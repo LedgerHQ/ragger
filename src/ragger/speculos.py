@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Optional, Tuple
+from typing import Optional
 
 from speculos.client import SpeculosClient, ApduResponse, ApduException
 
@@ -8,6 +8,7 @@ from ragger.interface import BackendInterface, APDUResponse
 
 
 def manage_error(function):
+
     def decoration(*args, **kwargs) -> APDUResponse:
         self = args[0]
         if self.raises:
@@ -19,6 +20,7 @@ def manage_error(function):
             result = (error.sw, error.data)
         logger.debug("Receiving '[%d] %s'", result[0], result[1])
         return result
+
     return decoration
 
 
@@ -48,18 +50,19 @@ class SpeculosBackend(BackendInterface):
     def __exit__(self, *args, **kwargs):
         self._client.__exit__(*args, **kwargs)
 
-    def send_raw(self, data: bytes = "") -> None:
+    def send_raw(self, data: bytes = b"") -> None:
         logger.debug("Sending '%s'", data)
         self._pending = ApduResponse(self._client._apdu_exchange_nowait(data))
 
     @manage_error
     def receive(self) -> APDUResponse:
+        assert self._pending is not None
         result = self._pending.receive()
         logger.debug("Receiving '%s'", result)
         return result
 
     @manage_error
-    def exchange_raw(self, data: bytes = "") -> APDUResponse:
+    def exchange_raw(self, data: bytes = b"") -> APDUResponse:
         logger.debug("Sending '%s'", data)
         result = self._client._apdu_exchange(data)
         return result

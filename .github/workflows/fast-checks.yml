@@ -1,0 +1,42 @@
+name: Fast checks
+
+on:
+  push:
+  pull_request:
+    branches:
+      - develop
+      - master
+
+jobs:
+  lint:
+    name: Linting
+    runs-on: ubuntu-latest
+    steps:
+    - name: Clone
+      uses: actions/checkout@v2
+    - name: Lint Python code
+      run: |
+        pip install flake8
+        find src/ -type f -name '*.py' -exec flake8 --max-line-length=120 '{}' '+' || echo 1
+
+  yapf:
+    name: Formatting
+    runs-on: ubuntu-latest
+    steps:
+    - name: Clone
+      uses: actions/checkout@v2
+    - name: Yapf source formatting
+      run: |
+        pip install yapf toml
+        yapf src/ --recursive -d
+
+  mypy:
+    name: Type checking
+    runs-on: ubuntu-latest
+    steps:
+    - name: Clone
+      uses: actions/checkout@v2
+    - name: Mypy type checking
+      run: |
+        pip install mypy
+        mypy src

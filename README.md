@@ -57,3 +57,20 @@ pytest <tests/path>         # will run tests on Speculos emulator
 
 pytest --live <tests/path>  # will run tests on a physical device
 ```
+
+## Requirements
+
+### Python dependencies
+
+To install locally, run:
+
+```
+pip install --extra-index-url https://test.pypi.org/simple/ -U --no-deps .
+```
+
+The extra index is important, as it brings the latest version of Speculos.
+
+### Other
+
+Speculos dependencies are obviously needed too.
+[Check the doc](https://speculos.ledger.com/installation/build.html) for these.

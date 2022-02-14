@@ -4,8 +4,7 @@ from typing import Optional, Type, Tuple, NewType, Union
 
 from ragger.utils import pack_APDU
 
-
-APDUResponse = NewType('APDUResponse', Union[bytes, Tuple[int, str]])
+APDUResponse = Union[bytes, Tuple[int, str]]
 
 
 class BackendInterface(ABC):
@@ -28,8 +27,7 @@ class BackendInterface(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def __exit__(self,
-                 exc_type: Optional[Type[BaseException]],
+    def __exit__(self, exc_type: Optional[Type[BaseException]],
                  exc_val: Optional[BaseException],
                  exc_tb: Optional[TracebackType]):
         raise NotImplementedError
