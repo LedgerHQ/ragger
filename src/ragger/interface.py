@@ -1,10 +1,15 @@
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
 from types import TracebackType
-from typing import Optional, Type, Tuple, NewType, Union
+from typing import Optional, Type, Tuple
 
 from ragger.utils import pack_APDU
 
-APDUResponse = Union[bytes, Tuple[int, str]]
+
+@dataclass(frozen=True)
+class RAPDU:
+    status: int
+    data: bytes
 
 
 class BackendInterface(ABC):
@@ -45,7 +50,7 @@ class BackendInterface(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def receive(self) -> Tuple[int, bytes]:
+    def receive(self) -> RAPDU:
         raise NotImplementedError
 
     def exchange(self,
@@ -53,11 +58,11 @@ class BackendInterface(ABC):
                  ins: int,
                  p1: int = 0,
                  p2: int = 0,
-                 data: bytes = b"") -> APDUResponse:
+                 data: bytes = b"") -> RAPDU:
         return self.exchange_raw(pack_APDU(cla, ins, p1, p2, data))
 
     @abstractmethod
-    def exchange_raw(self, data: bytes = b"") -> APDUResponse:
+    def exchange_raw(self, data: bytes = b"") -> RAPDU:
         raise NotImplementedError
 
     @abstractmethod

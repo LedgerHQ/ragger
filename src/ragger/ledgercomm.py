@@ -1,24 +1,22 @@
-from typing import Optional, Tuple
+from typing import Optional
 
 from ledgercomm import Transport
 from speculos.client import ApduException
 
 from ragger import logger
-from ragger.interface import BackendInterface, APDUResponse
+from ragger.interface import BackendInterface, RAPDU
 
 
 def manage_error(function):
 
-    def decoration(*args, **kwargs) -> Optional[Tuple[int, bytes]]:
-        self = args[0]
-        status, data = function(*args, **kwargs)
-        logger.debug("Receiving '[%d] %s'", status, data)
-        if not self.raises:
-            return (status, data)
-        if status == 0x9000:
-            return data
+    def decoration(*args, **kwargs) -> RAPDU:
+        self: LedgerCommBackend = args[0]
+        rapdu: RAPDU = function(*args, **kwargs)
+        logger.debug("Receiving '[%d] %s'", rapdu.status, rapdu.data)
+        if rapdu.status == 0x9000 or not self.raises:
+            return rapdu
         # else should raise
-        raise ApduException(status, data)
+        raise ApduException(rapdu.status, rapdu.data)
 
     return decoration
 
@@ -53,17 +51,17 @@ class LedgerCommBackend(BackendInterface):
         self._client.send_raw(data)
 
     @manage_error
-    def receive(self) -> APDUResponse:
+    def receive(self) -> RAPDU:
         assert self._client is not None
-        result = self._client.recv()
+        result = RAPDU(*self._client.recv())
         logger.debug("Receiving '%s'", result)
         return result
 
     @manage_error
-    def exchange_raw(self, data: bytes = b"") -> APDUResponse:
+    def exchange_raw(self, data: bytes = b"") -> RAPDU:
         logger.debug("Exchange: sending   > '%s'", data)
         assert self._client is not None
-        result = self._client.exchange_raw(data)
+        result = RAPDU(*self._client.exchange_raw(data))
         logger.debug("Exchange: receiving < '%s'", result)
         return result
 

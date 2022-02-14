@@ -1,5 +1,7 @@
 import logging
 
+from speculos.client import ApduException
+
 logger = logging.getLogger(__package__)
 logger.setLevel(level=logging.DEBUG)
 
@@ -9,7 +11,7 @@ handler.setFormatter(
 
 logger.addHandler(handler)
 
-from ragger.speculos import SpeculosBackend
-from ragger.ledgercomm import LedgerCommBackend
+from ragger.speculos import SpeculosBackend  # noqa: E402
+from ragger.ledgercomm import LedgerCommBackend  # noqa: E402
 
-__all__ = ["SpeculosBackend", "LedgerCommBackend"]
+__all__ = ["SpeculosBackend", "LedgerCommBackend", "ApduException"]

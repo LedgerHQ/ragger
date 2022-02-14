@@ -4,22 +4,21 @@ from typing import Optional
 from speculos.client import SpeculosClient, ApduResponse, ApduException
 
 from ragger import logger
-from ragger.interface import BackendInterface, APDUResponse
+from ragger.interface import BackendInterface, RAPDU
 
 
 def manage_error(function):
 
-    def decoration(*args, **kwargs) -> APDUResponse:
-        self = args[0]
-        if self.raises:
-            return function(*args, **kwargs)
-        # else status code are returned with data as a tuple
+    def decoration(*args, **kwargs) -> RAPDU:
+        self: SpeculosBackend = args[0]
         try:
-            result = (0x9000, function(*args, **kwargs))
+            rapdu = function(*args, **kwargs)
         except ApduException as error:
-            result = (error.sw, error.data)
-        logger.debug("Receiving '[%d] %s'", result[0], result[1])
-        return result
+            if self.raises:
+                raise error
+            rapdu = RAPDU(error.sw, error.data)
+        logger.debug("Receiving '[%d] %s'", rapdu.status, rapdu.data)
+        return rapdu
 
     return decoration
 
@@ -55,17 +54,16 @@ class SpeculosBackend(BackendInterface):
         self._pending = ApduResponse(self._client._apdu_exchange_nowait(data))
 
     @manage_error
-    def receive(self) -> APDUResponse:
+    def receive(self) -> RAPDU:
         assert self._pending is not None
-        result = self._pending.receive()
+        result = RAPDU(0x9000, self._pending.receive())
         logger.debug("Receiving '%s'", result)
         return result
 
     @manage_error
-    def exchange_raw(self, data: bytes = b"") -> APDUResponse:
+    def exchange_raw(self, data: bytes = b"") -> RAPDU:
         logger.debug("Sending '%s'", data)
-        result = self._client._apdu_exchange(data)
-        return result
+        return RAPDU(0x9000, self._client._apdu_exchange(data))
 
     def right_click(self) -> None:
         self._client.press_and_release("right")
