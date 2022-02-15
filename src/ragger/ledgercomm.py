@@ -27,6 +27,7 @@ class LedgerCommBackend(BackendInterface):
                  host: str = "127.0.0.1",
                  port: int = 9999,
                  raises: bool = False,
+                 interface: str = 'hid',
                  *args,
                  **kwargs):
         super().__init__(host, port, raises=raises)
@@ -37,6 +38,7 @@ class LedgerCommBackend(BackendInterface):
         logger.info(f"Starting {self.__class__.__name__} stream")
         self._client = Transport(server=self._host,
                                  port=self._port,
+                                 interface=interface,
                                  *self._args[0],
                                  **self._args[1])
         return self
