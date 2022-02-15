@@ -1,0 +1,39 @@
+name: Documentation generation & update
+
+on:
+  push:
+  pull_request:
+    branches:
+      - develop
+      - master
+
+jobs:
+  generate:
+    name: Generate the documentation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone
+        uses: actions/checkout@v2
+      - name: Install Python dependencies
+        run: pip install --extra-index-url https://test.pypi.org/simple/ .[doc]
+      - name: Generate the documentation
+        run: (cd doc && make html)
+      - name: Upload app binary
+        uses: actions/upload-artifact@v2
+        with:
+          name: documentation
+          path: doc/build/html/
+
+  deploy:
+    name: Deploy the documentation on Github pages
+    runs-on: ubuntu-latest
+    needs: generate
+    # if: github.ref == 'refs/heads/master'
+    steps:
+      - name: Download documentation bundle
+        uses: actions/download-artifact@v2
+      - name: Deploy documentation on pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: documentation/
