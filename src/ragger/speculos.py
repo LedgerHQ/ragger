@@ -17,7 +17,7 @@ def manage_error(function):
             if self.raises:
                 raise error
             rapdu = RAPDU(error.sw, error.data)
-        logger.debug("Receiving '[%d] %s'", rapdu.status, rapdu.data)
+        logger.debug("Receiving '%s'", rapdu)
         return rapdu
 
     return decoration

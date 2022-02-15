@@ -11,6 +11,9 @@ class RAPDU:
     status: int
     data: bytes
 
+    def __str__(self):
+        return f'[0x{self.status:02x}] {self.data}'
+
 
 class BackendInterface(ABC):
 

@@ -12,7 +12,7 @@ def manage_error(function):
     def decoration(*args, **kwargs) -> RAPDU:
         self: LedgerCommBackend = args[0]
         rapdu: RAPDU = function(*args, **kwargs)
-        logger.debug("Receiving '[%d] %s'", rapdu.status, rapdu.data)
+        logger.debug("Receiving '%s'", rapdu)
         if rapdu.status == 0x9000 or not self.raises:
             return rapdu
         # else should raise
@@ -32,13 +32,13 @@ class LedgerCommBackend(BackendInterface):
                  **kwargs):
         super().__init__(host, port, raises=raises)
         self._client: Optional[Transport] = None
+        kwargs['interface'] = interface
         self._args = (args, kwargs)
 
     def __enter__(self) -> "LedgerCommBackend":
         logger.info(f"Starting {self.__class__.__name__} stream")
         self._client = Transport(server=self._host,
                                  port=self._port,
-                                 interface=interface,
                                  *self._args[0],
                                  **self._args[1])
         return self
