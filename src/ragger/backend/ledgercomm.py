@@ -4,7 +4,7 @@ from ledgercomm import Transport
 from speculos.client import ApduException
 
 from ragger import logger
-from ragger.interface import BackendInterface, RAPDU
+from .interface import BackendInterface, RAPDU
 
 
 def manage_error(function):

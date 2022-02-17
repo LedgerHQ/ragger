@@ -4,7 +4,7 @@ from typing import Optional
 from speculos.client import SpeculosClient, ApduResponse, ApduException
 
 from ragger import logger
-from ragger.interface import BackendInterface, RAPDU
+from .interface import BackendInterface, RAPDU
 
 
 def manage_error(function):

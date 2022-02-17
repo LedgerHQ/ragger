@@ -22,7 +22,7 @@ following fixtures:
 
 ```python
 import pytest
-from ragger import SpeculosBackend, LedgerCommBackend
+from ragger.backends import SpeculosBackend, LedgerCommBackend
 
 # adding an pytest CLI option "--live"
 def pytest_addoption(parser):
@@ -48,7 +48,7 @@ def client(live):
 ```
 
 The `client` fixture can be used to discuss with the instantiated backend.
-Its interface is documented [here](src/ragger/interface.py).
+Its interface is documented [here](src/ragger/backends/interface.py).
 
 The test suite is then launched:
 
