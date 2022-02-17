@@ -1,0 +1,34 @@
+name: Build and test ragger
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+  pull_request:
+    branches:
+      - develop
+      - master
+
+jobs:
+  build_install_test:
+    name: Build, install and test the library
+    runs-on: ubuntu-latest
+    steps:
+    - name: Clone
+      uses: actions/checkout@v2
+    - name: Speculos dependencies
+      run: sudo apt-get update && sudo apt-get install -y qemu-user-static
+    - name: Build & install
+      run: pip install --extra-index-url https://test.pypi.org/simple/ -U .[tests]
+    - name: Gather an application to run tests against
+      uses: dawidd6/action-download-artifact@v2
+      with:
+        repo: LedgerHQ/app-boilerplate
+        name: boilerplate-app-nanoS-debug
+        workflow: ci-workflow.yml
+        path: tests/elfs/
+    - name: Check the downloaded files
+      run: tree .
+    - name: Run tests
+      run: pytest tests/
