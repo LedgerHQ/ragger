@@ -1,5 +1,6 @@
 from pathlib import Path
-from typing import Optional
+from contextlib import contextmanager
+from typing import Optional, Iterable, Generator
 
 from speculos.client import SpeculosClient, ApduResponse, ApduException
 
@@ -9,12 +10,11 @@ from .interface import BackendInterface, RAPDU
 
 def manage_error(function):
 
-    def decoration(*args, **kwargs) -> RAPDU:
-        self: SpeculosBackend = args[0]
+    def decoration(self: 'SpeculosBackend', *args, **kwargs) -> RAPDU:
         try:
-            rapdu = function(*args, **kwargs)
+            rapdu = function(self, *args, **kwargs)
         except ApduException as error:
-            if self.raises:
+            if self.raises and not self.is_valid(error.sw):
                 raise error
             rapdu = RAPDU(error.sw, error.data)
         logger.debug("Receiving '%s'", rapdu)
@@ -30,8 +30,12 @@ class SpeculosBackend(BackendInterface):
                  host: str = "127.0.0.1",
                  port: int = 5000,
                  raises: bool = False,
+                 valid_statuses: Iterable[int] = (0x9000, ),
                  **kwargs):
-        super().__init__(host, port, raises=raises)
+        super().__init__(host,
+                         port,
+                         raises=raises,
+                         valid_statuses=valid_statuses)
         self._client: SpeculosClient = SpeculosClient(app=str(application),
                                                       api_url=self.url,
                                                       **kwargs)
@@ -64,6 +68,22 @@ class SpeculosBackend(BackendInterface):
     def exchange_raw(self, data: bytes = b"") -> RAPDU:
         logger.debug("Sending '%s'", data)
         return RAPDU(0x9000, self._client._apdu_exchange(data))
+
+    @contextmanager
+    def exchange_async_raw(self,
+                           data: bytes = b"") -> Generator[None, None, None]:
+        with self._client.apdu_exchange_nowait(cla=data[0],
+                                               ins=data[1],
+                                               p1=data[2],
+                                               p2=data[3],
+                                               data=data[5:]) as response:
+            yield
+            try:
+                self._last_async_response = response.receive()
+            except ApduException as error:
+                if self.raises and not self.is_valid(error.sw):
+                    raise error
+                self._last_async_response = RAPDU(error.sw, error.data)
 
     def right_click(self) -> None:
         self._client.press_and_release("right")

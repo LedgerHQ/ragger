@@ -1,4 +1,5 @@
-from typing import Optional
+from contextlib import contextmanager
+from typing import Optional, Iterable, Generator
 
 from ledgercomm import Transport
 from speculos.client import ApduException
@@ -9,11 +10,10 @@ from .interface import BackendInterface, RAPDU
 
 def manage_error(function):
 
-    def decoration(*args, **kwargs) -> RAPDU:
-        self: LedgerCommBackend = args[0]
-        rapdu: RAPDU = function(*args, **kwargs)
+    def decoration(self: 'LedgerCommBackend', *args, **kwargs) -> RAPDU:
+        rapdu: RAPDU = function(self, *args, **kwargs)
         logger.debug("Receiving '%s'", rapdu)
-        if rapdu.status == 0x9000 or not self.raises:
+        if not self.raises or self.is_valid(rapdu.status):
             return rapdu
         # else should raise
         raise ApduException(rapdu.status, rapdu.data)
@@ -28,9 +28,13 @@ class LedgerCommBackend(BackendInterface):
                  port: int = 9999,
                  raises: bool = False,
                  interface: str = 'hid',
+                 valid_statuses: Iterable[int] = (0x9000, ),
                  *args,
                  **kwargs):
-        super().__init__(host, port, raises=raises)
+        super().__init__(host,
+                         port,
+                         raises=raises,
+                         valid_statuses=valid_statuses)
         self._client: Optional[Transport] = None
         kwargs['interface'] = interface
         self._args = (args, kwargs)
@@ -66,6 +70,13 @@ class LedgerCommBackend(BackendInterface):
         result = RAPDU(*self._client.exchange_raw(data))
         logger.debug("Exchange: receiving < '%s'", result)
         return result
+
+    @contextmanager
+    def exchange_async_raw(self,
+                           data: bytes = b"") -> Generator[None, None, None]:
+        self.send_raw(data)
+        yield
+        self._last_async_response = self.receive()
 
     def right_click(self) -> None:
         pass
