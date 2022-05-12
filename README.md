@@ -22,7 +22,7 @@ following fixtures:
 
 ```python
 import pytest
-from ragger.backends import SpeculosBackend, LedgerCommBackend
+from ragger.backend import SpeculosBackend, LedgerCommBackend
 
 # adding an pytest CLI option "--live"
 def pytest_addoption(parser):
@@ -35,7 +35,7 @@ def live(pytestconfig):
 
 # Depending on the "--live" option value, a different backend is instantiated,
 # and the tests will either run on Speculos or on a physical device
-@pytest.fixture(scope="session")
+@pytest.fixture
 def client(live):
     if live:
         backend = LedgerCommBackend(interface="hid", raises=True)
