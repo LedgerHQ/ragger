@@ -2,6 +2,9 @@ name: Documentation generation & update
 
 on:
   push:
+    branches:
+      - develop
+      - master
   pull_request:
     branches:
       - develop
@@ -28,7 +31,7 @@ jobs:
     name: Deploy the documentation on Github pages
     runs-on: ubuntu-latest
     needs: generate
-    # if: github.ref == 'refs/heads/master'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     steps:
       - name: Download documentation bundle
         uses: actions/download-artifact@v2
