@@ -15,7 +15,7 @@ It mainly consists on an interface which is implemented in two backends:
   through USB.
 
 
-## Example
+## Example with Pytest
 
 This backend can be easily integrated in a `pytest` test suite with the
 following fixtures:
@@ -24,27 +24,29 @@ following fixtures:
 import pytest
 from ragger.backend import SpeculosBackend, LedgerCommBackend
 
-# adding an pytest CLI option "--live"
+# adding an pytest CLI option "--backend"
 def pytest_addoption(parser):
-    parser.addoption("--live", action="store_true", default=False)
+    print(help(parser.addoption))
+    parser.addoption("--backend", action="store", default="speculos")
 
-# accessing the value of the "--live" option
+# accessing the value of the "--backend" option as a fixture
 @pytest.fixture(scope="session")
-def live(pytestconfig):
-    return pytestconfig.getoption("live")
+def backend(pytestconfig):
+    return pytestconfig.getoption("backend")
 
-# Depending on the "--live" option value, a different backend is instantiated,
-# and the tests will either run on Speculos or on a physical device
-@pytest.fixture
-def client(live):
-    if live:
-        backend = LedgerCommBackend(interface="hid", raises=True)
-    else:
-        app = SCRIPT_DIR.parent.parent / "bin" / "app.elf"
+# Depending on the "--backend" option value, a different backend is
+# instantiated, and the tests will either run on Speculos or on a physical
+# device depending on the backend
+def create_backend(backend: bool, raises: bool = True):
+    if backend.lower() == "ledgercomm":
+        return LedgerCommBackend(interface="hid", raises=raises)
+    elif backend.lower() == "ledgerwallet":
+        return LedgerWalletBackend()
+    elif backend.lower() == "speculos":
         args = ['--model', 'nanos', '--sdk', '2.1']
-        backend = SpeculosBackend(app, args=args, raises=True)
-    with backend as b:
-        yield b
+        return SpeculosBackend(APPLICATION, args=args, raises=raises)
+    else:
+        raise ValueError(f"Backend '{backend}' is unknown. Valid backends are: {BACKENDS}")
 ```
 
 The `client` fixture can be used to discuss with the instantiated backend.
@@ -53,9 +55,8 @@ Its interface is documented [here](src/ragger/backends/interface.py).
 The test suite is then launched:
 
 ```
-pytest <tests/path>         # will run tests on Speculos emulator
-
-pytest --live <tests/path>  # will run tests on a physical device
+pytest <tests/path>                                               # by default, will run tests on the Speculos emulator
+pytest --backend [speculos|ledgercomm|ledgerwallet] <tests/path>  # will run tests on the selected backend
 ```
 
 ## Requirements

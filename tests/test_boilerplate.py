@@ -2,7 +2,7 @@ from requests.exceptions import ConnectionError
 
 import pytest
 
-from ragger.backend import ApduException, RAPDU
+from ragger.backend import ApduException, RAPDU, SpeculosBackend
 
 
 def test_error_returns_not_raises(client_no_raise):
@@ -20,6 +20,7 @@ def test_error_raises_not_returns(client):
         assert not e.data
 
 
+@pytest.mark.use_on_backend("speculos")
 def test_quit_app(client):
     client.right_click()
     client.right_click()

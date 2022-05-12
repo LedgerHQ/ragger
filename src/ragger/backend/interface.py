@@ -13,22 +13,16 @@ class RAPDU:
     data: bytes
 
     def __str__(self):
-        return f'[0x{self.status:02x}] {self.data.hex()}'
+        return f'[0x{self.status:02x}] {self.data.hex() if self.data else "<Nothing>"}'
 
 
 class BackendInterface(ABC):
 
     def __init__(self,
-                 host: str,
-                 port: int,
                  raises: bool = False,
                  valid_statuses: Iterable[int] = (0x9000, )):
         """Initializes the Backend
 
-        :param host: The host where to reach the backend.
-        :type host: str
-        :param port: The port where to reach the backend
-        :type port: int
         :param raises: Weither the instance should raises on non-valid response
                        statuses, or not.
         :type raises: bool
@@ -36,8 +30,6 @@ class BackendInterface(ABC):
                                (default: [0x9000])
         :type valid_statuses: any iterable
         """
-        self._host = host
-        self._port = port
         self._raises = raises
         self._valid_statuses = valid_statuses
         self._last_async_response: Optional[RAPDU] = None
@@ -60,14 +52,6 @@ class BackendInterface(ABC):
         :rtype: bool
         """
         return self._raises
-
-    @property
-    def url(self) -> str:
-        """
-        :return: The backend URL.
-        :rtype: str
-        """
-        return f"{self._host}:{self._port}"
 
     def is_valid(self, status: int) -> bool:
         """
