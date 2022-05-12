@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Iterable
 
 from speculos.client import SpeculosClient, ApduResponse, ApduException
 
@@ -9,12 +9,11 @@ from .interface import BackendInterface, RAPDU
 
 def manage_error(function):
 
-    def decoration(*args, **kwargs) -> RAPDU:
-        self: SpeculosBackend = args[0]
+    def decoration(self: 'SpeculosBackend', *args, **kwargs) -> RAPDU:
         try:
-            rapdu = function(*args, **kwargs)
+            rapdu = function(self, *args, **kwargs)
         except ApduException as error:
-            if self.raises:
+            if self.raises and not self.is_valid(error.sw):
                 raise error
             rapdu = RAPDU(error.sw, error.data)
         logger.debug("Receiving '%s'", rapdu)
@@ -30,8 +29,12 @@ class SpeculosBackend(BackendInterface):
                  host: str = "127.0.0.1",
                  port: int = 5000,
                  raises: bool = False,
+                 valid_statuses: Iterable[int] = (0x9000, ),
                  **kwargs):
-        super().__init__(host, port, raises=raises)
+        super().__init__(host,
+                         port,
+                         raises=raises,
+                         valid_statuses=valid_statuses)
         self._client: SpeculosClient = SpeculosClient(app=str(application),
                                                       api_url=self.url,
                                                       **kwargs)

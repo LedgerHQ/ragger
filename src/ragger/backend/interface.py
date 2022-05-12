@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from types import TracebackType
-from typing import Optional, Type
+from typing import Optional, Type, Iterable
 
 from ragger.utils import pack_APDU
 
@@ -12,30 +12,39 @@ class RAPDU:
     data: bytes
 
     def __str__(self):
-        return f'[0x{self.status:02x}] {self.data}'
+        return f'[0x{self.status:02x}] {self.data.hex()}'
 
 
 class BackendInterface(ABC):
 
-    def __init__(self, host: str, port: int, raises: bool = False):
+    def __init__(self,
+                 host: str,
+                 port: int,
+                 raises: bool = False,
+                 valid_statuses: Iterable[int] = (0x9000, )):
         """Initializes the Backend
 
         :param host: The host where to reach the backend.
         :type host: str
         :param port: The port where to reach the backend
         :type port: int
-        :param raises: Weither the instance should raises on non-0x9000 response
+        :param raises: Weither the instance should raises on non-valid response
                        statuses, or not.
         :type raises: bool
+        :param valid_statuses: a list of RAPDU statuses considered successfull
+                               (default: [0x9000])
+        :type valid_statuses: any iterable
         """
         self._host = host
         self._port = port
         self._raises = raises
+        self._valid_statuses = valid_statuses
 
     @property
     def raises(self) -> bool:
         """
-        :return: Weither the instance raises on non-0x9000 response statuses or not.
+        :return: Weither the instance raises on non-0x9000 response statuses or
+                 not.
         :rtype: bool
         """
         return self._raises
@@ -47,6 +56,16 @@ class BackendInterface(ABC):
         :rtype: str
         """
         return f"{self._host}:{self._port}"
+
+    def is_valid(self, status: int) -> bool:
+        """
+        :param status: A status to check
+        :type status: int
+
+        :return: If the given status is considered valid or not
+        :rtype: bool
+        """
+        return status in self._valid_statuses
 
     @abstractmethod
     def __enter__(self) -> "BackendInterface":
@@ -67,8 +86,6 @@ class BackendInterface(ABC):
         """
         Formats then sends an APDU to the backend.
 
-        The length is automaticaly added to the APDU message.
-
         :param cla: The application ID
         :type cla: int
         :param ins: The command ID
@@ -80,8 +97,8 @@ class BackendInterface(ABC):
         :param data: Command data
         :type data: bytes
 
-        :return: Nothing
-        :rtype: None
+        :return: None
+        :rtype: NoneType
         """
         return self.send_raw(pack_APDU(cla, ins, p1, p2, data))
 
@@ -96,8 +113,8 @@ class BackendInterface(ABC):
         :param data: The APDU message
         :type data: bytes
 
-        :return: Nothing
-        :rtype: None
+        :return: None
+        :rtype: NoneType
         """
         raise NotImplementedError
 
@@ -111,7 +128,7 @@ class BackendInterface(ABC):
 
         :raises ApduException: If the `raises` attribute is True, this method
                                will raise if the backend returns a status code
-                               different from 0x9000
+                               not registered a a `valid_statuses`
 
         :return: The APDU response
         :rtype: RAPDU
@@ -162,7 +179,7 @@ class BackendInterface(ABC):
 
         :raises ApduException: If the `raises` attribute is True, this method
                                will raise if the backend returns a status code
-                               different from 0x9000
+                               not registered a a `valid_statuses`
 
         :return: The APDU response
         :rtype: RAPDU
@@ -181,8 +198,8 @@ class BackendInterface(ABC):
         get stuck (on further call to `receive` for instance) until the expected
         action is performed on the device.
 
-        :return: Nothing
-        :rtype: None
+        :return: None
+        :rtype: NoneType
         """
         raise NotImplementedError
 
@@ -198,8 +215,8 @@ class BackendInterface(ABC):
         get stuck (on further call to `receive` for instance) until the expected
         action is performed on the device.
 
-        :return: Nothing
-        :rtype: None
+        :return: None
+        :rtype: NoneType
         """
         raise NotImplementedError
 
@@ -215,7 +232,7 @@ class BackendInterface(ABC):
         get stuck (on further call to `receive` for instance) until the expected
         action is performed on the device.
 
-        :return: Nothing
-        :rtype: None
+        :return: None
+        :rtype: NoneType
         """
         raise NotImplementedError
