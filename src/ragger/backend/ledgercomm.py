@@ -1,4 +1,5 @@
-from typing import Optional, Iterable
+from contextlib import contextmanager
+from typing import Optional, Iterable, Generator
 
 from ledgercomm import Transport
 from speculos.client import ApduException
@@ -69,6 +70,13 @@ class LedgerCommBackend(BackendInterface):
         result = RAPDU(*self._client.exchange_raw(data))
         logger.debug("Exchange: receiving < '%s'", result)
         return result
+
+    @contextmanager
+    def exchange_async_raw(self,
+                           data: bytes = b"") -> Generator[None, None, None]:
+        self.send_raw(data)
+        yield
+        self._last_async_response = self.receive()
 
     def right_click(self) -> None:
         pass

@@ -1,5 +1,6 @@
 from pathlib import Path
-from typing import Optional, Iterable
+from contextlib import contextmanager
+from typing import Optional, Iterable, Generator
 
 from speculos.client import SpeculosClient, ApduResponse, ApduException
 
@@ -67,6 +68,22 @@ class SpeculosBackend(BackendInterface):
     def exchange_raw(self, data: bytes = b"") -> RAPDU:
         logger.debug("Sending '%s'", data)
         return RAPDU(0x9000, self._client._apdu_exchange(data))
+
+    @contextmanager
+    def exchange_async_raw(self,
+                           data: bytes = b"") -> Generator[None, None, None]:
+        with self._client.apdu_exchange_nowait(cla=data[0],
+                                               ins=data[1],
+                                               p1=data[2],
+                                               p2=data[3],
+                                               data=data[5:]) as response:
+            yield
+            try:
+                self._last_async_response = response.receive()
+            except ApduException as error:
+                if self.raises and not self.is_valid(error.sw):
+                    raise error
+                self._last_async_response = RAPDU(error.sw, error.data)
 
     def right_click(self) -> None:
         self._client.press_and_release("right")

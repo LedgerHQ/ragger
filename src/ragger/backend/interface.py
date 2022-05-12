@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
+from contextlib import contextmanager
 from dataclasses import dataclass
 from types import TracebackType
-from typing import Optional, Type, Iterable
+from typing import Optional, Type, Iterable, Generator
 
 from ragger.utils import pack_APDU
 
@@ -39,6 +40,17 @@ class BackendInterface(ABC):
         self._port = port
         self._raises = raises
         self._valid_statuses = valid_statuses
+        self._last_async_response: Optional[RAPDU] = None
+
+    @property
+    def last_async_response(self) -> Optional[RAPDU]:
+        """
+        :return: The last RAPDU received after a call to `exchange_async` or
+                 `exchange_async_raw`. `None` if no called was made, or if it
+                 resulted into an exception throw.
+        :rtype: RAPDU
+        """
+        return self._last_async_response
 
     @property
     def raises(self) -> bool:
@@ -183,6 +195,67 @@ class BackendInterface(ABC):
 
         :return: The APDU response
         :rtype: RAPDU
+        """
+        raise NotImplementedError
+
+    @contextmanager
+    def exchange_async(self,
+                       cla: int,
+                       ins: int,
+                       p1: int = 0,
+                       p2: int = 0,
+                       data: bytes = b"") -> Generator[None, None, None]:
+        """
+        Formats and sends an APDU to the backend, then gives the control back to
+        the caller.
+
+        This can be useful to still control a device when it has not responded
+        yet, for instance when a UI validation is requested.
+
+        The context manager does not yield anything. Interaction through the
+        backend instance is still possible.
+
+        :param cla: The application ID
+        :type cla: int
+        :param ins: The command ID
+        :type ins: int
+        :param p1: First instruction parameter, defaults to 0
+        :type p1: int
+        :param p1: Second instruction parameter, defaults to 0
+        :type p1: int
+        :param data: Command data
+        :type data: bytes
+
+        :raises ApduException: If the `raises` attribute is True, this method
+                               will raise if the backend returns a status code
+                               not registered a a `valid_statuses`
+
+        :return: None
+        :rtype: NoneType
+        """
+        with self.exchange_async_raw(pack_APDU(cla, ins, p1, p2, data)):
+            yield
+
+    @contextmanager
+    @abstractmethod
+    def exchange_async_raw(self,
+                           data: bytes = b"") -> Generator[None, None, None]:
+        """
+        Sends the given APDU to the backend, then gives the control back to the
+        caller.
+
+        Every part of the APDU (including length) are the caller's
+        responsibility
+
+        :param data: The APDU message
+        :type data: bytes
+
+        :raises ApduException: If the `raises` attribute is True, this method
+                               will raise if the backend returns a status code
+                               not registered a a `valid_statuses`
+
+        :return: None
+        :rtype: NoneType
         """
         raise NotImplementedError
 
