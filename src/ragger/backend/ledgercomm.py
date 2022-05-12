@@ -31,10 +31,9 @@ class LedgerCommBackend(BackendInterface):
                  valid_statuses: Iterable[int] = (0x9000, ),
                  *args,
                  **kwargs):
-        super().__init__(host,
-                         port,
-                         raises=raises,
-                         valid_statuses=valid_statuses)
+        super().__init__(raises=raises, valid_statuses=valid_statuses)
+        self._host = host
+        self._port = port
         self._client: Optional[Transport] = None
         kwargs['interface'] = interface
         self._args = (args, kwargs)
