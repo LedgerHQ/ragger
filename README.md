@@ -3,28 +3,53 @@
 This library aims at reducing the cost of running code on both Speculos emulator
 or on a real device.
 
-It mainly consists on an interface which is implemented in two backends:
+It mainly consists on an interface which is implemented by three backends:
 
-- `SpeculosBackend`, which uses `SpeculosClient` to run code on a Speculos
-  emulator. With this backend, APDU can be send directly, without having to
-  start a docker or anything.
+- an emulator-only backend, `SpeculosBackend`, which uses
+  [`SpeculosClient`](https://github.com/LedgerHQ/speculos/blob/master/speculos/client.py)
+  to run an app on a Speculos emulator. With this backend, APDU can be send directly,
+  without having to connect a device, start a docker or anything.
 
-- `LedgerCommbackend`, which uses the `LedgerComm` library to discuss with a
-  physical device. In this case, the physical device must be started, with the
-  expected application installed and running, and connected to the computer
-  through USB.
+- two physical backends (although technically they are agnostic, but the
+  `SpeculosClient` is superior with an emulator), `LedgerCommBackend` and
+  `LedgewWalletbackend`, which use respectively the
+  [`LedgerComm` library](https://github.com/LedgerHQ/ledgercomm) or the
+  [`LedgerWallet` library](https://github.com/LedgerHQ/ledgerctl/) to discuss
+  with a physical device. In these cases, the physical device must be started,
+  with the expected application *installed* and *running*, and connected to the
+  computer through USB.
 
+## Installation
 
-## Example with Pytest
+### Python package
 
-This backend can be easily integrated in a `pytest` test suite with the
+Ragger is currently not available on PIP repositories.
+
+To install it, you need to run at the root of the `git` repository:
+
+```
+pip install --extra-index-url https://test.pypi.org/simple/ -U --no-deps .
+```
+
+The extra index is important, as it brings the latest version of Speculos.
+
+### Other
+
+Speculos dependencies are obviously needed too.
+[Check the doc](https://speculos.ledger.com/installation/build.html) for these.
+
+## Examples
+
+### With `pytest`
+
+The backends can be easily integrated in a `pytest` test suite with the
 following fixtures:
 
 ```python
 import pytest
 from ragger.backend import SpeculosBackend, LedgerCommBackend
 
-# adding an pytest CLI option "--backend"
+# adding a pytest CLI option "--backend"
 def pytest_addoption(parser):
     print(help(parser.addoption))
     parser.addoption("--backend", action="store", default="speculos")
@@ -50,7 +75,7 @@ def create_backend(backend: bool, raises: bool = True):
 ```
 
 The `client` fixture can be used to discuss with the instantiated backend.
-Its interface is documented [here](src/ragger/backends/interface.py).
+Its interface is documented [here](src/ragger/backend/interface.py).
 
 The test suite is then launched:
 
@@ -59,19 +84,5 @@ pytest <tests/path>                                               # by default, 
 pytest --backend [speculos|ledgercomm|ledgerwallet] <tests/path>  # will run tests on the selected backend
 ```
 
-## Requirements
-
-### Python dependencies
-
-To install locally, run:
-
-```
-pip install --extra-index-url https://test.pypi.org/simple/ -U --no-deps .
-```
-
-The extra index is important, as it brings the latest version of Speculos.
-
-### Other
-
-Speculos dependencies are obviously needed too.
-[Check the doc](https://speculos.ledger.com/installation/build.html) for these.
+You can try the tests of this very repository with the boilerplate application
+on a NanoS.
