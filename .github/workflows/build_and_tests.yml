@@ -53,8 +53,7 @@ jobs:
     # https://test.pypi.org/manage/account/#api-tokens with restriction to speculos project
     - name: Publish Python package to test.pypi.org
       if: success() && github.event_name == 'push' && github.ref == 'refs/heads/develop'
-      run: |
-        ./venv-build/bin/python -m twine upload --repository testpypi dist/*
+      run: python -m twine upload --repository testpypi dist/*
       env:
         TWINE_USERNAME: __token__
         TWINE_PASSWORD: ${{ secrets.TEST_PYPI_PUBLIC_API_TOKEN  }}
