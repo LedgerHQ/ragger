@@ -47,7 +47,7 @@ jobs:
     - name: Build Ragger python package
       run: |
         pip install --upgrade pip build twine
-        python -m build
+        PIP_EXTRA_INDEX_URL=https://test.pypi.org/simple/ python -m build
         python -m twine check dist/*
     # TEST_PYPI_API_TOKEN is an API token created on
     # https://test.pypi.org/manage/account/#api-tokens with restriction to speculos project
