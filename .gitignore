@@ -3,5 +3,6 @@
 *~
 .coverage
 build/
+dist/
 
 tests/elfs/

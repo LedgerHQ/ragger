@@ -28,7 +28,7 @@ Ragger is currently not available on PIP repositories.
 To install it, you need to run at the root of the `git` repository:
 
 ```
-pip install --extra-index-url https://test.pypi.org/simple/ -U --no-deps .
+pip install --extra-index-url https://test.pypi.org/simple/ .
 ```
 
 The extra index is important, as it brings the latest version of Speculos.
