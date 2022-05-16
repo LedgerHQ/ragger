@@ -1,7 +1,8 @@
 [build-system]
 requires = [
-    "speculos",
+    "speculos>=0.1.85",
     "ledgercomm",
+    "ledgercomm[hid]",
     "ledgerwallet==0.1.3",
     "setuptools>=42",
     "wheel"
