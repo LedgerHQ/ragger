@@ -46,8 +46,16 @@ The backends can be easily integrated in a `pytest` test suite with the
 following fixtures:
 
 ```python
+---------- conftest.py ----------
+
 import pytest
+from ragger import Firmware
 from ragger.backend import SpeculosBackend, LedgerCommBackend
+
+# This variable is needed for Speculos only (physical tests need the application to be already installed)
+APPLICATION = "Path/to/the/application.elf"
+# This variable will be useful in tests to implement different behavior depending on the firmware
+NANOS_FIRMWARE = Firmware("nanos", "2.1")
 
 # adding a pytest CLI option "--backend"
 def pytest_addoption(parser):
@@ -59,30 +67,51 @@ def pytest_addoption(parser):
 def backend(pytestconfig):
     return pytestconfig.getoption("backend")
 
+# Providing the firmware as a fixture
+# This can be easily parametrized, which would allow to run the tests on several firmware type or version
+@pytest.fixture
+def firmware():
+    return NANOS_FIRMWARE
+
 # Depending on the "--backend" option value, a different backend is
 # instantiated, and the tests will either run on Speculos or on a physical
 # device depending on the backend
-def create_backend(backend: bool, raises: bool = True):
+def create_backend(backend: bool, firmware):
     if backend.lower() == "ledgercomm":
-        return LedgerCommBackend(interface="hid", raises=raises)
+        return LedgerCommBackend(firmware, interface="hid")
     elif backend.lower() == "ledgerwallet":
-        return LedgerWalletBackend()
+        return LedgerWalletBackend(firmware)
     elif backend.lower() == "speculos":
-        args = ['--model', 'nanos', '--sdk', '2.1']
-        return SpeculosBackend(APPLICATION, args=args, raises=raises)
+        return SpeculosBackend(APPLICATION, firmware)
     else:
         raise ValueError(f"Backend '{backend}' is unknown. Valid backends are: {BACKENDS}")
+
+# This final fixture will return the properly configured backend client, to be used in tests
+@pytest.fixture
+def client(backend, firmware):
+    with create_backend(backend, firmware) as b:
+        yield b
+
+---------- some_tests.py ----------
+
+def test_something(client, firmware):
+    client.exchange(<whatever>)
+    if firmware.device == "nanos":
+        result = <do something specific to NanoS>
+    else:
+        result = <do something else>
+    assert result.status == 0x9000
 ```
 
-The `client` fixture can be used to discuss with the instantiated backend.
-Its interface is documented [here](src/ragger/backend/interface.py).
+The `client` fixture used to discuss with the instantiated backend is documented 
+[here](src/ragger/backend/interface.py).
 
-The test suite is then launched:
+After implementing the tests, the test suite can be easily switched on the different backends:
 
 ```
 pytest <tests/path>                                               # by default, will run tests on the Speculos emulator
 pytest --backend [speculos|ledgercomm|ledgerwallet] <tests/path>  # will run tests on the selected backend
 ```
 
-You can try the tests of this very repository with the boilerplate application
-on a NanoS.
+The tests of this repository are a basically the same as this exemple, except 
+the tests run on the three current firmwares (NanoS, NanoX and NanoS+).

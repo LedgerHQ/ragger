@@ -13,9 +13,13 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-__version__ = "0.0.2"
+__version__ = "0.2.0"
 
 import logging
+
+from speculos.client import ApduException
+
+from ragger.utils import RAPDU, Firmware
 
 logger = logging.getLogger(__package__)
 logger.setLevel(level=logging.DEBUG)
@@ -25,3 +29,5 @@ handler.setFormatter(
     logging.Formatter('[%(asctime)s][%(levelname)s] %(name)s - %(message)s'))
 
 logger.addHandler(handler)
+
+__all__ = ["RAPDU", "Firmware", "logger", "ApduException"]

@@ -13,7 +13,31 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
+from dataclasses import dataclass
 from struct import pack
+from typing import List
+
+SUPPORTED_DEVICES: List[str] = ["nanos", "nanox", "nanosp"]
+
+
+@dataclass(frozen=True)
+class Firmware:
+    device: str
+    version: str
+
+    def __init__(self, device: str, version: str):
+        assert device.lower() in SUPPORTED_DEVICES
+        object.__setattr__(self, "device", device.lower())
+        object.__setattr__(self, "version", version)
+
+
+@dataclass(frozen=True)
+class RAPDU:
+    status: int
+    data: bytes
+
+    def __str__(self):
+        return f'[0x{self.status:02x}] {self.data.hex() if self.data else "<Nothing>"}'
 
 
 def pack_APDU(cla: int,

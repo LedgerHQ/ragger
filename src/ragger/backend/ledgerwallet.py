@@ -19,8 +19,8 @@ from typing import Generator
 from ledgerwallet.client import LedgerClient, CommException
 from speculos.client import ApduException
 
-from ragger import logger
-from .interface import BackendInterface, RAPDU
+from ragger import logger, RAPDU, Firmware
+from .interface import BackendInterface
 
 
 def manage_error(function):

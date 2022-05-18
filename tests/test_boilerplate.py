@@ -2,7 +2,8 @@ from requests.exceptions import ConnectionError
 
 import pytest
 
-from ragger.backend import ApduException, RAPDU, SpeculosBackend
+from ragger import ApduException, RAPDU
+from ragger.backend import SpeculosBackend
 
 
 def test_error_returns_not_raises(client_no_raise):
@@ -21,10 +22,14 @@ def test_error_raises_not_returns(client):
 
 
 @pytest.mark.use_on_backend("speculos")
-def test_quit_app(client):
-    client.right_click()
-    client.right_click()
-    client.right_click()
+def test_quit_app(client, application):
+    right_clicks = {
+        'nanos': 3,
+        'nanox': 3,
+        'nanosp': 3
+    }
+    for _ in range(right_clicks[application.firmware.device]):
+        client.right_click()
 
     with pytest.raises(ConnectionError):
         # clicking on "Quit", Speculos then stops and raises
