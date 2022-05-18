@@ -15,25 +15,16 @@
 """
 from abc import ABC, abstractmethod
 from contextlib import contextmanager
-from dataclasses import dataclass
 from types import TracebackType
 from typing import Optional, Type, Iterable, Generator
 
-from ragger.utils import pack_APDU
-
-
-@dataclass(frozen=True)
-class RAPDU:
-    status: int
-    data: bytes
-
-    def __str__(self):
-        return f'[0x{self.status:02x}] {self.data.hex() if self.data else "<Nothing>"}'
+from ragger.utils import pack_APDU, RAPDU, Firmware
 
 
 class BackendInterface(ABC):
 
     def __init__(self,
+                 firmware: Firmware,
                  raises: bool = False,
                  valid_statuses: Iterable[int] = (0x9000, )):
         """Initializes the Backend
@@ -45,9 +36,14 @@ class BackendInterface(ABC):
                                (default: [0x9000])
         :type valid_statuses: any iterable
         """
+        self._firmware = firmware
         self._raises = raises
         self._valid_statuses = valid_statuses
         self._last_async_response: Optional[RAPDU] = None
+
+    @property
+    def firmware(self) -> Firmware:
+        return self._firmware
 
     @property
     def last_async_response(self) -> Optional[RAPDU]:

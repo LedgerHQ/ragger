@@ -20,7 +20,8 @@ from typing import Optional, Iterable, Generator
 from speculos.client import SpeculosClient, ApduResponse, ApduException
 
 from ragger import logger
-from .interface import BackendInterface, RAPDU
+from ragger.utils import Firmware, RAPDU
+from .interface import BackendInterface
 
 
 def manage_error(function):
@@ -40,16 +41,29 @@ def manage_error(function):
 
 class SpeculosBackend(BackendInterface):
 
+    _ARGS_KEY = 'args'
+
     def __init__(self,
                  application: Path,
+                 firmware: Firmware,
                  host: str = "127.0.0.1",
                  port: int = 5000,
                  raises: bool = False,
                  valid_statuses: Iterable[int] = (0x9000, ),
                  **kwargs):
-        super().__init__(raises=raises, valid_statuses=valid_statuses)
+        super().__init__(firmware,
+                         raises=raises,
+                         valid_statuses=valid_statuses)
         self._host = host
         self._port = port
+        args = ["--model", firmware.device, "--sdk", firmware.version]
+        if self._ARGS_KEY in kwargs:
+            assert isinstance(kwargs[self._ARGS_KEY], list), \
+                f"'{self._ARGS_KEY}' ({kwargs[self._ARGS_KEY]}) keyword " \
+                "argument  must be a list of arguments"
+            kwargs[self._ARGS_KEY].extend(args)
+        else:
+            kwargs[self._ARGS_KEY] = args
         self._client: SpeculosClient = SpeculosClient(app=str(application),
                                                       api_url=self.url,
                                                       **kwargs)

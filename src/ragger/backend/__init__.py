@@ -13,14 +13,12 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-from speculos.client import ApduException
-
-from .interface import RAPDU
+from .interface import BackendInterface
 from .speculos import SpeculosBackend
 from .ledgercomm import LedgerCommBackend
 from .ledgerwallet import LedgerWalletBackend
 
 __all__ = [
     "SpeculosBackend", "LedgerCommBackend", "LedgerWalletBackend",
-    "ApduException", "RAPDU"
+    "BackendInterface"
 ]
