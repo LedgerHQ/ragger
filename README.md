@@ -1,5 +1,7 @@
 # Ragger
 
+[![codecov](https://codecov.io/gh/LedgerHQ/ragger/branch/master/graph/badge.svg)](https://codecov.io/gh/LedgerHQ/ragger)
+
 This library aims at reducing the cost of running code on both Speculos emulator
 or on a real device.
 
@@ -103,7 +105,7 @@ def test_something(client, firmware):
     assert result.status == 0x9000
 ```
 
-The `client` fixture used to discuss with the instantiated backend is documented 
+The `client` fixture used to discuss with the instantiated backend is documented
 [here](src/ragger/backend/interface.py).
 
 After implementing the tests, the test suite can be easily switched on the different backends:
@@ -113,5 +115,5 @@ pytest <tests/path>                                               # by default, 
 pytest --backend [speculos|ledgercomm|ledgerwallet] <tests/path>  # will run tests on the selected backend
 ```
 
-The tests of this repository are a basically the same as this exemple, except 
+The tests of this repository are a basically the same as this exemple, except
 the tests run on the three current firmwares (NanoS, NanoX and NanoS+).
