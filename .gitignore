@@ -2,6 +2,7 @@
 *egg-info/
 *~
 .coverage
+coverage.xml
 build/
 dist/
 
