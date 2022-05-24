@@ -24,7 +24,6 @@ APPLICATIONS = [
 
 
 def pytest_addoption(parser):
-    print(help(parser.addoption))
     parser.addoption("--backend", action="store", default="speculos")
 
 
