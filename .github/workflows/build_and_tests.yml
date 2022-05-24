@@ -50,8 +50,14 @@ jobs:
       run: mv tests/elfs/app.elf tests/elfs/nanosp.elf
     - name: Check the downloaded files
       run: tree .
-    - name: Run tests
-      run: pytest tests/
+    - name: Run tests and generate coverage
+      run: |
+        coverage run -m pytest tests/
+        coverage xml
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v1
+      with:
+        name: codecov-speculos
 
   package_and_deploy:
     name: Build and deploy Ragger Python Package

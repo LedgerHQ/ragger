@@ -16,9 +16,10 @@
 from abc import ABC, abstractmethod
 from contextlib import contextmanager
 from types import TracebackType
-from typing import Optional, Type, Iterable, Generator
+from typing import Optional, Type, Iterable, Generator, NoReturn
 
 from ragger.utils import pack_APDU, RAPDU, Firmware
+from ragger.error import ApplicationError
 
 
 class BackendInterface(ABC):
@@ -26,23 +27,33 @@ class BackendInterface(ABC):
     def __init__(self,
                  firmware: Firmware,
                  raises: bool = False,
-                 valid_statuses: Iterable[int] = (0x9000, )):
+                 valid_statuses: Iterable[int] = (0x9000, ),
+                 errors: Iterable[ApplicationError] = ()):
         """Initializes the Backend
 
+        :param firmware: Which Firmware will be managed
+        :type firmware: Firmware
         :param raises: Weither the instance should raises on non-valid response
                        statuses, or not.
         :type raises: bool
         :param valid_statuses: a list of RAPDU statuses considered successfull
                                (default: [0x9000])
-        :type valid_statuses: any iterable
+        :type valid_statuses: an iterable of int
+        :param errors: A list of errors expected by the application
+        :type errors: an iterable of ApplicationError
         """
         self._firmware = firmware
         self._raises = raises
         self._valid_statuses = valid_statuses
         self._last_async_response: Optional[RAPDU] = None
+        self._errors = {error.status: error.name for error in errors}
 
     @property
     def firmware(self) -> Firmware:
+        """
+        :return: The currently managed Firmware.
+        :rtype: Firmware
+        """
         return self._firmware
 
     @property
@@ -63,6 +74,16 @@ class BackendInterface(ABC):
         :rtype: bool
         """
         return self._raises
+
+    def _raise(self, status: int, data: bytes) -> NoReturn:
+        """
+        Raises an ApplicationError exception, forged from given argument and
+        expected errors, declared while initializing the backend.
+
+        :raises ApplicationError: An error forged with given arguments and
+                                  expected application errors.
+        """
+        raise ApplicationError(status, self._errors.get(status), data)
 
     def is_valid(self, status: int) -> bool:
         """
@@ -133,9 +154,9 @@ class BackendInterface(ABC):
         Calling this method implies a command APDU has been previously sent
         to the backend, and a response is expected.
 
-        :raises ApduException: If the `raises` attribute is True, this method
-                               will raise if the backend returns a status code
-                               not registered a a `valid_statuses`
+        :raises ApplicationError: If the `raises` attribute is True, this method
+                                  will raise if the backend returns a status
+                                  code not registered a a `valid_statuses`
 
         :return: The APDU response
         :rtype: RAPDU

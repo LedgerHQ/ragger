@@ -17,9 +17,8 @@ from contextlib import contextmanager
 from typing import Optional, Iterable, Generator
 
 from ledgercomm import Transport
-from speculos.client import ApduException
 
-from ragger import logger, RAPDU, Firmware
+from ragger import logger, RAPDU, Firmware, ApplicationError
 from .interface import BackendInterface
 
 
@@ -31,7 +30,7 @@ def manage_error(function):
         if not self.raises or self.is_valid(rapdu.status):
             return rapdu
         # else should raise
-        raise ApduException(rapdu.status, rapdu.data)
+        self._raise(rapdu.status, rapdu.data)
 
     return decoration
 
@@ -45,11 +44,13 @@ class LedgerCommBackend(BackendInterface):
                  raises: bool = False,
                  interface: str = 'hid',
                  valid_statuses: Iterable[int] = (0x9000, ),
+                 errors: Iterable[ApplicationError] = (),
                  *args,
                  **kwargs):
         super().__init__(firmware,
                          raises=raises,
-                         valid_statuses=valid_statuses)
+                         valid_statuses=valid_statuses,
+                         errors=errors)
         self._host = host
         self._port = port
         self._client: Optional[Transport] = None
