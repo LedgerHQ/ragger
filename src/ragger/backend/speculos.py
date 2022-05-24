@@ -20,6 +20,7 @@ from typing import Optional, Iterable, Generator
 from speculos.client import SpeculosClient, ApduResponse, ApduException
 
 from ragger import logger
+from ragger.error import ApplicationError
 from ragger.utils import Firmware, RAPDU
 from .interface import BackendInterface
 
@@ -28,10 +29,10 @@ def manage_error(function):
 
     def decoration(self: 'SpeculosBackend', *args, **kwargs) -> RAPDU:
         try:
-            rapdu = function(self, *args, **kwargs)
+            rapdu: RAPDU = function(self, *args, **kwargs)
         except ApduException as error:
             if self.raises and not self.is_valid(error.sw):
-                raise error
+                self._raise(error.sw, error.data)
             rapdu = RAPDU(error.sw, error.data)
         logger.debug("Receiving '%s'", rapdu)
         return rapdu
@@ -50,10 +51,12 @@ class SpeculosBackend(BackendInterface):
                  port: int = 5000,
                  raises: bool = False,
                  valid_statuses: Iterable[int] = (0x9000, ),
+                 errors: Iterable[ApplicationError] = (),
                  **kwargs):
         super().__init__(firmware,
                          raises=raises,
-                         valid_statuses=valid_statuses)
+                         valid_statuses=valid_statuses,
+                         errors=errors)
         self._host = host
         self._port = port
         args = ["--model", firmware.device, "--sdk", firmware.version]
@@ -110,7 +113,7 @@ class SpeculosBackend(BackendInterface):
                 self._last_async_response = response.receive()
             except ApduException as error:
                 if self.raises and not self.is_valid(error.sw):
-                    raise error
+                    self._raise(error.sw, error.data)
                 self._last_async_response = RAPDU(error.sw, error.data)
 
     def right_click(self) -> None:

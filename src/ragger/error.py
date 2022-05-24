@@ -13,20 +13,15 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-__version__ = "0.2.0"
+from dataclasses import dataclass
+from typing import Optional
 
-import logging
 
-from ragger.error import ApplicationError
-from ragger.utils import RAPDU, Firmware
+@dataclass(frozen=True)
+class ApplicationError(Exception):
+    status: int
+    name: Optional[str] = None
+    data: bytes = bytes()
 
-logger = logging.getLogger(__package__)
-logger.setLevel(level=logging.DEBUG)
-
-handler = logging.StreamHandler()
-handler.setFormatter(
-    logging.Formatter('[%(asctime)s][%(levelname)s] %(name)s - %(message)s'))
-
-logger.addHandler(handler)
-
-__all__ = ["RAPDU", "Firmware", "logger", "ApplicationError"]
+    def __str__(self):
+        return f"Error [0x{self.status:x}]{[self.name] if self.name else ''} {self.data}"

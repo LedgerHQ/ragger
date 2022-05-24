@@ -17,9 +17,8 @@ from contextlib import contextmanager
 from typing import Generator
 
 from ledgerwallet.client import LedgerClient, CommException
-from speculos.client import ApduException
 
-from ragger import logger, RAPDU, Firmware
+from ragger import logger, RAPDU
 from .interface import BackendInterface
 
 
@@ -30,7 +29,7 @@ def manage_error(function):
             rapdu: RAPDU = function(self, *args, **kwargs)
         except CommException as error:
             if self.raises and not self.is_valid(error.sw):
-                raise ApduException(error.sw, error.data)
+                self._raise(error.sw, error.data)
             rapdu = RAPDU(error.sw, error.data)
         logger.debug("Receiving '%s'", rapdu)
         return rapdu
