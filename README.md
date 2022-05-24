@@ -1,6 +1,6 @@
 # Ragger
 
-[![codecov](https://codecov.io/gh/LedgerHQ/ragger/branch/master/graph/badge.svg)](https://codecov.io/gh/LedgerHQ/ragger)
+[![codecov](https://codecov.io/gh/LedgerHQ/ragger/branch/develop/graph/badge.svg)](https://codecov.io/gh/LedgerHQ/ragger)
 
 This library aims at reducing the cost of running code on both Speculos emulator
 or on a real device.
