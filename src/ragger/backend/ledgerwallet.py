@@ -17,6 +17,7 @@ from contextlib import contextmanager
 from typing import Generator
 
 from ledgerwallet.client import LedgerClient, CommException
+from ledgerwallet.transport import HidDevice
 
 from ragger import logger, RAPDU
 from .interface import BackendInterface
@@ -59,7 +60,11 @@ class LedgerWalletBackend(BackendInterface):
     @manage_error
     def receive(self) -> RAPDU:
         assert self._client is not None
-        raw_result = self._client.device.read()
+        # TODO: remove this checked with LedgerWallet 1.0.4
+        if isinstance(self._client.device, HidDevice):
+            raw_result = self._client.device.read(1000)
+        else:
+            raw_result = self._client.device.read()
         result = RAPDU(int.from_bytes(raw_result[-2:], "big"), raw_result[:-2]
                        or b"")
         logger.debug("Receiving '%s'", result)

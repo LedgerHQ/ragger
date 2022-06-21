@@ -85,7 +85,7 @@ class SpeculosBackend(BackendInterface):
         self._client.__exit__(*args, **kwargs)
 
     def send_raw(self, data: bytes = b"") -> None:
-        logger.debug("Sending '%s'", data)
+        logger.debug("Sending '%s'", data.hex())
         self._pending = ApduResponse(self._client._apdu_exchange_nowait(data))
 
     @manage_error
@@ -97,7 +97,7 @@ class SpeculosBackend(BackendInterface):
 
     @manage_error
     def exchange_raw(self, data: bytes = b"") -> RAPDU:
-        logger.debug("Sending '%s'", data)
+        logger.debug("Sending '%s'", data.hex())
         return RAPDU(0x9000, self._client._apdu_exchange(data))
 
     @contextmanager

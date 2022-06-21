@@ -1,4 +1,4 @@
-name: Build, test and deploy ragger
+name: Build, test and deploy Ragger
 
 on:
   push:
@@ -55,7 +55,7 @@ jobs:
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
       with:
-        name: codecov-speculos
+        name: codecov-ragger
 
   package_and_deploy:
     name: Build and deploy Ragger Python Package
@@ -66,8 +66,6 @@ jobs:
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
-    - name: Install Ragger
-      run: pip install --extra-index-url https://test.pypi.org/simple/ .
     - name: Build Ragger python package
       run: |
         pip install --upgrade pip build twine

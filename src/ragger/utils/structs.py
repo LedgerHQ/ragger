@@ -14,10 +14,8 @@
    limitations under the License.
 """
 from dataclasses import dataclass
-from struct import pack
-from typing import List
 
-SUPPORTED_DEVICES: List[str] = ["nanos", "nanox", "nanosp"]
+from . import SUPPORTED_DEVICES
 
 
 @dataclass(frozen=True)
@@ -38,11 +36,3 @@ class RAPDU:
 
     def __str__(self):
         return f'[0x{self.status:02x}] {self.data.hex() if self.data else "<Nothing>"}'
-
-
-def pack_APDU(cla: int,
-              ins: int,
-              p1: int = 0,
-              p2: int = 0,
-              data: bytes = b"") -> bytes:
-    return pack(">BBBBB", cla, ins, p1, p2, len(data)) + data
