@@ -100,17 +100,11 @@ class BackendInterface(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def __exit__(self, exc_type: Optional[Type[BaseException]],
-                 exc_val: Optional[BaseException],
+    def __exit__(self, exc_type: Optional[Type[BaseException]], exc_val: Optional[BaseException],
                  exc_tb: Optional[TracebackType]):
         raise NotImplementedError
 
-    def send(self,
-             cla: int,
-             ins: int,
-             p1: int = 0,
-             p2: int = 0,
-             data: bytes = b"") -> None:
+    def send(self, cla: int, ins: int, p1: int = 0, p2: int = 0, data: bytes = b"") -> None:
         """
         Formats then sends an APDU to the backend.
 
@@ -163,12 +157,7 @@ class BackendInterface(ABC):
         """
         raise NotImplementedError
 
-    def exchange(self,
-                 cla: int,
-                 ins: int,
-                 p1: int = 0,
-                 p2: int = 0,
-                 data: bytes = b"") -> RAPDU:
+    def exchange(self, cla: int, ins: int, p1: int = 0, p2: int = 0, data: bytes = b"") -> RAPDU:
         """
         Formats and sends an APDU to the backend, then receives its response.
 
@@ -254,8 +243,7 @@ class BackendInterface(ABC):
 
     @contextmanager
     @abstractmethod
-    def exchange_async_raw(self,
-                           data: bytes = b"") -> Generator[None, None, None]:
+    def exchange_async_raw(self, data: bytes = b"") -> Generator[None, None, None]:
         """
         Sends the given APDU to the backend, then gives the control back to the
         caller.

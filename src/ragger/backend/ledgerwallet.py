@@ -65,8 +65,7 @@ class LedgerWalletBackend(BackendInterface):
             raw_result = self._client.device.read(1000)
         else:
             raw_result = self._client.device.read()
-        result = RAPDU(int.from_bytes(raw_result[-2:], "big"), raw_result[:-2]
-                       or b"")
+        result = RAPDU(int.from_bytes(raw_result[-2:], "big"), raw_result[:-2] or b"")
         logger.debug("Receiving '%s'", result)
         return result
 
@@ -75,14 +74,12 @@ class LedgerWalletBackend(BackendInterface):
         logger.debug("Exchange: sending   > '%s'", data)
         assert self._client is not None
         raw_result = self._client.raw_exchange(data)
-        result = RAPDU(int.from_bytes(raw_result[-2:], "big"), raw_result[:-2]
-                       or b"")
+        result = RAPDU(int.from_bytes(raw_result[-2:], "big"), raw_result[:-2] or b"")
         logger.debug("Exchange: receiving < '%s'", result)
         return result
 
     @contextmanager
-    def exchange_async_raw(self,
-                           data: bytes = b"") -> Generator[None, None, None]:
+    def exchange_async_raw(self, data: bytes = b"") -> Generator[None, None, None]:
         self.send_raw(data)
         yield
         self._last_async_response = self.receive()

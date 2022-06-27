@@ -53,10 +53,7 @@ class SpeculosBackend(BackendInterface):
                  valid_statuses: Iterable[int] = (0x9000, ),
                  errors: Iterable[ApplicationError] = (),
                  **kwargs):
-        super().__init__(firmware,
-                         raises=raises,
-                         valid_statuses=valid_statuses,
-                         errors=errors)
+        super().__init__(firmware, raises=raises, valid_statuses=valid_statuses, errors=errors)
         self._host = host
         self._port = port
         args = ["--model", firmware.device, "--sdk", firmware.version]
@@ -101,8 +98,7 @@ class SpeculosBackend(BackendInterface):
         return RAPDU(0x9000, self._client._apdu_exchange(data))
 
     @contextmanager
-    def exchange_async_raw(self,
-                           data: bytes = b"") -> Generator[None, None, None]:
+    def exchange_async_raw(self, data: bytes = b"") -> Generator[None, None, None]:
         with self._client.apdu_exchange_nowait(cla=data[0],
                                                ins=data[1],
                                                p1=data[2],
