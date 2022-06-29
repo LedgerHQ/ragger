@@ -1,3 +1,18 @@
+"""
+   Copyright 2022 Ledger SAS
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+"""
 from typing import Optional, Sequence, Union
 
 import bip_utils as bu
@@ -15,9 +30,9 @@ class ExtendedBip32Path(bu.Bip32Path):
         if not elems:
             raise ValueError("A Bip32 path can't be empty")
         if isinstance(elems, bytes):
-            super().__init__(bu.Bip32Path(elems[i:i + 4] for i in range(0, len(elems), 4)))
+            super().__init__((elems[i:i + 4] for i in range(0, len(elems), 4)), is_absolute=True)
         else:
-            super().__init__(elems)
+            super().__init__(elems, is_absolute=True)
 
     @staticmethod
     def _to_int(b: bytes) -> int:
