@@ -15,9 +15,9 @@ class ExtendedBip32Path(bu.Bip32Path):
         if not elems:
             raise ValueError("A Bip32 path can't be empty")
         if isinstance(elems, bytes):
-            super().__init__(bu.Bip32Path(elems[i:i + 4] for i in range(0, len(elems), 4)))
+            super().__init__((elems[i:i + 4] for i in range(0, len(elems), 4)), is_absolute=True)
         else:
-            super().__init__(elems)
+            super().__init__(elems, is_absolute=True)
 
     @staticmethod
     def _to_int(b: bytes) -> int:
