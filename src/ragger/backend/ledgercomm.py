@@ -47,10 +47,7 @@ class LedgerCommBackend(BackendInterface):
                  errors: Iterable[ApplicationError] = (),
                  *args,
                  **kwargs):
-        super().__init__(firmware,
-                         raises=raises,
-                         valid_statuses=valid_statuses,
-                         errors=errors)
+        super().__init__(firmware, raises=raises, valid_statuses=valid_statuses, errors=errors)
         self._host = host
         self._port = port
         self._client: Optional[Transport] = None
@@ -90,8 +87,7 @@ class LedgerCommBackend(BackendInterface):
         return result
 
     @contextmanager
-    def exchange_async_raw(self,
-                           data: bytes = b"") -> Generator[None, None, None]:
+    def exchange_async_raw(self, data: bytes = b"") -> Generator[None, None, None]:
         self.send_raw(data)
         yield
         self._last_async_response = self.receive()

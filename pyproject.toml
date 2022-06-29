@@ -5,9 +5,15 @@ requires = [
     "ledgercomm[hid]",
     "ledgerwallet==0.1.3",
     "setuptools>=42",
+    "bip_utils>=2.4.0",
+    "py-sr25519-bindings==0.1.4",
     "wheel"
 ]
 build-backend = "setuptools.build_meta"
 
 [tool.mypy]
 ignore_missing_imports = true
+
+[tool.yapf]
+based_on_style = "pep8"
+column_limit = 100

@@ -18,7 +18,4 @@ from .speculos import SpeculosBackend
 from .ledgercomm import LedgerCommBackend
 from .ledgerwallet import LedgerWalletBackend
 
-__all__ = [
-    "SpeculosBackend", "LedgerCommBackend", "LedgerWalletBackend",
-    "BackendInterface"
-]
+__all__ = ["SpeculosBackend", "LedgerCommBackend", "LedgerWalletBackend", "BackendInterface"]
