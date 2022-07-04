@@ -42,9 +42,10 @@ class LedgerWalletBackend(BackendInterface):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self._client: Optional[LedgerClient] = None
 
     def __enter__(self) -> "LedgerWalletBackend":
-        logger.info(f")Starting {self.__class__.__name__} stream")
+        logger.info(f"Starting {self.__class__.__name__} stream")
         self._client = LedgerClient()
         return self
 
@@ -60,12 +61,16 @@ class LedgerWalletBackend(BackendInterface):
     @manage_error
     def receive(self) -> RAPDU:
         assert self._client is not None
-        # TODO: remove this checked with LedgerWallet 1.0.4
+        # TODO: remove this checked with LedgerWallet > 0.1.3
         if isinstance(self._client.device, HidDevice):
             raw_result = self._client.device.read(1000)
         else:
             raw_result = self._client.device.read()
-        result = RAPDU(int.from_bytes(raw_result[-2:], "big"), raw_result[:-2] or b"")
+        status, payload = int.from_bytes(raw_result[-2:], "big"), raw_result[:-2] or b""
+        if not self.is_valid(status):
+            # Implemeting behavior where invalid statuses raises
+            raise CommException(f"Invalid status 0x{status:x}", sw=status, data=payload)
+        result = RAPDU(status, payload)
         logger.debug("Receiving '%s'", result)
         return result
 

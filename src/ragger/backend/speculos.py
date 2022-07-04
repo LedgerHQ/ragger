@@ -106,7 +106,7 @@ class SpeculosBackend(BackendInterface):
                                                data=data[5:]) as response:
             yield
             try:
-                self._last_async_response = response.receive()
+                self._last_async_response = RAPDU(0x9000, response.receive())
             except ApduException as error:
                 if self.raises and not self.is_valid(error.sw):
                     self._raise(error.sw, error.data)
