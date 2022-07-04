@@ -25,7 +25,7 @@ jobs:
       uses: dawidd6/action-download-artifact@v2
       with:
         repo: LedgerHQ/app-boilerplate
-        name: boilerplate-app-nanoS
+        name: boilerplate-app-nanos
         workflow: ci-workflow.yml
         path: tests/elfs/
     - name: Renaming NanoS artifact
@@ -34,7 +34,7 @@ jobs:
       uses: dawidd6/action-download-artifact@v2
       with:
         repo: LedgerHQ/app-boilerplate
-        name: boilerplate-app-nanoX
+        name: boilerplate-app-nanox
         workflow: ci-workflow.yml
         path: tests/elfs/
     - name: Renaming NanoS artifact
@@ -43,7 +43,7 @@ jobs:
       uses: dawidd6/action-download-artifact@v2
       with:
         repo: LedgerHQ/app-boilerplate
-        name: boilerplate-app-nanoSP
+        name: boilerplate-app-nanosp
         workflow: ci-workflow.yml
         path: tests/elfs/
     - name: Renaming NanoS artifact
