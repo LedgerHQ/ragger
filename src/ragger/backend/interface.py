@@ -174,9 +174,9 @@ class BackendInterface(ABC):
         :param data: Command data
         :type data: bytes
 
-        :raises ApduException: If the `raises` attribute is True, this method
-                               will raise if the backend returns a status code
-                               different from 0x9000
+        :raises ApplicationError: If the `raises` attribute is True, this method
+                                  will raise if the backend returns a status code
+                                  different from 0x9000
 
         :return: The APDU response
         :rtype: RAPDU
@@ -194,9 +194,9 @@ class BackendInterface(ABC):
         :param data: The APDU message
         :type data: bytes
 
-        :raises ApduException: If the `raises` attribute is True, this method
-                               will raise if the backend returns a status code
-                               not registered a a `valid_statuses`
+        :raises ApplicationError: If the `raises` attribute is True, this method
+                                  will raise if the backend returns a status code
+                                  not registered a a `valid_statuses`
 
         :return: The APDU response
         :rtype: RAPDU
@@ -231,9 +231,9 @@ class BackendInterface(ABC):
         :param data: Command data
         :type data: bytes
 
-        :raises ApduException: If the `raises` attribute is True, this method
-                               will raise if the backend returns a status code
-                               not registered a a `valid_statuses`
+        :raises ApplicationError: If the `raises` attribute is True, this method
+                                  will raise if the backend returns a status code
+                                  not registered a a `valid_statuses`
 
         :return: None
         :rtype: NoneType
@@ -254,9 +254,9 @@ class BackendInterface(ABC):
         :param data: The APDU message
         :type data: bytes
 
-        :raises ApduException: If the `raises` attribute is True, this method
-                               will raise if the backend returns a status code
-                               not registered a a `valid_statuses`
+        :raises ApplicationError: If the `raises` attribute is True, this method
+                                  will raise if the backend returns a status code
+                                  not registered a a `valid_statuses`
 
         :return: None
         :rtype: NoneType
