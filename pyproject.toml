@@ -20,3 +20,7 @@ column_limit = 100
 
 [tool.coverage.report]
 show_missing = true
+exclude_lines = [
+    "@abstractmethod",
+    "pragma: no cover"
+]
