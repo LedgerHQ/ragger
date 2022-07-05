@@ -66,6 +66,11 @@ jobs:
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
+    - name: Get Ragger version
+      id: version
+      run: |
+        echo "##[set-output name=version;]$(cat src/ragger/__init__.py  | grep __version__ | cut -d ' ' -f 3 | sed s/\"//g)";
+        echo "Version registered: ${{ steps.version.outputs.version }}"
     - name: Build Ragger python package
       run: |
         pip install --upgrade pip build twine
@@ -80,3 +85,13 @@ jobs:
         TWINE_USERNAME: __token__
         TWINE_PASSWORD: ${{ secrets.TEST_PYPI_PUBLIC_API_TOKEN  }}
         TWINE_NON_INTERACTIVE: 1
+    - name: Publish a release on the repo
+      if: success() && github.event_name == 'push' && github.ref == 'refs/heads/develop' && contains(github.event.head_commit.message, 'release')
+      uses: "marvinpinto/action-automatic-releases@latest"
+      with:
+        automatic_release_tag: "v${{ steps.version.outputs.version }}"
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        prerelease: true
+        files: |
+          LICENSE
+          dist/
