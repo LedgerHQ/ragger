@@ -75,15 +75,16 @@ class BackendInterface(ABC):
         """
         return self._raises
 
-    def _raise(self, status: int, data: bytes) -> NoReturn:
+    def _error(self, status: int, data: bytes) -> ApplicationError:
         """
-        Raises an ApplicationError exception, forged from given argument and
+        Return an ApplicationError exception, forged from given argument and
         expected errors, declared while initializing the backend.
 
-        :raises ApplicationError: An error forged with given arguments and
-                                  expected application errors.
+        :return: An error forged with given arguments and expected application
+                 errors.
+        :rtype: ApplicationError
         """
-        raise ApplicationError(status, self._errors.get(status), data)
+        return ApplicationError(status, self._errors.get(status), data)
 
     def is_valid(self, status: int) -> bool:
         """

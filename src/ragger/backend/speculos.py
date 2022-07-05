@@ -32,7 +32,7 @@ def manage_error(function):
             rapdu: RAPDU = function(self, *args, **kwargs)
         except ApduException as error:
             if self.raises and not self.is_valid(error.sw):
-                self._raise(error.sw, error.data)
+                raise self._error(error.sw, error.data)
             rapdu = RAPDU(error.sw, error.data)
         logger.debug("Receiving '%s'", rapdu)
         return rapdu
@@ -109,7 +109,7 @@ class SpeculosBackend(BackendInterface):
                 self._last_async_response = RAPDU(0x9000, response.receive())
             except ApduException as error:
                 if self.raises and not self.is_valid(error.sw):
-                    self._raise(error.sw, error.data)
+                    raise self._error(error.sw, error.data)
                 self._last_async_response = RAPDU(error.sw, error.data)
 
     def right_click(self) -> None:

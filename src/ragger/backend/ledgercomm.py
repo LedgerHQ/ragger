@@ -30,7 +30,7 @@ def manage_error(function):
         if not self.raises or self.is_valid(rapdu.status):
             return rapdu
         # else should raise
-        self._raise(rapdu.status, rapdu.data)
+        raise self._error(rapdu.status, rapdu.data)
 
     return decoration
 
