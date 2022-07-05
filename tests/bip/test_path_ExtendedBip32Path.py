@@ -6,6 +6,18 @@ from ragger.bip.utils import BIP
 
 class TestExtendedBip32Path(TestCase):
 
+    def test___init__(self):
+        b1, b2, b3, b4, b5 = bytes.fromhex("8000002c"), bytes.fromhex("8000003c"), \
+            bytes.fromhex("800000f1"), bytes.fromhex("800000f2"), bytes.fromhex("800000f3")
+        path1 = ExtendedBip32Path(b1 + b2 + b3 + b4 + b5)
+        path2 = ExtendedBip32Path([int.from_bytes(b, "big") for b in [b1, b2, b3, b4, b5]])
+        self.assertEqual(path1.purpose, path2.purpose)
+        self.assertEqual(path1.coin_type, path2.coin_type)
+        self.assertEqual(path1.account, path2.account)
+        self.assertEqual(path1.change, path2.change)
+        self.assertEqual(path1.address_index, path2.address_index)
+
+
     def test_error_empty(self):
         with self.assertRaises(ValueError):
             ExtendedBip32Path()
@@ -13,7 +25,6 @@ class TestExtendedBip32Path(TestCase):
             ExtendedBip32Path(b'')
 
     def test_one_level_path(self):
-
         for purpose in BIP:
             for hardening in ["00", "80"]:
                 path = ExtendedBip32Path(bytes.fromhex(f"{hardening}0000{purpose:x}"))

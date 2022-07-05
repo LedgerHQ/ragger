@@ -28,6 +28,21 @@ class TestSeed(TestCase):
         for path, key in path_to_key:
             self.assertEqual(self.seed.get_pubkey(bytes.fromhex(path)), bytes.fromhex(key))
 
+    def test_get_pubkey_error_path_too_short(self):
+        with self.assertRaises(ValueError) as error:
+            self.seed.get_pubkey(bytes.fromhex("8000002c"))
+        self.assertIn("too short", str(error.exception))
+
+    def test_get_pubkey_error_unknwon_purpose(self):
+        with self.assertRaises(ValueError) as error:
+            self.seed.get_pubkey(bytes.fromhex("800000ff 80000000"))
+        self.assertIn("Purpose", str(error.exception))
+
+    def test_get_pubkey_error_unknwon_change(self):
+        with self.assertRaises(ValueError) as error:
+            self.seed.get_pubkey(bytes.fromhex("8000002c 80000000 80000000 000000ff"))
+        self.assertIn("Change", str(error.exception))
+
     def test_get_address_bitcoin(self):
         # BTC: 44'/0'/0'/0/0
         path = bytes.fromhex("8000002c 80000000 80000000 00000000 00000000")
@@ -69,3 +84,9 @@ class TestSeed(TestCase):
         path = bytes.fromhex("8000002c 8000003c 80000000 00000000 00000000")
         expected = "0xDad77910DbDFdE764fC21FCD4E74D71bBACA6D8D"
         self.assertEqual(self.seed.get_address(path), expected)
+
+    def test_get_address_unknown_encoder_fallback_default(self):
+        # LTC: 44'/2'/0'/0/0
+        path = bytes.fromhex("8000002c 80000002 80000000 00000000 00000000")
+        encoder = "not existing"
+        self.assertEqual(self.seed.get_address(path, encoding=encoder), self.seed.get_address(path))

@@ -94,7 +94,7 @@ class TestLedgerCommbackend(TestCase):
             self.hid = mock
             self.hid().exchange.return_value = (failure, payload)
             with backend:
-                with self.assertRaises(ApplicationError) as error:
+                with self.assertRaises(ApplicationError):
                     backend.exchange_raw(b"")
 
     def test_exchange_async_raw(self):

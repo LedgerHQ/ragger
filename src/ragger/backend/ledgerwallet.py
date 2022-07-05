@@ -14,7 +14,7 @@
    limitations under the License.
 """
 from contextlib import contextmanager
-from typing import Generator
+from typing import Generator, Optional
 
 from ledgerwallet.client import LedgerClient, CommException
 from ledgerwallet.transport import HidDevice
@@ -68,7 +68,7 @@ class LedgerWalletBackend(BackendInterface):
             raw_result = self._client.device.read()
         status, payload = int.from_bytes(raw_result[-2:], "big"), raw_result[:-2] or b""
         if not self.is_valid(status):
-            # Implemeting behavior where invalid statuses raises
+            # Implemeting behavior where invalid statuses raise
             raise CommException(f"Invalid status 0x{status:x}", sw=status, data=payload)
         result = RAPDU(status, payload)
         logger.debug("Receiving '%s'", result)

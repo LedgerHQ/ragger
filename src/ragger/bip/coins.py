@@ -38,7 +38,7 @@ class Coin:
         try:
             return COINS[coin_type]
         except KeyError:
-            raise ValueError(f"Coin type '{coin_type}' is not supported")
+            raise ValueError(f"Coin type '{coin_type}' is currently unknown")
 
 
 Bitcoin = Coin(
