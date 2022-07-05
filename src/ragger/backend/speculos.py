@@ -34,6 +34,10 @@ def manage_error(function):
             if self.raises and not self.is_valid(error.sw):
                 raise self._error(error.sw, error.data)
             rapdu = RAPDU(error.sw, error.data)
+        else:
+            # Catch !is_valid values that the backend may not have raised
+            if self.raises and not self.is_valid(rapdu.status):
+                raise self._error(rapdu.status, rapdu.data)
         logger.debug("Receiving '%s'", rapdu)
         return rapdu
 
@@ -50,10 +54,8 @@ class SpeculosBackend(BackendInterface):
                  host: str = "127.0.0.1",
                  port: int = 5000,
                  raises: bool = False,
-                 valid_statuses: Iterable[int] = (0x9000, ),
-                 errors: Iterable[ApplicationError] = (),
                  **kwargs):
-        super().__init__(firmware, raises=raises, valid_statuses=valid_statuses, errors=errors)
+        super().__init__(firmware, raises=raises)
         self._host = host
         self._port = port
         args = ["--model", firmware.device, "--sdk", firmware.version]
@@ -89,7 +91,6 @@ class SpeculosBackend(BackendInterface):
     def receive(self) -> RAPDU:
         assert self._pending is not None
         result = RAPDU(0x9000, self._pending.receive())
-        logger.debug("Receiving '%s'", result)
         return result
 
     @manage_error
@@ -111,6 +112,11 @@ class SpeculosBackend(BackendInterface):
                 if self.raises and not self.is_valid(error.sw):
                     raise self._error(error.sw, error.data)
                 self._last_async_response = RAPDU(error.sw, error.data)
+            else:
+                # Catch !is_valid values that the backend may not have raised
+                if self.raises and not self.is_valid(self._last_async_response.status):
+                    raise self._error(self._last_async_response.status,
+                                      self._last_async_response.data)
 
     def right_click(self) -> None:
         self._client.press_and_release("right")
