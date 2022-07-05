@@ -24,9 +24,9 @@ class DummyBackend(BackendInterface):
 class TestBackendInterface(TestCase):
 
     def setUp(self):
-        self.firmware = Firmware('nanos', '2.0.1')
-        self.errors = (ApplicationError(0x8888, 'ERROR1'),
-                       ApplicationError(0x7777, 'ERROR2'))
+        self.firmware = Firmware("nanos", "2.0.1")
+        self.errors = (ApplicationError(0x8888, "ERROR1"),
+                       ApplicationError(0x7777, "ERROR2"))
         self.valid_statuses = (0x9000, 0x9001, 0x9002)
         self.backend = DummyBackend(self.firmware,
                                     valid_statuses=self.valid_statuses,
@@ -45,22 +45,11 @@ class TestBackendInterface(TestCase):
         for status in self.valid_statuses[1:]:
             self.assertFalse(backend.is_valid(status))
 
-    def test__raise_unmanaged_error(self):
-        error = ApplicationError(0x9999, data='error not managed')
-        with self.assertRaises(ApplicationError) as thrown_error:
-            self.backend._raise(error.status, error.data)
-        self.assertEqual(error, thrown_error.exception)
-
-    def test__raise_managed_error(self):
-        indice = 0
-        data = 'this error is managed'
-        error = ApplicationError(self.errors[indice].status, data=data)
-        expected = ApplicationError(self.errors[indice].status,
-                                    self.errors[indice].name,
-                                    data)
-        with self.assertRaises(ApplicationError) as thrown_error:
-            self.backend._raise(error.status, error.data)
-        self.assertEqual(expected, thrown_error.exception)
+    def test__error(self):
+        expected = ApplicationError(0x9999, data="error not manage")
+        error = self.backend._error(expected.status, expected.data)
+        self.assertIsInstance(error, ApplicationError)
+        self.assertEqual(error, expected)
 
     def test_send(self):
         cla, ins, p1, p2 = 1, 2, 3, 4

@@ -30,7 +30,7 @@ def manage_error(function):
             rapdu: RAPDU = function(self, *args, **kwargs)
         except CommException as error:
             if self.raises and not self.is_valid(error.sw):
-                self._raise(error.sw, error.data)
+                raise self._error(error.sw, error.data)
             rapdu = RAPDU(error.sw, error.data)
         logger.debug("Receiving '%s'", rapdu)
         return rapdu
