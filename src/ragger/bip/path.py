@@ -40,7 +40,11 @@ class ExtendedBip32Path(bu.Bip32Path):
 
     @property
     def purpose(self) -> BIP:
-        return BIP(self._to_int(self[0]) & I32_LAST_BIT_MASK)
+        bip_number: int = self._to_int(self[0]) & I32_LAST_BIT_MASK
+        try:
+            return BIP(bip_number)
+        except ValueError:
+            raise ValueError(f"Purpose (BIP number) '{bip_number}' is currently unknown")
 
     @property
     def coin_type(self) -> int:

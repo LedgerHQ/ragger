@@ -38,7 +38,7 @@ class Seed:
         try:
             return BIP44_CHANGE[b]
         except KeyError:
-            raise ValueError
+            raise ValueError(f"Change '{b}' is currently unknown.")
 
     @staticmethod
     def from_mnemonic(mnemonic: str) -> "Seed":
@@ -50,13 +50,9 @@ class Seed:
         key = None
         coin = None
         if path.Length() < 2:
-            return b""
+            raise ValueError("Path is too short (needs at least 3 elements).")
         coin = Coin.from_type(path.coin_type)
-        try:
-            bip = coin.bips[path.purpose]
-        except KeyError:
-            error = f"Purpose '{path.purpose}' is currently unknown"
-            raise ValueError(error)
+        bip = coin.bips[path.purpose]
         key = bip.key_cls.FromSeed(self.seed, bip.coin).Purpose().Coin()
         if path.Length() >= 3:
             key = key.Account(path.account)
@@ -83,8 +79,8 @@ class Seed:
                     encoding_func = coin.encodings[encoding]
                 else:
                     encoding_func = coin.encodings
-            except IndexError:
-                msg = f"No encoder found for coin {coin} with derivation path {path}. "
+            except KeyError:
+                msg = f"No encoder named '{encoding}' found for coin {coin}. "
                 msg += "Falling back to default (neutral encoder)"
                 logger.warning(msg)
         return encoding_func(pubkey, *args, **kwargs)
