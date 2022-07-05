@@ -1,7 +1,5 @@
 from unittest import TestCase
 
-from bip_utils import Bip32Path
-
 from ragger.bip.path import ExtendedBip32Path
 from ragger.bip.utils import BIP
 

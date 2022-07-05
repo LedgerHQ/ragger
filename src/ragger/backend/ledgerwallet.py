@@ -14,7 +14,7 @@
    limitations under the License.
 """
 from contextlib import contextmanager
-from typing import Generator
+from typing import Generator, Optional
 
 from ledgerwallet.client import LedgerClient, CommException
 from ledgerwallet.transport import HidDevice

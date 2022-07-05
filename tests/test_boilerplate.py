@@ -3,7 +3,6 @@ from requests.exceptions import ConnectionError
 import pytest
 
 from ragger import ApplicationError, RAPDU
-from ragger.backend import SpeculosBackend
 
 
 def test_error_returns_not_raises(client_no_raise):
