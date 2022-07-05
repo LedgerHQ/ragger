@@ -43,11 +43,9 @@ class LedgerCommBackend(BackendInterface):
                  port: int = 9999,
                  raises: bool = False,
                  interface: str = 'hid',
-                 valid_statuses: Iterable[int] = (0x9000, ),
-                 errors: Iterable[ApplicationError] = (),
                  *args,
                  **kwargs):
-        super().__init__(firmware, raises=raises, valid_statuses=valid_statuses, errors=errors)
+        super().__init__(firmware, raises=raises)
         self._host = host
         self._port = port
         self._client: Optional[Transport] = None

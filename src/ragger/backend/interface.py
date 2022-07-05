@@ -24,11 +24,7 @@ from ragger.error import ApplicationError
 
 class BackendInterface(ABC):
 
-    def __init__(self,
-                 firmware: Firmware,
-                 raises: bool = False,
-                 valid_statuses: Iterable[int] = (0x9000, ),
-                 errors: Iterable[ApplicationError] = ()):
+    def __init__(self, firmware: Firmware, raises: bool = False):
         """Initializes the Backend
 
         :param firmware: Which Firmware will be managed
@@ -36,17 +32,10 @@ class BackendInterface(ABC):
         :param raises: Weither the instance should raises on non-valid response
                        statuses, or not.
         :type raises: bool
-        :param valid_statuses: a list of RAPDU statuses considered successfull
-                               (default: [0x9000])
-        :type valid_statuses: an iterable of int
-        :param errors: A list of errors expected by the application
-        :type errors: an iterable of ApplicationError
         """
         self._firmware = firmware
         self._raises = raises
-        self._valid_statuses = valid_statuses
         self._last_async_response: Optional[RAPDU] = None
-        self._errors = {error.status: error.name for error in errors}
 
     @property
     def firmware(self) -> Firmware:
@@ -158,7 +147,16 @@ class BackendInterface(ABC):
         """
         raise NotImplementedError
 
-    def exchange(self, cla: int, ins: int, p1: int = 0, p2: int = 0, data: bytes = b"") -> RAPDU:
+    def exchange(
+        self,
+        cla: int,
+        ins: int,
+        p1: int = 0,
+        p2: int = 0,
+        data: bytes = b"",
+        valid_statuses: Iterable[int] = (0x9000, ),
+        errors: Iterable[ApplicationError] = ()
+    ) -> RAPDU:
         """
         Formats and sends an APDU to the backend, then receives its response.
 
@@ -174,6 +172,11 @@ class BackendInterface(ABC):
         :type p1: int
         :param data: Command data
         :type data: bytes
+        :param valid_statuses: a list of RAPDU statuses considered successfull
+                               (default: [0x9000])
+        :type valid_statuses: an iterable of int
+        :param errors: A list of errors expected by the application
+        :type errors: an iterable of ApplicationError
 
         :raises ApplicationError: If the `raises` attribute is True, this method
                                   will raise if the backend returns a status code
@@ -182,6 +185,9 @@ class BackendInterface(ABC):
         :return: The APDU response
         :rtype: RAPDU
         """
+        self._valid_statuses = valid_statuses
+        self._errors = {error.status: error.name for error in errors}
+
         return self.exchange_raw(pack_APDU(cla, ins, p1, p2, data))
 
     @abstractmethod
