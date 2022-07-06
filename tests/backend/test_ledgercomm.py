@@ -1,7 +1,7 @@
 from unittest import TestCase
 from unittest.mock import patch
 
-from ragger import Firmware, RAPDU, ApplicationError
+from ragger import Firmware, RAPDU, ExceptionRAPDU
 from ragger.backend import LedgerCommBackend
 
 
@@ -72,7 +72,7 @@ class TestLedgerCommbackend(TestCase):
             self.hid = mock
             self.hid().recv.return_value = (failure, payload)
             with backend:
-                with self.assertRaises(ApplicationError) as error:
+                with self.assertRaises(ExceptionRAPDU) as error:
                     backend.receive()
         self.assertEqual(error.exception.status, failure)
 
@@ -94,7 +94,7 @@ class TestLedgerCommbackend(TestCase):
             self.hid = mock
             self.hid().exchange.return_value = (failure, payload)
             with backend:
-                with self.assertRaises(ApplicationError):
+                with self.assertRaises(ExceptionRAPDU):
                     backend.exchange_raw(b"")
 
     def test_exchange_async_raw(self):

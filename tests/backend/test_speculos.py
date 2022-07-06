@@ -2,7 +2,7 @@ from unittest import TestCase
 from unittest.mock import patch
 from typing import Optional
 
-from ragger import Firmware, RAPDU, ApplicationError
+from ragger import Firmware, RAPDU, ExceptionRAPDU
 from ragger.backend import SpeculosBackend
 
 from tests.stubs import SpeculosServerStub, EndPoint, APDUStatus
@@ -68,7 +68,7 @@ class TestbackendSpeculos(TestCase):
         with patch("speculos.client.subprocess"):
             with SpeculosServerStub():
                 with backend:
-                    with self.assertRaises(ApplicationError) as error:
+                    with self.assertRaises(ExceptionRAPDU) as error:
                         backend.exchange_raw(bytes.fromhex("01000000"))
                     self.assertEqual(error.exception.status, APDUStatus.ERROR)
 
@@ -117,7 +117,7 @@ class TestbackendSpeculos(TestCase):
         with patch("speculos.client.subprocess"):
             with SpeculosServerStub():
                 with backend:
-                    with self.assertRaises(ApplicationError) as error:
+                    with self.assertRaises(ExceptionRAPDU) as error:
                         with backend.exchange_async_raw(bytes.fromhex("01000000")):
                             pass
                     self.assertEqual(error.exception.status, APDUStatus.ERROR)

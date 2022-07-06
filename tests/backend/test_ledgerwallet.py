@@ -2,7 +2,7 @@ from typing import Optional
 from unittest import TestCase
 from unittest.mock import patch, MagicMock
 
-from ragger import Firmware, RAPDU, ApplicationError
+from ragger import Firmware, RAPDU, ExceptionRAPDU
 from ragger.backend import LedgerWalletBackend
 
 
@@ -57,7 +57,7 @@ class TestLedgerWalletBackend(TestCase):
         with patch("ledgerwallet.client.enumerate_devices") as devices:
             devices.return_value = [self.device]
             with backend:
-                with self.assertRaises(ApplicationError) as error:
+                with self.assertRaises(ExceptionRAPDU) as error:
                     backend.receive()
         self.assertEqual(error.exception.status, status)
 

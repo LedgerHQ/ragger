@@ -17,7 +17,7 @@ __version__ = "0.4.2"
 
 import logging
 
-from ragger.error import ApplicationError
+from ragger.error import ExceptionRAPDU
 from ragger.utils import RAPDU, Firmware
 
 logger = logging.getLogger(__package__)
@@ -28,4 +28,4 @@ handler.setFormatter(logging.Formatter('[%(asctime)s][%(levelname)s] %(name)s - 
 
 logger.addHandler(handler)
 
-__all__ = ["RAPDU", "Firmware", "logger", "ApplicationError"]
+__all__ = ["RAPDU", "Firmware", "logger", "ExceptionRAPDU"]

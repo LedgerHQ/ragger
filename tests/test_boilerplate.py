@@ -2,7 +2,7 @@ from requests.exceptions import ConnectionError
 
 import pytest
 
-from ragger import ApplicationError, RAPDU
+from ragger import ExceptionRAPDU, RAPDU
 
 
 def test_error_returns_not_raises(client_no_raise):
@@ -15,7 +15,7 @@ def test_error_returns_not_raises(client_no_raise):
 def test_error_raises_not_returns(client):
     try:
         client.exchange(0x01, 0x00)
-    except ApplicationError as e:
+    except ExceptionRAPDU as e:
         assert e.status == 0x6e00
         assert not e.data
 

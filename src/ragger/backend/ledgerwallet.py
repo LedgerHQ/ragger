@@ -20,20 +20,25 @@ from ledgerwallet.client import LedgerClient, CommException
 from ledgerwallet.transport import HidDevice
 
 from ragger import logger, RAPDU
+from ragger.error import ExceptionRAPDU
 from .interface import BackendInterface
 
 
-def manage_error(function):
+def raise_policy_enforcer(function):
 
-    def decoration(self: "LedgerWalletBackend", *args, **kwargs) -> RAPDU:
+    def decoration(self: 'LedgerWalletBackend', *args, **kwargs) -> RAPDU:
+        # Catch backend raise
         try:
             rapdu: RAPDU = function(self, *args, **kwargs)
         except CommException as error:
-            if self.raises and not self.is_valid(error.sw):
-                raise self._error(error.sw, error.data)
             rapdu = RAPDU(error.sw, error.data)
+
         logger.debug("Receiving '%s'", rapdu)
-        return rapdu
+
+        if self.is_raise_required(rapdu):
+            raise ExceptionRAPDU(rapdu.status, rapdu.data)
+        else:
+            return rapdu
 
     return decoration
 
@@ -58,7 +63,7 @@ class LedgerWalletBackend(BackendInterface):
         assert self._client is not None
         self._client.device.write(data)
 
-    @manage_error
+    @raise_policy_enforcer
     def receive(self) -> RAPDU:
         assert self._client is not None
         # TODO: remove this checked with LedgerWallet > 0.1.3
@@ -67,14 +72,11 @@ class LedgerWalletBackend(BackendInterface):
         else:
             raw_result = self._client.device.read()
         status, payload = int.from_bytes(raw_result[-2:], "big"), raw_result[:-2] or b""
-        if not self.is_valid(status):
-            # Implemeting behavior where invalid statuses raise
-            raise CommException(f"Invalid status 0x{status:x}", sw=status, data=payload)
         result = RAPDU(status, payload)
         logger.debug("Receiving '%s'", result)
         return result
 
-    @manage_error
+    @raise_policy_enforcer
     def exchange_raw(self, data: bytes = b"") -> RAPDU:
         logger.debug("Exchange: sending   > '%s'", data)
         assert self._client is not None
