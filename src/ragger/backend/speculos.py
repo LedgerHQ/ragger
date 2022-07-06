@@ -20,26 +20,26 @@ from typing import Optional, Iterable, Generator
 from speculos.client import SpeculosClient, ApduResponse, ApduException
 
 from ragger import logger
-from ragger.error import ApplicationError
+from ragger.error import ExceptionRAPDU
 from ragger.utils import Firmware, RAPDU
 from .interface import BackendInterface
 
 
-def manage_error(function):
+def raise_policy_enforcer(function):
 
     def decoration(self: 'SpeculosBackend', *args, **kwargs) -> RAPDU:
+        # Catch backend raise
         try:
             rapdu: RAPDU = function(self, *args, **kwargs)
         except ApduException as error:
-            if self.raises and not self.is_valid(error.sw):
-                raise self._error(error.sw, error.data)
             rapdu = RAPDU(error.sw, error.data)
-        else:
-            # Catch !is_valid values that the backend may not have raised
-            if self.raises and not self.is_valid(rapdu.status):
-                raise self._error(rapdu.status, rapdu.data)
+
         logger.debug("Receiving '%s'", rapdu)
-        return rapdu
+
+        if self.is_raise_required(rapdu):
+            raise ExceptionRAPDU(rapdu.status, rapdu.data)
+        else:
+            return rapdu
 
     return decoration
 
@@ -53,9 +53,8 @@ class SpeculosBackend(BackendInterface):
                  firmware: Firmware,
                  host: str = "127.0.0.1",
                  port: int = 5000,
-                 raises: bool = False,
                  **kwargs):
-        super().__init__(firmware, raises=raises)
+        super().__init__(firmware)
         self._host = host
         self._port = port
         args = ["--model", firmware.device, "--sdk", firmware.version]
@@ -87,16 +86,20 @@ class SpeculosBackend(BackendInterface):
         logger.debug("Sending '%s'", data.hex())
         self._pending = ApduResponse(self._client._apdu_exchange_nowait(data))
 
-    @manage_error
+    @raise_policy_enforcer
     def receive(self) -> RAPDU:
         assert self._pending is not None
         result = RAPDU(0x9000, self._pending.receive())
         return result
 
-    @manage_error
+    @raise_policy_enforcer
     def exchange_raw(self, data: bytes = b"") -> RAPDU:
         logger.debug("Sending '%s'", data.hex())
         return RAPDU(0x9000, self._client._apdu_exchange(data))
+
+    @raise_policy_enforcer
+    def get_last_async_response(self, response) -> RAPDU:
+        return RAPDU(0x9000, response.receive())
 
     @contextmanager
     def exchange_async_raw(self, data: bytes = b"") -> Generator[None, None, None]:
@@ -106,17 +109,7 @@ class SpeculosBackend(BackendInterface):
                                                p2=data[3],
                                                data=data[5:]) as response:
             yield
-            try:
-                self._last_async_response = RAPDU(0x9000, response.receive())
-            except ApduException as error:
-                if self.raises and not self.is_valid(error.sw):
-                    raise self._error(error.sw, error.data)
-                self._last_async_response = RAPDU(error.sw, error.data)
-            else:
-                # Catch !is_valid values that the backend may not have raised
-                if self.raises and not self.is_valid(self._last_async_response.status):
-                    raise self._error(self._last_async_response.status,
-                                      self._last_async_response.data)
+            self._last_async_response = self.get_last_async_response(response)
 
     def right_click(self) -> None:
         self._client.press_and_release("right")

@@ -18,19 +18,22 @@ from typing import Optional, Iterable, Generator
 
 from ledgercomm import Transport
 
-from ragger import logger, RAPDU, Firmware, ApplicationError
+from ragger import logger, RAPDU, Firmware
+from ragger.error import ExceptionRAPDU
 from .interface import BackendInterface
 
 
-def manage_error(function):
+def raise_policy_enforcer(function):
 
     def decoration(self: 'LedgerCommBackend', *args, **kwargs) -> RAPDU:
         rapdu: RAPDU = function(self, *args, **kwargs)
+
         logger.debug("Receiving '%s'", rapdu)
-        if not self.raises or self.is_valid(rapdu.status):
+
+        if self.is_raise_required(rapdu):
+            raise ExceptionRAPDU(rapdu.status, rapdu.data)
+        else:
             return rapdu
-        # else should raise
-        raise self._error(rapdu.status, rapdu.data)
 
     return decoration
 
@@ -41,11 +44,10 @@ class LedgerCommBackend(BackendInterface):
                  firmware: Firmware,
                  host: str = "127.0.0.1",
                  port: int = 9999,
-                 raises: bool = False,
                  interface: str = 'hid',
                  *args,
                  **kwargs):
-        super().__init__(firmware, raises=raises)
+        super().__init__(firmware)
         self._host = host
         self._port = port
         self._client: Optional[Transport] = None
@@ -69,14 +71,14 @@ class LedgerCommBackend(BackendInterface):
         assert self._client is not None
         self._client.send_raw(data)
 
-    @manage_error
+    @raise_policy_enforcer
     def receive(self) -> RAPDU:
         assert self._client is not None
         result = RAPDU(*self._client.recv())
         logger.debug("Receiving '%s'", result)
         return result
 
-    @manage_error
+    @raise_policy_enforcer
     def exchange_raw(self, data: bytes = b"") -> RAPDU:
         logger.debug("Exchange: sending   > '%s'", data)
         assert self._client is not None
