@@ -56,12 +56,6 @@ def client(backend, application):
         yield b
 
 
-@pytest.fixture
-def client_no_raise(backend, application):
-    with create_backend(backend, application, raises=False) as b:
-        yield b
-
-
 @pytest.fixture(autouse=True)
 def use_only_on_backend(request, backend):
     if request.node.get_closest_marker('use_on_backend'):
