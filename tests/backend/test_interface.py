@@ -2,8 +2,9 @@ import struct
 from unittest import TestCase
 from unittest.mock import MagicMock
 
-from ragger import Firmware, ApplicationError
+from ragger import Firmware, ExceptionRAPDU
 from ragger.backend import BackendInterface
+from ragger.backend.interface import RaisePolicy
 
 
 class DummyBackend(BackendInterface):
@@ -25,31 +26,20 @@ class TestBackendInterface(TestCase):
 
     def setUp(self):
         self.firmware = Firmware("nanos", "2.0.1")
-        self.errors = (ApplicationError(0x8888, "ERROR1"),
-                       ApplicationError(0x7777, "ERROR2"))
+        self.errors = (ExceptionRAPDU(0x8888, "ERROR1"),
+                       ExceptionRAPDU(0x7777, "ERROR2"))
         self.valid_statuses = (0x9000, 0x9001, 0x9002)
-        self.backend = DummyBackend(self.firmware,
-                                    valid_statuses=self.valid_statuses,
-                                    errors=self.errors)
+        self.backend = DummyBackend(self.firmware)
 
     def test_init(self):
         self.assertEqual(self.backend.firmware, self.firmware)
         self.assertIsNone(self.backend.last_async_response)
-        self.assertFalse(self.backend.raises)
-        for status in self.valid_statuses:
-            self.assertTrue(self.backend.is_valid(status))
 
-        backend = DummyBackend(self.firmware, raises=True)
-        self.assertTrue(backend.raises)
-        self.assertTrue(backend.is_valid(0x9000))
-        for status in self.valid_statuses[1:]:
-            self.assertFalse(backend.is_valid(status))
-
-    def test__error(self):
-        expected = ApplicationError(0x9999, data="error not manage")
-        error = self.backend._error(expected.status, expected.data)
-        self.assertIsInstance(error, ApplicationError)
-        self.assertEqual(error, expected)
+        backend = DummyBackend(self.firmware)
+        self.assertEqual(backend.get_raise_policy(), RaisePolicy.RAISE_ALL_BUT_0x9000)
+        backend.set_raise_policy(RaisePolicy.RAISE_ALL)
+        self.assertEqual(backend.get_raise_policy(), RaisePolicy.RAISE_ALL)
+        backend.set_raise_policy(RaisePolicy.RAISE_ALL_BUT_0x9000)
 
     def test_send(self):
         cla, ins, p1, p2 = 1, 2, 3, 4
