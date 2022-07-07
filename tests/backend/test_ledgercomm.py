@@ -3,6 +3,7 @@ from unittest.mock import patch
 
 from ragger import Firmware, RAPDU, ExceptionRAPDU
 from ragger.backend import LedgerCommBackend
+from ragger.backend.interface import RaisePolicy
 
 
 class TestLedgerCommbackend(TestCase):
@@ -56,24 +57,35 @@ class TestLedgerCommbackend(TestCase):
                 rapdu = self.backend.receive()
         self.check_rapdu(rapdu, payload=payload)
 
+    def test_receive_ok_raise(self):
+        failure, payload = 0x8000, b"something"
+        with patch("ledgercomm.transport.HID") as mock:
+            self.hid = mock
+            self.hid().recv.return_value = (failure, payload)
+            with self.backend:
+                self.backend.set_raise_policy(RaisePolicy.RAISE_ALL)
+                with self.assertRaises(ExceptionRAPDU) as error:
+                    self.backend.receive()
+        self.assertEqual(error.exception.status, failure)
+
     def test_receive_nok(self):
         failure, payload = 0x8000, b"something"
         with patch("ledgercomm.transport.HID") as mock:
             self.hid = mock
             self.hid().recv.return_value = (failure, payload)
             with self.backend:
+                self.backend.set_raise_policy(RaisePolicy.RAISE_NOTHING)
                 rapdu = self.backend.receive()
         self.check_rapdu(rapdu, status=failure, payload=payload)
 
-    def test_receive_nok_raises(self):
+    def test_receive_nok_raise(self):
         failure, payload = 0x8000, b"something"
-        backend = LedgerCommBackend(self.firmware, raises=True)
         with patch("ledgercomm.transport.HID") as mock:
             self.hid = mock
             self.hid().recv.return_value = (failure, payload)
-            with backend:
+            with self.backend:
                 with self.assertRaises(ExceptionRAPDU) as error:
-                    backend.receive()
+                    self.backend.receive()
         self.assertEqual(error.exception.status, failure)
 
     def test_exchange_raw(self):
@@ -87,15 +99,14 @@ class TestLedgerCommbackend(TestCase):
         self.assertTrue(self.hid().exchange.called)
         self.check_rapdu(rapdu, payload=payload)
 
-    def test_exchange_raw_raises(self):
+    def test_exchange_raw_raise(self):
         failure, payload = 0x8000, b"something"
-        backend = LedgerCommBackend(self.firmware, raises=True)
         with patch("ledgercomm.transport.HID") as mock:
             self.hid = mock
             self.hid().exchange.return_value = (failure, payload)
-            with backend:
+            with self.backend:
                 with self.assertRaises(ExceptionRAPDU):
-                    backend.exchange_raw(b"")
+                    self.backend.exchange_raw(b"")
 
     def test_exchange_async_raw(self):
         success, payload = 0x9000, b"something"
