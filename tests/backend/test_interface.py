@@ -36,10 +36,8 @@ class TestBackendInterface(TestCase):
         self.assertIsNone(self.backend.last_async_response)
 
         backend = DummyBackend(self.firmware)
-        self.assertEqual(backend.get_raise_policy(), RaisePolicy.RAISE_ALL_BUT_0x9000)
-        backend.set_raise_policy(RaisePolicy.RAISE_ALL)
-        self.assertEqual(backend.get_raise_policy(), RaisePolicy.RAISE_ALL)
-        backend.set_raise_policy(RaisePolicy.RAISE_ALL_BUT_0x9000)
+        # Default value
+        self.assertEqual(backend.raise_policy, RaisePolicy.RAISE_ALL_BUT_0x9000)
 
     def test_send(self):
         cla, ins, p1, p2 = 1, 2, 3, 4
@@ -47,8 +45,7 @@ class TestBackendInterface(TestCase):
         self.assertFalse(self.backend.mock.send_raw.called)
         self.backend.send(cla, ins, p1, p2)
         self.assertTrue(self.backend.mock.send_raw.called)
-        self.assertEqual(self.backend.mock.send_raw.call_args,
-                         ((expected,),))
+        self.assertEqual(self.backend.mock.send_raw.call_args, ((expected,),))
 
     def test_exchange(self):
         cla, ins, p1, p2 = 1, 2, 3, 4
@@ -56,8 +53,7 @@ class TestBackendInterface(TestCase):
         self.assertFalse(self.backend.mock.send_raw.called)
         result = self.backend.exchange(cla, ins, p1, p2)
         self.assertTrue(self.backend.mock.exchange_raw.called)
-        self.assertEqual(self.backend.mock.exchange_raw.call_args,
-                         ((expected,),))
+        self.assertEqual(self.backend.mock.exchange_raw.call_args, ((expected,),))
         self.assertEqual(result, self.backend.mock.exchange_raw())
 
     def test_exchange_async(self):
@@ -67,5 +63,4 @@ class TestBackendInterface(TestCase):
         with self.backend.exchange_async(cla, ins, p1, p2):
             pass
         self.assertTrue(self.backend.mock.exchange_async_raw.called)
-        self.assertEqual(self.backend.mock.exchange_async_raw.call_args,
-                         ((expected,),))
+        self.assertEqual(self.backend.mock.exchange_async_raw.call_args, ((expected,),))

@@ -38,8 +38,8 @@ class BackendInterface(ABC):
         :type firmware: Firmware
         """
         self._firmware = firmware
-        self._raise_policy = RaisePolicy.RAISE_ALL_BUT_0x9000
         self._last_async_response: Optional[RAPDU] = None
+        self.raise_policy = RaisePolicy.RAISE_ALL_BUT_0x9000
 
     @property
     def firmware(self) -> Firmware:
@@ -68,31 +68,13 @@ class BackendInterface(ABC):
                  exc_tb: Optional[TracebackType]):
         raise NotImplementedError
 
-    def get_raise_policy(self) -> RaisePolicy:
-        """
-        :return: The current raise policy.
-        :rtype: RaisePolicy
-        """
-        return self._raise_policy
-
-    def set_raise_policy(self, raise_policy: RaisePolicy) -> None:
-        """
-        :param raise_policy: Weither the instance should raises on non-valid response
-                             statuses, or not.
-        :type raise_policy: RaisePolicy
-
-        :return: None
-        :rtype: NoneType
-        """
-        self._raise_policy = raise_policy
-
     def is_raise_required(self, rapdu: RAPDU) -> bool:
         """
         :return: If the given status is considered valid or not
         :rtype: bool
         """
-        return ((self._raise_policy == RaisePolicy.RAISE_ALL)
-                or ((self._raise_policy == RaisePolicy.RAISE_ALL_BUT_0x9000) and
+        return ((self.raise_policy == RaisePolicy.RAISE_ALL)
+                or ((self.raise_policy == RaisePolicy.RAISE_ALL_BUT_0x9000) and
                     (rapdu.status != 0x9000)))
 
     def send(self, cla: int, ins: int, p1: int = 0, p2: int = 0, data: bytes = b"") -> None:

@@ -42,28 +42,28 @@ class TestLedgerWalletBackend(TestCase):
                 rapdu = self.backend.receive()
         self.check_rapdu(rapdu, payload=payload)
 
-    def test_receive_ok_raise(self):
-        status, payload = 0x8000, b"something"
+    def test_receive_ok_raises(self):
+        status, payload = 0x9000, b"something"
         self.device.read.return_value = payload + bytes.fromhex(f"{status:x}")
         with patch("ledgerwallet.client.enumerate_devices") as devices:
             devices.return_value = [self.device]
             with self.backend:
-                self.backend.set_raise_policy(RaisePolicy.RAISE_ALL)
+                self.backend.raise_policy = RaisePolicy.RAISE_ALL
                 with self.assertRaises(ExceptionRAPDU) as error:
                     self.backend.receive()
         self.assertEqual(error.exception.status, status)
 
-    def test_receive_nok_no_raise(self):
+    def test_receive_nok_no_raises(self):
         status, payload = 0x8000, b"something"
         self.device.read.return_value = payload + bytes.fromhex(f"{status:x}")
         with patch("ledgerwallet.client.enumerate_devices") as devices:
             devices.return_value = [self.device]
             with self.backend:
-                self.backend.set_raise_policy(RaisePolicy.RAISE_NOTHING)
+                self.backend.raise_policy = RaisePolicy.RAISE_NOTHING
                 rapdu = self.backend.receive()
         self.check_rapdu(rapdu, status=status, payload=payload)
 
-    def test_receive_nok_raise(self):
+    def test_receive_nok_raises(self):
         status, payload = 0x8000, b"something"
         self.device.read.return_value = payload + bytes.fromhex(f"{status:x}")
         with patch("ledgerwallet.client.enumerate_devices") as devices:
@@ -82,17 +82,17 @@ class TestLedgerWalletBackend(TestCase):
                 rapdu = self.backend.exchange_raw(b"")
         self.check_rapdu(rapdu, payload=payload)
 
-    def test_exchange_raw_nok_no_raise(self):
+    def test_exchange_raw_nok_no_raises(self):
         status, payload = 0x8000, b"something"
         self.device.exchange.return_value = payload + bytes.fromhex(f"{status:x}")
         with patch("ledgerwallet.client.enumerate_devices") as devices:
             devices.return_value = [self.device]
             with self.backend:
-                self.backend.set_raise_policy(RaisePolicy.RAISE_NOTHING)
+                self.backend.raise_policy = RaisePolicy.RAISE_NOTHING
                 rapdu = self.backend.exchange_raw(b"")
         self.check_rapdu(rapdu, status=status, payload=payload)
 
-    def test_exchange_raw_nok_raise(self):
+    def test_exchange_raw_nok_raises(self):
         status, payload = 0x8000, b"something"
         self.device.exchange.return_value = payload + bytes.fromhex(f"{status:x}")
         with patch("ledgerwallet.client.enumerate_devices") as devices:

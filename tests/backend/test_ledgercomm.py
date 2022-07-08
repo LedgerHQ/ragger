@@ -57,13 +57,13 @@ class TestLedgerCommbackend(TestCase):
                 rapdu = self.backend.receive()
         self.check_rapdu(rapdu, payload=payload)
 
-    def test_receive_ok_raise(self):
-        failure, payload = 0x8000, b"something"
+    def test_receive_ok_raises(self):
+        failure, payload = 0x9000, b"something"
         with patch("ledgercomm.transport.HID") as mock:
             self.hid = mock
             self.hid().recv.return_value = (failure, payload)
             with self.backend:
-                self.backend.set_raise_policy(RaisePolicy.RAISE_ALL)
+                self.backend.raise_policy = RaisePolicy.RAISE_ALL
                 with self.assertRaises(ExceptionRAPDU) as error:
                     self.backend.receive()
         self.assertEqual(error.exception.status, failure)
@@ -74,11 +74,11 @@ class TestLedgerCommbackend(TestCase):
             self.hid = mock
             self.hid().recv.return_value = (failure, payload)
             with self.backend:
-                self.backend.set_raise_policy(RaisePolicy.RAISE_NOTHING)
+                self.backend.raise_policy = RaisePolicy.RAISE_NOTHING
                 rapdu = self.backend.receive()
         self.check_rapdu(rapdu, status=failure, payload=payload)
 
-    def test_receive_nok_raise(self):
+    def test_receive_nok_raises(self):
         failure, payload = 0x8000, b"something"
         with patch("ledgercomm.transport.HID") as mock:
             self.hid = mock
@@ -99,7 +99,7 @@ class TestLedgerCommbackend(TestCase):
         self.assertTrue(self.hid().exchange.called)
         self.check_rapdu(rapdu, payload=payload)
 
-    def test_exchange_raw_raise(self):
+    def test_exchange_raw_raises(self):
         failure, payload = 0x8000, b"something"
         with patch("ledgercomm.transport.HID") as mock:
             self.hid = mock

@@ -61,11 +61,11 @@ class TestbackendSpeculos(TestCase):
         with patch("speculos.client.subprocess"):
             with SpeculosServerStub():
                 with self.backend:
-                    self.backend.set_raise_policy(RaisePolicy.RAISE_NOTHING)
+                    self.backend.raise_policy = RaisePolicy.RAISE_NOTHING
                     rapdu = self.backend.exchange_raw(bytes.fromhex("01000000"))
                     self.check_rapdu(rapdu, expected=bytes.fromhex(EndPoint.APDU), status=APDUStatus.ERROR)
 
-    def test_exchange_raw_raise(self):
+    def test_exchange_raw_raises(self):
         with patch("speculos.client.subprocess"):
             with SpeculosServerStub():
                 with self.backend:
@@ -77,7 +77,7 @@ class TestbackendSpeculos(TestCase):
         with patch("speculos.client.subprocess"):
             with SpeculosServerStub():
                 with self.backend:
-                    self.backend.set_raise_policy(RaisePolicy.RAISE_ALL)
+                    self.backend.raise_policy = RaisePolicy.RAISE_ALL
                     with self.assertRaises(ExceptionRAPDU) as error:
                         self.backend.exchange_raw(bytes.fromhex("00000000"))
                     self.assertEqual(error.exception.status, APDUStatus.SUCCESS)
@@ -116,14 +116,14 @@ class TestbackendSpeculos(TestCase):
         with patch("speculos.client.subprocess"):
             with SpeculosServerStub():
                 with self.backend:
-                    self.backend.set_raise_policy(RaisePolicy.RAISE_NOTHING)
+                    self.backend.raise_policy = RaisePolicy.RAISE_NOTHING
                     with self.backend.exchange_async_raw(bytes.fromhex("01000000")):
                         self.assertIsNone(self.backend.last_async_response)
                     rapdu = self.backend.last_async_response
                     self.assertIsNotNone(rapdu)
                     self.check_rapdu(rapdu, expected=bytes.fromhex(EndPoint.APDU), status=APDUStatus.ERROR)
 
-    def test_exchange_async_raw_raise(self):
+    def test_exchange_async_raw_raises(self):
         with patch("speculos.client.subprocess"):
             with SpeculosServerStub():
                 with self.backend:
@@ -136,7 +136,7 @@ class TestbackendSpeculos(TestCase):
         with patch("speculos.client.subprocess"):
             with SpeculosServerStub():
                 with self.backend:
-                    self.backend.set_raise_policy(RaisePolicy.RAISE_ALL)
+                    self.backend.raise_policy = RaisePolicy.RAISE_ALL
                     with self.assertRaises(ExceptionRAPDU) as error:
                         with self.backend.exchange_async_raw(bytes.fromhex("00000000")):
                             pass

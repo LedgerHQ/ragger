@@ -7,7 +7,7 @@ from ragger.backend.interface import RaisePolicy
 
 
 def test_error_returns_not_raises(client):
-    client.set_raise_policy(RaisePolicy.RAISE_NOTHING)
+    client.raise_policy = RaisePolicy.RAISE_NOTHING
     result = client.exchange(0x01, 0x00)
     assert isinstance(result, RAPDU)
     assert result.status == 0x6e00

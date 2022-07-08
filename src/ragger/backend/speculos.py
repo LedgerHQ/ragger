@@ -98,7 +98,7 @@ class SpeculosBackend(BackendInterface):
         return RAPDU(0x9000, self._client._apdu_exchange(data))
 
     @raise_policy_enforcer
-    def get_last_async_response(self, response) -> RAPDU:
+    def _get_last_async_response(self, response) -> RAPDU:
         return RAPDU(0x9000, response.receive())
 
     @contextmanager
@@ -109,7 +109,7 @@ class SpeculosBackend(BackendInterface):
                                                p2=data[3],
                                                data=data[5:]) as response:
             yield
-            self._last_async_response = self.get_last_async_response(response)
+            self._last_async_response = self._get_last_async_response(response)
 
     def right_click(self) -> None:
         self._client.press_and_release("right")
