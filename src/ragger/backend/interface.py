@@ -16,7 +16,7 @@
 from abc import ABC, abstractmethod
 from contextlib import contextmanager
 from types import TracebackType
-from typing import Optional, Type, Iterable, Generator, NoReturn
+from typing import Optional, Type, Iterable, Generator
 
 from ragger.utils import pack_APDU, RAPDU, Firmware
 from ragger.error import ApplicationError
