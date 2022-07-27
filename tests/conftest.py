@@ -19,7 +19,7 @@ BACKENDS = ["speculos", "ledgercomm", "ledgerwallet"]
 APPLICATIONS = [
     Application(ELF_DIRECTORY / 'nanos.elf', Firmware('nanos', '2.1')),
     Application(ELF_DIRECTORY / 'nanox.elf', Firmware('nanox', '2.0.2')),
-    Application(ELF_DIRECTORY / 'nanosp.elf', Firmware('nanosp', '1.0'))
+    Application(ELF_DIRECTORY / 'nanosp.elf', Firmware('nanosp', '1.0.3'))
 ]
 
 
