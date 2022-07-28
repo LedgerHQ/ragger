@@ -4,7 +4,7 @@ from unittest.mock import patch, MagicMock
 
 from ragger import Firmware, RAPDU, ExceptionRAPDU
 from ragger.backend import LedgerWalletBackend
-from ragger.backend.interface import RaisePolicy
+from ragger.backend import RaisePolicy
 
 
 class TestLedgerWalletBackend(TestCase):

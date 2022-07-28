@@ -13,9 +13,11 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-from .interface import BackendInterface
+from .interface import BackendInterface, RaisePolicy
 from .speculos import SpeculosBackend
 from .ledgercomm import LedgerCommBackend
 from .ledgerwallet import LedgerWalletBackend
 
-__all__ = ["SpeculosBackend", "LedgerCommBackend", "LedgerWalletBackend", "BackendInterface"]
+__all__ = [
+    "SpeculosBackend", "LedgerCommBackend", "LedgerWalletBackend", "BackendInterface", "RaisePolicy"
+]
