@@ -18,7 +18,9 @@ jobs:
       - name: Clone
         uses: actions/checkout@v2
       - name: Install Python dependencies
-        run: pip install --extra-index-url https://test.pypi.org/simple/ .[doc]
+        run: |
+          pip install Jinja2 -U
+          pip install --extra-index-url https://test.pypi.org/simple/ .[doc]
       - name: Generate the documentation
         run: (cd doc && make html)
       - name: Upload app binary
