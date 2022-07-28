@@ -3,7 +3,7 @@ from requests.exceptions import ConnectionError
 import pytest
 
 from ragger import ExceptionRAPDU, RAPDU
-from ragger.backend.interface import RaisePolicy
+from ragger.backend import RaisePolicy
 
 
 def test_error_returns_not_raises(client):

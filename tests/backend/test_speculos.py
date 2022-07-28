@@ -4,7 +4,7 @@ from typing import Optional
 
 from ragger import Firmware, RAPDU, ExceptionRAPDU
 from ragger.backend import SpeculosBackend
-from ragger.backend.interface import RaisePolicy
+from ragger.backend import RaisePolicy
 
 from tests.stubs import SpeculosServerStub, EndPoint, APDUStatus
 

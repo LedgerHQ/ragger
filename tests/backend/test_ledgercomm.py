@@ -3,7 +3,7 @@ from unittest.mock import patch
 
 from ragger import Firmware, RAPDU, ExceptionRAPDU
 from ragger.backend import LedgerCommBackend
-from ragger.backend.interface import RaisePolicy
+from ragger.backend import RaisePolicy
 
 
 class TestLedgerCommbackend(TestCase):

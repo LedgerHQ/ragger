@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 
 from ragger import Firmware, ExceptionRAPDU
 from ragger.backend import BackendInterface
-from ragger.backend.interface import RaisePolicy
+from ragger.backend import RaisePolicy
 
 
 class DummyBackend(BackendInterface):
