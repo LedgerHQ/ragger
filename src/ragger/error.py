@@ -18,10 +18,9 @@ from typing import Optional
 
 
 @dataclass(frozen=True)
-class ApplicationError(Exception):
+class ExceptionRAPDU(Exception):
     status: int
-    name: Optional[str] = None
     data: bytes = bytes()
 
     def __str__(self):
-        return f"Error [0x{self.status:x}]{[self.name] if self.name else ''} {self.data}"
+        return f"Error [0x{self.status:x}] {self.data}"

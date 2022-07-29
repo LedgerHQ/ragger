@@ -2,8 +2,9 @@ import struct
 from unittest import TestCase
 from unittest.mock import MagicMock
 
-from ragger import Firmware, ApplicationError
+from ragger import Firmware, ExceptionRAPDU
 from ragger.backend import BackendInterface
+from ragger.backend import RaisePolicy
 
 
 class DummyBackend(BackendInterface):
@@ -25,31 +26,18 @@ class TestBackendInterface(TestCase):
 
     def setUp(self):
         self.firmware = Firmware("nanos", "2.0.1")
-        self.errors = (ApplicationError(0x8888, "ERROR1"),
-                       ApplicationError(0x7777, "ERROR2"))
+        self.errors = (ExceptionRAPDU(0x8888, "ERROR1"),
+                       ExceptionRAPDU(0x7777, "ERROR2"))
         self.valid_statuses = (0x9000, 0x9001, 0x9002)
-        self.backend = DummyBackend(self.firmware,
-                                    valid_statuses=self.valid_statuses,
-                                    errors=self.errors)
+        self.backend = DummyBackend(self.firmware)
 
     def test_init(self):
         self.assertEqual(self.backend.firmware, self.firmware)
         self.assertIsNone(self.backend.last_async_response)
-        self.assertFalse(self.backend.raises)
-        for status in self.valid_statuses:
-            self.assertTrue(self.backend.is_valid(status))
 
-        backend = DummyBackend(self.firmware, raises=True)
-        self.assertTrue(backend.raises)
-        self.assertTrue(backend.is_valid(0x9000))
-        for status in self.valid_statuses[1:]:
-            self.assertFalse(backend.is_valid(status))
-
-    def test__error(self):
-        expected = ApplicationError(0x9999, data="error not manage")
-        error = self.backend._error(expected.status, expected.data)
-        self.assertIsInstance(error, ApplicationError)
-        self.assertEqual(error, expected)
+        backend = DummyBackend(self.firmware)
+        # Default value
+        self.assertEqual(backend.raise_policy, RaisePolicy.RAISE_ALL_BUT_0x9000)
 
     def test_send(self):
         cla, ins, p1, p2 = 1, 2, 3, 4
@@ -57,8 +45,7 @@ class TestBackendInterface(TestCase):
         self.assertFalse(self.backend.mock.send_raw.called)
         self.backend.send(cla, ins, p1, p2)
         self.assertTrue(self.backend.mock.send_raw.called)
-        self.assertEqual(self.backend.mock.send_raw.call_args,
-                         ((expected,),))
+        self.assertEqual(self.backend.mock.send_raw.call_args, ((expected,),))
 
     def test_exchange(self):
         cla, ins, p1, p2 = 1, 2, 3, 4
@@ -66,8 +53,7 @@ class TestBackendInterface(TestCase):
         self.assertFalse(self.backend.mock.send_raw.called)
         result = self.backend.exchange(cla, ins, p1, p2)
         self.assertTrue(self.backend.mock.exchange_raw.called)
-        self.assertEqual(self.backend.mock.exchange_raw.call_args,
-                         ((expected,),))
+        self.assertEqual(self.backend.mock.exchange_raw.call_args, ((expected,),))
         self.assertEqual(result, self.backend.mock.exchange_raw())
 
     def test_exchange_async(self):
@@ -77,5 +63,4 @@ class TestBackendInterface(TestCase):
         with self.backend.exchange_async(cla, ins, p1, p2):
             pass
         self.assertTrue(self.backend.mock.exchange_async_raw.called)
-        self.assertEqual(self.backend.mock.exchange_async_raw.call_args,
-                         ((expected,),))
+        self.assertEqual(self.backend.mock.exchange_async_raw.call_args, ((expected,),))
