@@ -79,19 +79,8 @@ jobs:
     # TEST_PYPI_API_TOKEN is an API token created on
     # https://test.pypi.org/manage/account/#api-tokens with restriction to speculos project
     - name: Publish Python package to test.pypi.org
-      if: success() && github.event_name == 'push' && github.ref == 'refs/heads/develop' && contains(github.event.head_commit.message, 'release')
-      run: python -m twine upload --repository testpypi dist/*
-      env:
-        TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.TEST_PYPI_PUBLIC_API_TOKEN  }}
-        TWINE_NON_INTERACTIVE: 1
-    - name: Publish a release on the repo
-      if: success() && github.event_name == 'push' && github.ref == 'refs/heads/develop' && contains(github.event.head_commit.message, 'release')
-      uses: "marvinpinto/action-automatic-releases@latest"
-      with:
-        automatic_release_tag: "v${{ steps.version.outputs.version }}"
-        repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        prerelease: true
-        files: |
-          LICENSE
-          dist/
+      # if: success() && github.event_name == 'push' && github.ref == 'refs/heads/develop' && contains(github.event.head_commit.message, 'release')
+      run: |
+        echo ${{ github.event_name }}
+        echo ${{ github.ref }}
+        echo ${{ github.event.head_commit.message }}
