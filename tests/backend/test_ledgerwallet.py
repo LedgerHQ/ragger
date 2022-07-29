@@ -2,8 +2,9 @@ from typing import Optional
 from unittest import TestCase
 from unittest.mock import patch, MagicMock
 
-from ragger import Firmware, RAPDU, ApplicationError
+from ragger import Firmware, RAPDU, ExceptionRAPDU
 from ragger.backend import LedgerWalletBackend
+from ragger.backend import RaisePolicy
 
 
 class TestLedgerWalletBackend(TestCase):
@@ -41,24 +42,35 @@ class TestLedgerWalletBackend(TestCase):
                 rapdu = self.backend.receive()
         self.check_rapdu(rapdu, payload=payload)
 
-    def test_receive_nok(self):
+    def test_receive_ok_raises(self):
+        status, payload = 0x9000, b"something"
+        self.device.read.return_value = payload + bytes.fromhex(f"{status:x}")
+        with patch("ledgerwallet.client.enumerate_devices") as devices:
+            devices.return_value = [self.device]
+            with self.backend:
+                self.backend.raise_policy = RaisePolicy.RAISE_ALL
+                with self.assertRaises(ExceptionRAPDU) as error:
+                    self.backend.receive()
+        self.assertEqual(error.exception.status, status)
+
+    def test_receive_nok_no_raises(self):
         status, payload = 0x8000, b"something"
         self.device.read.return_value = payload + bytes.fromhex(f"{status:x}")
         with patch("ledgerwallet.client.enumerate_devices") as devices:
             devices.return_value = [self.device]
             with self.backend:
+                self.backend.raise_policy = RaisePolicy.RAISE_NOTHING
                 rapdu = self.backend.receive()
         self.check_rapdu(rapdu, status=status, payload=payload)
 
     def test_receive_nok_raises(self):
         status, payload = 0x8000, b"something"
         self.device.read.return_value = payload + bytes.fromhex(f"{status:x}")
-        backend = LedgerWalletBackend(self.firmware, raises=True)
         with patch("ledgerwallet.client.enumerate_devices") as devices:
             devices.return_value = [self.device]
-            with backend:
-                with self.assertRaises(ApplicationError) as error:
-                    backend.receive()
+            with self.backend:
+                with self.assertRaises(ExceptionRAPDU) as error:
+                    self.backend.receive()
         self.assertEqual(error.exception.status, status)
 
     def test_exchange_raw_ok(self):
@@ -70,7 +82,27 @@ class TestLedgerWalletBackend(TestCase):
                 rapdu = self.backend.exchange_raw(b"")
         self.check_rapdu(rapdu, payload=payload)
 
-    def test_exchange_async_raw__ok(self):
+    def test_exchange_raw_nok_no_raises(self):
+        status, payload = 0x8000, b"something"
+        self.device.exchange.return_value = payload + bytes.fromhex(f"{status:x}")
+        with patch("ledgerwallet.client.enumerate_devices") as devices:
+            devices.return_value = [self.device]
+            with self.backend:
+                self.backend.raise_policy = RaisePolicy.RAISE_NOTHING
+                rapdu = self.backend.exchange_raw(b"")
+        self.check_rapdu(rapdu, status=status, payload=payload)
+
+    def test_exchange_raw_nok_raises(self):
+        status, payload = 0x8000, b"something"
+        self.device.exchange.return_value = payload + bytes.fromhex(f"{status:x}")
+        with patch("ledgerwallet.client.enumerate_devices") as devices:
+            devices.return_value = [self.device]
+            with self.backend:
+                with self.assertRaises(ExceptionRAPDU) as error:
+                    self.backend.exchange_raw(b"")
+        self.assertEqual(error.exception.status, status)
+
+    def test_exchange_async_raw_ok(self):
         status, payload = 0x9000, b"something"
         self.device.read.return_value = payload + bytes.fromhex(f"{status:x}")
         with patch("ledgerwallet.client.enumerate_devices") as devices:

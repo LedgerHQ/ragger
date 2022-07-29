@@ -17,36 +17,29 @@ from abc import ABC, abstractmethod
 from contextlib import contextmanager
 from types import TracebackType
 from typing import Optional, Type, Iterable, Generator
+from enum import Enum, auto
 
 from ragger.utils import pack_APDU, RAPDU, Firmware
-from ragger.error import ApplicationError
+from ragger.error import ExceptionRAPDU
+
+
+class RaisePolicy(Enum):
+    RAISE_NOTHING = auto()
+    RAISE_ALL_BUT_0x9000 = auto()
+    RAISE_ALL = auto()
 
 
 class BackendInterface(ABC):
 
-    def __init__(self,
-                 firmware: Firmware,
-                 raises: bool = False,
-                 valid_statuses: Iterable[int] = (0x9000, ),
-                 errors: Iterable[ApplicationError] = ()):
+    def __init__(self, firmware: Firmware):
         """Initializes the Backend
 
         :param firmware: Which Firmware will be managed
         :type firmware: Firmware
-        :param raises: Weither the instance should raises on non-valid response
-                       statuses, or not.
-        :type raises: bool
-        :param valid_statuses: a list of RAPDU statuses considered successfull
-                               (default: [0x9000])
-        :type valid_statuses: an iterable of int
-        :param errors: A list of errors expected by the application
-        :type errors: an iterable of ApplicationError
         """
         self._firmware = firmware
-        self._raises = raises
-        self._valid_statuses = valid_statuses
         self._last_async_response: Optional[RAPDU] = None
-        self._errors = {error.status: error.name for error in errors}
+        self.raise_policy = RaisePolicy.RAISE_ALL_BUT_0x9000
 
     @property
     def firmware(self) -> Firmware:
@@ -66,36 +59,6 @@ class BackendInterface(ABC):
         """
         return self._last_async_response
 
-    @property
-    def raises(self) -> bool:
-        """
-        :return: Weither the instance raises on non-0x9000 response statuses or
-                 not.
-        :rtype: bool
-        """
-        return self._raises
-
-    def _error(self, status: int, data: bytes) -> ApplicationError:
-        """
-        Return an ApplicationError exception, forged from given argument and
-        expected errors, declared while initializing the backend.
-
-        :return: An error forged with given arguments and expected application
-                 errors.
-        :rtype: ApplicationError
-        """
-        return ApplicationError(status, self._errors.get(status), data)
-
-    def is_valid(self, status: int) -> bool:
-        """
-        :param status: A status to check
-        :type status: int
-
-        :return: If the given status is considered valid or not
-        :rtype: bool
-        """
-        return status in self._valid_statuses
-
     @abstractmethod
     def __enter__(self) -> "BackendInterface":
         raise NotImplementedError
@@ -104,6 +67,15 @@ class BackendInterface(ABC):
     def __exit__(self, exc_type: Optional[Type[BaseException]], exc_val: Optional[BaseException],
                  exc_tb: Optional[TracebackType]):
         raise NotImplementedError
+
+    def is_raise_required(self, rapdu: RAPDU) -> bool:
+        """
+        :return: If the given status is considered valid or not
+        :rtype: bool
+        """
+        return ((self.raise_policy == RaisePolicy.RAISE_ALL)
+                or ((self.raise_policy == RaisePolicy.RAISE_ALL_BUT_0x9000) and
+                    (rapdu.status != 0x9000)))
 
     def send(self, cla: int, ins: int, p1: int = 0, p2: int = 0, data: bytes = b"") -> None:
         """
@@ -149,9 +121,9 @@ class BackendInterface(ABC):
         Calling this method implies a command APDU has been previously sent
         to the backend, and a response is expected.
 
-        :raises ApplicationError: If the `raises` attribute is True, this method
-                                  will raise if the backend returns a status
-                                  code not registered a a `valid_statuses`
+        :raises ExceptionRAPDU: If the `raises` attribute is True, this method
+                                  will raise if the backend returns a status code
+                                  not registered as a `valid_statuses`
 
         :return: The APDU response
         :rtype: RAPDU
@@ -175,9 +147,9 @@ class BackendInterface(ABC):
         :param data: Command data
         :type data: bytes
 
-        :raises ApplicationError: If the `raises` attribute is True, this method
+        :raises ExceptionRAPDU: If the `raises` attribute is True, this method
                                   will raise if the backend returns a status code
-                                  different from 0x9000
+                                  not registered as a `valid_statuses`
 
         :return: The APDU response
         :rtype: RAPDU
@@ -195,9 +167,9 @@ class BackendInterface(ABC):
         :param data: The APDU message
         :type data: bytes
 
-        :raises ApplicationError: If the `raises` attribute is True, this method
+        :raises ExceptionRAPDU: If the `raises` attribute is True, this method
                                   will raise if the backend returns a status code
-                                  not registered a a `valid_statuses`
+                                  not registered as a `valid_statuses`
 
         :return: The APDU response
         :rtype: RAPDU
@@ -232,9 +204,9 @@ class BackendInterface(ABC):
         :param data: Command data
         :type data: bytes
 
-        :raises ApplicationError: If the `raises` attribute is True, this method
+        :raises ExceptionRAPDU: If the `raises` attribute is True, this method
                                   will raise if the backend returns a status code
-                                  not registered a a `valid_statuses`
+                                  not registered as a `valid_statuses`
 
         :return: None
         :rtype: NoneType
@@ -255,7 +227,7 @@ class BackendInterface(ABC):
         :param data: The APDU message
         :type data: bytes
 
-        :raises ApplicationError: If the `raises` attribute is True, this method
+        :raises ExceptionRAPDU: If the `raises` attribute is True, this method
                                   will raise if the backend returns a status code
                                   not registered a a `valid_statuses`
 

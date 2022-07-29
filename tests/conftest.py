@@ -12,6 +12,7 @@ class Application:
     path: Path
     firmware: Firmware
 
+
 ELF_DIRECTORY = Path(__file__).parent / 'elfs'
 
 BACKENDS = ["speculos", "ledgercomm", "ledgerwallet"]
@@ -37,19 +38,14 @@ def backend(pytestconfig):
     return pytestconfig.getoption("backend")
 
 
-def create_backend(backend: bool, application: Application, raises: bool = True):
+def create_backend(backend: str, application: Application):
     if backend.lower() == "ledgercomm":
-        return LedgerCommBackend(application.firmware, interface="hid", raises=raises)
+        return LedgerCommBackend(application.firmware, interface="hid")
     elif backend.lower() == "ledgerwallet":
         return LedgerWalletBackend(application.firmware)
     elif backend.lower() == "speculos":
-        assert application.path.is_file(), \
-            f"'{application.path}' elf must exist"
-        return SpeculosBackend(
-            application.path,
-            application.firmware,
-            raises=raises
-        )
+        assert application.path.is_file(), f"'{application.path}' elf must exist"
+        return SpeculosBackend(application.path, application.firmware)
     else:
         raise ValueError(f"Backend '{backend}' is unknown. Valid backends are: {BACKENDS}")
 
@@ -57,12 +53,6 @@ def create_backend(backend: bool, application: Application, raises: bool = True)
 @pytest.fixture
 def client(backend, application):
     with create_backend(backend, application) as b:
-        yield b
-
-
-@pytest.fixture
-def client_no_raise(backend, application):
-    with create_backend(backend, application, raises=False) as b:
         yield b
 
 
@@ -75,6 +65,7 @@ def use_only_on_backend(request, backend):
 
 
 def pytest_configure(config):
-  config.addinivalue_line(
-        "markers", "use_only_on_backend(backend): skip test if not on the specified backend",
-  )
+    config.addinivalue_line(
+        "markers",
+        "use_only_on_backend(backend): skip test if not on the specified backend",
+    )
