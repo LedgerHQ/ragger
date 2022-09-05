@@ -14,9 +14,38 @@
    limitations under the License.
 """
 from .interface import BackendInterface, RaisePolicy
-from .speculos import SpeculosBackend
-from .ledgercomm import LedgerCommBackend
-from .ledgerwallet import LedgerWalletBackend
+
+
+ERROR_MSG = "This backend needs {}. Please install this package (run `pip install " \
+    "--extra-index-url https://test.pypi.org/simple/ ragger[{}]` or check this address: '{}')"
+
+try:
+    from .speculos import SpeculosBackend
+except ImportError:
+
+    def SpeculosBackend(*args, **kwargs):  # type: ignore
+        raise ImportError(
+            ERROR_MSG.format("Speculos", "speculos", "https://github.com/LedgerHQ/speculos/"))
+
+
+try:
+    from .ledgercomm import LedgerCommBackend
+except ImportError:
+
+    def LedgerCommBackend(*args, **kwargs):  # type: ignore
+        raise ImportError(
+            ERROR_MSG.format("LedgerComm", "ledgercomm", "https://github.com/LedgerHQ/ledgercomm/"))
+
+
+try:
+    from .ledgerwallet import LedgerWalletBackend
+except ImportError:
+
+    def LedgerWalletBackend(*args, **kwargs):  # type: ignore
+        raise ImportError(
+            ERROR_MSG.format("LedgerWallet", "ledgerwallet",
+                             "https://github.com/LedgerHQ/ledgerctl/"))
+
 
 __all__ = [
     "SpeculosBackend", "LedgerCommBackend", "LedgerWalletBackend", "BackendInterface", "RaisePolicy"
