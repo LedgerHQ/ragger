@@ -30,14 +30,25 @@ Ragger is currently not available on PIP repositories.
 To install it, you need to run at the root of the `git` repository:
 
 ```
-pip install --extra-index-url https://test.pypi.org/simple/ .
+pip install --extra-index-url https://test.pypi.org/simple/ .[all_backends]
 ```
 
 The extra index is important, as it brings the latest version of Speculos.
 
-### Other
+### Extras
 
-Speculos dependencies are obviously needed too.
+Sometimes we just need some function embedded in the library, or just one backend. It can be
+bothersome (and heavy) to import all dependencies when just one or none are needed.
+
+This is why backends are stored as extra in `ragger`. Installing `ragger` without extra means **it
+comes without any backends**.
+
+Extra are straightforward: `[speculos]`, `[ledgercomm]` and `[ledgerwallet]`. In the previous
+section, `[all_backends]` was used: it is a shortcut to `[speculos,ledgercomm,ledgerwallet]`.
+
+### Speculos dependencies
+
+If the Speculos extra is installed (to use the `SpeculosBackend`), system dependencies are needed.
 [Check the doc](https://speculos.ledger.com/installation/build.html) for these.
 
 ## Examples
