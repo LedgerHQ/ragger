@@ -123,6 +123,9 @@ class SpeculosBackend(BackendInterface):
     def both_click(self) -> None:
         self._client.press_and_release("both")
 
+    def finger_touch(self, x: int = 0, y: int = 0, delay: float = 0.5) -> None:
+        self._client.finger_touch(x, y, delay)
+
     def _save_screen_snapshot(self, snap: BytesIO, path: Path) -> None:
         img = Image.open(snap)
         img.save(path)
