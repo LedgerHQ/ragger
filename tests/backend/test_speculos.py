@@ -1,5 +1,6 @@
 from unittest import TestCase
 from unittest.mock import patch
+from pathlib import Path
 from typing import Optional
 
 from ragger import Firmware, RAPDU, ExceptionRAPDU
@@ -7,6 +8,8 @@ from ragger.backend import SpeculosBackend
 from ragger.backend import RaisePolicy
 
 from tests.stubs import SpeculosServerStub, EndPoint, APDUStatus
+
+ROOT_SCREENSHOT_PATH = Path(__file__).parent.parent.resolve()
 
 
 class TestbackendSpeculos(TestCase):
@@ -63,7 +66,9 @@ class TestbackendSpeculos(TestCase):
                 with self.backend:
                     self.backend.raise_policy = RaisePolicy.RAISE_NOTHING
                     rapdu = self.backend.exchange_raw(bytes.fromhex("01000000"))
-                    self.check_rapdu(rapdu, expected=bytes.fromhex(EndPoint.APDU), status=APDUStatus.ERROR)
+                    self.check_rapdu(rapdu,
+                                     expected=bytes.fromhex(EndPoint.APDU),
+                                     status=APDUStatus.ERROR)
 
     def test_exchange_raw_raises(self):
         with patch("speculos.client.subprocess"):
@@ -121,7 +126,9 @@ class TestbackendSpeculos(TestCase):
                         self.assertIsNone(self.backend.last_async_response)
                     rapdu = self.backend.last_async_response
                     self.assertIsNotNone(rapdu)
-                    self.check_rapdu(rapdu, expected=bytes.fromhex(EndPoint.APDU), status=APDUStatus.ERROR)
+                    self.check_rapdu(rapdu,
+                                     expected=bytes.fromhex(EndPoint.APDU),
+                                     status=APDUStatus.ERROR)
 
     def test_exchange_async_raw_raises(self):
         with patch("speculos.client.subprocess"):
@@ -149,3 +156,43 @@ class TestbackendSpeculos(TestCase):
                     self.backend.right_click()
                     self.backend.left_click()
                     self.backend.both_click()
+
+    def test_navigate_until_snap(self):
+        with patch("speculos.client.subprocess"):
+            with SpeculosServerStub():
+                with self.backend:
+                    ret = self.backend.navigate_until_snap(ROOT_SCREENSHOT_PATH, "generic", 0, 2)
+                self.assertEqual(ret, 2)
+
+    def test_navigate_and_compare_until_snap(self):
+        with patch("speculos.client.subprocess"):
+            with SpeculosServerStub():
+                with self.backend:
+                    ret = self.backend.navigate_and_compare_until_snap(
+                        ROOT_SCREENSHOT_PATH, "generic", 0, 2)
+                self.assertTrue(ret)
+
+    def test_navigate_fail_after_last_action(self):
+        with patch("speculos.client.subprocess"):
+            with SpeculosServerStub():
+                with self.backend:
+                    with self.assertRaises(ValueError) as error:
+                        self.backend.navigate_and_compare_until_snap(ROOT_SCREENSHOT_PATH,
+                                                                     "generic", 0, 1)
+                    self.assertIn("Timeout waiting for screen change", str(error.exception))
+
+    def test_navigate_fail_cannot_find_first_snap(self):
+        with patch("speculos.client.subprocess"):
+            with SpeculosServerStub():
+                with self.backend:
+                    with self.assertRaises(ValueError) as error:
+                        self.backend.navigate_until_snap(ROOT_SCREENSHOT_PATH, "generic", 3, 2)
+                    self.assertIn("Could not find first snapshot", str(error.exception))
+
+    def test_navigate_fail_cannot_find_last_snap(self):
+        with patch("speculos.client.subprocess"):
+            with SpeculosServerStub():
+                with self.backend:
+                    with self.assertRaises(ValueError) as error:
+                        self.backend.navigate_until_snap(ROOT_SCREENSHOT_PATH, "generic", 0, 4)
+                    self.assertIn("Timeout waiting for snap", str(error.exception))

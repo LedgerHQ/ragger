@@ -19,6 +19,14 @@ from . import SUPPORTED_DEVICES
 
 
 @dataclass(frozen=True)
+class Crop:
+    left: int = 0
+    upper: int = 0
+    right: int = 0
+    lower: int = 0
+
+
+@dataclass(frozen=True)
 class Firmware:
     device: str
     version: str
