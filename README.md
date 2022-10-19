@@ -51,8 +51,24 @@ section, `[all_backends]` was used: it is a shortcut to `[speculos,ledgercomm,le
 If the Speculos extra is installed (to use the `SpeculosBackend`), system dependencies are needed.
 [Check the doc](https://speculos.ledger.com/installation/build.html) for these.
 
-## Examples
+## Features
 
+The `src/ragger/backend/interface.py` file describes the methods that can be implemented by the different backends and that allow to interact with a device (either a real device or emulated):
+
+* `send`: send a formatted APDU.
+* `send_raw`: send a raw APDU.
+* `receive`: receive a response ADPU.
+* `exchange`: send a formatted APDU and wait for a response (synchronous).
+* `exchange_raw`: send a raw APDU and wait for a response (synchronous).
+* `exchange_async`: send a formatted APDU and give back the control to the caller (asynchronous).
+* `exchange_async_raw`: send a raw APDU and give back the control to the caller.
+* `right_click`: perform a right click on a device.
+* `left_click`: perform a left click on a device.
+* `both_click`: perform a click on both buttons (left + right) of a device.
+* `navigate_until_snap`: navigate on the device (by performing right clicks) until a snapshot is found and then validate (with both click).
+* `navigate_and_compare_until_snap`: same as the previous method but compare screenshots of the flow with "golden" images after the last snapshot is found.
+
+## Examples
 ### With `pytest`
 
 The backends can be easily integrated in a `pytest` test suite with the
