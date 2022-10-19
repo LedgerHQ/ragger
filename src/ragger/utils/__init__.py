@@ -14,7 +14,7 @@
    limitations under the License.
 """
 from .constants import SUPPORTED_DEVICES
-from .structs import Firmware, RAPDU
+from .structs import Firmware, RAPDU, Crop
 from .packing import pack_APDU
 
-__all__ = ("SUPPORTED_DEVICES", "Firmware", "RAPDU", "pack_APDU")
+__all__ = ("SUPPORTED_DEVICES", "Firmware", "RAPDU", "pack_APDU", "Crop")

@@ -17,7 +17,6 @@ class TestExtendedBip32Path(TestCase):
         self.assertEqual(path1.change, path2.change)
         self.assertEqual(path1.address_index, path2.address_index)
 
-
     def test_error_empty(self):
         with self.assertRaises(ValueError):
             ExtendedBip32Path()

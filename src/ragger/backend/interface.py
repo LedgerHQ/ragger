@@ -15,12 +15,12 @@
 """
 from abc import ABC, abstractmethod
 from contextlib import contextmanager
-from types import TracebackType
-from typing import Optional, Type, Iterable, Generator
 from enum import Enum, auto
+from pathlib import Path
+from types import TracebackType
+from typing import Optional, Type, Generator
 
-from ragger.utils import pack_APDU, RAPDU, Firmware
-from ragger.error import ExceptionRAPDU
+from ragger.utils import pack_APDU, RAPDU, Firmware, Crop
 
 
 class RaisePolicy(Enum):
@@ -282,6 +282,79 @@ class BackendInterface(ABC):
         get stuck (on further call to `receive` for instance) until the expected
         action is performed on the device.
 
+        :return: None
+        :rtype: NoneType
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def navigate_and_compare_until_snap(self,
+                                        path: Path,
+                                        test_case_name: Path,
+                                        start_img_idx: int = 0,
+                                        last_img_idx: int = 0) -> bool:
+        """
+        Navigate until snapshot is found and then compare all snapshots of the flow
+        to check if everything is properly displayed.
+
+        This method may be left void on backends connecting to physical devices,
+        where a physical interaction must be performed instead.
+        This will prevent the instrumentation to fail (the void method won't
+        raise `NotImplementedError`), but the instrumentation flow will probably
+        get stuck (on further call to `receive` for instance) until the expected
+        action is performed on the device.
+        
+        :param path: Absolute path to the snapshots directory.
+        :type path: Path
+        :param test_case_name: Relative path to the test case snapshots directory (from path).
+        :type test_case_name: Path
+        :param start_img_idx: Index of the first snapshot of the navigation flow.
+        :type start_img_idx: int
+        :param last_img_idx: Index of the snapshot to look for when navigating.
+        :type last_img_idx: int
+
+        :return: None
+        :rtype: NoneType
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def navigate_until_snap(self,
+                            path: Path,
+                            test_case_name: Path,
+                            start_img_idx: int = 0,
+                            last_img_idx: int = 0,
+                            take_snaps: bool = True,
+                            timeout: int = 30,
+                            crop_first: Crop = None,
+                            crop_last: Crop = None) -> int:
+        """
+        Navigate until snapshot is found.
+
+        This method may be left void on backends connecting to physical devices,
+        where a physical interaction must be performed instead.
+        This will prevent the instrumentation to fail (the void method won't
+        raise `NotImplementedError`), but the instrumentation flow will probably
+        get stuck (on further call to `receive` for instance) until the expected
+        action is performed on the device.
+
+        :param path: Absolute path to the snapshots directory.
+        :type path: Path
+        :param test_case_name: Relative path to the test case snapshots directory (from path).
+        :type test_case_name: Path
+        :param start_img_idx: Index of the first snapshot of the navigation flow.
+        :type start_img_idx: int
+        :param last_img_idx: Index of the snapshot to look for when navigating.
+        :type last_img_idx: int
+        :param take_snaps: Take temporary snapshots of the screen displayed when navigating.
+        :type take_snaps: bool
+        :param timeout: Timeout of the navigation loop if last snapshot is not found.
+        :type timeout: int
+        :param crop_first: Crop (left, upper, right or lower pixels) first snapshot image for comparison (useful if using a generic snapshot).
+        :type crop_first: Crop
+        :param crop_last: Crop (left, upper, right or lower pixels) last snapshot image for comparison (useful if using a generic snapshot).
+        :type crop_last: Crop
+        
         :return: None
         :rtype: NoneType
         """

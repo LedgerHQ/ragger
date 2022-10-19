@@ -23,8 +23,7 @@ class TestSeed(TestCase):
             # LTC: 49'/2'/0'/0/0
             ("80000031 80000002 80000000 00000000 00000000",
              "047503e09409149c042c76020da3425bbea35eaeeaaf0f6b438dcc8e3820d9a41"
-             "c2e14029a47f0c63fa6913f5f9c326d1e78607346261b2a3abff3b829d7dacb39")
-        )
+             "c2e14029a47f0c63fa6913f5f9c326d1e78607346261b2a3abff3b829d7dacb39"))
         for path, key in path_to_key:
             self.assertEqual(self.seed.get_pubkey(bytes.fromhex(path)), bytes.fromhex(key))
 
@@ -77,7 +76,8 @@ class TestSeed(TestCase):
             self.assertEqual(self.seed.get_address(path, encoding=fmt), expected)
 
         path = bytes.fromhex("80000031 80000002 80000000 00000000 00000000")
-        self.assertEqual(self.seed.get_address(path, encoding="p2sh"), "MJovkMvQ2rXXUj7TGVvnQyVMWghSdqZsmu")
+        self.assertEqual(self.seed.get_address(path, encoding="p2sh"),
+                         "MJovkMvQ2rXXUj7TGVvnQyVMWghSdqZsmu")
 
     def test_get_address_ethereum(self):
         # ETH: 44'/60'/0'/0/0

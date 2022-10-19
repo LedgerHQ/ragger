@@ -14,12 +14,13 @@
    limitations under the License.
 """
 from contextlib import contextmanager
+from pathlib import Path
 from typing import Generator, Optional
 
 from ledgerwallet.client import LedgerClient, CommException
 from ledgerwallet.transport import HidDevice
 
-from ragger import logger, RAPDU
+from ragger import logger, RAPDU, Crop
 from ragger.error import ExceptionRAPDU
 from .interface import BackendInterface
 
@@ -98,4 +99,22 @@ class LedgerWalletBackend(BackendInterface):
         pass
 
     def both_click(self) -> None:
+        pass
+
+    def navigate_until_snap(self,
+                            path: Path,
+                            test_case_name: Path,
+                            start_img_idx: int = 0,
+                            last_img_idx: int = 0,
+                            take_snaps: bool = True,
+                            timeout: int = 30,
+                            crop_first: Crop = None,
+                            crop_last: Crop = None) -> int:
+        pass
+
+    def navigate_and_compare_until_snap(self,
+                                        path: Path,
+                                        test_case_name: Path,
+                                        start_img_idx: int = 0,
+                                        last_img_idx: int = 0) -> bool:
         pass
