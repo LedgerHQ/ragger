@@ -110,3 +110,6 @@ class LedgerCommBackend(BackendInterface):
                                      tmp_snap_path: Optional[Path] = None,
                                      golden_run: bool = False) -> bool:
         return True
+
+    def finger_touch(self, x: int = 0, y: int = 0, delay: float = 0.5) -> None:
+        pass
