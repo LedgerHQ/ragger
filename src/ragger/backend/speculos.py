@@ -24,7 +24,8 @@ from speculos.client import SpeculosClient, ApduResponse, ApduException, screens
 
 from ragger import logger
 from ragger.error import ExceptionRAPDU
-from ragger.utils import Firmware, RAPDU, Crop
+from ragger.firmware import Firmware
+from ragger.utils import RAPDU, Crop
 from .interface import BackendInterface
 
 

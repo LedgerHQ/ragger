@@ -20,7 +20,8 @@ from pathlib import Path
 from types import TracebackType
 from typing import Optional, Type, Generator
 
-from ragger.utils import pack_APDU, RAPDU, Firmware, Crop
+from ragger.firmware import Firmware
+from ragger.utils import pack_APDU, RAPDU, Crop
 
 
 class RaisePolicy(Enum):

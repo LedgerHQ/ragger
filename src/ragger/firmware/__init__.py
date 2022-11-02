@@ -13,6 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-from typing import List
+from .structs import Firmware
+from .versions import SDK_VERSIONS
 
-SUPPORTED_DEVICES: List[str] = ["nanos", "nanox", "nanosp"]
+__all__ = ["Firmware", "SDK_VERSIONS"]
