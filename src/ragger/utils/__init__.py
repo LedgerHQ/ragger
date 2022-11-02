@@ -13,8 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-from .constants import SUPPORTED_DEVICES
-from .structs import Firmware, RAPDU, Crop
+from .structs import RAPDU, Crop
 from .packing import pack_APDU
 
-__all__ = ("SUPPORTED_DEVICES", "Firmware", "RAPDU", "pack_APDU", "Crop")
+__all__ = ("RAPDU", "pack_APDU", "Crop")

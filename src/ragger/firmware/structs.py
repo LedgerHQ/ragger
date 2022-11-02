@@ -15,19 +15,25 @@
 """
 from dataclasses import dataclass
 
+from semver import VersionInfo
 
-@dataclass(frozen=True)
-class Crop:
-    left: int = 0
-    upper: int = 0
-    right: int = 0
-    lower: int = 0
+from .versions import SDK_VERSIONS
 
 
 @dataclass(frozen=True)
-class RAPDU:
-    status: int
-    data: bytes
+class _Firmware:
+    device: str
+    version: str
+    semantic_version: VersionInfo
 
-    def __str__(self):
-        return f'[0x{self.status:02x}] {self.data.hex() if self.data else "<Nothing>"}'
+
+class Firmware(_Firmware):
+
+    def __init__(self, device: str, version: str):
+        assert device.lower() in SDK_VERSIONS.keys()
+        try:
+            versions = SDK_VERSIONS[device.lower()]
+        except KeyError:
+            raise KeyError(f"Version {version} for {device} is not supported or does not exist")
+        # Some versions used are not semantic, like 2.0 and such. These are managed here
+        super().__init__(device.lower(), version, versions.get_last_from_string(version))

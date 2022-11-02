@@ -2,9 +2,10 @@ import struct
 from unittest import TestCase
 from unittest.mock import MagicMock
 
-from ragger import Firmware, ExceptionRAPDU
+from ragger import ExceptionRAPDU
 from ragger.backend import BackendInterface
 from ragger.backend import RaisePolicy
+from ragger.firmware.structs import _Firmware
 
 
 class DummyBackend(BackendInterface):
@@ -50,7 +51,7 @@ class DummyBackend(BackendInterface):
 class TestBackendInterface(TestCase):
 
     def setUp(self):
-        self.firmware = Firmware("nanos", "2.0.1")
+        self.firmware = _Firmware("nanos", "2.0.1", "other")
         self.errors = (ExceptionRAPDU(0x8888, "ERROR1"), ExceptionRAPDU(0x7777, "ERROR2"))
         self.valid_statuses = (0x9000, 0x9001, 0x9002)
         self.backend = DummyBackend(self.firmware)

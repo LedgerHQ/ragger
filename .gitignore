@@ -1,9 +1,10 @@
 *pyc
 *egg-info/
 *~
-.coverage
+.coverage*
 coverage.xml
 build/
 dist/
 
 tests/elfs/
+snapshots-tmp/

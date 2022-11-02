@@ -20,7 +20,8 @@ from pathlib import Path
 from types import TracebackType
 from typing import Optional, Type, Generator
 
-from ragger.utils import pack_APDU, RAPDU, Firmware, Crop
+from ragger.firmware import Firmware
+from ragger.utils import pack_APDU, RAPDU, Crop
 
 
 class RaisePolicy(Enum):
@@ -303,7 +304,7 @@ class BackendInterface(ABC):
         raise `NotImplementedError`), but the instrumentation flow will probably
         get stuck (on further call to `receive` for instance) until the expected
         action is performed on the device.
-        
+
         :param path: Absolute path to the snapshots directory.
         :type path: Path
         :param test_case_name: Relative path to the test case snapshots directory (from path).
@@ -350,11 +351,13 @@ class BackendInterface(ABC):
         :type take_snaps: bool
         :param timeout: Timeout of the navigation loop if last snapshot is not found.
         :type timeout: int
-        :param crop_first: Crop (left, upper, right or lower pixels) first snapshot image for comparison (useful if using a generic snapshot).
+        :param crop_first: Crop (left, upper, right or lower pixels) first snapshot image for comparison
+                           (useful if using a generic snapshot).
         :type crop_first: Crop
-        :param crop_last: Crop (left, upper, right or lower pixels) last snapshot image for comparison (useful if using a generic snapshot).
+        :param crop_last: Crop (left, upper, right or lower pixels) last snapshot image for comparison
+                          (useful if using a generic snapshot).
         :type crop_last: Crop
-        
+
         :return: None
         :rtype: NoneType
         """

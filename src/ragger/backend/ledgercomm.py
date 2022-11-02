@@ -15,7 +15,7 @@
 """
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Optional, Iterable, Generator
+from typing import Optional, Generator
 
 from ledgercomm import Transport
 
