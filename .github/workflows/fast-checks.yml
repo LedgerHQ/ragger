@@ -1,11 +1,12 @@
 name: Fast checks
 
 on:
+  workflow_dispatch:
   push:
-  pull_request:
     branches:
       - develop
       - master
+  pull_request:
 
 jobs:
   lint:
@@ -17,7 +18,7 @@ jobs:
     - name: Lint Python code
       run: |
         pip install flake8
-        find src/ -type f -name '*.py' -exec flake8 --max-line-length=120 '{}' '+' || echo 1
+        find src/ -type f -name '*.py' -exec flake8 --max-line-length=120 '{}' '+'
 
   yapf:
     name: Formatting
