@@ -26,9 +26,12 @@ class MetaScreen(type):
     Creates a class with a constructor automatically instanciating layouts
     from declared class attributes.
 
-    The goal is to build a representation of a screen in a declarative way. For instance, let's
-    imagine an application with an information button header, a cancel/quit footer and a keyboard
-    in the center of the screen. The declaration of such screen would be:
+    The goal is to build a representation of a screen in a declarative way. Layouts must be declared
+    as attributes of the class, their name starting with the prefix `layout_`. These attributes will
+    then be instantiated and stored in the class instance, without their `layout_` prefix.
+
+    For instance, let's imagine an application with an information button header, a cancel/quit
+    footer and a keyboard in the center of the screen. The declaration of such screen would be:
 
     ```python
     class Screen(metaclass=MetaScreen):
@@ -52,8 +55,8 @@ class MetaScreen(type):
     try:
         screen.footer.tap()         # quitting the application
     except:
-        pass                       # depending on the backend, the application stop could raise
-                                   # an error
+        pass                        # depending on the backend, the application stop could raise
+                                    # an error
     ```
 
     (Of course the navigation depends on the current application, so this example may not work in
