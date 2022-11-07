@@ -20,7 +20,7 @@ from ragger.firmware import Firmware
 from .positions import POSITIONS_BY_SDK
 
 
-class Layout:
+class _Layout:
 
     def __init__(self, client: BackendInterface, firmware: Firmware):
         self._client = client
@@ -46,14 +46,14 @@ class Layout:
 
 
 # Suggestions
-class ChoiceList(Layout):
+class ChoiceList(_Layout):
 
     def choose(self, index: int):
         assert 1 <= index <= 6, "Choice index must be in [1, 6]"
         self.client.finger_touch(*self.positions[index])
 
 
-class Suggestions(Layout):
+class Suggestions(_Layout):
 
     def choose(self, index: int):
         assert 1 <= index <= 4, "Suggestion index must be in [1, 4]"
@@ -61,7 +61,7 @@ class Suggestions(Layout):
 
 
 # Keyboards
-class LetterOnlyKeyboard(Layout):
+class _GenericKeyboard(_Layout):
 
     def write(self, word: str):
         for letter in word.lower():
@@ -72,8 +72,38 @@ class LetterOnlyKeyboard(Layout):
         self.client.finger_touch(*self.positions["back"])
 
 
+class LetterOnlyKeyboard(_GenericKeyboard):
+    pass
+
+
+class _FullKeyboard(_GenericKeyboard):
+
+    def change_layout(self):
+        self.client.finger_touch(*self.positions["change_layout"])
+
+
+class FullKeyboardLetters(_FullKeyboard):
+
+    def change_case(self):
+        self.client.finger_touch(*self.positions["change_case"])
+
+
+class FullKeyboardSpecialCharacters(_FullKeyboard):
+
+    def more_specials(self):
+        self.client.finger_touch(*self.positions["more_specials"])
+
+
+class FullKeyboardSpecialCharacters1(FullKeyboardSpecialCharacters):
+    pass
+
+
+class FullKeyboardSpecialCharacters2(FullKeyboardSpecialCharacters):
+    pass
+
+
 # Center Info
-class TappableCenter(Layout):
+class TappableCenter(_Layout):
 
     def tap(self):
         self.client.finger_touch(*self.positions)
@@ -81,21 +111,34 @@ class TappableCenter(Layout):
 
 # Headers
 #########
-class InfoHeader(Layout):
+class RightHeader(_Layout):
 
     def tap(self):
         self.client.finger_touch(*self.positions)
 
 
-class NavigationHeader(Layout):
+ExitHeader = RightHeader
+InfoHeader = RightHeader
+
+
+class LeftHeader(_Layout):
 
     def tap(self):
         self.client.finger_touch(*self.positions)
+
+
+NavigationHeader = LeftHeader
 
 
 # Footers
 #########
-class CancelFooter(Layout):
+class CenteredFooter(_Layout):
 
     def tap(self):
         self.client.finger_touch(*self.positions)
+
+
+CancelFooter = CenteredFooter
+ExitFooter = CenteredFooter
+InfoFooter = CenteredFooter
+SettingsFooter = CenteredFooter
