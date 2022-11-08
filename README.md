@@ -65,75 +65,53 @@ The `src/ragger/backend/interface.py` file describes the methods that can be imp
 * `right_click`: perform a right click on a device.
 * `left_click`: perform a left click on a device.
 * `both_click`: perform a click on both buttons (left + right) of a device.
-* `navigate_until_snap`: navigate on the device (by performing right clicks) until a snapshot is found and then validate (with both click).
-* `navigate_and_compare_until_snap`: same as the previous method but compare screenshots of the flow with "golden" images after the last snapshot is found.
+* `compare_screen_with_snapshot`: compare the current device screen with the provided snapshot.
+* `save_screen_snapshot`: save the current device screen as a snapshot.
+
+The `src/ragger/navigator/navigator.py` file describes the methods that can be implemented by the different device navigators and that allow to interact with an emulated device:
+* `navigate`: navigate on the device according to a set of navigation instructions provided.
+* `navigate_and_compare`: navigate on the device according to a set of navigation instructions provided then compare each step screenshot with "golden images".
+* `navigate_until_snap`: navigate on the device until a snapshot is found and then validate.
 
 ## Examples
 ### With `pytest`
 
-The backends can be easily integrated in a `pytest` test suite with the
-following fixtures:
+The backends can be easily integrated in a `pytest` test suite with the following files:
+
+* A `conftest.py` which can be heavily based on [this template](template_conftest.py).
+* Tests files which would looks like:
 
 ```python
----------- conftest.py ----------
+#---------- some_tests.py ----------
 
-import pytest
-from ragger import Firmware
-from ragger.backend import SpeculosBackend, LedgerCommBackend
+TESTS_ROOT_DIR = Path(__file__).parent
 
-# This variable is needed for Speculos only (physical tests need the application to be already installed)
-APPLICATION = "Path/to/the/application.elf"
-# This variable will be useful in tests to implement different behavior depending on the firmware
-NANOS_FIRMWARE = Firmware("nanos", "2.1")
-
-# adding a pytest CLI option "--backend"
-def pytest_addoption(parser):
-    print(help(parser.addoption))
-    parser.addoption("--backend", action="store", default="speculos")
-
-# accessing the value of the "--backend" option as a fixture
-@pytest.fixture(scope="session")
-def backend(pytestconfig):
-    return pytestconfig.getoption("backend")
-
-# Providing the firmware as a fixture
-# This can be easily parametrized, which would allow to run the tests on several firmware type or version
-@pytest.fixture
-def firmware():
-    return NANOS_FIRMWARE
-
-# Depending on the "--backend" option value, a different backend is
-# instantiated, and the tests will either run on Speculos or on a physical
-# device depending on the backend
-def create_backend(backend: bool, firmware):
-    if backend.lower() == "ledgercomm":
-        return LedgerCommBackend(firmware, interface="hid")
-    elif backend.lower() == "ledgerwallet":
-        return LedgerWalletBackend(firmware)
-    elif backend.lower() == "speculos":
-        return SpeculosBackend(APPLICATION, firmware)
-    else:
-        raise ValueError(f"Backend '{backend}' is unknown. Valid backends are: {BACKENDS}")
-
-# This final fixture will return the properly configured backend client, to be used in tests
-@pytest.fixture
-def client(backend, firmware):
-    with create_backend(backend, firmware) as b:
-        yield b
-
----------- some_tests.py ----------
 
 def test_something(client, firmware):
-    client.exchange(<whatever>)
-    if firmware.device == "nanos":
-        result = <do something specific to NanoS>
-    else:
-        result = <do something else>
-    assert result.status == 0x9000
+    rapdu: RAPDU = client.exchange(<whatever>)
+    assert rapdu.status == 0x9000
+
+
+def test_with_user_action_and_screenshot_comparison(client, firmware, navigator, test_name):
+    with client.exchange_async(<whatever>)
+        if firmware.device == "nanos":
+            instructions = [
+                NavigationInstruction.RIGHT_CLICK,
+                NavigationInstruction.BOTH_CLICK,
+            ]
+        else:
+            instructions = <something else>
+        navigator.navigate_and_compare(TESTS_ROOT_DIR, test_name, instructions)
+    rapdu: RAPDU = client.last_async_response
+    assert rapdu.status == 0x9000
+    assert verify(rapdu.data)
 ```
 
 The `client` fixture used to discuss with the instantiated backend is documented
 [here](src/ragger/backend/interface.py).
+
+The `navigator` fixture used to navigate with the instantiated backend is documented
+[here](src/ragger/navigator/navigator.py).
 
 After implementing the tests, the test suite can be easily switched on the different backends:
 
@@ -142,5 +120,5 @@ pytest <tests/path>                                               # by default, 
 pytest --backend [speculos|ledgercomm|ledgerwallet] <tests/path>  # will run tests on the selected backend
 ```
 
-The tests of this repository are a basically the same as this exemple, except
+The tests of this repository are basically the same as this example, except
 the tests run on the three current firmwares (NanoS, NanoX and NanoS+).
