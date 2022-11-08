@@ -45,7 +45,6 @@ class _Layout:
 ########
 
 
-# Suggestions
 class ChoiceList(_Layout):
 
     def choose(self, index: int):

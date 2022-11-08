@@ -18,6 +18,11 @@ from typing import Dict, Tuple
 from ragger.backend import BackendInterface
 from ragger.firmware import Firmware
 
+from .layouts import CancelFooter, CenteredFooter, ChoiceList, ExitFooter, ExitHeader, \
+    FullKeyboardLetters, FullKeyboardSpecialCharacters1, FullKeyboardSpecialCharacters2, \
+    InfoFooter, InfoHeader, LetterOnlyKeyboard, RightHeader, SettingsFooter, Suggestions, \
+    TappableCenter
+
 LAYOUT_PREFIX = "layout_"
 
 
@@ -76,3 +81,30 @@ class MetaScreen(type):
 
         namespace["__init__"] = init
         return super().__new__(cls, name, parents, namespace)
+
+
+class FullScreen(metaclass=MetaScreen):
+    """
+    This screen embbeds every possible clickable layout.
+    It could be used to manipulate any Fatstacks application, at the cost of using an imprecise,
+    unpersonalized and in way wrong representation of the application's screen. Still, it could
+    prove handy for fast testing.
+    """
+    # possible headers
+    layout_right_header = RightHeader
+    layout_exit_header = ExitHeader
+    layout_info_header = InfoHeader
+    # possible centers
+    layout_choice_list = ChoiceList
+    layout_suggestions = Suggestions
+    layout_tappable = TappableCenter
+    layout_letter_only_keyboard = LetterOnlyKeyboard
+    layout_full_keyboard_letters = FullKeyboardLetters
+    layout_full_keyboard_special_characters_1 = FullKeyboardSpecialCharacters1
+    layout_full_keyboard_special_characters_2 = FullKeyboardSpecialCharacters2
+    # possible footers
+    layout_centered_footer = CenteredFooter
+    layout_cancel_footer = CancelFooter
+    layout_exit_footer = ExitFooter
+    layout_info_footer = InfoFooter
+    layout_settings_footer = SettingsFooter
