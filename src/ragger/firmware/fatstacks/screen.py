@@ -20,8 +20,8 @@ from ragger.firmware import Firmware
 
 from .layouts import CancelFooter, CenteredFooter, ChoiceList, ExitFooter, ExitHeader, \
     FullKeyboardLetters, FullKeyboardSpecialCharacters1, FullKeyboardSpecialCharacters2, \
-    InfoFooter, InfoHeader, LetterOnlyKeyboard, RightHeader, SettingsFooter, Suggestions, \
-    TappableCenter
+    InfoFooter, InfoHeader, LeftHeader, LetterOnlyKeyboard, NavigationHeader, RightHeader, \
+    SettingsFooter, Suggestions, TappableCenter
 
 LAYOUT_PREFIX = "layout_"
 
@@ -94,10 +94,12 @@ class FullScreen(metaclass=MetaScreen):
     layout_right_header = RightHeader
     layout_exit_header = ExitHeader
     layout_info_header = InfoHeader
+    layout_left_header = LeftHeader
+    layout_navigation_header = NavigationHeader
     # possible centers
     layout_choice_list = ChoiceList
     layout_suggestions = Suggestions
-    layout_tappable = TappableCenter
+    layout_tappable_center = TappableCenter
     layout_letter_only_keyboard = LetterOnlyKeyboard
     layout_full_keyboard_letters = FullKeyboardLetters
     layout_full_keyboard_special_characters_1 = FullKeyboardSpecialCharacters1
