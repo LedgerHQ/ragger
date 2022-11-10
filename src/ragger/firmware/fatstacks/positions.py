@@ -31,7 +31,10 @@ class Position:
 CENTER = Position(200, 335)
 BUTTON_UPPER_LEFT = Position(36, 36)
 BUTTON_UPPER_RIGHT = Position(342, 55)
-BUTTON_LOWER_MIDDLE = Position(197, 606)
+BUTTON_LOWER_LEFT = Position(36, 606)
+BUTTON_LOWER_MIDDLE = Position(200, 606)
+BUTTON_LOWER_RIGHT = Position(342, 606)
+BUTTON_ABOVE_LOWER_MIDDLE = Position(200, 515)
 
 POSITIONS_BY_SDK = {
     FatstacksVersions.V_1_0_0.value: {
@@ -192,5 +195,36 @@ POSITIONS_BY_SDK = {
         "RightHeader": BUTTON_UPPER_RIGHT,
         "LeftHeader": BUTTON_UPPER_LEFT,
         "CenteredFooter": BUTTON_LOWER_MIDDLE,
+        "UseCaseHome": {
+            "info": BUTTON_UPPER_RIGHT,
+            "settings": BUTTON_UPPER_RIGHT,
+            "quit": BUTTON_LOWER_MIDDLE
+        },
+        "UseCaseSettings": {
+            "exit": BUTTON_LOWER_LEFT,
+            "back": BUTTON_LOWER_MIDDLE,
+            "next": BUTTON_LOWER_RIGHT,
+        },
+        "UseCaseChoice": {
+            "confirm": BUTTON_ABOVE_LOWER_MIDDLE,
+            "reject": BUTTON_LOWER_MIDDLE,
+        },
+        "UseCaseReview": {
+            "tap": CENTER,
+            "back": BUTTON_UPPER_LEFT,
+            "confirm": BUTTON_ABOVE_LOWER_MIDDLE,
+            "reject": BUTTON_LOWER_MIDDLE,
+        },
+        "UseCaseViewDetails": {
+            "exit": BUTTON_LOWER_LEFT,
+            "back": BUTTON_LOWER_MIDDLE,
+            "next": BUTTON_LOWER_RIGHT,
+        },
+        "UseCaseAddressConfirmation": {
+            "show_qr": CENTER,
+            "exit_qr": BUTTON_LOWER_MIDDLE,
+            "confirm": BUTTON_ABOVE_LOWER_MIDDLE,
+            "cancel": BUTTON_LOWER_MIDDLE,
+        },
     }
 }

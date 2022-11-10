@@ -32,6 +32,49 @@ class NavInsID(Enum):
     LEFT_CLICK = auto()
     BOTH_CLICK = auto()
 
+    # Navigation instructions for Fatstacks devices
+    TOUCH = auto()
+    # possible headers
+    RIGHT_HEADER_TAP = auto()
+    EXIT_HEADER_TAP = auto()
+    INFO_HEADER_TAP = auto()
+    LEFT_HEADER_TAP = auto()
+    NAVIGATION_HEADER_TAP = auto()
+    # possible centers
+    CHOICE_CHOOSE = auto()
+    SUGGESTION_CHOOSE = auto()
+    TAPPABLE_CENTER_TAP = auto()
+    KB_LETTER_ONLY_WRITE = auto()
+    KB_LETTERS_WRITE = auto()
+    KB_SPECIAL_CHAR_1_WRITE = auto()
+    KB_SPECIAL_CHAR_2_WRITE = auto()
+    # possible footers
+    CENTERED_FOOTER_TAP = auto()
+    CANCEL_FOOTER_TAP = auto()
+    EXIT_FOOTER_TAP = auto()
+    INFO_FOOTER_TAP = auto()
+    # use cases
+    USE_CASE_HOME_INFO = auto()
+    USE_CASE_HOME_SETTINGS = auto()
+    USE_CASE_HOME_QUIT = auto()
+    USE_CASE_SETTINGS_EXIT = auto()
+    USE_CASE_SETTINGS_BACK = auto()
+    USE_CASE_SETTINGS_NEXT = auto()
+    USE_CASE_CHOICE_CONFIRM = auto()
+    USE_CASE_CHOICE_REJECT = auto()
+    USE_CASE_STATUS_WAIT = auto()
+    USE_CASE_REVIEW_TAP = auto()
+    USE_CASE_REVIEW_BACK = auto()
+    USE_CASE_REVIEW_REJECT = auto()
+    USE_CASE_REVIEW_CONFIRM = auto()
+    USE_CASE_VIEW_DETAILS_EXIT = auto()
+    USE_CASE_VIEW_DETAILS_BACK = auto()
+    USE_CASE_VIEW_DETAILS_NEXT = auto()
+    USE_CASE_ADDRESS_CONFIRMATION_SHOW_QR = auto()
+    USE_CASE_ADDRESS_CONFIRMATION_EXIT_QR = auto()
+    USE_CASE_ADDRESS_CONFIRMATION_CONFIRM = auto()
+    USE_CASE_ADDRESS_CONFIRMATION_CANCEL = auto()
+
 
 class NavIns:
 
