@@ -29,10 +29,13 @@ author = 'bow'
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
+    'sphinx_copybutton',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
+
+html_sidebars = { '**': ['globaltoc.html', 'relations.html', 'sourcelink.html', 'searchbox.html'] }
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -43,6 +46,9 @@ import os
 import sys
 
 sys.path.insert(0, os.path.abspath('../src/'))
+
+from ragger import __version__
+release = __version__
 
 # Autodoc conf
 # Do not skip __init__ methods by default
