@@ -29,12 +29,6 @@ class DummyBackend(BackendInterface):
     def left_click(self):
         self.mock.left_click()
 
-    def navigate_and_compare_until_snap(self, *args, **kwargs):
-        return self.mock.navigate_and_compare_until_snap(*args, **kwargs)
-
-    def navigate_until_snap(self, *args, **kwargs):
-        return self.mock.navigate_until_snap(*args, **kwargs)
-
     def exchange_async_raw(self, *args, **kwargs):
         return self.mock.exchange_async_raw(*args, **kwargs)
 
@@ -46,6 +40,12 @@ class DummyBackend(BackendInterface):
 
     def send_raw(self, *args, **kwargs):
         self.mock.send_raw(*args, **kwargs)
+
+    def compare_screen_with_snapshot(self, snap_path, crop=None) -> bool:
+        return self.mock.compare_screen_with_snapshot()
+
+    def save_screen_snapshot(self, path) -> None:
+        self.mock.save_screen_snapshot()
 
 
 class TestBackendInterface(TestCase):

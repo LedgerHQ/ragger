@@ -13,13 +13,20 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-from .structs import RAPDU, Crop
-from .packing import pack_APDU
-from .path import BtcDerivationPathFormat, pack_derivation_path
-from .path import bitcoin_pack_derivation_path
-from .misc import app_path_from_app_name, prefix_with_len
-from .misc import create_currency_config
+from time import sleep
 
-__all__ = ("RAPDU", "pack_APDU", "Crop", "BtcDerivationPathFormat", "pack_derivation_path",
-           "bitcoin_pack_derivation_path", "app_path_from_app_name", "prefix_with_len",
-           "create_currency_config")
+from ragger.backend import BackendInterface
+from ragger.firmware import Firmware
+from ragger.navigator import NavInsID, Navigator
+
+
+class NanoNavigator(Navigator):
+
+    def __init__(self, backend: BackendInterface, firmware: Firmware, golden_run: bool = False):
+        callbacks = {
+            NavInsID.WAIT: sleep,
+            NavInsID.RIGHT_CLICK: backend.right_click,
+            NavInsID.LEFT_CLICK: backend.left_click,
+            NavInsID.BOTH_CLICK: backend.both_click
+        }
+        super().__init__(backend, firmware, callbacks, golden_run)

@@ -37,26 +37,35 @@ def apdu(*args):
 class Actions:
 
     def __init__(self):
-        self.iter = 0
-        self.idx = 1
+        self.idx = 0
 
     def button(self, *args):
         path = request.path
         if "right" in path:
-            self.idx = self.idx + 1 if (self.idx < 2) else 0
+            if self.idx == 2:
+                self.idx = 0
+            elif self.idx == 4:
+                self.idx = 3
+            else:
+                self.idx = self.idx + 1
         elif "left" in path:
-            self.idx = self.idx - 1 if (self.idx >= 1) else 0
+            if self.idx == 0:
+                self.idx = 2
+            elif self.idx == 3:
+                self.idx = 4
+            else:
+                self.idx = self.idx - 1
         elif "both" in path:
             if self.idx == 2:
                 self.idx = 3
+            if self.idx == 4:
+                self.idx = 0
+
         return {}
 
     def screenshot(self, *args):
         path = Path(
             __file__).parent.resolve() / "snapshots/nanos/generic" / f"{str(self.idx).zfill(5)}.png"
-        if self.iter == 1:
-            self.idx = 0
-        self.iter = self.iter + 1
         img_temp = Image.open(path)
         iobytes = BytesIO()
         img_temp.save(iobytes, format="PNG")
