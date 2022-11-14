@@ -1,4 +1,5 @@
 .. _Tutorial:
+
 Tutorial
 ========
 
@@ -136,8 +137,9 @@ a list of those:
                Firmware('nanox', '2.0.2'),
                Firmware('nanosp', '1.0.3')]
 
+
 Then we can override the
-`pytest_generate_tests<https://docs.pytest.org/en/7.2.x/how-to/parametrize.html#pytest-generate-tests>`_
+`pytest_generate_tests <https://docs.pytest.org/en/7.2.x/how-to/parametrize.html#pytest-generate-tests>`_
 function to automatically create a fixture (let's call it "firmware"), which
 will parametrize every test using this fixture and trigger then with each
 declared firmware version:
@@ -255,7 +257,8 @@ access it:
 Now that we are able to now wich backend is chosen, we can write a function
 returning the correct backend:
 
-.. code_block:: python
+
+.. code-block:: python
 
   from ragger.backend import LedgerCommBackend, LedgerWalletBackend
 
@@ -275,6 +278,7 @@ returning the correct backend:
 Test can now be launched to run with another backend:
 
 .. code-block:: bash
+
   $ # start the application on a physical device connected to the computer, or with any emulator
   $ pytest -v --backend ledgercomm test_something.py
 

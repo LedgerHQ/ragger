@@ -285,7 +285,7 @@ a list of those:</p>
 </pre></div>
 </div>
 <p>Then we can override the
-<a href="#id13"><span class="problematic" id="id14">`pytest_generate_tests&lt;https://docs.pytest.org/en/7.2.x/how-to/parametrize.html#pytest-generate-tests&gt;`_</span></a>
+<a class="reference external" href="https://docs.pytest.org/en/7.2.x/how-to/parametrize.html#pytest-generate-tests">pytest_generate_tests</a>
 function to automatically create a fixture (let’s call it “firmware”), which
 will parametrize every test using this fixture and trigger then with each
 declared firmware version:</p>
@@ -391,7 +391,27 @@ access it:</p>
 </div>
 <p>Now that we are able to now wich backend is chosen, we can write a function
 returning the correct backend:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ragger.backend</span> <span class="kn">import</span> <span class="n">LedgerCommBackend</span><span class="p">,</span> <span class="n">LedgerWalletBackend</span>
+
+<span class="n">BACKENDS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;speculos&quot;</span><span class="p">,</span> <span class="s2">&quot;ledgercomm&quot;</span><span class="p">,</span> <span class="s2">&quot;ledgerwallet&quot;</span><span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">create_backend</span><span class="p">(</span><span class="n">backend_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">firmware</span><span class="p">:</span> <span class="n">Firmware</span><span class="p">,</span> <span class="n">display</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BackendInterface</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">backend</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;ledgercomm&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">LedgerCommBackend</span><span class="p">(</span><span class="n">firmware</span><span class="p">,</span> <span class="n">interface</span><span class="o">=</span><span class="s2">&quot;hid&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">backend</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;ledgerwallet&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">LedgerWalletBackend</span><span class="p">(</span><span class="n">firmware</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">backend</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;speculos&quot;</span><span class="p">:</span>
+        <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span> <span class="o">=</span> <span class="n">prepare_speculos_args</span><span class="p">(</span><span class="n">firmware</span><span class="p">,</span> <span class="n">display</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">SpeculosBackend</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">firmware</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Backend &#39;</span><span class="si">{</span><span class="n">backend</span><span class="si">}</span><span class="s2">&#39; is unknown. Valid backends are: </span><span class="si">{</span><span class="n">BACKENDS</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 <p>Test can now be launched to run with another backend:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ <span class="c1"># start the application on a physical device connected to the computer, or with any emulator</span>
+$ pytest -v --backend ledgercomm test_something.py
+</pre></div>
+</div>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>This won’t work - again - because the tests will run for every SDK versions, but

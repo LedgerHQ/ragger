@@ -4,7 +4,7 @@ Rationale
 =========
 
 Testing, easily manipulating a Ledger :term:`application` is hard. Although
-:term"`Speculos` strongly eases it, it does not replace a IRL test on physical
+:term"`Speculos` strongly eases it, it does not replace an IRL test on physical
 devices.
 
 Moreover, as an emulator, it provides low-level functions like pressing a
