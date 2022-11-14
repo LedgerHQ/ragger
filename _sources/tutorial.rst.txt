@@ -9,6 +9,7 @@ of ``Ragger`` in order to write tests which are able to run either on
 
 .. contents::
   :local:
+  :backlinks: none
 
 ``Ragger`` installation
 -----------------------
@@ -279,7 +280,7 @@ Test can now be launched to run with another backend:
 
 .. code-block:: bash
 
-  $ # start the application on a physical device connected to the computer, or with any emulator
+  $ # start the application on a physical device connected to the computer, or on an emulator
   $ pytest -v --backend ledgercomm test_something.py
 
 .. warning::
@@ -354,7 +355,7 @@ And now we can easily specify which firmware should be used:
 
 .. code-block:: bash
 
-  $ # start the application on a physical device connected to the computer, or with any emulator
+  $ # start the application on a physical device connected to the computer, or on an emulator
   $ pytest -v --nanosp --backend ledgercomm test_something.py
 
   =============================== test session starts ===============================

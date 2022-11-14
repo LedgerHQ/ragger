@@ -52,26 +52,21 @@
     <div class="menu-wrapper">
         <nav class="menu" role="navigation" aria-label="main navigation">
             <div class="language_switcher_placeholder"></div>
-  <div>
-    <h3><a href="index.html">Table of Contents</a></h3>
-    <ul>
-<li><a class="reference internal" href="#">Tutorial</a><ul>
-<li><a class="reference internal" href="#ragger-installation"><code class="docutils literal notranslate"><span class="pre">Ragger</span></code> installation</a></li>
-<li><a class="reference internal" href="#first-backend-instantiation">First backend instantiation</a><ul>
-<li><a class="reference internal" href="#the-speculosbackend">The <code class="docutils literal notranslate"><span class="pre">SpeculosBackend</span></code></a></li>
-<li><a class="reference internal" href="#backend-as-a-fixture">Backend as a fixture</a></li>
+<h3><a href="index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">How is this doc structured:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="rationale.html">Rationale</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#ragger-installation"><code class="docutils literal notranslate"><span class="pre">Ragger</span></code> installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#first-backend-instantiation">First backend instantiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generalization">Generalization</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#generalization">Generalization</a><ul>
-<li><a class="reference internal" href="#to-other-firmware">To other firmware</a></li>
-<li><a class="reference internal" href="#to-other-backends">To other backends</a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source.html">Code documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
 </ul>
 
-  </div>
   <div>
     <h4>Previous topic</h4>
     <p class="topless"><a href="rationale.html"
@@ -172,7 +167,7 @@ of <code class="docutils literal notranslate"><span class="pre">Ragger</span></c
 </ul>
 </nav>
 <section id="ragger-installation">
-<h2><a class="toc-backref" href="#id6" role="doc-backlink"><code class="docutils literal notranslate"><span class="pre">Ragger</span></code> installation</a><a class="headerlink" href="#ragger-installation" title="Permalink to this heading">¶</a></h2>
+<h2><code class="docutils literal notranslate"><span class="pre">Ragger</span></code> installation<a class="headerlink" href="#ragger-installation" title="Permalink to this heading">¶</a></h2>
 <p>First step of all is the installation of <code class="docutils literal notranslate"><span class="pre">Ragger</span></code>. At first, we are going to
 test it with <a class="reference internal" href="glossary.html#term-Speculos"><span class="xref std std-term">Speculos</span></a>, so we are going to install <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> with Speculos
 dependencies:</p>
@@ -193,9 +188,9 @@ file.</p></li>
 </ul>
 </section>
 <section id="first-backend-instantiation">
-<h2><a class="toc-backref" href="#id7" role="doc-backlink">First backend instantiation</a><a class="headerlink" href="#first-backend-instantiation" title="Permalink to this heading">¶</a></h2>
+<h2>First backend instantiation<a class="headerlink" href="#first-backend-instantiation" title="Permalink to this heading">¶</a></h2>
 <section id="the-speculosbackend">
-<h3><a class="toc-backref" href="#id8" role="doc-backlink">The <code class="docutils literal notranslate"><span class="pre">SpeculosBackend</span></code></a><a class="headerlink" href="#the-speculosbackend" title="Permalink to this heading">¶</a></h3>
+<h3>The <code class="docutils literal notranslate"><span class="pre">SpeculosBackend</span></code><a class="headerlink" href="#the-speculosbackend" title="Permalink to this heading">¶</a></h3>
 <p>The <a class="reference internal" href="source.html#ragger.backend.BackendInterface" title="ragger.backend.BackendInterface"><code class="xref py py-class docutils literal notranslate"><span class="pre">BackendInterface</span></code></a> really only
 needs a <code class="xref py py-class docutils literal notranslate"><span class="pre">Firmware</span></code> - declaring the type of
 Ledger cold wallet to run the <a class="reference internal" href="glossary.html#term-Application"><span class="xref std std-term">application</span></a> on, and the version of the
@@ -229,7 +224,7 @@ once the communication is done. For Speculos, this mean stopping the whole
 emulator, for other backend it could be as simple as closing a socket.</p>
 </section>
 <section id="backend-as-a-fixture">
-<h3><a class="toc-backref" href="#id9" role="doc-backlink">Backend as a fixture</a><a class="headerlink" href="#backend-as-a-fixture" title="Permalink to this heading">¶</a></h3>
+<h3>Backend as a fixture<a class="headerlink" href="#backend-as-a-fixture" title="Permalink to this heading">¶</a></h3>
 <p>From this, we are not far away from writing a <a class="reference internal" href="glossary.html#term-Pytest"><span class="xref std std-term">Pytest</span></a> fixture, wich could
 take place in a <code class="docutils literal notranslate"><span class="pre">conftest.py</span></code> file, and used in a <code class="docutils literal notranslate"><span class="pre">test_something.py</span></code> file:</p>
 <div class="literal-block-wrapper docutils container" id="id2">
@@ -270,9 +265,9 @@ test_something.py::test_something PASSED                                     <sp
 </section>
 </section>
 <section id="generalization">
-<h2><a class="toc-backref" href="#id10" role="doc-backlink">Generalization</a><a class="headerlink" href="#generalization" title="Permalink to this heading">¶</a></h2>
+<h2>Generalization<a class="headerlink" href="#generalization" title="Permalink to this heading">¶</a></h2>
 <section id="to-other-firmware">
-<h3><a class="toc-backref" href="#id11" role="doc-backlink">To other firmware</a><a class="headerlink" href="#to-other-firmware" title="Permalink to this heading">¶</a></h3>
+<h3>To other firmware<a class="headerlink" href="#to-other-firmware" title="Permalink to this heading">¶</a></h3>
 <p>When testing an application, it sounds logical to test not only a specific
 <a class="reference internal" href="glossary.html#term-Firmware"><span class="xref std std-term">Firmware</span></a>, but all supported ones. The common practice is to test
 on the latest version of all Firmware (NanoS, NanoS+, NanoX). So we can declare
@@ -371,7 +366,7 @@ test_something.py::test_something<span class="o">[</span>nanosp <span class="m">
 </div>
 </section>
 <section id="to-other-backends">
-<h3><a class="toc-backref" href="#id12" role="doc-backlink">To other backends</a><a class="headerlink" href="#to-other-backends" title="Permalink to this heading">¶</a></h3>
+<h3>To other backends<a class="headerlink" href="#to-other-backends" title="Permalink to this heading">¶</a></h3>
 <p>So far only Speculos was used as a backend. Let’s see how to connect other ones.</p>
 <p>Other backend are simpler the Speculos, because they do not manage the
 application directly. Indeed, as Speculos embeds an emulator, the application
@@ -408,7 +403,7 @@ returning the correct backend:</p>
 </pre></div>
 </div>
 <p>Test can now be launched to run with another backend:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ <span class="c1"># start the application on a physical device connected to the computer, or with any emulator</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ <span class="c1"># start the application on a physical device connected to the computer, or on an emulator</span>
 $ pytest -v --backend ledgercomm test_something.py
 </pre></div>
 </div>
@@ -482,7 +477,7 @@ the application currently started could only be of one SDK version!</p>
 </div>
 </div>
 <p>And now we can easily specify which firmware should be used:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ <span class="c1"># start the application on a physical device connected to the computer, or with any emulator</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ <span class="c1"># start the application on a physical device connected to the computer, or on an emulator</span>
 $ pytest -v --nanosp --backend ledgercomm test_something.py
 
 <span class="o">===============================</span> <span class="nb">test</span> session <span class="nv">starts</span> <span class="o">===============================</span>
@@ -504,26 +499,21 @@ test_something.py::test_something<span class="o">[</span>nanosp <span class="m">
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <div>
-    <h3><a href="index.html">Table of Contents</a></h3>
-    <ul>
-<li><a class="reference internal" href="#">Tutorial</a><ul>
-<li><a class="reference internal" href="#ragger-installation"><code class="docutils literal notranslate"><span class="pre">Ragger</span></code> installation</a></li>
-<li><a class="reference internal" href="#first-backend-instantiation">First backend instantiation</a><ul>
-<li><a class="reference internal" href="#the-speculosbackend">The <code class="docutils literal notranslate"><span class="pre">SpeculosBackend</span></code></a></li>
-<li><a class="reference internal" href="#backend-as-a-fixture">Backend as a fixture</a></li>
+<h3><a href="index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">How is this doc structured:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="rationale.html">Rationale</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#ragger-installation"><code class="docutils literal notranslate"><span class="pre">Ragger</span></code> installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#first-backend-instantiation">First backend instantiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generalization">Generalization</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#generalization">Generalization</a><ul>
-<li><a class="reference internal" href="#to-other-firmware">To other firmware</a></li>
-<li><a class="reference internal" href="#to-other-backends">To other backends</a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source.html">Code documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
 </ul>
 
-  </div>
   <div>
     <h4>Previous topic</h4>
     <p class="topless"><a href="rationale.html"

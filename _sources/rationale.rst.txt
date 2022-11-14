@@ -4,10 +4,14 @@ Rationale
 =========
 
 Testing, easily manipulating a Ledger :term:`application` is hard. Although
-:term"`Speculos` strongly eases it, it does not replace an IRL test on physical
-devices.
+:term:`Speculos` strongly eases it, it cannot always replace IRL tests on
+physical devices.
 
-Moreover, as an emulator, it provides low-level functions like pressing a
+There are libraries allowing to communicate with a physical device. However,
+it would be very convenient to be able to develop code which would be compatible
+wherever the application runs, either on an emulator or on a physical device.
+
+On top of this, all these libraries provides low-level functions like pressing a
 button or sending APDUs. Applications can be complex pieces of software and
 testing one require higher-level code.
 
@@ -15,7 +19,7 @@ Abstracting the backends
 ------------------------
 
 The original goal of ``Ragger`` is to make the manipulation of an
-:term"`application` oblivious of the underlying device. Most application are
+:term:`application` oblivious of the underlying device. Most application are
 tested against the Ledger emulator: :term:`Speculos`, but it is not always
 enough, and testing on real physical device is often required.
 

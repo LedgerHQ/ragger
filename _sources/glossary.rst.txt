@@ -53,5 +53,6 @@ Glossary
      **Speculos** is an open-source Ledger device emulator, allowing easy and
      fast testing of an :term:`application`. It is hosted
      `on GitHub <https://github.com/ledgerhq/speculos>`_.
+
      It is composed of the emulator itself, and a HTTP client-server module
-     allowing to easily communicate with the emulator.
+     allowing to easily communicate with said emulator.
