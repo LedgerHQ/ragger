@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>The Ragger framework &#8212; Ragger 0.7.0 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rationale &#8212; Ragger 0.7.0 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/pydoctheme.css?2022.1" />
@@ -23,7 +23,8 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Rationale" href="rationale.html" />
+    <link rel="next" title="Tutorial" href="tutorial.html" />
+    <link rel="prev" title="The Ragger framework" href="index.html" />
     <link href="_static/layout.css" rel="stylesheet" type="text/css">
 
   </head>
@@ -52,22 +53,30 @@
         <nav class="menu" role="navigation" aria-label="main navigation">
             <div class="language_switcher_placeholder"></div>
   <div>
-    <h3><a href="#">Table of Contents</a></h3>
+    <h3><a href="index.html">Table of Contents</a></h3>
     <ul>
-<li><a class="reference internal" href="#">The Ragger framework</a></li>
-<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+<li><a class="reference internal" href="#">Rationale</a><ul>
+<li><a class="reference internal" href="#abstracting-the-backends">Abstracting the backends</a></li>
+<li><a class="reference internal" href="#easing-the-development-of-application-clients">Easing the development of application clients</a></li>
+</ul>
+</li>
 </ul>
 
   </div>
   <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="index.html"
+                          title="previous chapter">The Ragger framework</a></p>
+  </div>
+  <div>
     <h4>Next topic</h4>
-    <p class="topless"><a href="rationale.html"
-                          title="next chapter">Rationale</a></p>
+    <p class="topless"><a href="tutorial.html"
+                          title="next chapter">Tutorial</a></p>
   </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/index.rst.txt"
+      <li><a href="_sources/rationale.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -92,8 +101,11 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="rationale.html" title="Rationale"
+          <a href="tutorial.html" title="Tutorial"
              accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="The Ragger framework"
+             accesskey="P">previous</a> |</li>
           <li><img src="_static/py.svg" alt="python logo" style="vertical-align: middle; margin-top: -1px"/></li>
           <li><a href="https://www.python.org/">Python</a> &#187;</li>
           <li class="switchers">
@@ -102,10 +114,10 @@
           </li>
           <li>
               
-              <a href="#">Ragger 0.7.0 documentation</a> &#187;
+              <a href="index.html">Ragger 0.7.0 documentation</a> &#187;
               
           </li>
-        <li class="nav-item nav-item-this"><a href="">The Ragger framework</a></li>
+        <li class="nav-item nav-item-this"><a href="">Rationale</a></li>
                 <li class="right">
                     
 
@@ -128,45 +140,55 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="the-ragger-framework">
-<h1>The Ragger framework<a class="headerlink" href="#the-ragger-framework" title="Permalink to this heading">¶</a></h1>
-<p><code class="docutils literal notranslate"><span class="pre">Ragger</span></code> is a Python framework which aims at simplifying the test and overall
-automatic manipulation of applications running on Ledger devices (NanoS, NanoS+
-and NanoX).</p>
-<p>It is composed of a tiny wrapper around other Ledger’s libraries which abstract
-and/or provide access to Ledger’s cold wallet, and higher-level classes allowing
-to develop complex behaviors on devices.</p>
-<div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">How is this doc structured:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="rationale.html">Rationale</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="rationale.html#abstracting-the-backends">Abstracting the backends</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rationale.html#easing-the-development-of-application-clients">Easing the development of application clients</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="tutorial.html#ragger-installation"><code class="docutils literal notranslate"><span class="pre">Ragger</span></code> installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorial.html#first-backend-instantiation">First backend instantiation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorial.html#generalization">Generalization</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
-<li class="toctree-l1"><a class="reference internal" href="source.html">Code documentation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="source.html#backend">Backend</a></li>
-<li class="toctree-l2"><a class="reference internal" href="source.html#responses">Responses</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
-</ul>
-</div>
-</section>
-<section id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading">¶</a></h1>
+  <section id="rationale">
+<span id="id1"></span><h1>Rationale<a class="headerlink" href="#rationale" title="Permalink to this heading">¶</a></h1>
+<p>Testing, easily manipulating a Ledger <a class="reference internal" href="glossary.html#term-Application"><span class="xref std std-term">application</span></a> is hard. Although
+:term”<cite>Speculos</cite> strongly eases it, it does not replace a IRL test on physical
+devices.</p>
+<p>Moreover, as an emulator, it provides low-level functions like pressing a
+button or sending APDUs. Applications can be complex pieces of software and
+testing one require higher-level code.</p>
+<section id="abstracting-the-backends">
+<h2>Abstracting the backends<a class="headerlink" href="#abstracting-the-backends" title="Permalink to this heading">¶</a></h2>
+<p>The original goal of <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> is to make the manipulation of an
+:term”<cite>application</cite> oblivious of the underlying device. Most application are
+tested against the Ledger emulator: <a class="reference internal" href="glossary.html#term-Speculos"><span class="xref std std-term">Speculos</span></a>, but it is not always
+enough, and testing on real physical device is often required.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Ragger</span></code> provides an interface which wraps several libraries:</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
-<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
-<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+<li><p>one emulator-only library: <a class="reference internal" href="glossary.html#term-Speculos"><span class="xref std std-term">Speculos</span></a> (which uses itself as an emulator),</p></li>
+<li><p>two agnostic libraries, which can communicate with either a physical device,
+or an emulated one:</p>
+<ul>
+<li><p><a class="reference internal" href="glossary.html#term-LedgerComm"><span class="xref std std-term">LedgerComm</span></a></p></li>
+<li><p><a class="reference internal" href="glossary.html#term-LedgerWallet"><span class="xref std std-term">LedgerWallet</span></a></p></li>
 </ul>
+</li>
+</ul>
+<p>In <code class="docutils literal notranslate"><span class="pre">Ragger</span></code>, these libraries are called <a class="reference internal" href="glossary.html#term-Backend"><span class="xref std std-term">backends</span></a>. Any other backend
+can be added, given it respects the
+<a class="reference internal" href="source.html#ragger.backend.BackendInterface" title="ragger.backend.BackendInterface"><code class="xref py py-class docutils literal notranslate"><span class="pre">BackendInterface</span></code></a> interface.</p>
+<p>Application <a class="reference internal" href="glossary.html#term-Client"><span class="xref std std-term">clients</span></a> using <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> must comply with this
+interface to communicate with the application. Once it’s done, the client
+can communicate with an application running either on top of an emulator or on
+a real, physical device with very little cost.</p>
+<p>Why not <strong>no</strong> cost? That’s because the backend actually needs to talk to
+something. Speculos is conveniently able to start its emulator itself, however
+the other backends will need the application to be already started. Typically,
+the application will have to be installed on a physical device, started, and the
+device connected to the computer launching the client.</p>
+<figure class="align-center" id="id2">
+<img alt="_images/usage.png" src="_images/usage.png" />
+<figcaption>
+<p><span class="caption-text">Software / communication layers between an application and its client</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>How to exploit these capabilities to write test running on both emulated or
+physical device is documented in the <a class="reference internal" href="tutorial.html#tutorial"><span class="std std-ref">tutorial section</span></a>.</p>
+</section>
+<section id="easing-the-development-of-application-clients">
+<h2>Easing the development of application clients<a class="headerlink" href="#easing-the-development-of-application-clients" title="Permalink to this heading">¶</a></h2>
+</section>
 </section>
 
 
@@ -177,22 +199,30 @@ to develop complex behaviors on devices.</p>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <div>
-    <h3><a href="#">Table of Contents</a></h3>
+    <h3><a href="index.html">Table of Contents</a></h3>
     <ul>
-<li><a class="reference internal" href="#">The Ragger framework</a></li>
-<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+<li><a class="reference internal" href="#">Rationale</a><ul>
+<li><a class="reference internal" href="#abstracting-the-backends">Abstracting the backends</a></li>
+<li><a class="reference internal" href="#easing-the-development-of-application-clients">Easing the development of application clients</a></li>
+</ul>
+</li>
 </ul>
 
   </div>
   <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="index.html"
+                          title="previous chapter">The Ragger framework</a></p>
+  </div>
+  <div>
     <h4>Next topic</h4>
-    <p class="topless"><a href="rationale.html"
-                          title="next chapter">Rationale</a></p>
+    <p class="topless"><a href="tutorial.html"
+                          title="next chapter">Tutorial</a></p>
   </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/index.rst.txt"
+      <li><a href="_sources/rationale.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -217,8 +247,11 @@ to develop complex behaviors on devices.</p>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="rationale.html" title="Rationale"
+          <a href="tutorial.html" title="Tutorial"
              >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="The Ragger framework"
+             >previous</a> |</li>
           <li><img src="_static/py.svg" alt="python logo" style="vertical-align: middle; margin-top: -1px"/></li>
           <li><a href="https://www.python.org/">Python</a> &#187;</li>
           <li class="switchers">
@@ -227,10 +260,10 @@ to develop complex behaviors on devices.</p>
           </li>
           <li>
               
-              <a href="#">Ragger 0.7.0 documentation</a> &#187;
+              <a href="index.html">Ragger 0.7.0 documentation</a> &#187;
               
           </li>
-        <li class="nav-item nav-item-this"><a href="">The Ragger framework</a></li>
+        <li class="nav-item nav-item-this"><a href="">Rationale</a></li>
                 <li class="right">
                     
 

@@ -1,0 +1,58 @@
+.. _Rationale:
+
+Rationale
+=========
+
+Testing, easily manipulating a Ledger :term:`application` is hard. Although
+:term"`Speculos` strongly eases it, it does not replace a IRL test on physical
+devices.
+
+Moreover, as an emulator, it provides low-level functions like pressing a
+button or sending APDUs. Applications can be complex pieces of software and
+testing one require higher-level code.
+
+Abstracting the backends
+------------------------
+
+The original goal of ``Ragger`` is to make the manipulation of an
+:term"`application` oblivious of the underlying device. Most application are
+tested against the Ledger emulator: :term:`Speculos`, but it is not always
+enough, and testing on real physical device is often required.
+
+``Ragger`` provides an interface which wraps several libraries:
+
+- one emulator-only library: :term:`Speculos` (which uses itself as an emulator),
+- two agnostic libraries, which can communicate with either a physical device,
+  or an emulated one:
+
+  - :term:`LedgerComm`
+  - :term:`LedgerWallet`
+
+In ``Ragger``, these libraries are called :term:`backends<Backend>`. Any other backend
+can be added, given it respects the
+:py:class:`BackendInterface <ragger.backend.BackendInterface>` interface.
+
+
+Application :term:`clients<client>` using ``Ragger`` must comply with this
+interface to communicate with the application. Once it's done, the client
+can communicate with an application running either on top of an emulator or on
+a real, physical device with very little cost.
+
+Why not **no** cost? That's because the backend actually needs to talk to
+something. Speculos is conveniently able to start its emulator itself, however
+the other backends will need the application to be already started. Typically,
+the application will have to be installed on a physical device, started, and the
+device connected to the computer launching the client.
+
+.. figure:: images/usage.png
+  :align: center
+  :figclass: align-center
+
+  Software / communication layers between an application and its client
+
+How to exploit these capabilities to write test running on both emulated or
+physical device is documented in the :ref:`tutorial section<Tutorial>`.
+
+
+Easing the development of application clients
+---------------------------------------------
