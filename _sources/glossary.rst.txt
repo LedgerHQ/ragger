@@ -32,9 +32,9 @@ Glossary
      transaction, changing the configuration, ...
 
    Firmware
-     A **firmware** usually designates the Ledger device *type* and SDK
-     *version*. Currently, *types* are NanoS, NanoS+ and NanoX. The *version*
-     depends on the type.
+     A **firmware** usually designates the Ledger device *device type* and SDK
+     *version*. Currently, *device types* are NanoS, NanoS+ and NanoX. The
+     *version* depends on the type.
 
      ``Ragger`` stores this information in the
      :py:class:`Firmware <ragger.firmware.Firmware>` class.
