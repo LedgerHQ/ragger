@@ -17,7 +17,7 @@ from time import sleep
 
 from ragger.backend import BackendInterface
 from ragger.firmware import Firmware
-from ragger.navigator import NavInsID, Navigator
+from .navigator import NavInsID, Navigator
 
 
 class NanoNavigator(Navigator):
