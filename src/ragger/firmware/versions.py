@@ -27,6 +27,30 @@ class VersionManager(Enum):
                  minor: Optional[int] = None,
                  patch: Optional[int] = None,
                  *args) -> VersionInfo:
+        """
+        Returns the :class:`semver.VersionInfo` matching the given version
+        numbers. If the version numbers are incomplete, fallbacks to the latest
+        version matching the given numbers.
+
+        For instance, if the enum contains version ``2.0.1`` and ``2.0.4``,
+        ``VersionManager.get_last(major=2, minor=0)`` will return the ``2.0.4``
+        version.
+
+        If a number is given, its higher-level numbers are required: patch needs
+        major and minor, and minor needs major (else the function raises a
+        ``ValueError``).
+
+        If no suitable version are found, raises a ``ValueError``.
+
+        :param major: The major version in semantic versionning
+        :type major: int
+        :param minor: The minor version in semantic versionning
+        :type minor: int
+        :param patch: The patch version in semantic versionning
+        :type patch: int
+        :return: The latest matching version
+        :rtype: :class:`semver.VersionInfo`
+        """
         # error cases: (None, 2) or (1, None, 4) or (None, 2, 2)
         if (minor is not None and major is None):
             raise ValueError("Minor version can not be pinned if major is not")
@@ -52,6 +76,25 @@ class VersionManager(Enum):
 
     @classmethod
     def get_last_from_string(cls, version: str) -> VersionInfo:
+        """
+        Returns the :class:`semver.VersionInfo` matching the given version
+        string. If the version string is incomplete, fallbacks to the latest
+        version matching the version string.
+
+        For instance, if the enum contains version ``2.0.1`` and ``2.0.4``,
+        ``VersionManager.get_last_from_string("2.0")`` will return the ``2.0.4``
+        version.
+
+        Version strings must be valid semantic version string, or at least
+        two-digits strings (like "2.0"). A version of "2" will raise.
+
+        If no suitable version are found, raises a ``ValueError``.
+
+        :param version: The version
+        :type version: str
+        :return: The latest matching version
+        :rtype: :class:`semver.VersionInfo`
+        """
         # special case: version with 2 numbers like "2.0"
         if version.count(".") == 1:
             return cls.get_last(*(int(v) for v in version.split(".")))

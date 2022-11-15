@@ -28,6 +28,22 @@ class _Firmware:
 
 
 class Firmware(_Firmware):
+    """
+    The Firmware container class holds information on the expected device on which
+    the current Ragger code will apply on.
+
+    It is composed of:
+
+    - a `device` type, which represents the name of the physical device
+      ('nanos', 'nanox', ...),
+    - a `version`, which represent the SDK version associated with the physical
+      device.
+
+    A third attribute is also generated: `semantic_version`, which is deduced
+    from the `version` by the `VersionManager` class, by selecting the latest
+    `semantic_version` matching the given `version`. For instance, NanoS 2.1
+    will fallback to version 2.1.0.
+    """
 
     def __init__(self, device: str, version: str):
         assert device.lower() in SDK_VERSIONS.keys()
