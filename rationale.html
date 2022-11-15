@@ -157,9 +157,9 @@ testing one require higher-level code.</p>
 <section id="abstracting-the-backends">
 <h2>Abstracting the backends<a class="headerlink" href="#abstracting-the-backends" title="Permalink to this heading">¶</a></h2>
 <p>The original goal of <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> is to make the manipulation of an
-<a class="reference internal" href="glossary.html#term-Application"><span class="xref std std-term">application</span></a> oblivious of the underlying device. Most application are
-tested against the Ledger emulator: <a class="reference internal" href="glossary.html#term-Speculos"><span class="xref std std-term">Speculos</span></a>, but it is not always
-enough, and testing on real physical device is often required.</p>
+<a class="reference internal" href="glossary.html#term-Application"><span class="xref std std-term">application</span></a> oblivious of the underlying device. Most applications are
+tested against <a class="reference internal" href="glossary.html#term-Speculos"><span class="xref std std-term">Speculos</span></a>, the Ledger device emulator, but it is not
+always enough, and testing on real physical devices is often required.</p>
 <p><code class="docutils literal notranslate"><span class="pre">Ragger</span></code> provides an interface which wraps several libraries:</p>
 <ul class="simple">
 <li><p>one emulator-only library: <a class="reference internal" href="glossary.html#term-Speculos"><span class="xref std std-term">Speculos</span></a> (which uses itself as an emulator),</p></li>
@@ -171,9 +171,14 @@ or an emulated one:</p>
 </ul>
 </li>
 </ul>
-<p>In <code class="docutils literal notranslate"><span class="pre">Ragger</span></code>, these libraries are called <a class="reference internal" href="glossary.html#term-Backend"><span class="xref std std-term">backends</span></a>. Any other backend
-can be added, given it respects the
+<p>In <code class="docutils literal notranslate"><span class="pre">Ragger</span></code>, the classes embedding these libraries are called
+<a class="reference internal" href="glossary.html#term-Backend"><span class="xref std std-term">backends</span></a>. Any other backend can be added, given it respects the
 <a class="reference internal" href="source.html#ragger.backend.BackendInterface" title="ragger.backend.BackendInterface"><code class="xref py py-class docutils literal notranslate"><span class="pre">BackendInterface</span></code></a> interface.</p>
+<figure class="align-center" id="id2">
+<img alt="_images/usage.svg" src="_images/usage.svg" /><figcaption>
+<p><span class="caption-text">Software / communication layers between an application and its client</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
 <p>Application <a class="reference internal" href="glossary.html#term-Client"><span class="xref std std-term">clients</span></a> using <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> must comply with this
 interface to communicate with the application. Once it’s done, the client
 can communicate with an application running either on top of an emulator or on
@@ -183,17 +188,39 @@ something. Speculos is conveniently able to start its emulator itself, however
 the other backends will need the application to be already started. Typically,
 the application will have to be installed on a physical device, started, and the
 device connected to the computer launching the client.</p>
-<figure class="align-center" id="id2">
-<img alt="_images/usage.png" src="_images/usage.png" />
-<figcaption>
-<p><span class="caption-text">Software / communication layers between an application and its client</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
-</figcaption>
-</figure>
 <p>How to exploit these capabilities to write test running on both emulated or
 physical device is documented in the <a class="reference internal" href="tutorial.html#tutorial"><span class="std std-ref">tutorial section</span></a>.</p>
 </section>
 <section id="easing-the-development-of-application-clients">
 <h2>Easing the development of application clients<a class="headerlink" href="#easing-the-development-of-application-clients" title="Permalink to this heading">¶</a></h2>
+<p>On top of abstracting the backend, <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> provides tools and mechanisms
+allowing to ease the development of application clients and write more thorough
+tests.</p>
+<section id="navigation">
+<h3>Navigation<a class="headerlink" href="#navigation" title="Permalink to this heading">¶</a></h3>
+<p>In particular, <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> offers abstraction layers to declare application flows
+without repeating oneself. This is the role of the
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Navigator</span></code> interface.</p>
+<p>This class allows to declare a set of
+<code class="xref py py-class docutils literal notranslate"><span class="pre">navigation</span> <span class="pre">instructions</span></code>) which, bound with
+callbacks, allows to abstract the expected behavior of an application.</p>
+<p>Once the instructions are declared, it is possible to declare feature flows as
+a list of instructions.</p>
+<figure class="align-center" id="id3">
+<img alt="_images/navigate.svg" src="_images/navigate.svg" /><figcaption>
+<p><span class="caption-text">Software / communication layers between an application and its client</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>The <code class="docutils literal notranslate"><span class="pre">Navigator</span></code> class also offers (with Speculos) screenshot checking
+capabilities: while the instructions are performed, <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> takes screenshots
+of the application’s screen, and is able to save them or compare them with
+<a class="reference internal" href="glossary.html#term-Golden-snapshot"><span class="xref std std-term">golden snapshots</span></a> to check if the application behaves
+as expected.</p>
+<p>This does not sound like much, but as soon as an application get a bit complex,
+it helps a lot to write code which on the first hand manipulate high-level
+concept as validating a transaction, and on the other hand deal with low-level
+details such as crafting an <a class="reference internal" href="glossary.html#term-APDU"><span class="xref std std-term">APDU</span></a> and click on a button at the right time.</p>
+</section>
 </section>
 </section>
 

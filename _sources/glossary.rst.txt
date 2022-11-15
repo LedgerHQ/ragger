@@ -5,6 +5,13 @@ Glossary
 
 .. glossary::
 
+   APDU
+     **APDU** stands for
+     `Application Protocol Data Unit <https://en.wikipedia.org/wiki/Smart_card_application_protocol_data_unit>`_.
+     It designate a message which is transmitted from a :term:`client` to an
+     :term:`application`, or the other way around. APDUs transit through USB or
+     Bluetooth.
+
    Application
      In this documentation, an **application** is a piece of software, build
      around the Ledger Secure SDK, which runs on a Ledger cold wallet device,
@@ -16,19 +23,28 @@ Glossary
      NanoS/S+/X), or an emulated one (thanks to ``Speculos``).
 
    Client
-     A **client** is any piece of software accessing a service made available by
-     a **server**; but in this documentation, a **client** refers to a piece of
-     code able to communicate with an :term:`application`.
+     A client is any piece of software accessing a service made available by a
+     server; but in this documentation, a **client** refers to a piece of code
+     able to communicate with an :term:`application`.
+
+     Typically, the client of an application programmatically enables the
+     capabilities of its application: signing a payload, triggering a
+     transaction, changing the configuration, ...
 
    Firmware
-     A **firmware** usually designates the Ledger device type and SDK version.
-     Currently, types are NanoS, NanoS+ and NanoX. The version depends on the
-     type.
+     A **firmware** usually designates the Ledger device *type* and SDK
+     *version*. Currently, *types* are NanoS, NanoS+ and NanoX. The *version*
+     depends on the type.
 
      ``Ragger`` stores this information in the
      :py:class:`Firmware <ragger.firmware.Firmware>` class.
 
      See also :term:`SDK`.
+
+   Golden snapshot
+     In ``Ragger``, golden snapshots are :term:`application` screen's snapshots
+     which are considered as references. They are used when testing an
+     application to check the application behaves as expected.
 
    LedgerComm
      LedgerComm is the original open-source library allowing to communicate with

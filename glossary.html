@@ -133,6 +133,12 @@
   <section id="glossary">
 <span id="id1"></span><h1>Glossary<a class="headerlink" href="#glossary" title="Permalink to this heading">¶</a></h1>
 <dl class="glossary">
+<dt id="term-APDU">APDU<a class="headerlink" href="#term-APDU" title="Permalink to this term">¶</a></dt><dd><p><strong>APDU</strong> stands for
+<a class="reference external" href="https://en.wikipedia.org/wiki/Smart_card_application_protocol_data_unit">Application Protocol Data Unit</a>.
+It designate a message which is transmitted from a <a class="reference internal" href="#term-Client"><span class="xref std std-term">client</span></a> to an
+<a class="reference internal" href="#term-Application"><span class="xref std std-term">application</span></a>, or the other way around. APDUs transit through USB or
+Bluetooth.</p>
+</dd>
 <dt id="term-Application">Application<a class="headerlink" href="#term-Application" title="Permalink to this term">¶</a></dt><dd><p>In this documentation, an <strong>application</strong> is a piece of software, build
 around the Ledger Secure SDK, which runs on a Ledger cold wallet device,
 such as a NanoS, NanoS+ or NanoX.</p>
@@ -141,16 +147,23 @@ such as a NanoS, NanoS+ or NanoX.</p>
 a Ledger cold wallet device, either a real one (like a physical
 NanoS/S+/X), or an emulated one (thanks to <code class="docutils literal notranslate"><span class="pre">Speculos</span></code>).</p>
 </dd>
-<dt id="term-Client">Client<a class="headerlink" href="#term-Client" title="Permalink to this term">¶</a></dt><dd><p>A <strong>client</strong> is any piece of software accessing a service made available by
-a <strong>server</strong>; but in this documentation, a <strong>client</strong> refers to a piece of
-code able to communicate with an <a class="reference internal" href="#term-Application"><span class="xref std std-term">application</span></a>.</p>
+<dt id="term-Client">Client<a class="headerlink" href="#term-Client" title="Permalink to this term">¶</a></dt><dd><p>A client is any piece of software accessing a service made available by a
+server; but in this documentation, a <strong>client</strong> refers to a piece of code
+able to communicate with an <a class="reference internal" href="#term-Application"><span class="xref std std-term">application</span></a>.</p>
+<p>Typically, the client of an application programmatically enables the
+capabilities of its application: signing a payload, triggering a
+transaction, changing the configuration, …</p>
 </dd>
-<dt id="term-Firmware">Firmware<a class="headerlink" href="#term-Firmware" title="Permalink to this term">¶</a></dt><dd><p>A <strong>firmware</strong> usually designates the Ledger device type and SDK version.
-Currently, types are NanoS, NanoS+ and NanoX. The version depends on the
-type.</p>
+<dt id="term-Firmware">Firmware<a class="headerlink" href="#term-Firmware" title="Permalink to this term">¶</a></dt><dd><p>A <strong>firmware</strong> usually designates the Ledger device <em>type</em> and SDK
+<em>version</em>. Currently, <em>types</em> are NanoS, NanoS+ and NanoX. The <em>version</em>
+depends on the type.</p>
 <p><code class="docutils literal notranslate"><span class="pre">Ragger</span></code> stores this information in the
 <code class="xref py py-class docutils literal notranslate"><span class="pre">Firmware</span></code> class.</p>
 <p>See also <a class="reference internal" href="#term-SDK"><span class="xref std std-term">SDK</span></a>.</p>
+</dd>
+<dt id="term-Golden-snapshot">Golden snapshot<a class="headerlink" href="#term-Golden-snapshot" title="Permalink to this term">¶</a></dt><dd><p>In <code class="docutils literal notranslate"><span class="pre">Ragger</span></code>, golden snapshots are <a class="reference internal" href="#term-Application"><span class="xref std std-term">application</span></a> screen’s snapshots
+which are considered as references. They are used when testing an
+application to check the application behaves as expected.</p>
 </dd>
 <dt id="term-LedgerComm">LedgerComm<a class="headerlink" href="#term-LedgerComm" title="Permalink to this term">¶</a></dt><dd><p>LedgerComm is the original open-source library allowing to communicate with
 a Ledger device. It is hosted
