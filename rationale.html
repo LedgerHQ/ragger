@@ -7,6 +7,7 @@
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -19,6 +20,8 @@
         <script src="_static/sphinx_highlight.js"></script>
         <script src="_static/clipboard.min.js"></script>
         <script src="_static/copybutton.js"></script>
+        <script src="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+        <script src="_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -114,10 +117,18 @@ or an emulated one:</p>
 <p>In <code class="docutils literal notranslate"><span class="pre">Ragger</span></code>, the classes embedding these libraries are called
 <a class="reference internal" href="glossary.html#term-Backend"><span class="xref std std-term">backends</span></a>. Any other backend can be added, given it respects the
 <a class="reference internal" href="source.html#ragger.backend.BackendInterface" title="ragger.backend.BackendInterface"><code class="xref py py-class docutils literal notranslate"><span class="pre">BackendInterface</span></code></a> interface.</p>
-<div class="align-center figure" id="id2">
-<img alt="_images/usage.svg" src="_images/usage.svg" /><p class="caption"><span class="caption-text">Software / communication layers between an application and its client</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
-</div>
-<p>Application <a class="reference internal" href="glossary.html#term-Client"><span class="xref std std-term">clients</span></a> using <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> must comply with this
+<a class=""
+               data-lightbox="group-a4cae377-3461-4e69-a061-55530367e5dc"
+               href="_images/usage.svg"
+               title="Software / communication layers between an application and its client"
+               data-title="Software / communication layers between an application and its client"
+               
+               ><img src="_images/usage.svg"
+                     class="align-center"
+                     width="90%"
+                     height="auto"
+                     alt=""/>
+                </a><p>Application <a class="reference internal" href="glossary.html#term-Client"><span class="xref std std-term">clients</span></a> using <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> must comply with this
 interface to communicate with the application. Once it’s done, the client
 can communicate with an application running either on top of an emulator or on
 a real, physical device with very little cost.</p>
@@ -144,10 +155,18 @@ without repeating oneself. This is the role of the
 callbacks, allows to abstract the expected behavior of an application.</p>
 <p>Once the instructions are declared, it is possible to declare feature flows as
 a list of instructions.</p>
-<div class="align-center figure" id="id3">
-<img alt="_images/navigate.svg" src="_images/navigate.svg" /><p class="caption"><span class="caption-text">Software / communication layers between an application and its client</span><a class="headerlink" href="#id3" title="Permalink to this image"></a></p>
-</div>
-<p>The <code class="docutils literal notranslate"><span class="pre">Navigator</span></code> class also offers (with Speculos) screenshot checking
+<a class=""
+               data-lightbox="group-c6dedfee-9904-467f-a6f1-7c93894aedf4"
+               href="_images/navigate.svg"
+               title="Software / communication layers between an application and its client"
+               data-title="Software / communication layers between an application and its client"
+               
+               ><img src="_images/navigate.svg"
+                     class="align-center"
+                     width="90%"
+                     height="auto"
+                     alt=""/>
+                </a><p>The <code class="docutils literal notranslate"><span class="pre">Navigator</span></code> class also offers (with Speculos) screenshot checking
 capabilities: while the instructions are performed, <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> takes screenshots
 of the application’s screen, and is able to save them or compare them with
 <a class="reference internal" href="glossary.html#term-Golden-snapshot"><span class="xref std std-term">golden snapshots</span></a> to check if the application behaves
