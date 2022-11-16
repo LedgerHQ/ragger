@@ -36,11 +36,10 @@ In ``Ragger``, the classes embedding these libraries are called
 :term:`backends<Backend>`. Any other backend can be added, given it respects the
 :py:class:`BackendInterface <ragger.backend.BackendInterface>` interface.
 
-.. figure:: images/usage.svg
+.. thumbnail:: images/usage.svg
   :align: center
-  :figclass: align-center
-
-  Software / communication layers between an application and its client
+  :title: Software / communication layers between an application and its client
+  :show_caption: true
 
 Application :term:`clients<client>` using ``Ragger`` must comply with this
 interface to communicate with the application. Once it's done, the client
@@ -78,11 +77,10 @@ callbacks, allows to abstract the expected behavior of an application.
 Once the instructions are declared, it is possible to declare feature flows as
 a list of instructions.
 
-.. figure:: images/navigate.svg
+.. thumbnail:: images/navigate.svg
   :align: center
-  :figclass: align-center
-
-  Software / communication layers between an application and its client
+  :title: Software / communication layers between an application and its client
+  :show_caption: true
 
 The ``Navigator`` class also offers (with Speculos) screenshot checking
 capabilities: while the instructions are performed, ``Ragger`` takes screenshots

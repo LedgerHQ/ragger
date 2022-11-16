@@ -1,15 +1,12 @@
 Architecture
 ============
 
-.. figure:: images/packages_ragger_architecture.png
+.. thumbnail:: images/packages_ragger_architecture.png
   :align: center
-  :figclass: align-center
+  :title: Package relations
+  :show_caption: true
 
-  ``Ragger`` package relations
-
-
-.. figure:: images/classes_ragger_architecture.png
+.. thumbnail:: images/classes_ragger_architecture.png
   :align: center
-  :figclass: align-center
-
-  ``Ragger`` class relations
+  :title: Class relations
+  :show_caption: true

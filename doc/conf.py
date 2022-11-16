@@ -30,7 +30,12 @@ author = 'bow'
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx_copybutton',
+    'sphinxcontrib.images',
 ]
+
+images_config = {
+    "default_image_width": "90%",
+}
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
