@@ -117,8 +117,9 @@ or an emulated one:</p>
 <p>In <code class="docutils literal notranslate"><span class="pre">Ragger</span></code>, the classes embedding these libraries are called
 <a class="reference internal" href="glossary.html#term-Backend"><span class="xref std std-term">backends</span></a>. Any other backend can be added, given it respects the
 <a class="reference internal" href="source.html#ragger.backend.BackendInterface" title="ragger.backend.BackendInterface"><code class="xref py py-class docutils literal notranslate"><span class="pre">BackendInterface</span></code></a> interface.</p>
-<a class=""
-               data-lightbox="group-a4cae377-3461-4e69-a061-55530367e5dc"
+<figure class="">
+            <a 
+               data-lightbox="group-d4432b4f-6276-4f5e-a394-34e5648cb099"
                href="_images/usage.svg"
                title="Software / communication layers between an application and its client"
                data-title="Software / communication layers between an application and its client"
@@ -128,7 +129,8 @@ or an emulated one:</p>
                      width="90%"
                      height="auto"
                      alt=""/>
-                </a><p>Application <a class="reference internal" href="glossary.html#term-Client"><span class="xref std std-term">clients</span></a> using <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> must comply with this
+                </a><figcaption>Software / communication layers between an application and its client</figcaption>
+            </figure><p>Application <a class="reference internal" href="glossary.html#term-Client"><span class="xref std std-term">clients</span></a> using <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> must comply with this
 interface to communicate with the application. Once it’s done, the client
 can communicate with an application running either on top of an emulator or on
 a real, physical device with very little cost.</p>
@@ -155,8 +157,9 @@ without repeating oneself. This is the role of the
 callbacks, allows to abstract the expected behavior of an application.</p>
 <p>Once the instructions are declared, it is possible to declare feature flows as
 a list of instructions.</p>
-<a class=""
-               data-lightbox="group-c6dedfee-9904-467f-a6f1-7c93894aedf4"
+<figure class="">
+            <a 
+               data-lightbox="group-cb41a348-b795-4a8c-afcb-e236d96337a2"
                href="_images/navigate.svg"
                title="Software / communication layers between an application and its client"
                data-title="Software / communication layers between an application and its client"
@@ -166,7 +169,8 @@ a list of instructions.</p>
                      width="90%"
                      height="auto"
                      alt=""/>
-                </a><p>The <code class="docutils literal notranslate"><span class="pre">Navigator</span></code> class also offers (with Speculos) screenshot checking
+                </a><figcaption>Software / communication layers between an application and its client</figcaption>
+            </figure><p>The <code class="docutils literal notranslate"><span class="pre">Navigator</span></code> class also offers (with Speculos) screenshot checking
 capabilities: while the instructions are performed, <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> takes screenshots
 of the application’s screen, and is able to save them or compare them with
 <a class="reference internal" href="glossary.html#term-Golden-snapshot"><span class="xref std std-term">golden snapshots</span></a> to check if the application behaves

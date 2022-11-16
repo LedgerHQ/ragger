@@ -39,6 +39,7 @@ In ``Ragger``, the classes embedding these libraries are called
 .. thumbnail:: images/usage.svg
   :align: center
   :title: Software / communication layers between an application and its client
+  :show_caption: true
 
 Application :term:`clients<client>` using ``Ragger`` must comply with this
 interface to communicate with the application. Once it's done, the client
@@ -79,6 +80,7 @@ a list of instructions.
 .. thumbnail:: images/navigate.svg
   :align: center
   :title: Software / communication layers between an application and its client
+  :show_caption: true
 
 The ``Navigator`` class also offers (with Speculos) screenshot checking
 capabilities: while the instructions are performed, ``Ragger`` takes screenshots
