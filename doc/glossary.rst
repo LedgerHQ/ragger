@@ -60,6 +60,10 @@ Glossary
      `Pytest <https://docs.pytest.org/>`_ is a largely used, open-source Python
      testing tool. Its ``fixture`` mechanism works neatly with ``Ragger``.
 
+   RAPDU
+     "Response APDU", designates the response of an :term:`application`
+     following an :term:`APDU` from the :term:`client` to the application.
+
    SDK
      The **SDK** is the open-source code allowing an application to be compiled
      for a Ledger cold wallet device. It is hosted on GitHub.
@@ -71,4 +75,4 @@ Glossary
      `on GitHub <https://github.com/ledgerhq/speculos>`__.
 
      It is composed of the emulator itself, and a HTTP client-server module
-     allowing to easily communicate with said emulator.
+     allowing to easily control and communicate with said emulator.

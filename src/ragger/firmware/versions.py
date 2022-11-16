@@ -20,6 +20,21 @@ from semver import VersionInfo
 
 
 class VersionManager(Enum):
+    """
+    A class managing the versions of a specific device.
+
+    Any class deriving from :class:`VersionManager` declares its managed
+    versions as class attributes (it is an :class:`Enum`). This attributes must
+    be of type :class:`semver.ServerInfo`. Class methods helps getting specific
+    managed versions::
+
+      class Versions(VersionManager):
+          Version1 = semver.VersionInfo(1, 4, 0)
+          Version2 = semver.VersionInfo(2, 0, 3)
+
+      Versions.get_last()         # returns semver.VersionInfo(2, 0, 3)
+      Versions.get_last(major=1)  # returns semver.VersionInfo(1, 4, 0)
+    """
 
     @classmethod
     def get_last(cls,
@@ -121,6 +136,8 @@ class NanoXVersions(VersionManager):
     V_2_0_2 = VersionInfo(2, 0, 2)
 
 
+#: This global holds the currently supported device names and related SDK
+#: versions. Managed devices are currently: "nanos", "nanosp" and  "nanox"
 SDK_VERSIONS: Dict[str, Type[VersionManager]] = {
     "nanos": NanoSVersions,
     "nanosp": NanoSPVersions,

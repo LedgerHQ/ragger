@@ -141,7 +141,7 @@ a list of those:
 
 Then we can override the
 `pytest_generate_tests <https://docs.pytest.org/en/7.2.x/how-to/parametrize.html#pytest-generate-tests>`_
-function to automatically create a fixture (let's call it "firmware"), which
+function to automatically create a fixture (let's call it ``firmware``), which
 will parametrize every test using this fixture and trigger then with each
 declared firmware version:
 
@@ -156,7 +156,8 @@ declared firmware version:
               ids.append(fw.device + " " + fw.version)
           metafunc.parametrize("firmware", fw_list, ids=ids)
 
-Now let's modify our previous ``backend`` fixture to use this firmware fixture:
+Now let's modify our previous ``backend`` fixture to use this ``firmware``
+fixture:
 
 .. code-block:: python
 
@@ -166,15 +167,24 @@ Now let's modify our previous ``backend`` fixture to use this firmware fixture:
       with backend:
           yield backend
 
+Now this ``backend`` fixture is parametrized, and will trigger 3 times, with
+successively ``firmware = Firmware('nanos', '2.1')``,
+``firmware = Firmware('nanox', '2.0.2')`` and
+``firmware = Firmware('nanosp', '1.0.3')``. The test will also be triggered 3
+times, with each time a ``backend`` configured with a different application.
+
 .. warning::
-  This won't work, because the tests may be started with every SDK versions, but
-  the application ELF is compiled for only one SDK!
+  The tests won't pass, because they may be started with every SDK versions,
+  but the application ELF is not parametrized yet, and is still compiled for
+  only one SDK type and version!
 
 .. note::
-  The application ELFs, hence the ELF file path has to be parametrized too.
+  The application ELFs, hence the ELF file path has to be parametrized.
 
-Thankfully, ``Ragger`` provides a `app_path_from_app_name` function which infers
-an application name ELF given its name and the firmware name.
+Thankfully, ``Ragger`` provides a
+:py:func:`app_path_from_app_name <ragger.utils.misc.app_path_from_app_name>`
+function which infers an application name ELF given its name and the firmware
+name.
 
 So, given you have a directory ``APPS_DIRECTORY`` where you stored all your
 application ELFs, and they are all named as ``app_nanos.elf``,

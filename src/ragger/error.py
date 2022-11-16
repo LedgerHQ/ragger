@@ -18,6 +18,19 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class ExceptionRAPDU(Exception):
+    """
+    Depending on the :class:`RaisePolicy <ragger.backend.interface.RaisePolicy>`,
+    communication with an application can raise this exception.
+
+    Just like :class:`RAPDU <ragger.utils.structs.RAPDU>`, it is composed of two
+    attributes:
+
+    - ``status`` (``int``), which is extracted from the two last bytes of the
+      response,
+    - ``data`` (``bytes``), which is the entire response payload, except the two
+      last bytes.
+    """
+
     status: int
     data: bytes = bytes()
 

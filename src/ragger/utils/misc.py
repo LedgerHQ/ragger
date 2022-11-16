@@ -18,6 +18,24 @@ from pathlib import Path
 
 
 def app_path_from_app_name(app_dir: Path, app_name: str, device: str) -> Path:
+    """
+    Builds an application ELF path according to a directory, an application name
+    and a device name.
+
+    The resulting path will be formated like:
+    ``<directory>/<application name>_<device name>.elf``
+
+    Example: ``tests/elfs/exchange_nanox.elf``
+
+    The directory and resulting path existance are checked.
+
+    :param app_dir: The directory where the application ELF is
+    :type app_dir: Path
+    :param app_name: The name of the application
+    :type app_name: str
+    :param device: The device type name (ex: 'nanos', 'nanosp', ...)
+    :type device: str
+    """
     assert app_dir.is_dir(), f"{app_dir} is not a directory"
     app_path = app_dir / (app_name + "_" + device + ".elf")
     assert app_path.is_file(), f"{app_path} must exist"

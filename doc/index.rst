@@ -17,6 +17,7 @@ to develop complex behaviors on devices.
    tutorial
    architecture
    source
+   faq
    glossary
 
 
