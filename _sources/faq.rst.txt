@@ -1,0 +1,21 @@
+Frequently Asked Question
+=========================
+
+Can I modify the behavior of the backend in case of error?
+----------------------------------------------------------
+
+Indeed, all backends can be instantiated with a
+:py:class:`RaisePolicy <ragger.backend.interface.RaisePolicy>`.
+
+By default, this policy is ``RaisePolicy.RAISE_ALL_BUT_0x9000``, which means the
+backend will raise an :py:class:`ExceptionRAPDU <ragger.error.ExceptionRAPDU>`
+if the :term:`APDU` returned by the :term:`application` does not end with
+``b'0x9000'``. This behavior can be change with the two other options:
+
+- ``RaisePolicy.RAISE_NOTHING``, where the backend will never raise, and always
+  returns a proper :py:class:`RAPDU <ragger.utils.structs.RAPDU>`.
+- ``RaisePolicy.RAISE_ALL``, where the backend will always raise a
+  :py:class:`ExceptionAPDU <ragger.error.ExceptionRAPDU>`, whatever the status.
+
+From that, every higher-level error management can be performed on top of
+``Ragger``.

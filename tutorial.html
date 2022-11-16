@@ -65,6 +65,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="source.html">Code documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">Frequently Asked Question</a></li>
 <li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
 </ul>
 
@@ -229,7 +230,7 @@ a list of those:</p>
 </div>
 <p>Then we can override the
 <a class="reference external" href="https://docs.pytest.org/en/7.2.x/how-to/parametrize.html#pytest-generate-tests">pytest_generate_tests</a>
-function to automatically create a fixture (let’s call it “firmware”), which
+function to automatically create a fixture (let’s call it <code class="docutils literal notranslate"><span class="pre">firmware</span></code>), which
 will parametrize every test using this fixture and trigger then with each
 declared firmware version:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">pytest_generate_tests</span><span class="p">(</span><span class="n">metafunc</span><span class="p">):</span>
@@ -242,7 +243,8 @@ declared firmware version:</p>
         <span class="n">metafunc</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">&quot;firmware&quot;</span><span class="p">,</span> <span class="n">fw_list</span><span class="p">,</span> <span class="n">ids</span><span class="o">=</span><span class="n">ids</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Now let’s modify our previous <code class="docutils literal notranslate"><span class="pre">backend</span></code> fixture to use this firmware fixture:</p>
+<p>Now let’s modify our previous <code class="docutils literal notranslate"><span class="pre">backend</span></code> fixture to use this <code class="docutils literal notranslate"><span class="pre">firmware</span></code>
+fixture:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@fixture</span>
 <span class="k">def</span> <span class="nf">backend</span><span class="p">(</span><span class="n">firmware</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SpeculosBackend</span><span class="p">:</span>
     <span class="n">backend</span> <span class="o">=</span> <span class="n">SpeculosBackend</span><span class="p">(</span><span class="n">APPLICATION_ELF</span><span class="p">,</span> <span class="n">firmware</span><span class="p">)</span>
@@ -250,17 +252,25 @@ declared firmware version:</p>
         <span class="k">yield</span> <span class="n">backend</span>
 </pre></div>
 </div>
+<p>Now this <code class="docutils literal notranslate"><span class="pre">backend</span></code> fixture is parametrized, and will trigger 3 times, with
+successively <code class="docutils literal notranslate"><span class="pre">firmware</span> <span class="pre">=</span> <span class="pre">Firmware('nanos',</span> <span class="pre">'2.1')</span></code>,
+<code class="docutils literal notranslate"><span class="pre">firmware</span> <span class="pre">=</span> <span class="pre">Firmware('nanox',</span> <span class="pre">'2.0.2')</span></code> and
+<code class="docutils literal notranslate"><span class="pre">firmware</span> <span class="pre">=</span> <span class="pre">Firmware('nanosp',</span> <span class="pre">'1.0.3')</span></code>. The test will also be triggered 3
+times, with each time a <code class="docutils literal notranslate"><span class="pre">backend</span></code> configured with a different application.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>This won’t work, because the tests may be started with every SDK versions, but
-the application ELF is compiled for only one SDK!</p>
+<p>The tests won’t pass, because they may be started with every SDK versions,
+but the application ELF is not parametrized yet, and is still compiled for
+only one SDK type and version!</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The application ELFs, hence the ELF file path has to be parametrized too.</p>
+<p>The application ELFs, hence the ELF file path has to be parametrized.</p>
 </div>
-<p>Thankfully, <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> provides a <cite>app_path_from_app_name</cite> function which infers
-an application name ELF given its name and the firmware name.</p>
+<p>Thankfully, <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> provides a
+<a class="reference internal" href="source.html#ragger.utils.misc.app_path_from_app_name" title="ragger.utils.misc.app_path_from_app_name"><code class="xref py py-func docutils literal notranslate"><span class="pre">app_path_from_app_name</span></code></a>
+function which infers an application name ELF given its name and the firmware
+name.</p>
 <p>So, given you have a directory <code class="docutils literal notranslate"><span class="pre">APPS_DIRECTORY</span></code> where you stored all your
 application ELFs, and they are all named as <code class="docutils literal notranslate"><span class="pre">app_nanos.elf</span></code>,
 <code class="docutils literal notranslate"><span class="pre">app_nanosp.elf</span></code>, <code class="docutils literal notranslate"><span class="pre">app_nanox.elf</span></code>, this code will deduce their proper

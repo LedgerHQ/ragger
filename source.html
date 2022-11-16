@@ -25,7 +25,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Glossary" href="glossary.html" />
+    <link rel="next" title="Frequently Asked Question" href="faq.html" />
     <link rel="prev" title="Architecture" href="architecture.html" />
     <link href="_static/layout.css" rel="stylesheet" type="text/css">
 
@@ -53,31 +53,15 @@
 <li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Code documentation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#ragger-backend"><code class="docutils literal notranslate"><span class="pre">ragger.backend</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#ragger.backend.BackendInterface"><code class="docutils literal notranslate"><span class="pre">BackendInterface</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#ragger.backend.BackendInterface.__init__"><code class="docutils literal notranslate"><span class="pre">BackendInterface.__init__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#ragger.backend.BackendInterface.both_click"><code class="docutils literal notranslate"><span class="pre">BackendInterface.both_click()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#ragger.backend.BackendInterface.compare_screen_with_snapshot"><code class="docutils literal notranslate"><span class="pre">BackendInterface.compare_screen_with_snapshot()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#ragger.backend.BackendInterface.exchange"><code class="docutils literal notranslate"><span class="pre">BackendInterface.exchange()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#ragger.backend.BackendInterface.exchange_async"><code class="docutils literal notranslate"><span class="pre">BackendInterface.exchange_async()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#ragger.backend.BackendInterface.exchange_async_raw"><code class="docutils literal notranslate"><span class="pre">BackendInterface.exchange_async_raw()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#ragger.backend.BackendInterface.exchange_raw"><code class="docutils literal notranslate"><span class="pre">BackendInterface.exchange_raw()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#ragger.backend.BackendInterface.firmware"><code class="docutils literal notranslate"><span class="pre">BackendInterface.firmware</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#ragger.backend.BackendInterface.is_raise_required"><code class="docutils literal notranslate"><span class="pre">BackendInterface.is_raise_required()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#ragger.backend.BackendInterface.last_async_response"><code class="docutils literal notranslate"><span class="pre">BackendInterface.last_async_response</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#ragger.backend.BackendInterface.left_click"><code class="docutils literal notranslate"><span class="pre">BackendInterface.left_click()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#ragger.backend.BackendInterface.receive"><code class="docutils literal notranslate"><span class="pre">BackendInterface.receive()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#ragger.backend.BackendInterface.right_click"><code class="docutils literal notranslate"><span class="pre">BackendInterface.right_click()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#ragger.backend.BackendInterface.save_screen_snapshot"><code class="docutils literal notranslate"><span class="pre">BackendInterface.save_screen_snapshot()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#ragger.backend.BackendInterface.send"><code class="docutils literal notranslate"><span class="pre">BackendInterface.send()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#ragger.backend.BackendInterface.send_raw"><code class="docutils literal notranslate"><span class="pre">BackendInterface.send_raw()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ragger-backend-interface"><code class="docutils literal notranslate"><span class="pre">ragger.backend.interface</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#interface-contract">Interface contract</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#response-management-policy">Response management policy</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#responses">Responses</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#ragger.RAPDU"><code class="docutils literal notranslate"><span class="pre">RAPDU</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#ragger.ExceptionRAPDU"><code class="docutils literal notranslate"><span class="pre">ExceptionRAPDU</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#ragger.backend.RaisePolicy"><code class="docutils literal notranslate"><span class="pre">RaisePolicy</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#ragger-error"><code class="docutils literal notranslate"><span class="pre">ragger.error</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ragger.error.ExceptionRAPDU"><code class="docutils literal notranslate"><span class="pre">ExceptionRAPDU</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#ragger-firmware"><code class="docutils literal notranslate"><span class="pre">ragger.firmware</span></code></a><ul>
@@ -94,8 +78,16 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#ragger-utils"><code class="docutils literal notranslate"><span class="pre">ragger.utils</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ragger-utils-misc"><code class="docutils literal notranslate"><span class="pre">ragger.utils.misc</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ragger.utils.misc.app_path_from_app_name"><code class="docutils literal notranslate"><span class="pre">app_path_from_app_name()</span></code></a></li>
 </ul>
 </li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">Frequently Asked Question</a></li>
 <li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
 </ul>
 
@@ -129,26 +121,41 @@
 <ul class="simple">
 <li><p><a class="reference internal" href="#ragger-backend" id="id2"><code class="docutils literal notranslate"><span class="pre">ragger.backend</span></code></a></p>
 <ul>
-<li><p><a class="reference internal" href="#responses" id="id3">Responses</a></p></li>
+<li><p><a class="reference internal" href="#ragger-backend-interface" id="id3"><code class="docutils literal notranslate"><span class="pre">ragger.backend.interface</span></code></a></p>
+<ul>
+<li><p><a class="reference internal" href="#interface-contract" id="id4">Interface contract</a></p></li>
+<li><p><a class="reference internal" href="#response-management-policy" id="id5">Response management policy</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#ragger-firmware" id="id4"><code class="docutils literal notranslate"><span class="pre">ragger.firmware</span></code></a></p>
-<ul>
-<li><p><a class="reference internal" href="#ragger-firmware-firmware" id="id5"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.firmware</span></code></a></p></li>
-<li><p><a class="reference internal" href="#ragger-firmware-version" id="id6"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.version</span></code></a></p>
-<ul>
-<li><p><a class="reference internal" href="#nano-s" id="id7">Nano S</a></p></li>
-<li><p><a class="reference internal" href="#id1" id="id8">Nano S+</a></p></li>
-<li><p><a class="reference internal" href="#nano-x" id="id9">Nano X</a></p></li>
-<li><p><a class="reference internal" href="#versionmanager" id="id10">VersionManager</a></p></li>
 </ul>
 </li>
+<li><p><a class="reference internal" href="#ragger-error" id="id6"><code class="docutils literal notranslate"><span class="pre">ragger.error</span></code></a></p></li>
+<li><p><a class="reference internal" href="#ragger-firmware" id="id7"><code class="docutils literal notranslate"><span class="pre">ragger.firmware</span></code></a></p>
+<ul>
+<li><p><a class="reference internal" href="#ragger-firmware-firmware" id="id8"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.firmware</span></code></a></p></li>
+<li><p><a class="reference internal" href="#ragger-firmware-version" id="id9"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.version</span></code></a></p>
+<ul>
+<li><p><a class="reference internal" href="#nano-s" id="id10">Nano S</a></p></li>
+<li><p><a class="reference internal" href="#id1" id="id11">Nano S+</a></p></li>
+<li><p><a class="reference internal" href="#nano-x" id="id12">Nano X</a></p></li>
+<li><p><a class="reference internal" href="#versionmanager" id="id13">VersionManager</a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#ragger-utils" id="id14"><code class="docutils literal notranslate"><span class="pre">ragger.utils</span></code></a></p>
+<ul>
+<li><p><a class="reference internal" href="#ragger-utils-misc" id="id15"><code class="docutils literal notranslate"><span class="pre">ragger.utils.misc</span></code></a></p></li>
 </ul>
 </li>
 </ul>
 </div>
 <div class="section" id="ragger-backend">
 <h2><code class="docutils literal notranslate"><span class="pre">ragger.backend</span></code><a class="headerlink" href="#ragger-backend" title="Permalink to this heading"></a></h2>
+<div class="section" id="ragger-backend-interface">
+<h3><code class="docutils literal notranslate"><span class="pre">ragger.backend.interface</span></code><a class="headerlink" href="#ragger-backend-interface" title="Permalink to this heading"></a></h3>
+<div class="section" id="interface-contract">
+<h4>Interface contract<a class="headerlink" href="#interface-contract" title="Permalink to this heading"></a></h4>
 <p>The contract a backend must respect:</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="ragger.backend.BackendInterface">
@@ -206,7 +213,7 @@ action is performed on the device.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ragger.backend.BackendInterface.exchange">
-<span class="sig-name descname"><span class="pre">exchange</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cla</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ins</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">b''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#ragger.RAPDU" title="ragger.utils.structs.RAPDU"><span class="pre">RAPDU</span></a></span></span><a class="headerlink" href="#ragger.backend.BackendInterface.exchange" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">exchange</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cla</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ins</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">b''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">RAPDU</span></span></span><a class="headerlink" href="#ragger.backend.BackendInterface.exchange" title="Permalink to this definition"></a></dt>
 <dd><p>Formats and sends an APDU to the backend, then receives its response.</p>
 <p>The length is automaticaly added to the APDU message.</p>
 <dl class="field-list simple">
@@ -220,7 +227,7 @@ action is performed on the device.</p>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><p><a class="reference internal" href="#ragger.ExceptionRAPDU" title="ragger.ExceptionRAPDU"><strong>ExceptionRAPDU</strong></a> – If the <cite>raises</cite> attribute is True, this method
+<dd class="field-even"><p><a class="reference internal" href="#ragger.error.ExceptionRAPDU" title="ragger.error.ExceptionRAPDU"><strong>ExceptionRAPDU</strong></a> – If the <cite>raises</cite> attribute is True, this method
 will raise if the backend returns a status code
 not registered as a <cite>valid_statuses</cite></p>
 </dd>
@@ -228,7 +235,7 @@ not registered as a <cite>valid_statuses</cite></p>
 <dd class="field-odd"><p>The APDU response</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference internal" href="#ragger.RAPDU" title="ragger.RAPDU">RAPDU</a></p>
+<dd class="field-even"><p>RAPDU</p>
 </dd>
 </dl>
 </dd></dl>
@@ -253,7 +260,7 @@ backend instance is still possible.</p>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><p><a class="reference internal" href="#ragger.ExceptionRAPDU" title="ragger.ExceptionRAPDU"><strong>ExceptionRAPDU</strong></a> – If the <cite>raises</cite> attribute is True, this method
+<dd class="field-even"><p><a class="reference internal" href="#ragger.error.ExceptionRAPDU" title="ragger.error.ExceptionRAPDU"><strong>ExceptionRAPDU</strong></a> – If the <cite>raises</cite> attribute is True, this method
 will raise if the backend returns a status code
 not registered as a <cite>valid_statuses</cite></p>
 </dd>
@@ -278,7 +285,7 @@ responsibility</p>
 <dd class="field-odd"><p><strong>data</strong> (<em>bytes</em>) – The APDU message</p>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><p><a class="reference internal" href="#ragger.ExceptionRAPDU" title="ragger.ExceptionRAPDU"><strong>ExceptionRAPDU</strong></a> – If the <cite>raises</cite> attribute is True, this method
+<dd class="field-even"><p><a class="reference internal" href="#ragger.error.ExceptionRAPDU" title="ragger.error.ExceptionRAPDU"><strong>ExceptionRAPDU</strong></a> – If the <cite>raises</cite> attribute is True, this method
 will raise if the backend returns a status code
 not registered a a <cite>valid_statuses</cite></p>
 </dd>
@@ -293,7 +300,7 @@ not registered a a <cite>valid_statuses</cite></p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ragger.backend.BackendInterface.exchange_raw">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">exchange_raw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">b''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#ragger.RAPDU" title="ragger.utils.structs.RAPDU"><span class="pre">RAPDU</span></a></span></span><a class="headerlink" href="#ragger.backend.BackendInterface.exchange_raw" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">exchange_raw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">b''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">RAPDU</span></span></span><a class="headerlink" href="#ragger.backend.BackendInterface.exchange_raw" title="Permalink to this definition"></a></dt>
 <dd><p>Sends the given APDU to the backend, then receives its response.</p>
 <p>Every part of the APDU (including length) are the caller’s
 responsibility</p>
@@ -302,7 +309,7 @@ responsibility</p>
 <dd class="field-odd"><p><strong>data</strong> (<em>bytes</em>) – The APDU message</p>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><p><a class="reference internal" href="#ragger.ExceptionRAPDU" title="ragger.ExceptionRAPDU"><strong>ExceptionRAPDU</strong></a> – If the <cite>raises</cite> attribute is True, this method
+<dd class="field-even"><p><a class="reference internal" href="#ragger.error.ExceptionRAPDU" title="ragger.error.ExceptionRAPDU"><strong>ExceptionRAPDU</strong></a> – If the <cite>raises</cite> attribute is True, this method
 will raise if the backend returns a status code
 not registered as a <cite>valid_statuses</cite></p>
 </dd>
@@ -310,7 +317,7 @@ not registered as a <cite>valid_statuses</cite></p>
 <dd class="field-odd"><p>The APDU response</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference internal" href="#ragger.RAPDU" title="ragger.RAPDU">RAPDU</a></p>
+<dd class="field-even"><p>RAPDU</p>
 </dd>
 </dl>
 </dd></dl>
@@ -330,7 +337,7 @@ not registered as a <cite>valid_statuses</cite></p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ragger.backend.BackendInterface.is_raise_required">
-<span class="sig-name descname"><span class="pre">is_raise_required</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rapdu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#ragger.RAPDU" title="ragger.utils.structs.RAPDU"><span class="pre">RAPDU</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#ragger.backend.BackendInterface.is_raise_required" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">is_raise_required</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rapdu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">RAPDU</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#ragger.backend.BackendInterface.is_raise_required" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>If the given status is considered valid or not</p>
@@ -343,7 +350,7 @@ not registered as a <cite>valid_statuses</cite></p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ragger.backend.BackendInterface.last_async_response">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">last_async_response</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ragger.RAPDU" title="ragger.utils.structs.RAPDU"><span class="pre">RAPDU</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ragger.backend.BackendInterface.last_async_response" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">last_async_response</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">RAPDU</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ragger.backend.BackendInterface.last_async_response" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>The last RAPDU received after a call to <cite>exchange_async</cite> or
@@ -351,7 +358,7 @@ not registered as a <cite>valid_statuses</cite></p>
 resulted into an exception throw.</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference internal" href="#ragger.RAPDU" title="ragger.RAPDU">RAPDU</a></p>
+<dd class="field-even"><p>RAPDU</p>
 </dd>
 </dl>
 </dd></dl>
@@ -378,13 +385,13 @@ action is performed on the device.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ragger.backend.BackendInterface.receive">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">receive</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#ragger.RAPDU" title="ragger.utils.structs.RAPDU"><span class="pre">RAPDU</span></a></span></span><a class="headerlink" href="#ragger.backend.BackendInterface.receive" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">receive</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">RAPDU</span></span></span><a class="headerlink" href="#ragger.backend.BackendInterface.receive" title="Permalink to this definition"></a></dt>
 <dd><p>Receives a response APDU from the backend.</p>
 <p>Calling this method implies a command APDU has been previously sent
 to the backend, and a response is expected.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#ragger.ExceptionRAPDU" title="ragger.ExceptionRAPDU"><strong>ExceptionRAPDU</strong></a> – If the <cite>raises</cite> attribute is True, this method
+<dd class="field-odd"><p><a class="reference internal" href="#ragger.error.ExceptionRAPDU" title="ragger.error.ExceptionRAPDU"><strong>ExceptionRAPDU</strong></a> – If the <cite>raises</cite> attribute is True, this method
 will raise if the backend returns a status code
 not registered as a <cite>valid_statuses</cite></p>
 </dd>
@@ -392,7 +399,7 @@ not registered as a <cite>valid_statuses</cite></p>
 <dd class="field-even"><p>The APDU response</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#ragger.RAPDU" title="ragger.RAPDU">RAPDU</a></p>
+<dd class="field-odd"><p>RAPDU</p>
 </dd>
 </dl>
 </dd></dl>
@@ -478,29 +485,27 @@ responsibility</p>
 
 </dd></dl>
 
-<div class="section" id="responses">
-<h3>Responses<a class="headerlink" href="#responses" title="Permalink to this heading"></a></h3>
-<p>Most APDU response are instances of class RAPDU:</p>
+</div>
+<div class="section" id="response-management-policy">
+<h4>Response management policy<a class="headerlink" href="#response-management-policy" title="Permalink to this heading"></a></h4>
+<p>To change the behavior of the backend on <span class="xref std std-term">response APDU</span>, one can
+tinker with the <code class="docutils literal notranslate"><span class="pre">RaisePolicy</span></code>:</p>
 <dl class="py class">
-<dt class="sig sig-object py" id="ragger.RAPDU">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragger.</span></span><span class="sig-name descname"><span class="pre">RAPDU</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragger.RAPDU" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<p>However, if the backend has its raise_policy configured to raise on the
-received APDU response, it will raises an <cite>ExceptionRAPDU</cite>:</p>
-<dl class="py class">
-<dt class="sig sig-object py" id="ragger.ExceptionRAPDU">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragger.</span></span><span class="sig-name descname"><span class="pre">ExceptionRAPDU</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">b''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragger.ExceptionRAPDU" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<p>The different values of <cite>RaisePolicy</cite> are :</p>
-<dl class="py class">
-<dt class="sig sig-object py" id="ragger.backend.RaisePolicy">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragger.backend.</span></span><span class="sig-name descname"><span class="pre">RaisePolicy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragger.backend.RaisePolicy" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="ragger.backend.interface.RaisePolicy">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragger.backend.interface.</span></span><span class="sig-name descname"><span class="pre">RaisePolicy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragger.backend.interface.RaisePolicy" title="Permalink to this definition"></a></dt>
 <dd><p>An enumeration.</p>
 </dd></dl>
 
 </div>
+</div>
+</div>
+<div class="section" id="ragger-error">
+<h2><code class="docutils literal notranslate"><span class="pre">ragger.error</span></code><a class="headerlink" href="#ragger-error" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="ragger.error.ExceptionRAPDU">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragger.error.</span></span><span class="sig-name descname"><span class="pre">ExceptionRAPDU</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">b''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragger.error.ExceptionRAPDU" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 </div>
 <div class="section" id="ragger-firmware">
 <h2><code class="docutils literal notranslate"><span class="pre">ragger.firmware</span></code><a class="headerlink" href="#ragger-firmware" title="Permalink to this heading"></a></h2>
@@ -684,6 +689,32 @@ two-digits strings (like “2.0”). A version of “2” will raise.</p>
 </div>
 </div>
 </div>
+<div class="section" id="ragger-utils">
+<h2><code class="docutils literal notranslate"><span class="pre">ragger.utils</span></code><a class="headerlink" href="#ragger-utils" title="Permalink to this heading"></a></h2>
+<div class="section" id="ragger-utils-misc">
+<h3><code class="docutils literal notranslate"><span class="pre">ragger.utils.misc</span></code><a class="headerlink" href="#ragger-utils-misc" title="Permalink to this heading"></a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="ragger.utils.misc.app_path_from_app_name">
+<span class="sig-prename descclassname"><span class="pre">ragger.utils.misc.</span></span><span class="sig-name descname"><span class="pre">app_path_from_app_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">app_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span></span></span><a class="headerlink" href="#ragger.utils.misc.app_path_from_app_name" title="Permalink to this definition"></a></dt>
+<dd><p>Builds an application ELF path according to a directory, an application name
+and a device name.</p>
+<p>The resulting path will be formated like:
+<code class="docutils literal notranslate"><span class="pre">&lt;directory&gt;/&lt;application</span> <span class="pre">name&gt;_&lt;device</span> <span class="pre">name&gt;.elf</span></code></p>
+<p>Example: <code class="docutils literal notranslate"><span class="pre">tests/elfs/exchange_nanox.elf</span></code></p>
+<p>The directory and resulting path existance are checked.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>app_dir</strong> (<em>Path</em>) – The directory where the application ELF is</p></li>
+<li><p><strong>app_name</strong> (<em>str</em>) – The name of the application</p></li>
+<li><p><strong>device</strong> (<em>str</em>) – The device type name (ex: ‘nanos’, ‘nanosp’, …)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
 </div>
 
 
@@ -691,7 +722,7 @@ two-digits strings (like “2.0”). A version of “2” will raise.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="architecture.html" class="btn btn-neutral float-left" title="Architecture" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="glossary.html" class="btn btn-neutral float-right" title="Glossary" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="faq.html" class="btn btn-neutral float-right" title="Frequently Asked Question" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
