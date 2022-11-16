@@ -49,12 +49,12 @@ Glossary
    LedgerComm
      LedgerComm is the original open-source library allowing to communicate with
      a Ledger device. It is hosted
-     `on GitHub <https://github.com/LedgerHQ/ledgercomm>`_.
+     `on GitHub <https://github.com/LedgerHQ/ledgercomm>`__.
 
    LedgerWallet
      LedgerWallet is the newer open-source library allowing to communicate with
      a Ledger device. It is hosted
-     `on GitHub <https://github.com/LedgerHQ/ledgerctl/>`_
+     `on GitHub <https://github.com/LedgerHQ/ledgerctl/>`__
 
    Pytest
      `Pytest <https://docs.pytest.org/>`_ is a largely used, open-source Python
@@ -68,7 +68,7 @@ Glossary
    Speculos
      **Speculos** is an open-source Ledger device emulator, allowing easy and
      fast testing of an :term:`application`. It is hosted
-     `on GitHub <https://github.com/ledgerhq/speculos>`_.
+     `on GitHub <https://github.com/ledgerhq/speculos>`__.
 
      It is composed of the emulator itself, and a HTTP client-server module
      allowing to easily communicate with said emulator.
