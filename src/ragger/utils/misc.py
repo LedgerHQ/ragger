@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-from typing import Optional, Tuple
+from typing import Optional, Tuple, List
 from pathlib import Path
 
 
@@ -39,3 +39,7 @@ def create_currency_config(main_ticker: str,
     for element in [main_ticker.encode(), application_name.encode(), sub_config]:
         coin_config += prefix_with_len(element)
     return coin_config
+
+
+def split_message(message: bytes, max_size: int) -> List[bytes]:
+    return [message[x:x + max_size] for x in range(0, len(message), max_size)]
