@@ -25,7 +25,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Frequently Asked Question" href="faq.html" />
+    <link rel="next" title="Frequently Asked Questions" href="faq.html" />
     <link rel="prev" title="Architecture" href="architecture.html" />
     <link href="_static/layout.css" rel="stylesheet" type="text/css">
 
@@ -70,15 +70,20 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#ragger-firmware-version"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.version</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#versionmanager">VersionManager</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#nano-s">Nano S</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#id1">Nano S+</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#nano-x">Nano X</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#versionmanager">VersionManager</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#managed-sdk-versions">Managed SDK &amp; versions</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#ragger-utils"><code class="docutils literal notranslate"><span class="pre">ragger.utils</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ragger-utils-structs"><code class="docutils literal notranslate"><span class="pre">ragger.utils.structs</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ragger.utils.structs.RAPDU"><code class="docutils literal notranslate"><span class="pre">RAPDU</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#ragger-utils-misc"><code class="docutils literal notranslate"><span class="pre">ragger.utils.misc</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#ragger.utils.misc.app_path_from_app_name"><code class="docutils literal notranslate"><span class="pre">app_path_from_app_name()</span></code></a></li>
 </ul>
@@ -87,7 +92,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="faq.html">Frequently Asked Question</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">Frequently Asked Questions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
 </ul>
 
@@ -135,17 +140,19 @@
 <li><p><a class="reference internal" href="#ragger-firmware-firmware" id="id8"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.firmware</span></code></a></p></li>
 <li><p><a class="reference internal" href="#ragger-firmware-version" id="id9"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.version</span></code></a></p>
 <ul>
-<li><p><a class="reference internal" href="#nano-s" id="id10">Nano S</a></p></li>
-<li><p><a class="reference internal" href="#id1" id="id11">Nano S+</a></p></li>
-<li><p><a class="reference internal" href="#nano-x" id="id12">Nano X</a></p></li>
-<li><p><a class="reference internal" href="#versionmanager" id="id13">VersionManager</a></p></li>
+<li><p><a class="reference internal" href="#versionmanager" id="id10">VersionManager</a></p></li>
+<li><p><a class="reference internal" href="#nano-s" id="id11">Nano S</a></p></li>
+<li><p><a class="reference internal" href="#id1" id="id12">Nano S+</a></p></li>
+<li><p><a class="reference internal" href="#nano-x" id="id13">Nano X</a></p></li>
+<li><p><a class="reference internal" href="#managed-sdk-versions" id="id14">Managed SDK &amp; versions</a></p></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#ragger-utils" id="id14"><code class="docutils literal notranslate"><span class="pre">ragger.utils</span></code></a></p>
+<li><p><a class="reference internal" href="#ragger-utils" id="id15"><code class="docutils literal notranslate"><span class="pre">ragger.utils</span></code></a></p>
 <ul>
-<li><p><a class="reference internal" href="#ragger-utils-misc" id="id15"><code class="docutils literal notranslate"><span class="pre">ragger.utils.misc</span></code></a></p></li>
+<li><p><a class="reference internal" href="#ragger-utils-structs" id="id16"><code class="docutils literal notranslate"><span class="pre">ragger.utils.structs</span></code></a></p></li>
+<li><p><a class="reference internal" href="#ragger-utils-misc" id="id17"><code class="docutils literal notranslate"><span class="pre">ragger.utils.misc</span></code></a></p></li>
 </ul>
 </li>
 </ul>
@@ -213,7 +220,7 @@ action is performed on the device.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ragger.backend.BackendInterface.exchange">
-<span class="sig-name descname"><span class="pre">exchange</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cla</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ins</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">b''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">RAPDU</span></span></span><a class="headerlink" href="#ragger.backend.BackendInterface.exchange" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">exchange</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cla</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ins</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">b''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#ragger.utils.structs.RAPDU" title="ragger.utils.structs.RAPDU"><span class="pre">RAPDU</span></a></span></span><a class="headerlink" href="#ragger.backend.BackendInterface.exchange" title="Permalink to this definition"></a></dt>
 <dd><p>Formats and sends an APDU to the backend, then receives its response.</p>
 <p>The length is automaticaly added to the APDU message.</p>
 <dl class="field-list simple">
@@ -235,7 +242,7 @@ not registered as a <cite>valid_statuses</cite></p>
 <dd class="field-odd"><p>The APDU response</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>RAPDU</p>
+<dd class="field-even"><p><a class="reference internal" href="#ragger.utils.structs.RAPDU" title="ragger.utils.structs.RAPDU">RAPDU</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -300,7 +307,7 @@ not registered a a <cite>valid_statuses</cite></p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ragger.backend.BackendInterface.exchange_raw">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">exchange_raw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">b''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">RAPDU</span></span></span><a class="headerlink" href="#ragger.backend.BackendInterface.exchange_raw" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">exchange_raw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">b''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#ragger.utils.structs.RAPDU" title="ragger.utils.structs.RAPDU"><span class="pre">RAPDU</span></a></span></span><a class="headerlink" href="#ragger.backend.BackendInterface.exchange_raw" title="Permalink to this definition"></a></dt>
 <dd><p>Sends the given APDU to the backend, then receives its response.</p>
 <p>Every part of the APDU (including length) are the caller’s
 responsibility</p>
@@ -317,7 +324,7 @@ not registered as a <cite>valid_statuses</cite></p>
 <dd class="field-odd"><p>The APDU response</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>RAPDU</p>
+<dd class="field-even"><p><a class="reference internal" href="#ragger.utils.structs.RAPDU" title="ragger.utils.structs.RAPDU">RAPDU</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -337,7 +344,7 @@ not registered as a <cite>valid_statuses</cite></p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ragger.backend.BackendInterface.is_raise_required">
-<span class="sig-name descname"><span class="pre">is_raise_required</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rapdu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">RAPDU</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#ragger.backend.BackendInterface.is_raise_required" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">is_raise_required</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rapdu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#ragger.utils.structs.RAPDU" title="ragger.utils.structs.RAPDU"><span class="pre">RAPDU</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#ragger.backend.BackendInterface.is_raise_required" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>If the given status is considered valid or not</p>
@@ -350,7 +357,7 @@ not registered as a <cite>valid_statuses</cite></p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ragger.backend.BackendInterface.last_async_response">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">last_async_response</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">RAPDU</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ragger.backend.BackendInterface.last_async_response" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">last_async_response</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ragger.utils.structs.RAPDU" title="ragger.utils.structs.RAPDU"><span class="pre">RAPDU</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ragger.backend.BackendInterface.last_async_response" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>The last RAPDU received after a call to <cite>exchange_async</cite> or
@@ -358,7 +365,7 @@ not registered as a <cite>valid_statuses</cite></p>
 resulted into an exception throw.</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>RAPDU</p>
+<dd class="field-even"><p><a class="reference internal" href="#ragger.utils.structs.RAPDU" title="ragger.utils.structs.RAPDU">RAPDU</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -385,7 +392,7 @@ action is performed on the device.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ragger.backend.BackendInterface.receive">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">receive</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">RAPDU</span></span></span><a class="headerlink" href="#ragger.backend.BackendInterface.receive" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">receive</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#ragger.utils.structs.RAPDU" title="ragger.utils.structs.RAPDU"><span class="pre">RAPDU</span></a></span></span><a class="headerlink" href="#ragger.backend.BackendInterface.receive" title="Permalink to this definition"></a></dt>
 <dd><p>Receives a response APDU from the backend.</p>
 <p>Calling this method implies a command APDU has been previously sent
 to the backend, and a response is expected.</p>
@@ -399,7 +406,7 @@ not registered as a <cite>valid_statuses</cite></p>
 <dd class="field-even"><p>The APDU response</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>RAPDU</p>
+<dd class="field-odd"><p><a class="reference internal" href="#ragger.utils.structs.RAPDU" title="ragger.utils.structs.RAPDU">RAPDU</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -488,12 +495,27 @@ responsibility</p>
 </div>
 <div class="section" id="response-management-policy">
 <h4>Response management policy<a class="headerlink" href="#response-management-policy" title="Permalink to this heading"></a></h4>
-<p>To change the behavior of the backend on <span class="xref std std-term">response APDU</span>, one can
+<p>To change the behavior of the backend on <a class="reference internal" href="glossary.html#term-RAPDU"><span class="xref std std-term">response APDU</span></a>, one can
 tinker with the <code class="docutils literal notranslate"><span class="pre">RaisePolicy</span></code>:</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="ragger.backend.interface.RaisePolicy">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragger.backend.interface.</span></span><span class="sig-name descname"><span class="pre">RaisePolicy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragger.backend.interface.RaisePolicy" title="Permalink to this definition"></a></dt>
 <dd><p>An enumeration.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ragger.backend.interface.RaisePolicy.RAISE_ALL">
+<span class="sig-name descname"><span class="pre">RAISE_ALL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#ragger.backend.interface.RaisePolicy.RAISE_ALL" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ragger.backend.interface.RaisePolicy.RAISE_ALL_BUT_0x9000">
+<span class="sig-name descname"><span class="pre">RAISE_ALL_BUT_0x9000</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#ragger.backend.interface.RaisePolicy.RAISE_ALL_BUT_0x9000" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ragger.backend.interface.RaisePolicy.RAISE_NOTHING">
+<span class="sig-name descname"><span class="pre">RAISE_NOTHING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#ragger.backend.interface.RaisePolicy.RAISE_NOTHING" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </div>
@@ -504,7 +526,17 @@ tinker with the <code class="docutils literal notranslate"><span class="pre">Rai
 <dl class="py class">
 <dt class="sig sig-object py" id="ragger.error.ExceptionRAPDU">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragger.error.</span></span><span class="sig-name descname"><span class="pre">ExceptionRAPDU</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">b''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragger.error.ExceptionRAPDU" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Depending on the <a class="reference internal" href="#ragger.backend.interface.RaisePolicy" title="ragger.backend.interface.RaisePolicy"><code class="xref py py-class docutils literal notranslate"><span class="pre">RaisePolicy</span></code></a>,
+communication with an application can raise this exception.</p>
+<p>Just like <a class="reference internal" href="#ragger.utils.structs.RAPDU" title="ragger.utils.structs.RAPDU"><code class="xref py py-class docutils literal notranslate"><span class="pre">RAPDU</span></code></a>, it is composed of two
+attributes:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">status</span></code> (<code class="docutils literal notranslate"><span class="pre">int</span></code>), which is extracted from the two last bytes of the
+response,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> (<code class="docutils literal notranslate"><span class="pre">bytes</span></code>), which is the entire response payload, except the two
+last bytes.</p></li>
+</ul>
+</dd></dl>
 
 </div>
 <div class="section" id="ragger-firmware">
@@ -518,28 +550,115 @@ should expect. This is declared with this class:</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragger.firmware.</span></span><span class="sig-name descname"><span class="pre">Firmware</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">version</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragger.firmware.Firmware" title="Permalink to this definition"></a></dt>
 <dd><p>The Firmware container class holds information on the expected device on which
 the current Ragger code will apply on.</p>
-<p>It is composed of:</p>
+<p>It is composed of three attributes:</p>
 <ul class="simple">
-<li><p>a <cite>device</cite> type, which represents the name of the physical device
+<li><p><code class="docutils literal notranslate"><span class="pre">device</span></code> (<code class="docutils literal notranslate"><span class="pre">str</span></code>), which represents the name of the physical device
 (‘nanos’, ‘nanox’, …),</p></li>
-<li><p>a <cite>version</cite>, which represent the SDK version associated with the physical
-device.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">version</span></code> (<code class="docutils literal notranslate"><span class="pre">str</span></code>), which represent the SDK version associated with the
+physical device.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">semantic_version</span></code> (<code class="xref py py-class docutils literal notranslate"><span class="pre">semver.VersionInfo</span></code>), which is deduced from
+<code class="docutils literal notranslate"><span class="pre">device</span></code> and <code class="docutils literal notranslate"><span class="pre">version</span></code>. <code class="docutils literal notranslate"><span class="pre">device</span></code> is used to get the correct
+<a class="reference internal" href="#ragger.firmware.versions.VersionManager" title="ragger.firmware.versions.VersionManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">VersionManager</span></code></a> class
+from the <a class="reference internal" href="#ragger.firmware.versions.SDK_VERSIONS" title="ragger.firmware.versions.SDK_VERSIONS"><code class="xref py py-data docutils literal notranslate"><span class="pre">SDK_VERSIONS</span></code></a>
+global, then the <code class="xref py py-class docutils literal notranslate"><span class="pre">semver.VersionInfo</span></code> is selected according to the
+given <code class="docutils literal notranslate"><span class="pre">version</span></code>. For instance, <code class="docutils literal notranslate"><span class="pre">device</span> <span class="pre">=</span> <span class="pre">&quot;NanoS&quot;</span></code> and
+<code class="docutils literal notranslate"><span class="pre">version</span> <span class="pre">=</span>&#160; <span class="pre">&quot;2.1&quot;</span></code> will results into
+<code class="docutils literal notranslate"><span class="pre">semantic_version</span> <span class="pre">=</span> <span class="pre">semver.VersionInfo(2,</span> <span class="pre">1,</span> <span class="pre">0)</span></code>.</p></li>
 </ul>
-<p>A third attribute is also generated: <cite>semantic_version</cite>, which is deduced
-from the <cite>version</cite> by the <cite>VersionManager</cite> class, by selecting the latest
-<cite>semantic_version</cite> matching the given <cite>version</cite>. For instance, NanoS 2.1
-will fallback to version 2.1.0.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ragger.firmware.Firmware.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">version</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragger.firmware.Firmware.__init__" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Instantiate the <a class="reference internal" href="#ragger.firmware.Firmware" title="ragger.firmware.Firmware"><code class="xref py py-class docutils literal notranslate"><span class="pre">Firmware</span></code></a>.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">device</span></code> does not match any device declared in
+<a class="reference internal" href="#ragger.firmware.versions.SDK_VERSIONS" title="ragger.firmware.versions.SDK_VERSIONS"><code class="xref py py-data docutils literal notranslate"><span class="pre">SDK_VERSIONS</span></code></a>, will raise
+a <code class="docutils literal notranslate"><span class="pre">KeyError</span></code>.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">version</span></code> does not match any version in the
+<a class="reference internal" href="#ragger.firmware.versions.VersionManager" title="ragger.firmware.versions.VersionManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">VersionManager</span></code></a>
+related to the <code class="docutils literal notranslate"><span class="pre">SDK_VERSION[device]</span></code>, will raise a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>.</p>
+</dd></dl>
 
 </dd></dl>
 
 </div>
 <div class="section" id="ragger-firmware-version">
 <h3><code class="docutils literal notranslate"><span class="pre">ragger.firmware.version</span></code><a class="headerlink" href="#ragger-firmware-version" title="Permalink to this heading"></a></h3>
-<p>Currently availabled version are these ones:</p>
+<div class="section" id="versionmanager">
+<h4>VersionManager<a class="headerlink" href="#versionmanager" title="Permalink to this heading"></a></h4>
+<p>Versions are managed through the <code class="docutils literal notranslate"><span class="pre">VersionManager</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="ragger.firmware.versions.VersionManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragger.firmware.versions.</span></span><span class="sig-name descname"><span class="pre">VersionManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragger.firmware.versions.VersionManager" title="Permalink to this definition"></a></dt>
+<dd><p>A class managing the versions of a specific device.</p>
+<p>Any class deriving from <a class="reference internal" href="#ragger.firmware.versions.VersionManager" title="ragger.firmware.versions.VersionManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">VersionManager</span></code></a> declares its managed
+versions as class attributes (it is an <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code>). This attributes must
+be of type <code class="xref py py-class docutils literal notranslate"><span class="pre">semver.ServerInfo</span></code>. Class methods helps getting specific
+managed versions:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Versions</span><span class="p">(</span><span class="n">VersionManager</span><span class="p">):</span>
+    <span class="n">Version1</span> <span class="o">=</span> <span class="n">semver</span><span class="o">.</span><span class="n">VersionInfo</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">Version2</span> <span class="o">=</span> <span class="n">semver</span><span class="o">.</span><span class="n">VersionInfo</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+
+<span class="n">Versions</span><span class="o">.</span><span class="n">get_last</span><span class="p">()</span>         <span class="c1"># returns semver.VersionInfo(2, 0, 3)</span>
+<span class="n">Versions</span><span class="o">.</span><span class="n">get_last</span><span class="p">(</span><span class="n">major</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># returns semver.VersionInfo(1, 4, 0)</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="ragger.firmware.versions.VersionManager.get_last">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_last</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">major</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">patch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">VersionInfo</span></span></span><a class="headerlink" href="#ragger.firmware.versions.VersionManager.get_last" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the <code class="xref py py-class docutils literal notranslate"><span class="pre">semver.VersionInfo</span></code> matching the given version
+numbers. If the version numbers are incomplete, fallbacks to the latest
+version matching the given numbers.</p>
+<p>For instance, if the enum contains version <code class="docutils literal notranslate"><span class="pre">2.0.1</span></code> and <code class="docutils literal notranslate"><span class="pre">2.0.4</span></code>,
+<code class="docutils literal notranslate"><span class="pre">VersionManager.get_last(major=2,</span> <span class="pre">minor=0)</span></code> will return the <code class="docutils literal notranslate"><span class="pre">2.0.4</span></code>
+version.</p>
+<p>If a number is given, its higher-level numbers are required: patch needs
+major and minor, and minor needs major (else the function raises a
+<code class="docutils literal notranslate"><span class="pre">ValueError</span></code>).</p>
+<p>If no suitable version are found, raises a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>major</strong> (<em>int</em>) – The major version in semantic versionning</p></li>
+<li><p><strong>minor</strong> (<em>int</em>) – The minor version in semantic versionning</p></li>
+<li><p><strong>patch</strong> (<em>int</em>) – The patch version in semantic versionning</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The latest matching version</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">semver.VersionInfo</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ragger.firmware.versions.VersionManager.get_last_from_string">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_last_from_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">version</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">VersionInfo</span></span></span><a class="headerlink" href="#ragger.firmware.versions.VersionManager.get_last_from_string" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the <code class="xref py py-class docutils literal notranslate"><span class="pre">semver.VersionInfo</span></code> matching the given version
+string. If the version string is incomplete, fallbacks to the latest
+version matching the version string.</p>
+<p>For instance, if the enum contains version <code class="docutils literal notranslate"><span class="pre">2.0.1</span></code> and <code class="docutils literal notranslate"><span class="pre">2.0.4</span></code>,
+<code class="docutils literal notranslate"><span class="pre">VersionManager.get_last_from_string(&quot;2.0&quot;)</span></code> will return the <code class="docutils literal notranslate"><span class="pre">2.0.4</span></code>
+version.</p>
+<p>Version strings must be valid semantic version string, or at least
+two-digits strings (like “2.0”). A version of “2” will raise.</p>
+<p>If no suitable version are found, raises a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>version</strong> (<em>str</em>) – The version</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The latest matching version</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">semver.VersionInfo</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="nano-s">
 <h4>Nano S<a class="headerlink" href="#nano-s" title="Permalink to this heading"></a></h4>
 <dl class="py class">
@@ -622,68 +741,13 @@ will fallback to version 2.1.0.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="versionmanager">
-<h4>VersionManager<a class="headerlink" href="#versionmanager" title="Permalink to this heading"></a></h4>
-<p>Versions are managed through the <code class="docutils literal notranslate"><span class="pre">VersionManager</span></code></p>
-<dl class="py class">
-<dt class="sig sig-object py" id="ragger.firmware.versions.VersionManager">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragger.firmware.versions.</span></span><span class="sig-name descname"><span class="pre">VersionManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragger.firmware.versions.VersionManager" title="Permalink to this definition"></a></dt>
-<dd><p>An enumeration.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="ragger.firmware.versions.VersionManager.get_last">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_last</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">major</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">patch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">VersionInfo</span></span></span><a class="headerlink" href="#ragger.firmware.versions.VersionManager.get_last" title="Permalink to this definition"></a></dt>
-<dd><p>Returns the <code class="xref py py-class docutils literal notranslate"><span class="pre">semver.VersionInfo</span></code> matching the given version
-numbers. If the version numbers are incomplete, fallbacks to the latest
-version matching the given numbers.</p>
-<p>For instance, if the enum contains version <code class="docutils literal notranslate"><span class="pre">2.0.1</span></code> and <code class="docutils literal notranslate"><span class="pre">2.0.4</span></code>,
-<code class="docutils literal notranslate"><span class="pre">VersionManager.get_last(major=2,</span> <span class="pre">minor=0)</span></code> will return the <code class="docutils literal notranslate"><span class="pre">2.0.4</span></code>
-version.</p>
-<p>If a number is given, its higher-level numbers are required: patch needs
-major and minor, and minor needs major (else the function raises a
-<code class="docutils literal notranslate"><span class="pre">ValueError</span></code>).</p>
-<p>If no suitable version are found, raises a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>major</strong> (<em>int</em>) – The major version in semantic versionning</p></li>
-<li><p><strong>minor</strong> (<em>int</em>) – The minor version in semantic versionning</p></li>
-<li><p><strong>patch</strong> (<em>int</em>) – The patch version in semantic versionning</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The latest matching version</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">semver.VersionInfo</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ragger.firmware.versions.VersionManager.get_last_from_string">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_last_from_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">version</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">VersionInfo</span></span></span><a class="headerlink" href="#ragger.firmware.versions.VersionManager.get_last_from_string" title="Permalink to this definition"></a></dt>
-<dd><p>Returns the <code class="xref py py-class docutils literal notranslate"><span class="pre">semver.VersionInfo</span></code> matching the given version
-string. If the version string is incomplete, fallbacks to the latest
-version matching the version string.</p>
-<p>For instance, if the enum contains version <code class="docutils literal notranslate"><span class="pre">2.0.1</span></code> and <code class="docutils literal notranslate"><span class="pre">2.0.4</span></code>,
-<code class="docutils literal notranslate"><span class="pre">VersionManager.get_last_from_string(&quot;2.0&quot;)</span></code> will return the <code class="docutils literal notranslate"><span class="pre">2.0.4</span></code>
-version.</p>
-<p>Version strings must be valid semantic version string, or at least
-two-digits strings (like “2.0”). A version of “2” will raise.</p>
-<p>If no suitable version are found, raises a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>version</strong> (<em>str</em>) – The version</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The latest matching version</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">semver.VersionInfo</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
+<div class="section" id="managed-sdk-versions">
+<h4>Managed SDK &amp; versions<a class="headerlink" href="#managed-sdk-versions" title="Permalink to this heading"></a></h4>
+<dl class="py data">
+<dt class="sig sig-object py" id="ragger.firmware.versions.SDK_VERSIONS">
+<span class="sig-prename descclassname"><span class="pre">ragger.firmware.versions.</span></span><span class="sig-name descname"><span class="pre">SDK_VERSIONS</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ragger.firmware.versions.VersionManager" title="ragger.firmware.versions.VersionManager"><span class="pre">VersionManager</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'nanos':</span> <span class="pre">&lt;enum</span> <span class="pre">'NanoSVersions'&gt;,</span> <span class="pre">'nanosp':</span> <span class="pre">&lt;enum</span> <span class="pre">'NanoSPVersions'&gt;,</span> <span class="pre">'nanox':</span> <span class="pre">&lt;enum</span> <span class="pre">'NanoXVersions'&gt;}</span></em><a class="headerlink" href="#ragger.firmware.versions.SDK_VERSIONS" title="Permalink to this definition"></a></dt>
+<dd><p>This global holds the currently supported device names and related SDK
+versions. Managed devices are currently: “nanos”, “nanosp” and  “nanox”</p>
 </dd></dl>
 
 </div>
@@ -691,6 +755,23 @@ two-digits strings (like “2.0”). A version of “2” will raise.</p>
 </div>
 <div class="section" id="ragger-utils">
 <h2><code class="docutils literal notranslate"><span class="pre">ragger.utils</span></code><a class="headerlink" href="#ragger-utils" title="Permalink to this heading"></a></h2>
+<div class="section" id="ragger-utils-structs">
+<h3><code class="docutils literal notranslate"><span class="pre">ragger.utils.structs</span></code><a class="headerlink" href="#ragger-utils-structs" title="Permalink to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="ragger.utils.structs.RAPDU">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragger.utils.structs.</span></span><span class="sig-name descname"><span class="pre">RAPDU</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragger.utils.structs.RAPDU" title="Permalink to this definition"></a></dt>
+<dd><p>The dataclass containing the application’s response of an APDU from the
+client to the application.</p>
+<p>It is composed of two attributes:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">status</span></code> (<code class="docutils literal notranslate"><span class="pre">int</span></code>): from the two last bytes of the payload. Common
+values are 0x9000 for success, other being errors.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> (<code class="docutils literal notranslate"><span class="pre">bytes</span></code>): the rest of the response (the entire payload without
+the two last bytes)</p></li>
+</ul>
+</dd></dl>
+
+</div>
 <div class="section" id="ragger-utils-misc">
 <h3><code class="docutils literal notranslate"><span class="pre">ragger.utils.misc</span></code><a class="headerlink" href="#ragger-utils-misc" title="Permalink to this heading"></a></h3>
 <dl class="py function">
@@ -722,7 +803,7 @@ and a device name.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="architecture.html" class="btn btn-neutral float-left" title="Architecture" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="faq.html" class="btn btn-neutral float-right" title="Frequently Asked Question" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="faq.html" class="btn btn-neutral float-right" title="Frequently Asked Questions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

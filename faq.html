@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Frequently Asked Question &mdash; Ragger 0.7.0 documentation</title>
+  <title>Frequently Asked Questions &mdash; Ragger 0.7.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
@@ -52,8 +52,8 @@
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="source.html">Code documentation</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Frequently Asked Question</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#can-i-modify-the-behavior-of-the-backend-in-case-of-error">Can I modify the behavior of the backend in case of error?</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Frequently Asked Questions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#can-i-control-how-the-backend-behaves-when-receiving-a-response-from-the-application">Can I control how the backend behaves when receiving a response from the application?</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
@@ -73,7 +73,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home"></a></li>
-      <li class="breadcrumb-item active">Frequently Asked Question</li>
+      <li class="breadcrumb-item active">Frequently Asked Questions</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/faq.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -83,19 +83,22 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="frequently-asked-question">
-<h1>Frequently Asked Question<a class="headerlink" href="#frequently-asked-question" title="Permalink to this heading"></a></h1>
-<div class="section" id="can-i-modify-the-behavior-of-the-backend-in-case-of-error">
-<h2>Can I modify the behavior of the backend in case of error?<a class="headerlink" href="#can-i-modify-the-behavior-of-the-backend-in-case-of-error" title="Permalink to this heading"></a></h2>
-<p>Indeed, all backends can be instantiated with a
-<a class="reference internal" href="source.html#ragger.backend.interface.RaisePolicy" title="ragger.backend.interface.RaisePolicy"><code class="xref py py-class docutils literal notranslate"><span class="pre">RaisePolicy</span></code></a>.</p>
+  <div class="section" id="frequently-asked-questions">
+<h1>Frequently Asked Questions<a class="headerlink" href="#frequently-asked-questions" title="Permalink to this heading"></a></h1>
+<div class="section" id="can-i-control-how-the-backend-behaves-when-receiving-a-response-from-the-application">
+<h2>Can I control how the backend behaves when receiving a response from the application?<a class="headerlink" href="#can-i-control-how-the-backend-behaves-when-receiving-a-response-from-the-application" title="Permalink to this heading"></a></h2>
+<p>Backends can be instantiated with a
+<a class="reference internal" href="source.html#ragger.backend.interface.RaisePolicy" title="ragger.backend.interface.RaisePolicy"><code class="xref py py-class docutils literal notranslate"><span class="pre">RaisePolicy</span></code></a>, which controls
+how a backend should react when receiving a response from the
+<a class="reference internal" href="glossary.html#term-Application"><span class="xref std std-term">application</span></a> it is communicating with.</p>
 <p>By default, this policy is <code class="docutils literal notranslate"><span class="pre">RaisePolicy.RAISE_ALL_BUT_0x9000</span></code>, which means the
 backend will raise an <a class="reference internal" href="source.html#ragger.error.ExceptionRAPDU" title="ragger.error.ExceptionRAPDU"><code class="xref py py-class docutils literal notranslate"><span class="pre">ExceptionRAPDU</span></code></a>
 if the <a class="reference internal" href="glossary.html#term-APDU"><span class="xref std std-term">APDU</span></a> returned by the <a class="reference internal" href="glossary.html#term-Application"><span class="xref std std-term">application</span></a> does not end with
-<code class="docutils literal notranslate"><span class="pre">b'0x9000'</span></code>. This behavior can be change with the two other options:</p>
+<code class="docutils literal notranslate"><span class="pre">b'0x9000'</span></code>, else returns a <a class="reference internal" href="source.html#ragger.utils.structs.RAPDU" title="ragger.utils.structs.RAPDU"><code class="xref py py-class docutils literal notranslate"><span class="pre">RAPDU</span></code></a>
+instance. This behavior can be change with the two other options:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">RaisePolicy.RAISE_NOTHING</span></code>, where the backend will never raise, and always
-returns a proper <code class="xref py py-class docutils literal notranslate"><span class="pre">RAPDU</span></code>.</p></li>
+returns a proper <a class="reference internal" href="source.html#ragger.utils.structs.RAPDU" title="ragger.utils.structs.RAPDU"><code class="xref py py-class docutils literal notranslate"><span class="pre">RAPDU</span></code></a>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">RaisePolicy.RAISE_ALL</span></code>, where the backend will always raise a
 <a class="reference internal" href="source.html#ragger.error.ExceptionRAPDU" title="ragger.error.ExceptionRAPDU"><code class="xref py py-class docutils literal notranslate"><span class="pre">ExceptionAPDU</span></code></a>, whatever the status.</p></li>
 </ul>
