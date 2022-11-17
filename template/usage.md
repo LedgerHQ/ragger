@@ -14,23 +14,51 @@ sudo apt-get update && sudo apt-get install qemu-user-static
 
 ### Compile the application
 
-For all required devices, compile the application by running the following command in the container `ghcr.io/ledgerhq/ledger-app-builder/ledger-app-builder-lite:latest`
+The application to test must be compiled for all required devices.
+You can use for this the container `ghcr.io/ledgerhq/ledger-app-builder/ledger-app-builder-lite`:
 ```
-make BOLOS_SDK=$<device>_SDK
+docker pull ghcr.io/ledgerhq/ledger-app-builder/ledger-app-builder-lite:latest
+cd app-<appname>/                               # replace <appname> with the name of your app, (eg boilerplate)
+docker run --user "$(id -u)":"$(id -g)" --rm -ti -v "$(realpath .):/app" --privileged -v "/dev/bus/usb:/dev/bus/usb" ledger-app-builder-lite:latest
+make clean && make BOLOS_SDK=$<device>_SDK      # replace <device> with one of [NANOS, NANOX, NANOSP]
+exit
 ```
 
-Copy the compiled binaries to the elfs directory
-```
-cp bin/app.elf tests/elfs/<appname>_<device>.elf
-```
+### Run a simple test using the Speculos emulator
 
-### Run a simple test
+Copy the compiled binaries to the `elfs` directory, create the directory if necessary.
+```
+mkdir -p tests/elfs/
+cp bin/app.elf tests/elfs/<appname>_<device>.elf    # replace <device> with one of [nanos, nanox, nanosp]
+                                                    # replace <appname> with the name of your app, (eg boilerplate)
+                                                    # so for example tests/elfs/boilerplate_nanos.elf
+```
 
 You can use the following command to get your first experience with Ragger and Speculos
 ```
 pytest -v --tb=short --nanox --display
 ```
-Or you can refer to the following section to configure the options you want to use
+Or you can refer to the section `Available pytest options` to configure the options you want to use
+
+
+### Run a simple test using a real device
+
+The application to test must be loaded on a Ledger device plugged in USB.
+You can use for this the container `ghcr.io/ledgerhq/ledger-app-builder/ledger-app-builder-lite`:
+```
+docker pull ghcr.io/ledgerhq/ledger-app-builder/ledger-app-builder-lite:latest
+cd app-<appname>/                                   # replace <appname> with the name of your app, (eg boilerplate)
+docker run --user "$(id -u)":"$(id -g)" --rm -ti -v "$(realpath .):/app" --privileged -v "/dev/bus/usb:/dev/bus/usb" ledger-app-builder-lite:latest
+make clean && make BOLOS_SDK=$<device>_SDK load     # replace <device> with one of [NANOS, NANOX, NANOSP]
+exit
+```
+
+You can use the following command to get your first experience with Ragger and Ledgerwallet on a NANOX.
+Make sure that the device is plugged, unlocked, and that the tested application is open.
+```
+pytest -v --tb=short --nanox --backend ledgerwallet
+```
+Or you can refer to the section `Available pytest options` to configure the options you want to use
 
 
 ## Available pytest options
