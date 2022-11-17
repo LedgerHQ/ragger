@@ -342,3 +342,85 @@ class Navigator(ABC):
         else:
             raise ValueError(f"Could not find first snapshot {first_golden_snap}")
         return img_idx
+
+
+    def navigate_until_text(self,
+                            navigate_instruction: NavIns,
+                            validation_instruction: NavIns,
+                            text: str,
+                            path: Path = None,
+                            test_case_name: Path = None,
+                            take_snaps: bool = False,
+                            timeout: int = 30) -> int:
+        """
+        Navigate until some text is found on the screen content displayed.
+
+        This method may be left void on backends connecting to physical devices,
+        where a physical interaction must be performed instead.
+        This will prevent the instrumentation to fail (the void method won't
+        raise `NotImplementedError`), but the instrumentation flow will probably
+        get stuck (on further call to `receive` for instance) until the expected
+        action is performed on the device.
+
+        :param navigate_instruction: Navigation instruction to be performed until the text is found.
+        :type navigate_instruction: NavIns
+        :param validation_instruction: Navigation instruction to be performed once the text is found.
+        :type validation_instruction: NavIns
+        :param path: Absolute path to the snapshots directory.
+        :type path: Path
+        :param test_case_name: Relative path to the test case snapshots directory (from path).
+        :type test_case_name: Path
+        :param first_instruction_wait: Sleeping time before the first snapshot
+        :type first_instruction_wait: float
+        :param take_snaps: Take temporary snapshots of the screen displayed when navigating.
+        :type take_snaps: bool
+        :param timeout: Timeout of the navigation loop if last snapshot is not found.
+        :type timeout: int
+
+        :return: img_idx
+        :rtype: int
+        """
+
+        if not isinstance(self._backend, SpeculosBackend):
+            # When not using Speculos backend, taking snapshots is not possible
+            # therefore comparison is not possible too.
+            # TODO request user to interact with the device.
+            return 0
+        
+        img_idx = 0
+        
+        if take_snaps:
+            snaps_tmp_path = self._init_snaps_temp_dir(path, test_case_name)
+        
+        start = time()
+        
+        ctx = self._backend.wait_for_screen_change(2.0)
+        
+        # Navigate until the text specified in argument is found.
+        while True:
+            now = time()
+        
+            ctx = self._backend.wait_for_screen_change(2.0,ctx)
+            
+            # Global navigation loop timeout in case the text is never found.
+            if (now - start > timeout):
+                raise TimeoutError(f"Timeout waiting for text {text}")
+
+            # Take snapshots if required.
+            if take_snaps:
+                self._backend.save_screen_snapshot(self._get_snap_path(snaps_tmp_path, img_idx))
+                img_idx += 1
+
+            if not self._backend.compare_screen_with_text(text):
+                # Go to the next screen.
+                self.navigate([navigate_instruction])
+            else:
+                # Validation action when the text is found.
+                self.navigate([validation_instruction])
+                break       
+
+        # Take last snapshot if required.
+        if take_snaps:
+            self._backend.save_screen_snapshot(self._get_snap_path(snaps_tmp_path, img_idx))
+        
+        return img_idx
