@@ -13,6 +13,7 @@ to develop complex behaviors on devices.
    :maxdepth: 2
    :caption: How is this doc structured:
 
+   installation
    rationale
    tutorial
    architecture
