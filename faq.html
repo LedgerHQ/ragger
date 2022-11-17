@@ -54,9 +54,11 @@
 <li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="source.html">Code documentation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Frequently Asked Questions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#installation-integration">Installation / integration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#why-all-my-tests-are-raising-a-connectionerror-when-using-speculosbackend">Why all my tests are raising a <code class="docutils literal notranslate"><span class="pre">ConnectionError</span></code> when using SpeculosBackend?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#and-if-i-m-getting-a-notadirectoryerror">…and if I’m getting a <code class="docutils literal notranslate"><span class="pre">NotADirectoryError</span></code>?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation-integration">Installation / integration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#why-all-my-tests-are-raising-a-connectionerror-when-using-speculosbackend">Why all my tests are raising a <code class="docutils literal notranslate"><span class="pre">ConnectionError</span></code> when using SpeculosBackend?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#and-if-i-m-getting-a-notadirectoryerror">…and if I’m getting a <code class="docutils literal notranslate"><span class="pre">NotADirectoryError</span></code>?</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#architecture-code">Architecture / code</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#can-i-control-how-the-backend-behaves-when-receiving-a-response-from-the-application">Can I control how the backend behaves when receiving a response from the application?</a></li>
 </ul>
@@ -94,9 +96,12 @@
 <h1>Frequently Asked Questions<a class="headerlink" href="#frequently-asked-questions" title="Permalink to this heading"></a></h1>
 <div class="contents local topic" id="contents">
 <ul class="simple">
-<li><p><a class="reference internal" href="#installation-integration" id="id1">Installation / integration</a></p></li>
+<li><p><a class="reference internal" href="#installation-integration" id="id1">Installation / integration</a></p>
+<ul>
 <li><p><a class="reference internal" href="#why-all-my-tests-are-raising-a-connectionerror-when-using-speculosbackend" id="id2">Why all my tests are raising a <code class="docutils literal notranslate"><span class="pre">ConnectionError</span></code> when using SpeculosBackend?</a></p></li>
 <li><p><a class="reference internal" href="#and-if-i-m-getting-a-notadirectoryerror" id="id3">…and if I’m getting a <code class="docutils literal notranslate"><span class="pre">NotADirectoryError</span></code>?</a></p></li>
+</ul>
+</li>
 <li><p><a class="reference internal" href="#architecture-code" id="id4">Architecture / code</a></p>
 <ul>
 <li><p><a class="reference internal" href="#can-i-control-how-the-backend-behaves-when-receiving-a-response-from-the-application" id="id5">Can I control how the backend behaves when receiving a response from the application?</a></p></li>
@@ -106,9 +111,8 @@
 </div>
 <div class="section" id="installation-integration">
 <h2>Installation / integration<a class="headerlink" href="#installation-integration" title="Permalink to this heading"></a></h2>
-</div>
 <div class="section" id="why-all-my-tests-are-raising-a-connectionerror-when-using-speculosbackend">
-<h2>Why all my tests are raising a <code class="docutils literal notranslate"><span class="pre">ConnectionError</span></code> when using SpeculosBackend?<a class="headerlink" href="#why-all-my-tests-are-raising-a-connectionerror-when-using-speculosbackend" title="Permalink to this heading"></a></h2>
+<h3>Why all my tests are raising a <code class="docutils literal notranslate"><span class="pre">ConnectionError</span></code> when using SpeculosBackend?<a class="headerlink" href="#why-all-my-tests-are-raising-a-connectionerror-when-using-speculosbackend" title="Permalink to this heading"></a></h3>
 <p>This indicates that <a class="reference internal" href="glossary.html#term-Speculos"><span class="xref std std-term">Speculos</span></a> could not reach its server, generally
 because the emulator could not be started.</p>
 <p>With verbose options, you should be able to find in the logs the Speculos
@@ -126,10 +130,11 @@ could be that:</p>
 </ul>
 </div>
 <div class="section" id="and-if-i-m-getting-a-notadirectoryerror">
-<h2>…and if I’m getting a <code class="docutils literal notranslate"><span class="pre">NotADirectoryError</span></code>?<a class="headerlink" href="#and-if-i-m-getting-a-notadirectoryerror" title="Permalink to this heading"></a></h2>
+<h3>…and if I’m getting a <code class="docutils literal notranslate"><span class="pre">NotADirectoryError</span></code>?<a class="headerlink" href="#and-if-i-m-getting-a-notadirectoryerror" title="Permalink to this heading"></a></h3>
 <p>This is a rare case that can occur if the user’s <code class="docutils literal notranslate"><span class="pre">$PATH</span></code> contains
 dubiously-formed directories. (Re-)Installing <code class="docutils literal notranslate"><span class="pre">qemu-arm-static</span></code> (see
 <a class="reference internal" href="installation.html#installation-apt"><span class="std std-ref">here</span></a>) seems to solve the issue.</p>
+</div>
 </div>
 <div class="section" id="architecture-code">
 <h2>Architecture / code<a class="headerlink" href="#architecture-code" title="Permalink to this heading"></a></h2>

@@ -9,7 +9,7 @@ Installation / integration
 --------------------------
 
 Why all my tests are raising a ``ConnectionError`` when using SpeculosBackend?
-------------------------------------------------------------------------------
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 This indicates that :term:`Speculos` could not reach its server, generally
 because the emulator could not be started.
@@ -30,7 +30,7 @@ could be that:
 - ``qemu-arm-static`` (used by Speculos under the hook) is not installed
 
 ...and if I'm getting a ``NotADirectoryError``?
------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++
 
 This is a rare case that can occur if the user's ``$PATH`` contains
 dubiously-formed directories. (Re-)Installing ``qemu-arm-static`` (see
