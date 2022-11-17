@@ -53,6 +53,7 @@ import sys
 sys.path.insert(0, os.path.abspath('../src/'))
 
 from ragger import __version__
+version = __version__
 release = __version__
 
 # Autodoc conf
