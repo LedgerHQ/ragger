@@ -9,6 +9,7 @@ This framework allows testing the application on the Speculos emulator or on a r
 
 ```
 pip install --extra-index-url https://test.pypi.org/simple/ -r requirements.txt
+sudo apt-get update && sudo apt-get install qemu-user-static
 ```
 
 ### Compile the application
