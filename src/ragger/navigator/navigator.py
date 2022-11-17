@@ -140,7 +140,7 @@ class Navigator(ABC):
                              path: Path,
                              test_case_name: Path,
                              instructions: List[NavIns],
-                             first_instruction_wait: float = 0.5,
+                             first_instruction_wait: float = 1.0,
                              middle_instruction_wait: float = 0.1,
                              last_instruction_wait: float = 0.5) -> None:
         """
