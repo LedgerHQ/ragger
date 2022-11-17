@@ -145,28 +145,28 @@ file.</p></li>
 needs a <a class="reference internal" href="source.html#ragger.firmware.Firmware" title="ragger.firmware.Firmware"><code class="xref py py-class docutils literal notranslate"><span class="pre">Firmware</span></code></a> - declaring the type of
 Ledger cold wallet to run the <a class="reference internal" href="glossary.html#term-Application"><span class="xref std std-term">application</span></a> on, and the version of the
 given <a class="reference internal" href="glossary.html#term-SDK"><span class="xref std std-term">SDK</span></a>, to be instantiated.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ragger.firmware</span> <span class="kn">import</span> <span class="n">Firmware</span>
-<span class="kn">from</span> <span class="nn">ragger.backend</span> <span class="kn">import</span> <span class="n">BackendInterface</span>
-
-<span class="n">backend</span> <span class="o">=</span> <span class="n">BackendInterface</span><span class="p">(</span><span class="n">Firmware</span><span class="p">(</span><span class="s2">&quot;nanos&quot;</span><span class="p">,</span> <span class="s2">&quot;2.1.0&quot;</span><span class="p">))</span>  <span class="c1"># this won&#39;t work, as it is an abstract interface</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="kn">from</span> <span class="nn">ragger.firmware</span> <span class="kn">import</span> <span class="n">Firmware</span>
+<span class="linenos">2</span><span class="kn">from</span> <span class="nn">ragger.backend</span> <span class="kn">import</span> <span class="n">BackendInterface</span>
+<span class="linenos">3</span>
+<span class="linenos">4</span><span class="n">backend</span> <span class="o">=</span> <span class="n">BackendInterface</span><span class="p">(</span><span class="n">Firmware</span><span class="p">(</span><span class="s2">&quot;nanos&quot;</span><span class="p">,</span> <span class="s2">&quot;2.1.0&quot;</span><span class="p">))</span>  <span class="c1"># this won&#39;t work, as it is an abstract interface</span>
 </pre></div>
 </div>
 <p>However, as we us Speculos which is going to start the <a class="reference internal" href="glossary.html#term-Application"><span class="xref std std-term">application</span></a> inside an emulator,
 we need to provide the application ELF file as an argument:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ragger.firmware</span> <span class="kn">import</span> <span class="n">Firmware</span>
-<span class="kn">from</span> <span class="nn">ragger.backend</span> <span class="kn">import</span> <span class="n">SpeculosBackend</span>
-
-<span class="n">APPLICATION_ELF</span> <span class="o">=</span> <span class="s2">&quot;path/to/app.elf&quot;</span>
-
-<span class="n">backend</span> <span class="o">=</span> <span class="n">SpeculosBackend</span><span class="p">(</span><span class="n">APPLICATION_ELF</span><span class="p">,</span> <span class="n">Firmware</span><span class="p">(</span><span class="s2">&quot;nanos&quot;</span><span class="p">,</span> <span class="s2">&quot;2.1.0&quot;</span><span class="p">))</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="kn">from</span> <span class="nn">ragger.firmware</span> <span class="kn">import</span> <span class="n">Firmware</span>
+<span class="linenos">2</span><span class="kn">from</span> <span class="nn">ragger.backend</span> <span class="kn">import</span> <span class="n">SpeculosBackend</span>
+<span class="linenos">3</span>
+<span class="linenos">4</span><span class="n">APPLICATION_ELF</span> <span class="o">=</span> <span class="s2">&quot;path/to/app.elf&quot;</span>
+<span class="linenos">5</span>
+<span class="linenos">6</span><span class="n">backend</span> <span class="o">=</span> <span class="n">SpeculosBackend</span><span class="p">(</span><span class="n">APPLICATION_ELF</span><span class="p">,</span> <span class="n">Firmware</span><span class="p">(</span><span class="s2">&quot;nanos&quot;</span><span class="p">,</span> <span class="s2">&quot;2.1.0&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>And that’s it, you have a working backend! Although in the case of Speculos,
 the emulator won’t start immediately. You need to use a <code class="docutils literal notranslate"><span class="pre">with</span></code> statement
 to start it and begin to exchange APDUs or other events with you application.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">backend</span><span class="p">:</span>
-    <span class="n">backend</span><span class="o">.</span><span class="n">exchange</span><span class="p">(</span><span class="n">cla</span><span class="o">=</span><span class="mh">0xE0</span><span class="p">,</span> <span class="n">ins</span><span class="o">=</span><span class="mh">0x01</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="s2">&quot;DEADBEEF&quot;</span><span class="p">))</span>
-    <span class="n">backend</span><span class="o">.</span><span class="n">right_click</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">with</span> <span class="n">backend</span><span class="p">:</span>
+<span class="linenos">2</span>    <span class="n">backend</span><span class="o">.</span><span class="n">exchange</span><span class="p">(</span><span class="n">cla</span><span class="o">=</span><span class="mh">0xE0</span><span class="p">,</span> <span class="n">ins</span><span class="o">=</span><span class="mh">0x01</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="s2">&quot;DEADBEEF&quot;</span><span class="p">))</span>
+<span class="linenos">3</span>    <span class="n">backend</span><span class="o">.</span><span class="n">right_click</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>This syntax will ensure that the backends properly clean what needs cleaning
@@ -179,25 +179,25 @@ emulator, for other backend it could be as simple as closing a socket.</p>
 take place in a <code class="docutils literal notranslate"><span class="pre">conftest.py</span></code> file, and used in a <code class="docutils literal notranslate"><span class="pre">test_something.py</span></code> file:</p>
 <div class="literal-block-wrapper docutils container" id="id2">
 <div class="code-block-caption"><span class="caption-text">conftest.py</span><a class="headerlink" href="#id2" title="Permalink to this code"></a></div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pytest</span> <span class="kn">import</span> <span class="n">fixture</span>
-<span class="kn">from</span> <span class="nn">ragger.firmware</span> <span class="kn">import</span> <span class="n">Firmware</span>
-<span class="kn">from</span> <span class="nn">ragger.backend</span> <span class="kn">import</span> <span class="n">SpeculosBackend</span>
-
-<span class="n">APPLICATION_ELF</span> <span class="o">=</span> <span class="s2">&quot;path/to/application.elf&quot;</span>
-
-<span class="nd">@fixture</span>
-<span class="k">def</span> <span class="nf">backend</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">SpeculosBackend</span><span class="p">:</span>
-    <span class="n">backend</span> <span class="o">=</span> <span class="n">SpeculosBackend</span><span class="p">(</span><span class="n">APPLICATION_ELF</span><span class="p">,</span> <span class="n">Firmware</span><span class="p">(</span><span class="s2">&quot;nanos&quot;</span><span class="p">,</span> <span class="s2">&quot;2.1.0&quot;</span><span class="p">))</span>
-    <span class="k">with</span> <span class="n">backend</span><span class="p">:</span>
-        <span class="k">yield</span> <span class="n">backend</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span> <span class="nn">pytest</span> <span class="kn">import</span> <span class="n">fixture</span>
+<span class="linenos"> 2</span><span class="kn">from</span> <span class="nn">ragger.firmware</span> <span class="kn">import</span> <span class="n">Firmware</span>
+<span class="linenos"> 3</span><span class="kn">from</span> <span class="nn">ragger.backend</span> <span class="kn">import</span> <span class="n">SpeculosBackend</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="n">APPLICATION_ELF</span> <span class="o">=</span> <span class="s2">&quot;path/to/application.elf&quot;</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span><span class="nd">@fixture</span>
+<span class="linenos"> 8</span><span class="k">def</span> <span class="nf">backend</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">SpeculosBackend</span><span class="p">:</span>
+<span class="linenos"> 9</span>    <span class="n">backend</span> <span class="o">=</span> <span class="n">SpeculosBackend</span><span class="p">(</span><span class="n">APPLICATION_ELF</span><span class="p">,</span> <span class="n">Firmware</span><span class="p">(</span><span class="s2">&quot;nanos&quot;</span><span class="p">,</span> <span class="s2">&quot;2.1.0&quot;</span><span class="p">))</span>
+<span class="linenos">10</span>    <span class="k">with</span> <span class="n">backend</span><span class="p">:</span>
+<span class="linenos">11</span>        <span class="k">yield</span> <span class="n">backend</span>
 </pre></div>
 </div>
 </div>
 <div class="literal-block-wrapper docutils container" id="id3">
 <div class="code-block-caption"><span class="caption-text">test_something.py</span><a class="headerlink" href="#id3" title="Permalink to this code"></a></div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_something</span><span class="p">(</span><span class="n">backend</span><span class="p">):</span>
-    <span class="n">backend</span><span class="o">.</span><span class="n">exchange</span><span class="p">(</span><span class="n">cla</span><span class="o">=</span><span class="mh">0xE0</span><span class="p">,</span> <span class="n">ins</span><span class="o">=</span><span class="mh">0x01</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="s2">&quot;DEADBEEF&quot;</span><span class="p">))</span>
-    <span class="n">backend</span><span class="o">.</span><span class="n">right_click</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">def</span> <span class="nf">test_something</span><span class="p">(</span><span class="n">backend</span><span class="p">):</span>
+<span class="linenos">2</span>    <span class="n">backend</span><span class="o">.</span><span class="n">exchange</span><span class="p">(</span><span class="n">cla</span><span class="o">=</span><span class="mh">0xE0</span><span class="p">,</span> <span class="n">ins</span><span class="o">=</span><span class="mh">0x01</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="s2">&quot;DEADBEEF&quot;</span><span class="p">))</span>
+<span class="linenos">3</span>    <span class="n">backend</span><span class="o">.</span><span class="n">right_click</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -222,11 +222,11 @@ test_something.py::test_something PASSED                                     <sp
 <a class="reference internal" href="glossary.html#term-Firmware"><span class="xref std std-term">Firmware</span></a>, but all supported ones. The common practice is to test
 on the latest version of all Firmware (NanoS, NanoS+, NanoX). So we can declare
 a list of those:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ragger.firmware</span> <span class="kn">import</span> <span class="n">Firmware</span>
-
-<span class="n">FIRMWARES</span> <span class="o">=</span> <span class="p">[</span><span class="n">Firmware</span><span class="p">(</span><span class="s1">&#39;nanos&#39;</span><span class="p">,</span> <span class="s1">&#39;2.1&#39;</span><span class="p">),</span>
-             <span class="n">Firmware</span><span class="p">(</span><span class="s1">&#39;nanox&#39;</span><span class="p">,</span> <span class="s1">&#39;2.0.2&#39;</span><span class="p">),</span>
-             <span class="n">Firmware</span><span class="p">(</span><span class="s1">&#39;nanosp&#39;</span><span class="p">,</span> <span class="s1">&#39;1.0.3&#39;</span><span class="p">)]</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="kn">from</span> <span class="nn">ragger.firmware</span> <span class="kn">import</span> <span class="n">Firmware</span>
+<span class="linenos">2</span>
+<span class="linenos">3</span><span class="n">FIRMWARES</span> <span class="o">=</span> <span class="p">[</span><span class="n">Firmware</span><span class="p">(</span><span class="s1">&#39;nanos&#39;</span><span class="p">,</span> <span class="s1">&#39;2.1&#39;</span><span class="p">),</span>
+<span class="linenos">4</span>             <span class="n">Firmware</span><span class="p">(</span><span class="s1">&#39;nanox&#39;</span><span class="p">,</span> <span class="s1">&#39;2.0.2&#39;</span><span class="p">),</span>
+<span class="linenos">5</span>             <span class="n">Firmware</span><span class="p">(</span><span class="s1">&#39;nanosp&#39;</span><span class="p">,</span> <span class="s1">&#39;1.0.3&#39;</span><span class="p">)]</span>
 </pre></div>
 </div>
 <p>Then we can override the
@@ -234,23 +234,23 @@ a list of those:</p>
 function to automatically create a fixture (let’s call it <code class="docutils literal notranslate"><span class="pre">firmware</span></code>), which
 will parametrize every test using this fixture and trigger then with each
 declared firmware version:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">pytest_generate_tests</span><span class="p">(</span><span class="n">metafunc</span><span class="p">):</span>
-<span class="n">fw_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-<span class="n">ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-    <span class="k">if</span> <span class="s2">&quot;firmware&quot;</span> <span class="ow">in</span> <span class="n">metafunc</span><span class="o">.</span><span class="n">fixturenames</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">fw</span> <span class="ow">in</span> <span class="n">FIRMWARES</span><span class="p">:</span>
-            <span class="n">fw_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fw</span><span class="p">)</span>
-            <span class="n">ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fw</span><span class="o">.</span><span class="n">device</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">fw</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
-        <span class="n">metafunc</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">&quot;firmware&quot;</span><span class="p">,</span> <span class="n">fw_list</span><span class="p">,</span> <span class="n">ids</span><span class="o">=</span><span class="n">ids</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">def</span> <span class="nf">pytest_generate_tests</span><span class="p">(</span><span class="n">metafunc</span><span class="p">):</span>
+<span class="linenos">2</span><span class="n">fw_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+<span class="linenos">3</span><span class="n">ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+<span class="linenos">4</span>    <span class="k">if</span> <span class="s2">&quot;firmware&quot;</span> <span class="ow">in</span> <span class="n">metafunc</span><span class="o">.</span><span class="n">fixturenames</span><span class="p">:</span>
+<span class="linenos">5</span>        <span class="k">for</span> <span class="n">fw</span> <span class="ow">in</span> <span class="n">FIRMWARES</span><span class="p">:</span>
+<span class="linenos">6</span>            <span class="n">fw_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fw</span><span class="p">)</span>
+<span class="linenos">7</span>            <span class="n">ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fw</span><span class="o">.</span><span class="n">device</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">fw</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+<span class="linenos">8</span>        <span class="n">metafunc</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">&quot;firmware&quot;</span><span class="p">,</span> <span class="n">fw_list</span><span class="p">,</span> <span class="n">ids</span><span class="o">=</span><span class="n">ids</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Now let’s modify our previous <code class="docutils literal notranslate"><span class="pre">backend</span></code> fixture to use this <code class="docutils literal notranslate"><span class="pre">firmware</span></code>
 fixture:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@fixture</span>
-<span class="k">def</span> <span class="nf">backend</span><span class="p">(</span><span class="n">firmware</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SpeculosBackend</span><span class="p">:</span>
-    <span class="n">backend</span> <span class="o">=</span> <span class="n">SpeculosBackend</span><span class="p">(</span><span class="n">APPLICATION_ELF</span><span class="p">,</span> <span class="n">firmware</span><span class="p">)</span>
-    <span class="k">with</span> <span class="n">backend</span><span class="p">:</span>
-        <span class="k">yield</span> <span class="n">backend</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="nd">@fixture</span>
+<span class="linenos">2</span><span class="k">def</span> <span class="nf">backend</span><span class="p">(</span><span class="n">firmware</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SpeculosBackend</span><span class="p">:</span>
+<span class="linenos">3</span>    <span class="n">backend</span> <span class="o">=</span> <span class="n">SpeculosBackend</span><span class="p">(</span><span class="n">APPLICATION_ELF</span><span class="p">,</span> <span class="n">firmware</span><span class="p">)</span>
+<span class="linenos">4</span>    <span class="k">with</span> <span class="n">backend</span><span class="p">:</span>
+<span class="linenos">5</span>        <span class="k">yield</span> <span class="n">backend</span>
 </pre></div>
 </div>
 <p>Now this <code class="docutils literal notranslate"><span class="pre">backend</span></code> fixture is parametrized, and will trigger 3 times, with
@@ -278,35 +278,35 @@ application ELFs, and they are all named as <code class="docutils literal notran
 name and location:</p>
 <div class="literal-block-wrapper docutils container" id="id4">
 <div class="code-block-caption"><span class="caption-text">conftest.py</span><a class="headerlink" href="#id4" title="Permalink to this code"></a></div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">pytest</span> <span class="kn">import</span> <span class="n">fixture</span>
-
-<span class="kn">from</span> <span class="nn">ragger.firmware</span> <span class="kn">import</span> <span class="n">Firmware</span>
-<span class="kn">from</span> <span class="nn">ragger.backend</span> <span class="kn">import</span> <span class="n">SpeculosBackend</span>
-<span class="kn">from</span> <span class="nn">ragger.utils</span> <span class="kn">import</span> <span class="n">app_path_from_app_name</span>
-
-<span class="n">APPS_DIRECTORY</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;path/to/&quot;</span><span class="p">)</span>
-<span class="n">APP_NAME</span> <span class="o">=</span> <span class="s2">&quot;app&quot;</span>
-
-<span class="n">FIRMWARES</span> <span class="o">=</span> <span class="p">[</span><span class="n">Firmware</span><span class="p">(</span><span class="s1">&#39;nanos&#39;</span><span class="p">,</span> <span class="s1">&#39;2.1&#39;</span><span class="p">),</span>
-             <span class="n">Firmware</span><span class="p">(</span><span class="s1">&#39;nanox&#39;</span><span class="p">,</span> <span class="s1">&#39;2.0.2&#39;</span><span class="p">),</span>
-             <span class="n">Firmware</span><span class="p">(</span><span class="s1">&#39;nanosp&#39;</span><span class="p">,</span> <span class="s1">&#39;1.0.3&#39;</span><span class="p">)]</span>
-
-<span class="k">def</span> <span class="nf">pytest_generate_tests</span><span class="p">(</span><span class="n">metafunc</span><span class="p">):</span>
-    <span class="n">fw_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-    <span class="n">ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-    <span class="k">if</span> <span class="s2">&quot;firmware&quot;</span> <span class="ow">in</span> <span class="n">metafunc</span><span class="o">.</span><span class="n">fixturenames</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">fw</span> <span class="ow">in</span> <span class="n">FIRMWARES</span><span class="p">:</span>
-            <span class="n">fw_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fw</span><span class="p">)</span>
-            <span class="n">ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fw</span><span class="o">.</span><span class="n">device</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">fw</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
-        <span class="n">metafunc</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">&quot;firmware&quot;</span><span class="p">,</span> <span class="n">fw_list</span><span class="p">,</span> <span class="n">ids</span><span class="o">=</span><span class="n">ids</span><span class="p">)</span>
-
-<span class="nd">@fixture</span>
-<span class="k">def</span> <span class="nf">backend</span><span class="p">(</span><span class="n">firmware</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SpeculosBackend</span><span class="p">:</span>
-    <span class="n">app_location</span> <span class="o">=</span> <span class="n">app_path_from_app_name</span><span class="p">(</span><span class="n">APPS_DIRECTORY</span><span class="p">,</span> <span class="n">APP_NAME</span><span class="p">,</span> <span class="n">firmware</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
-    <span class="n">backend</span> <span class="o">=</span> <span class="n">SpeculosBackend</span><span class="p">(</span><span class="n">app_location</span><span class="p">,</span> <span class="n">firmware</span><span class="p">)</span>
-    <span class="k">with</span> <span class="n">backend</span><span class="p">:</span>
-        <span class="k">yield</span> <span class="n">backend</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="linenos"> 2</span><span class="kn">from</span> <span class="nn">pytest</span> <span class="kn">import</span> <span class="n">fixture</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="kn">from</span> <span class="nn">ragger.firmware</span> <span class="kn">import</span> <span class="n">Firmware</span>
+<span class="linenos"> 5</span><span class="kn">from</span> <span class="nn">ragger.backend</span> <span class="kn">import</span> <span class="n">SpeculosBackend</span>
+<span class="linenos"> 6</span><span class="kn">from</span> <span class="nn">ragger.utils</span> <span class="kn">import</span> <span class="n">app_path_from_app_name</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span><span class="n">APPS_DIRECTORY</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;path/to/&quot;</span><span class="p">)</span>
+<span class="linenos"> 9</span><span class="n">APP_NAME</span> <span class="o">=</span> <span class="s2">&quot;app&quot;</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span><span class="n">FIRMWARES</span> <span class="o">=</span> <span class="p">[</span><span class="n">Firmware</span><span class="p">(</span><span class="s1">&#39;nanos&#39;</span><span class="p">,</span> <span class="s1">&#39;2.1&#39;</span><span class="p">),</span>
+<span class="linenos">12</span>             <span class="n">Firmware</span><span class="p">(</span><span class="s1">&#39;nanox&#39;</span><span class="p">,</span> <span class="s1">&#39;2.0.2&#39;</span><span class="p">),</span>
+<span class="linenos">13</span>             <span class="n">Firmware</span><span class="p">(</span><span class="s1">&#39;nanosp&#39;</span><span class="p">,</span> <span class="s1">&#39;1.0.3&#39;</span><span class="p">)]</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span><span class="k">def</span> <span class="nf">pytest_generate_tests</span><span class="p">(</span><span class="n">metafunc</span><span class="p">):</span>
+<span class="linenos">16</span>    <span class="n">fw_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+<span class="linenos">17</span>    <span class="n">ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+<span class="linenos">18</span>    <span class="k">if</span> <span class="s2">&quot;firmware&quot;</span> <span class="ow">in</span> <span class="n">metafunc</span><span class="o">.</span><span class="n">fixturenames</span><span class="p">:</span>
+<span class="linenos">19</span>        <span class="k">for</span> <span class="n">fw</span> <span class="ow">in</span> <span class="n">FIRMWARES</span><span class="p">:</span>
+<span class="linenos">20</span>            <span class="n">fw_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fw</span><span class="p">)</span>
+<span class="linenos">21</span>            <span class="n">ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fw</span><span class="o">.</span><span class="n">device</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">fw</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+<span class="linenos">22</span>        <span class="n">metafunc</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">&quot;firmware&quot;</span><span class="p">,</span> <span class="n">fw_list</span><span class="p">,</span> <span class="n">ids</span><span class="o">=</span><span class="n">ids</span><span class="p">)</span>
+<span class="linenos">23</span>
+<span class="linenos">24</span><span class="nd">@fixture</span>
+<span class="linenos">25</span><span class="k">def</span> <span class="nf">backend</span><span class="p">(</span><span class="n">firmware</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SpeculosBackend</span><span class="p">:</span>
+<span class="linenos">26</span>    <span class="n">app_location</span> <span class="o">=</span> <span class="n">app_path_from_app_name</span><span class="p">(</span><span class="n">APPS_DIRECTORY</span><span class="p">,</span> <span class="n">APP_NAME</span><span class="p">,</span> <span class="n">firmware</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+<span class="linenos">27</span>    <span class="n">backend</span> <span class="o">=</span> <span class="n">SpeculosBackend</span><span class="p">(</span><span class="n">app_location</span><span class="p">,</span> <span class="n">firmware</span><span class="p">)</span>
+<span class="linenos">28</span>    <span class="k">with</span> <span class="n">backend</span><span class="p">:</span>
+<span class="linenos">29</span>        <span class="k">yield</span> <span class="n">backend</span>
 </pre></div>
 </div>
 </div>
@@ -335,30 +335,30 @@ running somewhere, and will only try to connect on it when the time comes.</p>
 <p>We need however the capability to decide which backend will be used when running
 the test. Let’s declare a <code class="docutils literal notranslate"><span class="pre">Pytest</span></code> <code class="docutils literal notranslate"><span class="pre">--backend</span></code> argument, and a fixture to
 access it:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">pytest_addoption</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">addoption</span><span class="p">(</span><span class="s2">&quot;--backend&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;speculos&quot;</span><span class="p">)</span>
-
-<span class="nd">@fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">&quot;session&quot;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">backend_name</span><span class="p">(</span><span class="n">pytestconfig</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">pytestconfig</span><span class="o">.</span><span class="n">getoption</span><span class="p">(</span><span class="s2">&quot;backend&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">def</span> <span class="nf">pytest_addoption</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
+<span class="linenos">2</span>    <span class="n">parser</span><span class="o">.</span><span class="n">addoption</span><span class="p">(</span><span class="s2">&quot;--backend&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;speculos&quot;</span><span class="p">)</span>
+<span class="linenos">3</span>
+<span class="linenos">4</span><span class="nd">@fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">&quot;session&quot;</span><span class="p">)</span>
+<span class="linenos">5</span><span class="k">def</span> <span class="nf">backend_name</span><span class="p">(</span><span class="n">pytestconfig</span><span class="p">):</span>
+<span class="linenos">6</span>    <span class="k">return</span> <span class="n">pytestconfig</span><span class="o">.</span><span class="n">getoption</span><span class="p">(</span><span class="s2">&quot;backend&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Now that we are able to now wich backend is chosen, we can write a function
 returning the correct backend:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ragger.backend</span> <span class="kn">import</span> <span class="n">LedgerCommBackend</span><span class="p">,</span> <span class="n">LedgerWalletBackend</span>
-
-<span class="n">BACKENDS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;speculos&quot;</span><span class="p">,</span> <span class="s2">&quot;ledgercomm&quot;</span><span class="p">,</span> <span class="s2">&quot;ledgerwallet&quot;</span><span class="p">]</span>
-
-<span class="k">def</span> <span class="nf">create_backend</span><span class="p">(</span><span class="n">backend_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">firmware</span><span class="p">:</span> <span class="n">Firmware</span><span class="p">,</span> <span class="n">display</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BackendInterface</span><span class="p">:</span>
-    <span class="k">if</span> <span class="n">backend</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;ledgercomm&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">LedgerCommBackend</span><span class="p">(</span><span class="n">firmware</span><span class="p">,</span> <span class="n">interface</span><span class="o">=</span><span class="s2">&quot;hid&quot;</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">backend</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;ledgerwallet&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">LedgerWalletBackend</span><span class="p">(</span><span class="n">firmware</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">backend</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;speculos&quot;</span><span class="p">:</span>
-        <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span> <span class="o">=</span> <span class="n">prepare_speculos_args</span><span class="p">(</span><span class="n">firmware</span><span class="p">,</span> <span class="n">display</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">SpeculosBackend</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">firmware</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Backend &#39;</span><span class="si">{</span><span class="n">backend</span><span class="si">}</span><span class="s2">&#39; is unknown. Valid backends are: </span><span class="si">{</span><span class="n">BACKENDS</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span> <span class="nn">ragger.backend</span> <span class="kn">import</span> <span class="n">LedgerCommBackend</span><span class="p">,</span> <span class="n">LedgerWalletBackend</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="n">BACKENDS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;speculos&quot;</span><span class="p">,</span> <span class="s2">&quot;ledgercomm&quot;</span><span class="p">,</span> <span class="s2">&quot;ledgerwallet&quot;</span><span class="p">]</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="k">def</span> <span class="nf">create_backend</span><span class="p">(</span><span class="n">backend_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">firmware</span><span class="p">:</span> <span class="n">Firmware</span><span class="p">,</span> <span class="n">display</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BackendInterface</span><span class="p">:</span>
+<span class="linenos"> 6</span>    <span class="k">if</span> <span class="n">backend</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;ledgercomm&quot;</span><span class="p">:</span>
+<span class="linenos"> 7</span>        <span class="k">return</span> <span class="n">LedgerCommBackend</span><span class="p">(</span><span class="n">firmware</span><span class="p">,</span> <span class="n">interface</span><span class="o">=</span><span class="s2">&quot;hid&quot;</span><span class="p">)</span>
+<span class="linenos"> 8</span>    <span class="k">elif</span> <span class="n">backend</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;ledgerwallet&quot;</span><span class="p">:</span>
+<span class="linenos"> 9</span>        <span class="k">return</span> <span class="n">LedgerWalletBackend</span><span class="p">(</span><span class="n">firmware</span><span class="p">)</span>
+<span class="linenos">10</span>    <span class="k">elif</span> <span class="n">backend</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;speculos&quot;</span><span class="p">:</span>
+<span class="linenos">11</span>        <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span> <span class="o">=</span> <span class="n">prepare_speculos_args</span><span class="p">(</span><span class="n">firmware</span><span class="p">,</span> <span class="n">display</span><span class="p">)</span>
+<span class="linenos">12</span>        <span class="k">return</span> <span class="n">SpeculosBackend</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">firmware</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="linenos">13</span>    <span class="k">else</span><span class="p">:</span>
+<span class="linenos">14</span>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Backend &#39;</span><span class="si">{</span><span class="n">backend</span><span class="si">}</span><span class="s2">&#39; is unknown. Valid backends are: </span><span class="si">{</span><span class="n">BACKENDS</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Test can now be launched to run with another backend:</p>
@@ -374,64 +374,64 @@ the application currently started could only be of one SDK version!</p>
 <p>We can allow <code class="docutils literal notranslate"><span class="pre">Pytest</span></code> to specify the firmware by expanding/modifying our current code:</p>
 <div class="literal-block-wrapper docutils container" id="id5">
 <div class="code-block-caption"><span class="caption-text">conftest.py</span><a class="headerlink" href="#id5" title="Permalink to this code"></a></div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">pytest</span> <span class="kn">import</span> <span class="n">fixture</span>
-
-<span class="kn">from</span> <span class="nn">ragger.firmware</span> <span class="kn">import</span> <span class="n">Firmware</span>
-<span class="kn">from</span> <span class="nn">ragger.backend</span> <span class="kn">import</span> <span class="n">SpeculosBackend</span><span class="p">,</span> <span class="n">LedgerCommBackend</span><span class="p">,</span> <span class="n">LedgerWalletBackend</span><span class="p">,</span> <span class="n">BackendInterface</span>
-<span class="kn">from</span> <span class="nn">ragger.utils</span> <span class="kn">import</span> <span class="n">app_path_from_app_name</span>
-
-<span class="n">APPS_DIRECTORY</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;path/to/&quot;</span><span class="p">)</span>
-<span class="n">APP_NAME</span> <span class="o">=</span> <span class="s2">&quot;app&quot;</span>
-
-<span class="n">FIRMWARES</span> <span class="o">=</span> <span class="p">[</span><span class="n">Firmware</span><span class="p">(</span><span class="s1">&#39;nanos&#39;</span><span class="p">,</span> <span class="s1">&#39;2.1&#39;</span><span class="p">),</span>
-             <span class="n">Firmware</span><span class="p">(</span><span class="s1">&#39;nanox&#39;</span><span class="p">,</span> <span class="s1">&#39;2.0.2&#39;</span><span class="p">),</span>
-            <span class="n">Firmware</span><span class="p">(</span><span class="s1">&#39;nanosp&#39;</span><span class="p">,</span> <span class="s1">&#39;1.0.3&#39;</span><span class="p">)]</span>
-
-<span class="n">BACKENDS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;speculos&quot;</span><span class="p">,</span> <span class="s2">&quot;ledgercomm&quot;</span><span class="p">,</span> <span class="s2">&quot;ledgerwallet&quot;</span><span class="p">]</span>
-
-<span class="k">def</span> <span class="nf">pytest_addoption</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">addoption</span><span class="p">(</span><span class="s2">&quot;--backend&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;speculos&quot;</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">fw</span> <span class="ow">in</span> <span class="n">FIRMWARES</span><span class="p">:</span>
-        <span class="n">parser</span><span class="o">.</span><span class="n">addoption</span><span class="p">(</span><span class="s2">&quot;--&quot;</span><span class="o">+</span><span class="n">fw</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;run on </span><span class="si">{</span><span class="n">fw</span><span class="o">.</span><span class="n">device</span><span class="si">}</span><span class="s2"> only&quot;</span><span class="p">)</span>
-
-<span class="nd">@fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">&quot;session&quot;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">backend_name</span><span class="p">(</span><span class="n">pytestconfig</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">pytestconfig</span><span class="o">.</span><span class="n">getoption</span><span class="p">(</span><span class="s2">&quot;backend&quot;</span><span class="p">)</span>
-
-<span class="k">def</span> <span class="nf">create_backend</span><span class="p">(</span><span class="n">backend_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">firmware</span><span class="p">:</span> <span class="n">Firmware</span><span class="p">,</span> <span class="n">display</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BackendInterface</span><span class="p">:</span>
-    <span class="k">if</span> <span class="n">backend</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;ledgercomm&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">LedgerCommBackend</span><span class="p">(</span><span class="n">firmware</span><span class="p">,</span> <span class="n">interface</span><span class="o">=</span><span class="s2">&quot;hid&quot;</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">backend</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;ledgerwallet&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">LedgerWalletBackend</span><span class="p">(</span><span class="n">firmware</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">backend</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;speculos&quot;</span><span class="p">:</span>
-        <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span> <span class="o">=</span> <span class="n">prepare_speculos_args</span><span class="p">(</span><span class="n">firmware</span><span class="p">,</span> <span class="n">display</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">SpeculosBackend</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">firmware</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Backend &#39;</span><span class="si">{</span><span class="n">backend</span><span class="si">}</span><span class="s2">&#39; is unknown. Valid backends are: </span><span class="si">{</span><span class="n">BACKENDS</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-<span class="k">def</span> <span class="nf">pytest_generate_tests</span><span class="p">(</span><span class="n">metafunc</span><span class="p">):</span>
-    <span class="k">if</span> <span class="s2">&quot;firmware&quot;</span> <span class="ow">in</span> <span class="n">metafunc</span><span class="o">.</span><span class="n">fixturenames</span><span class="p">:</span>
-        <span class="n">fw_list</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">ids</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="c1"># First pass: enable only demanded firmwares</span>
-        <span class="k">for</span> <span class="n">fw</span> <span class="ow">in</span> <span class="n">FIRMWARES</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">metafunc</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getoption</span><span class="p">(</span><span class="n">fw</span><span class="o">.</span><span class="n">device</span><span class="p">):</span>
-                <span class="n">fw_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fw</span><span class="p">)</span>
-                <span class="n">ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fw</span><span class="o">.</span><span class="n">device</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">fw</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
-        <span class="c1"># Second pass if no specific firmware demanded: add them all</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">fw_list</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">fw</span> <span class="ow">in</span> <span class="n">FIRMWARES</span><span class="p">:</span>
-                <span class="n">fw_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fw</span><span class="p">)</span>
-                <span class="n">ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fw</span><span class="o">.</span><span class="n">device</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">fw</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
-        <span class="n">metafunc</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">&quot;firmware&quot;</span><span class="p">,</span> <span class="n">fw_list</span><span class="p">,</span> <span class="n">ids</span><span class="o">=</span><span class="n">ids</span><span class="p">)</span>
-
-<span class="nd">@fixture</span>
-<span class="k">def</span> <span class="nf">backend</span><span class="p">(</span><span class="n">firmware</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SpeculosBackend</span><span class="p">:</span>
-    <span class="n">app_location</span> <span class="o">=</span> <span class="n">app_path_from_app_name</span><span class="p">(</span><span class="n">APPS_DIRECTORY</span><span class="p">,</span> <span class="n">APP_NAME</span><span class="p">,</span> <span class="n">firmware</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
-    <span class="n">backend</span> <span class="o">=</span> <span class="n">SpeculosBackend</span><span class="p">(</span><span class="n">app_location</span><span class="p">,</span> <span class="n">firmware</span><span class="p">)</span>
-    <span class="k">with</span> <span class="n">backend</span><span class="p">:</span>
-        <span class="k">yield</span> <span class="n">backend</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="linenos"> 2</span><span class="kn">from</span> <span class="nn">pytest</span> <span class="kn">import</span> <span class="n">fixture</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="kn">from</span> <span class="nn">ragger.firmware</span> <span class="kn">import</span> <span class="n">Firmware</span>
+<span class="linenos"> 5</span><span class="kn">from</span> <span class="nn">ragger.backend</span> <span class="kn">import</span> <span class="n">SpeculosBackend</span><span class="p">,</span> <span class="n">LedgerCommBackend</span><span class="p">,</span> <span class="n">LedgerWalletBackend</span><span class="p">,</span> <span class="n">BackendInterface</span>
+<span class="linenos"> 6</span><span class="kn">from</span> <span class="nn">ragger.utils</span> <span class="kn">import</span> <span class="n">app_path_from_app_name</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span><span class="n">APPS_DIRECTORY</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;path/to/&quot;</span><span class="p">)</span>
+<span class="linenos"> 9</span><span class="n">APP_NAME</span> <span class="o">=</span> <span class="s2">&quot;app&quot;</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span><span class="n">FIRMWARES</span> <span class="o">=</span> <span class="p">[</span><span class="n">Firmware</span><span class="p">(</span><span class="s1">&#39;nanos&#39;</span><span class="p">,</span> <span class="s1">&#39;2.1&#39;</span><span class="p">),</span>
+<span class="linenos">12</span>             <span class="n">Firmware</span><span class="p">(</span><span class="s1">&#39;nanox&#39;</span><span class="p">,</span> <span class="s1">&#39;2.0.2&#39;</span><span class="p">),</span>
+<span class="linenos">13</span>            <span class="n">Firmware</span><span class="p">(</span><span class="s1">&#39;nanosp&#39;</span><span class="p">,</span> <span class="s1">&#39;1.0.3&#39;</span><span class="p">)]</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span><span class="n">BACKENDS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;speculos&quot;</span><span class="p">,</span> <span class="s2">&quot;ledgercomm&quot;</span><span class="p">,</span> <span class="s2">&quot;ledgerwallet&quot;</span><span class="p">]</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span><span class="k">def</span> <span class="nf">pytest_addoption</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
+<span class="linenos">18</span>    <span class="n">parser</span><span class="o">.</span><span class="n">addoption</span><span class="p">(</span><span class="s2">&quot;--backend&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;speculos&quot;</span><span class="p">)</span>
+<span class="linenos">19</span>    <span class="k">for</span> <span class="n">fw</span> <span class="ow">in</span> <span class="n">FIRMWARES</span><span class="p">:</span>
+<span class="linenos">20</span>        <span class="n">parser</span><span class="o">.</span><span class="n">addoption</span><span class="p">(</span><span class="s2">&quot;--&quot;</span><span class="o">+</span><span class="n">fw</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;run on </span><span class="si">{</span><span class="n">fw</span><span class="o">.</span><span class="n">device</span><span class="si">}</span><span class="s2"> only&quot;</span><span class="p">)</span>
+<span class="linenos">21</span>
+<span class="linenos">22</span><span class="nd">@fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">&quot;session&quot;</span><span class="p">)</span>
+<span class="linenos">23</span><span class="k">def</span> <span class="nf">backend_name</span><span class="p">(</span><span class="n">pytestconfig</span><span class="p">):</span>
+<span class="linenos">24</span>    <span class="k">return</span> <span class="n">pytestconfig</span><span class="o">.</span><span class="n">getoption</span><span class="p">(</span><span class="s2">&quot;backend&quot;</span><span class="p">)</span>
+<span class="linenos">25</span>
+<span class="linenos">26</span><span class="k">def</span> <span class="nf">create_backend</span><span class="p">(</span><span class="n">backend_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">firmware</span><span class="p">:</span> <span class="n">Firmware</span><span class="p">,</span> <span class="n">display</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BackendInterface</span><span class="p">:</span>
+<span class="linenos">27</span>    <span class="k">if</span> <span class="n">backend</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;ledgercomm&quot;</span><span class="p">:</span>
+<span class="linenos">28</span>        <span class="k">return</span> <span class="n">LedgerCommBackend</span><span class="p">(</span><span class="n">firmware</span><span class="p">,</span> <span class="n">interface</span><span class="o">=</span><span class="s2">&quot;hid&quot;</span><span class="p">)</span>
+<span class="linenos">29</span>    <span class="k">elif</span> <span class="n">backend</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;ledgerwallet&quot;</span><span class="p">:</span>
+<span class="linenos">30</span>        <span class="k">return</span> <span class="n">LedgerWalletBackend</span><span class="p">(</span><span class="n">firmware</span><span class="p">)</span>
+<span class="linenos">31</span>    <span class="k">elif</span> <span class="n">backend</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;speculos&quot;</span><span class="p">:</span>
+<span class="linenos">32</span>        <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span> <span class="o">=</span> <span class="n">prepare_speculos_args</span><span class="p">(</span><span class="n">firmware</span><span class="p">,</span> <span class="n">display</span><span class="p">)</span>
+<span class="linenos">33</span>        <span class="k">return</span> <span class="n">SpeculosBackend</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">firmware</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="linenos">34</span>    <span class="k">else</span><span class="p">:</span>
+<span class="linenos">35</span>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Backend &#39;</span><span class="si">{</span><span class="n">backend</span><span class="si">}</span><span class="s2">&#39; is unknown. Valid backends are: </span><span class="si">{</span><span class="n">BACKENDS</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="linenos">36</span>
+<span class="linenos">37</span><span class="k">def</span> <span class="nf">pytest_generate_tests</span><span class="p">(</span><span class="n">metafunc</span><span class="p">):</span>
+<span class="linenos">38</span>    <span class="k">if</span> <span class="s2">&quot;firmware&quot;</span> <span class="ow">in</span> <span class="n">metafunc</span><span class="o">.</span><span class="n">fixturenames</span><span class="p">:</span>
+<span class="linenos">39</span>        <span class="n">fw_list</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos">40</span>        <span class="n">ids</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos">41</span>        <span class="c1"># First pass: enable only demanded firmwares</span>
+<span class="linenos">42</span>        <span class="k">for</span> <span class="n">fw</span> <span class="ow">in</span> <span class="n">FIRMWARES</span><span class="p">:</span>
+<span class="linenos">43</span>            <span class="k">if</span> <span class="n">metafunc</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getoption</span><span class="p">(</span><span class="n">fw</span><span class="o">.</span><span class="n">device</span><span class="p">):</span>
+<span class="linenos">44</span>                <span class="n">fw_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fw</span><span class="p">)</span>
+<span class="linenos">45</span>                <span class="n">ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fw</span><span class="o">.</span><span class="n">device</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">fw</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+<span class="linenos">46</span>        <span class="c1"># Second pass if no specific firmware demanded: add them all</span>
+<span class="linenos">47</span>        <span class="k">if</span> <span class="ow">not</span> <span class="n">fw_list</span><span class="p">:</span>
+<span class="linenos">48</span>            <span class="k">for</span> <span class="n">fw</span> <span class="ow">in</span> <span class="n">FIRMWARES</span><span class="p">:</span>
+<span class="linenos">49</span>                <span class="n">fw_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fw</span><span class="p">)</span>
+<span class="linenos">50</span>                <span class="n">ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fw</span><span class="o">.</span><span class="n">device</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">fw</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+<span class="linenos">51</span>        <span class="n">metafunc</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">&quot;firmware&quot;</span><span class="p">,</span> <span class="n">fw_list</span><span class="p">,</span> <span class="n">ids</span><span class="o">=</span><span class="n">ids</span><span class="p">)</span>
+<span class="linenos">52</span>
+<span class="linenos">53</span><span class="nd">@fixture</span>
+<span class="linenos">54</span><span class="k">def</span> <span class="nf">backend</span><span class="p">(</span><span class="n">firmware</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SpeculosBackend</span><span class="p">:</span>
+<span class="linenos">55</span>    <span class="n">app_location</span> <span class="o">=</span> <span class="n">app_path_from_app_name</span><span class="p">(</span><span class="n">APPS_DIRECTORY</span><span class="p">,</span> <span class="n">APP_NAME</span><span class="p">,</span> <span class="n">firmware</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+<span class="linenos">56</span>    <span class="n">backend</span> <span class="o">=</span> <span class="n">SpeculosBackend</span><span class="p">(</span><span class="n">app_location</span><span class="p">,</span> <span class="n">firmware</span><span class="p">)</span>
+<span class="linenos">57</span>    <span class="k">with</span> <span class="n">backend</span><span class="p">:</span>
+<span class="linenos">58</span>        <span class="k">yield</span> <span class="n">backend</span>
 </pre></div>
 </div>
 </div>

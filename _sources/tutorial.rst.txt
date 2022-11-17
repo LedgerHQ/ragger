@@ -46,6 +46,7 @@ Ledger cold wallet to run the :term:`application` on, and the version of the
 given :term:`SDK`, to be instantiated.
 
 .. code-block:: python
+  :linenos:
 
   from ragger.firmware import Firmware
   from ragger.backend import BackendInterface
@@ -56,6 +57,7 @@ However, as we us Speculos which is going to start the :term:`application` insid
 we need to provide the application ELF file as an argument:
 
 .. code-block:: python
+  :linenos:
 
   from ragger.firmware import Firmware
   from ragger.backend import SpeculosBackend
@@ -69,6 +71,7 @@ the emulator won't start immediately. You need to use a ``with`` statement
 to start it and begin to exchange APDUs or other events with you application.
 
 .. code-block:: python
+  :linenos:
 
   with backend:
       backend.exchange(cla=0xE0, ins=0x01, data=bytes.fromhex("DEADBEEF"))
@@ -86,6 +89,7 @@ take place in a ``conftest.py`` file, and used in a ``test_something.py`` file:
 
 .. code-block:: python
   :caption: conftest.py
+  :linenos:
 
   from pytest import fixture
   from ragger.firmware import Firmware
@@ -101,6 +105,7 @@ take place in a ``conftest.py`` file, and used in a ``test_something.py`` file:
 
 .. code-block:: python
   :caption: test_something.py
+  :linenos:
 
   def test_something(backend):
       backend.exchange(cla=0xE0, ins=0x01, data=bytes.fromhex("DEADBEEF"))
@@ -131,6 +136,7 @@ on the latest version of all Firmware (NanoS, NanoS+, NanoX). So we can declare
 a list of those:
 
 .. code-block:: python
+  :linenos:
 
   from ragger.firmware import Firmware
 
@@ -146,6 +152,7 @@ will parametrize every test using this fixture and trigger then with each
 declared firmware version:
 
 .. code-block:: python
+  :linenos:
 
   def pytest_generate_tests(metafunc):
   fw_list = list()
@@ -160,6 +167,7 @@ Now let's modify our previous ``backend`` fixture to use this ``firmware``
 fixture:
 
 .. code-block:: python
+  :linenos:
 
   @fixture
   def backend(firmware) -> SpeculosBackend:
@@ -193,6 +201,7 @@ name and location:
 
 .. code-block:: python
   :caption: conftest.py
+  :linenos:
 
   from pathlib import Path
   from pytest import fixture
@@ -256,7 +265,8 @@ We need however the capability to decide which backend will be used when running
 the test. Let's declare a ``Pytest`` ``--backend`` argument, and a fixture to
 access it:
 
-.. code-block::
+.. code-block:: python
+  :linenos:
 
   def pytest_addoption(parser):
       parser.addoption("--backend", action="store", default="speculos")
@@ -270,6 +280,7 @@ returning the correct backend:
 
 
 .. code-block:: python
+  :linenos:
 
   from ragger.backend import LedgerCommBackend, LedgerWalletBackend
 
@@ -301,6 +312,7 @@ We can allow ``Pytest`` to specify the firmware by expanding/modifying our curre
 
 .. code-block:: python
   :caption: conftest.py
+  :linenos:
 
   from pathlib import Path
   from pytest import fixture
