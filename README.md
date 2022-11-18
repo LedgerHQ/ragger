@@ -78,7 +78,8 @@ The `src/ragger/navigator/navigator.py` file describes the methods that can be i
 
 The backends can be easily integrated in a `pytest` test suite with the following files:
 
-* A `conftest.py` which can be heavily based on [this template](template_conftest.py).
+* A `conftest.py` which can be heavily based on [this template](template/conftest.py).
+* A `usage.md` which can be heavily based on [this template](template/usage.md).
 * Tests files which would looks like:
 
 ```python
