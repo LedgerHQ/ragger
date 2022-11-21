@@ -45,12 +45,13 @@ class MetaScreen(type):
     header, a cancel/quit footer and a keyboard in the center of the screen.
     The declaration of such screen would be:
 
-    ```python
-    class Screen(metaclass=MetaScreen):
-        layout_header = InfoHeader
-        layout_keyboard = LetterOnlyKeyboard
-        layout_footer = CancelFooter
-    ```
+    .. code-block:: python
+
+        class Screen(metaclass=MetaScreen):
+          layout_header = InfoHeader
+          layout_keyboard = LetterOnlyKeyboard
+          layout_footer = CancelFooter
+
 
     When instantiated, the class `Screen` will also instantiate `InfoHeader`,
     `LetterOnlyKeyboard` and `CancelFooter`, and store them as instance
@@ -58,19 +59,19 @@ class MetaScreen(type):
     They could then be used immediately:
 
 
-    ```python
-    screen = Screen(client, firmware)
+    .. code-block:: python
 
-    screen.header.tap()             # entering the 'info' view
-    screen.footer.tap()             # going out the 'info' view
-    screen.keyboard.write("hello")  # writting 'hello' on the keyboard
-    screen.footer.tap()             # going out the 'app' view
-    try:
-        screen.footer.tap()         # quitting the application
-    except:
-        pass                        # depending on the backend, the application
-                                    # stop could raisean error
-    ```
+        screen = Screen(client, firmware)
+
+        screen.header.tap()             # entering the 'info' view
+        screen.footer.tap()             # going out the 'info' view
+        screen.keyboard.write("hello")  # writting 'hello' on the keyboard
+        screen.footer.tap()             # going out the 'app' view
+        try:
+            screen.footer.tap()         # quitting the application
+        except:
+            pass                        # depending on the backend, the application
+                                        # stop could raisean error
 
     (Of course the navigation depends on the current application, so this
     example may not work in most cases).
