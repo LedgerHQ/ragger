@@ -159,9 +159,9 @@ class SpeculosBackend(BackendInterface):
         else:
             return screenshot_equal(f"{golden_snap_path}", snap)
 
-    def wait_for_screen_change(self, timeout: float = 10.0, context: list = None):
+    def wait_for_screen_change(self, timeout: float = 10.0, context: list = []):
         start = time()
-        if context is None:
+        if not context:
             return self._client.get_screen_content()
         else:
             content = context

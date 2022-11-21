@@ -347,10 +347,7 @@ class Navigator(ABC):
                             navigate_instruction: NavIns,
                             validation_instruction: NavIns,
                             text: str,
-                            path: Path = None,
-                            test_case_name: Path = None,
-                            take_snaps: bool = False,
-                            timeout: int = 30) -> int:
+                            timeout: int = 30):
         """
         Navigate until some text is found on the screen content displayed.
 
@@ -365,14 +362,8 @@ class Navigator(ABC):
         :type navigate_instruction: NavIns
         :param validation_instruction: Navigation instruction to be performed once the text is found.
         :type validation_instruction: NavIns
-        :param path: Absolute path to the snapshots directory.
-        :type path: Path
-        :param test_case_name: Relative path to the test case snapshots directory (from path).
-        :type test_case_name: Path
         :param first_instruction_wait: Sleeping time before the first snapshot
         :type first_instruction_wait: float
-        :param take_snaps: Take temporary snapshots of the screen displayed when navigating.
-        :type take_snaps: bool
         :param timeout: Timeout of the navigation loop if last snapshot is not found.
         :type timeout: int
 
@@ -385,11 +376,6 @@ class Navigator(ABC):
             # therefore comparison is not possible too.
             # TODO request user to interact with the device.
             return 0
-
-        img_idx = 0
-
-        if take_snaps:
-            snaps_tmp_path = self._init_snaps_temp_dir(path, test_case_name)
 
         start = time()
 
@@ -405,11 +391,6 @@ class Navigator(ABC):
             if (now - start > timeout):
                 raise TimeoutError(f"Timeout waiting for text {text}")
 
-            # Take snapshots if required.
-            if take_snaps:
-                self._backend.save_screen_snapshot(self._get_snap_path(snaps_tmp_path, img_idx))
-                img_idx += 1
-
             if not self._backend.compare_screen_with_text(text):
                 # Go to the next screen.
                 self.navigate([navigate_instruction])
@@ -417,9 +398,3 @@ class Navigator(ABC):
                 # Validation action when the text is found.
                 self.navigate([validation_instruction])
                 break
-
-        # Take last snapshot if required.
-        if take_snaps:
-            self._backend.save_screen_snapshot(self._get_snap_path(snaps_tmp_path, img_idx))
-
-        return img_idx
