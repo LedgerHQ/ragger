@@ -343,7 +343,6 @@ class Navigator(ABC):
             raise ValueError(f"Could not find first snapshot {first_golden_snap}")
         return img_idx
 
-
     def navigate_until_text(self,
                             navigate_instruction: NavIns,
                             validation_instruction: NavIns,
@@ -386,22 +385,22 @@ class Navigator(ABC):
             # therefore comparison is not possible too.
             # TODO request user to interact with the device.
             return 0
-        
+
         img_idx = 0
-        
+
         if take_snaps:
             snaps_tmp_path = self._init_snaps_temp_dir(path, test_case_name)
-        
+
         start = time()
-        
+
         ctx = self._backend.wait_for_screen_change(2.0)
-        
+
         # Navigate until the text specified in argument is found.
         while True:
             now = time()
-        
-            ctx = self._backend.wait_for_screen_change(2.0,ctx)
-            
+
+            ctx = self._backend.wait_for_screen_change(2.0, ctx)
+
             # Global navigation loop timeout in case the text is never found.
             if (now - start > timeout):
                 raise TimeoutError(f"Timeout waiting for text {text}")
@@ -417,10 +416,10 @@ class Navigator(ABC):
             else:
                 # Validation action when the text is found.
                 self.navigate([validation_instruction])
-                break       
+                break
 
         # Take last snapshot if required.
         if take_snaps:
             self._backend.save_screen_snapshot(self._get_snap_path(snaps_tmp_path, img_idx))
-        
+
         return img_idx
