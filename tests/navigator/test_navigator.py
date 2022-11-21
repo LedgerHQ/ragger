@@ -113,3 +113,21 @@ class TestNavigator(TestCase):
                                                            "00004.png",
                                                            timeout=5)
                     self.assertIn("Timeout waiting for snap", str(error.exception))
+
+    def test_navigate_until_text(self):
+        with patch("speculos.client.subprocess"):
+            with SpeculosServerStub():
+                with self.backend:
+                    self.navigator.navigate_until_text(NavIns(NavInsID.RIGHT_CLICK),
+                                                       NavIns(NavInsID.BOTH_CLICK),
+                                                       "About")
+    
+    def test_navigate_until_text_cannot_find_text(self):
+        with patch("speculos.client.subprocess"):
+            with SpeculosServerStub():
+                with self.backend:
+                    with self.assertRaises(TimeoutError) as error:
+                        self.navigator.navigate_until_text(NavIns(NavInsID.RIGHT_CLICK),
+                                                                 NavIns(NavInsID.BOTH_CLICK),
+                                                                 "WILL NOT BE FOUND")
+                    self.assertIn("Timeout waiting for text", str(error.exception))
