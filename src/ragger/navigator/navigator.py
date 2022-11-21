@@ -383,13 +383,6 @@ class Navigator(ABC):
 
         # Navigate until the text specified in argument is found.
         while True:
-            now = time()
-
-            ctx = self._backend.wait_for_screen_change(2.0, ctx)
-
-            # Global navigation loop timeout in case the text is never found.
-            if (now - start > timeout):
-                raise TimeoutError(f"Timeout waiting for text {text}")
 
             if not self._backend.compare_screen_with_text(text):
                 # Go to the next screen.
@@ -398,3 +391,9 @@ class Navigator(ABC):
                 # Validation action when the text is found.
                 self.navigate([validation_instruction])
                 break
+
+            # Global navigation loop timeout in case the text is never found.
+            if (time() - start > timeout):
+                raise TimeoutError(f"Timeout waiting for text {text}")
+
+            ctx = self._backend.wait_for_screen_change(2.0, ctx)

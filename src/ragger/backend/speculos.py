@@ -18,7 +18,7 @@ from io import BytesIO
 from pathlib import Path
 from PIL import Image
 from typing import Optional, Generator
-from time import time
+from time import time, sleep
 from json import dumps
 
 from speculos.client import SpeculosClient, screenshot_equal, ApduResponse, ApduException
@@ -170,10 +170,11 @@ class SpeculosBackend(BackendInterface):
                 now = time()
                 if (now - start > timeout):
                     raise TimeoutError("Timeout waiting for screen change")
+                sleep(0.1)
             return content
 
     def compare_screen_with_text(self, text: str):
         return text in dumps(self._client.get_screen_content())
 
-    def get_screen_content(self) -> None:
+    def get_screen_content(self) -> list:
         return self._client.get_screen_content()

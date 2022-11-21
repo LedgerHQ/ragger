@@ -84,6 +84,7 @@ The `src/ragger/navigator/navigator.py` file describes the methods that can be i
 * `navigate`: navigate on the device according to a set of navigation instructions provided.
 * `navigate_and_compare`: navigate on the device according to a set of navigation instructions provided then compare each step screenshot with "golden images".
 * `navigate_until_snap`: navigate on the device until a snapshot is found and then validate.
+* `navigate_until_text`: navigate on the device until a text string is found on screen and then validate.
 
 ## Examples
 ### With `pytest`
