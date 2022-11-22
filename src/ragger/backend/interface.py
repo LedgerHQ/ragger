@@ -289,27 +289,25 @@ class BackendInterface(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def compare_screen_with_snapshot(self, snap_path: Path, crop: Optional[Crop] = None) -> bool:
+    def compare_screen_with_snapshot(self,
+                                     golden_snap_path: Path,
+                                     crop: Optional[Crop] = None,
+                                     tmp_snap_path: Optional[Path] = None,
+                                     golden_run: bool = False) -> bool:
         """
         Compare the current device screen with the provided snapshot.
 
-        :param snap_path: The path to the snap to compare the screen device with
-        :type snap_path: Path
+        :param golden_snap_path: The path to the snap to compare the screen
+                                 device with
+        :type golden_snap_path: Path
         :param crop: Optional crop options to use for the comparison
         :type crop: Crop
-
-        :return: True if matches else False
-        :rtype: bool
-        """
-        raise NotImplementedError
-
-    @abstractmethod
-    def save_screen_snapshot(self, snap_path: Path):
-        """
-        Save the current device screen as a snapshot.
-
-        :param snap_path: The path where to save the screen snapshot
-        :type snap_path: Path
+        :param tmp_snap_path: Optional path where to store the screen snap used
+                              for the comparison
+        :type tmp_snap_path: Path
+        :param golden_run: Optional option to save the current screen as golden
+                           instead of comparing it.
+        :type golden_run: bool
 
         :return: True if matches else False
         :rtype: bool
