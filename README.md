@@ -130,14 +130,23 @@ the tests run on the three current firmwares (NanoS, NanoX and NanoS+).
 
 ## Documentation
 
-You'll need the `doc` dependencies to generate the documentation:
+The complete documentation can be found [here](https://ledgerhq.github.io/ragger/).
+If you want to generate it locally, you'll need the `doc` dependencies to
+generate the documentation:
 
 ```bash
 pip install .[doc]
 ```
 
+You will also need the `graphviz` package in order to generate some dependency
+diagrams:
+
+```bash
+apt-get install graphviz
+```
+
 Once done, you can generate the documentation:
 
 ```bash
-(cd doc && make html)
+(cd doc && make gen_resources && make html)
 ```

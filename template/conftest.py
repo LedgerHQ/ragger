@@ -28,7 +28,7 @@ def pytest_addoption(parser):
 
 
 @pytest.fixture(scope="session")
-def backend(pytestconfig):
+def backend_name(pytestconfig):
     return pytestconfig.getoption("backend")
 
 
@@ -85,29 +85,29 @@ def prepare_speculos_args(firmware: Firmware, display: bool):
 # Depending on the "--backend" option value, a different backend is
 # instantiated, and the tests will either run on Speculos or on a physical
 # device depending on the backend
-def create_backend(backend: str, firmware: Firmware, display: bool):
-    if backend.lower() == "ledgercomm":
+def create_backend(backend_name: str, firmware: Firmware, display: bool):
+    if backend_name.lower() == "ledgercomm":
         return LedgerCommBackend(firmware, interface="hid")
-    elif backend.lower() == "ledgerwallet":
+    elif backend_name.lower() == "ledgerwallet":
         return LedgerWalletBackend(firmware)
-    elif backend.lower() == "speculos":
+    elif backend_name.lower() == "speculos":
         args, kwargs = prepare_speculos_args(firmware, display)
         return SpeculosBackend(*args, firmware, **kwargs)
     else:
-        raise ValueError(f"Backend '{backend}' is unknown. Valid backends are: {BACKENDS}")
+        raise ValueError(f"Backend '{backend_name}' is unknown. Valid backends are: {BACKENDS}")
 
 
-# This final fixture will return the properly configured backend client, to be used in tests
+# This final fixture will return the properly configured backend, to be used in tests
 @pytest.fixture
-def client(backend, firmware, display):
-    with create_backend(backend, firmware, display) as b:
+def backend(backend, firmware, display):
+    with create_backend(backend_name, firmware, display) as b:
         yield b
 
 
 @pytest.fixture
-def navigator(client, firmware, golden_run):
+def navigator(backend, firmware, golden_run):
     if firmware.device.startswith("nano"):
-        return NanoNavigator(client, firmware, golden_run)
+        return NanoNavigator(backend, firmware, golden_run)
     else:
         raise ValueError(f"Device '{firmware.device}' is unsupported.")
 
