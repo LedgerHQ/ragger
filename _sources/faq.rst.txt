@@ -19,14 +19,15 @@ command line, which should look like:
 
 .. code-block:: bash
 
-  /usr/bin/python3 -m speculos --model nanos --sdk 2.1 --display headless <path>/application_nanos.elf
+  /usr/bin/python3 -m speculos --model nanos --sdk 2.1 --display headless /<absolute_path>/<application_name>.elf
 
 Try and launch this command line by itself to try and see the original error. It
 could be that:
 
 - the application ELF file does not exists
 - the ``model`` or ``sdk`` version does not exists
-- speculos is not installed
+- Speculos is already started elsewhere, and the network port are not available
+- Speculos is not installed
 - ``qemu-arm-static`` (used by Speculos under the hook) is not installed
 
 ...and if I'm getting a ``NotADirectoryError``?

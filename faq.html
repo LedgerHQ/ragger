@@ -8,6 +8,7 @@
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" type="text/css" />
+    <link rel="shortcut icon" href="_static/ragger.png"/>
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -120,7 +121,7 @@
 because the emulator could not be started.</p>
 <p>With verbose options, you should be able to find in the logs the Speculos
 command line, which should look like:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>/usr/bin/python3 -m speculos --model nanos --sdk <span class="m">2</span>.1 --display headless &lt;path&gt;/application_nanos.elf
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>/usr/bin/python3 -m speculos --model nanos --sdk <span class="m">2</span>.1 --display headless /&lt;absolute_path&gt;/&lt;application_name&gt;.elf
 </pre></div>
 </div>
 <p>Try and launch this command line by itself to try and see the original error. It
@@ -128,7 +129,8 @@ could be that:</p>
 <ul class="simple">
 <li><p>the application ELF file does not exists</p></li>
 <li><p>the <code class="docutils literal notranslate"><span class="pre">model</span></code> or <code class="docutils literal notranslate"><span class="pre">sdk</span></code> version does not exists</p></li>
-<li><p>speculos is not installed</p></li>
+<li><p>Speculos is already started elsewhere, and the network port are not available</p></li>
+<li><p>Speculos is not installed</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">qemu-arm-static</span></code> (used by Speculos under the hook) is not installed</p></li>
 </ul>
 </div>
