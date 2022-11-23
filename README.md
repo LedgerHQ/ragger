@@ -21,6 +21,10 @@ It mainly consists on an interface which is implemented by three backends:
   with the expected application *installed* and *running*, and connected to the
   computer through USB.
 
+
+More complete documentation can be found [here](https://ledgerhq.github.io/ragger/).
+
+
 ## Installation
 
 ### Python package
@@ -123,3 +127,26 @@ pytest --backend [speculos|ledgercomm|ledgerwallet] <tests/path>  # will run tes
 
 The tests of this repository are basically the same as this example, except
 the tests run on the three current firmwares (NanoS, NanoX and NanoS+).
+
+## Documentation
+
+The complete documentation can be found [here](https://ledgerhq.github.io/ragger/).
+If you want to generate it locally, you'll need the `doc` dependencies to
+generate the documentation:
+
+```bash
+pip install .[doc]
+```
+
+You will also need the `graphviz` package in order to generate some dependency
+diagrams:
+
+```bash
+apt-get install graphviz
+```
+
+Once done, you can generate the documentation:
+
+```bash
+(cd doc && make gen_resources && make html)
+```

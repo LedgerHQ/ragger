@@ -26,6 +26,17 @@ class Crop:
 
 @dataclass(frozen=True)
 class RAPDU:
+    """
+    The dataclass containing the application's response of an APDU from the
+    client to the application.
+
+    It is composed of two attributes:
+
+    - ``status`` (``int``): from the two last bytes of the payload. Common
+      values are 0x9000 for success, other being errors.
+    - ``data`` (``bytes``): the rest of the response (the entire payload without
+      the two last bytes)
+    """
     status: int
     data: bytes
 

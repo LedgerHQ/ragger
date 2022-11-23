@@ -28,8 +28,38 @@ class _Firmware:
 
 
 class Firmware(_Firmware):
+    """
+    The Firmware container class holds information on the expected device on which
+    the current Ragger code will apply on.
+
+    It is composed of three attributes:
+
+    - ``device`` (``str``), which represents the name of the physical device
+      ('nanos', 'nanox', ...),
+    - ``version`` (``str``), which represent the SDK version associated with the
+      physical device.
+    - ``semantic_version`` (:class:`semver.VersionInfo`), which is deduced from
+      ``device`` and ``version``. ``device`` is used to get the correct
+      :class:`VersionManager <ragger.firmware.versions.VersionManager>` class
+      from the :data:`SDK_VERSIONS <ragger.firmware.versions.SDK_VERSIONS>`
+      global, then the :class:`semver.VersionInfo` is selected according to the
+      given ``version``. For instance, ``device = "NanoS"`` and
+      ``version =  "2.1"`` will results into
+      ``semantic_version = semver.VersionInfo(2, 1, 0)``.
+    """
 
     def __init__(self, device: str, version: str):
+        """
+        Instantiate the :class:`Firmware`.
+
+        If ``device`` does not match any device declared in
+        :data:`SDK_VERSIONS <ragger.firmware.versions.SDK_VERSIONS>`, will raise
+        a ``KeyError``.
+
+        If ``version`` does not match any version in the
+        :class:`VersionManager <ragger.firmware.versions.VersionManager>`
+        related to the ``SDK_VERSION[device]``, will raise a ``ValueError``.
+        """
         assert device.lower() in SDK_VERSIONS.keys()
         try:
             versions = SDK_VERSIONS[device.lower()]

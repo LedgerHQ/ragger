@@ -14,6 +14,9 @@ help:
 
 .PHONY: help Makefile
 
+gen_resources:
+	@pyreverse --output svg --colorized --project generated_ragger_architecture --output-directory "$(SOURCEDIR)"/images/ "$(SOURCEDIR)"/../src/ragger
+
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
 %: Makefile

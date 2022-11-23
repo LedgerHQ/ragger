@@ -24,15 +24,25 @@ author = 'bow'
 
 # -- General configuration ---------------------------------------------------
 
+html_favicon = "images/ragger.png"
+
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
+    'sphinx_copybutton',
+    'sphinxcontrib.images',
 ]
+
+images_config = {
+    "default_image_width": "90%",
+}
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
+
+html_sidebars = { '**': ['globaltoc.html', 'relations.html', 'sourcelink.html', 'searchbox.html'] }
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -43,6 +53,10 @@ import os
 import sys
 
 sys.path.insert(0, os.path.abspath('../src/'))
+
+from ragger import __version__
+version = __version__
+release = __version__
 
 # Autodoc conf
 # Do not skip __init__ methods by default
@@ -59,7 +73,7 @@ def setup(app):
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'python_docs_theme'
+html_theme = 'sphinx_rtd_theme'
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
