@@ -95,11 +95,12 @@ class Navigator(ABC):
     def _compare_snap_with_timeout(self,
                                    path: Path,
                                    timeout_s: float = 5.0,
-                                   crop: Optional[Crop] = None) -> bool:
+                                   crop: Optional[Crop] = None,
+                                   tmp_snap_path: Optional[Path] = None) -> bool:
         start = time()
         now = start
         while not (now - start > timeout_s):
-            if self._backend.compare_screen_with_snapshot(path, crop):
+            if self._backend.compare_screen_with_snapshot(path, crop, tmp_snap_path=tmp_snap_path):
                 return True
             now = time()
         return False
@@ -108,16 +109,9 @@ class Navigator(ABC):
         golden = self._get_snap_path(snaps_golden_path, index)
         tmp = self._get_snap_path(snaps_tmp_path, index)
 
-        # Save snap in tmp folder if bakend support it.
-        # It allows the user to access the screenshots in case of comparison failure
-        self._backend.save_screen_snapshot(tmp)
-
-        # Allow to generate golden snapshots
-        if self._golden_run:
-            self._backend.save_screen_snapshot(golden)
-
         assert self._backend.compare_screen_with_snapshot(
-            golden), f"Screen does not match golden {tmp}."
+            golden, tmp_snap_path=tmp,
+            golden_run=self._golden_run), f"Screen does not match golden {tmp}."
 
     def navigate(self, instructions: List[NavIns]):
         """
@@ -244,29 +238,40 @@ class Navigator(ABC):
         img_idx = 0
         first_golden_snap = snaps_golden_path / start_img_name
         last_golden_snap = snaps_golden_path / last_img_name
+
+        # Take snapshots if required.
+        if take_snaps:
+            tmp_snap_path = self._get_snap_path(snaps_tmp_path, img_idx)
+        else:
+            tmp_snap_path = None
+
         # Check if the first snapshot is found before going in the navigation loop.
         # It saves time in non-nominal cases where the navigation flow does not start.
-        if self._compare_snap_with_timeout(first_golden_snap, timeout_s=2, crop=crop_first):
+        if self._compare_snap_with_timeout(first_golden_snap,
+                                           timeout_s=2,
+                                           crop=crop_first,
+                                           tmp_snap_path=tmp_snap_path):
             start = time()
             # Navigate until the last snapshot specified in argument is found.
-            while not self._compare_snap_with_timeout(
-                    last_golden_snap, timeout_s=0.5, crop=crop_last):
+            while True:
+                if take_snaps:
+                    # Take snapshots if required.
+                    tmp_snap_path = self._get_snap_path(snaps_tmp_path, img_idx)
+
+                if self._compare_snap_with_timeout(last_golden_snap,
+                                                   timeout_s=0.5,
+                                                   crop=crop_last,
+                                                   tmp_snap_path=tmp_snap_path):
+                    break
+
                 now = time()
                 # Global navigation loop timeout in case the snapshot is never found.
                 if (now - start > timeout):
                     raise TimeoutError(f"Timeout waiting for snap {last_golden_snap}")
 
-                # Take snapshots if required.
-                if take_snaps:
-                    self._backend.save_screen_snapshot(self._get_snap_path(snaps_tmp_path, img_idx))
-
                 # Go to the next screen.
                 self.navigate([navigate_instruction])
                 img_idx += 1
-
-            # Take last snapshot if required.
-            if take_snaps:
-                self._backend.save_screen_snapshot(self._get_snap_path(snaps_tmp_path, img_idx))
 
             # Validation action when last snapshot is found.
             self.navigate([validation_instruction])

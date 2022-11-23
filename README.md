@@ -70,7 +70,6 @@ The `src/ragger/backend/interface.py` file describes the methods that can be imp
 * `left_click`: perform a left click on a device.
 * `both_click`: perform a click on both buttons (left + right) of a device.
 * `compare_screen_with_snapshot`: compare the current device screen with the provided snapshot.
-* `save_screen_snapshot`: save the current device screen as a snapshot.
 
 The `src/ragger/navigator/navigator.py` file describes the methods that can be implemented by the different device navigators and that allow to interact with an emulated device:
 * `navigate`: navigate on the device according to a set of navigation instructions provided.

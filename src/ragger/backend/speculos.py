@@ -123,19 +123,32 @@ class SpeculosBackend(BackendInterface):
     def both_click(self) -> None:
         self._client.press_and_release("both")
 
-    def compare_screen_with_snapshot(self, snap_path: Path, crop: Optional[Crop] = None) -> bool:
+    def _save_screen_snapshot(self, snap: BytesIO, path: Path) -> None:
+        img = Image.open(snap)
+        img.save(path)
+
+    def compare_screen_with_snapshot(self,
+                                     golden_snap_path: Path,
+                                     crop: Optional[Crop] = None,
+                                     tmp_snap_path: Optional[Path] = None,
+                                     golden_run: bool = False) -> bool:
         snap = BytesIO(self._client.get_screenshot())
+
+        # Save snap in tmp folder.
+        # It allows the user to access the screenshots in case of comparison failure
+        if tmp_snap_path:
+            self._save_screen_snapshot(snap, tmp_snap_path)
+
+        # Allow to generate golden snapshots
+        if golden_run:
+            self._save_screen_snapshot(snap, golden_snap_path)
+
         if crop is not None:
-            return screenshot_equal(f"{snap_path}",
+            return screenshot_equal(f"{golden_snap_path}",
                                     snap,
                                     left=crop.left,
                                     upper=crop.upper,
                                     right=crop.right,
                                     lower=crop.lower)
         else:
-            return screenshot_equal(f"{snap_path}", snap)
-
-    def save_screen_snapshot(self, path: Path) -> None:
-        screenshot = self._client.get_screenshot()
-        snap = Image.open(BytesIO(screenshot))
-        snap.save(path)
+            return screenshot_equal(f"{golden_snap_path}", snap)

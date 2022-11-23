@@ -102,8 +102,9 @@ class LedgerWalletBackend(BackendInterface):
     def both_click(self) -> None:
         pass
 
-    def compare_screen_with_snapshot(self, snap_path: Path, crop: Optional[Crop] = None) -> bool:
+    def compare_screen_with_snapshot(self,
+                                     golden_snap_path: Path,
+                                     crop: Optional[Crop] = None,
+                                     tmp_snap_path: Optional[Path] = None,
+                                     golden_run: bool = False) -> bool:
         return True
-
-    def save_screen_snapshot(self, path: Path) -> None:
-        pass
