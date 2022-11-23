@@ -205,13 +205,18 @@ action is performed on the device.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ragger.backend.BackendInterface.compare_screen_with_snapshot">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compare_screen_with_snapshot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snap_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Crop</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#ragger.backend.BackendInterface.compare_screen_with_snapshot" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compare_screen_with_snapshot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">golden_snap_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Crop</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tmp_snap_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">golden_run</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#ragger.backend.BackendInterface.compare_screen_with_snapshot" title="Permalink to this definition"></a></dt>
 <dd><p>Compare the current device screen with the provided snapshot.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>snap_path</strong> (<em>Path</em>) – The path to the snap to compare the screen device with</p></li>
+<li><p><strong>golden_snap_path</strong> (<em>Path</em>) – The path to the snap to compare the screen
+device with</p></li>
 <li><p><strong>crop</strong> (<em>Crop</em>) – Optional crop options to use for the comparison</p></li>
+<li><p><strong>tmp_snap_path</strong> (<em>Path</em>) – Optional path where to store the screen snap used
+for the comparison</p></li>
+<li><p><strong>golden_run</strong> (<em>bool</em>) – Optional option to save the current screen as golden
+instead of comparing it.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -432,23 +437,6 @@ action is performed on the device.</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>NoneType</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ragger.backend.BackendInterface.save_screen_snapshot">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">save_screen_snapshot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snap_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragger.backend.BackendInterface.save_screen_snapshot" title="Permalink to this definition"></a></dt>
-<dd><p>Save the current device screen as a snapshot.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>snap_path</strong> (<em>Path</em>) – The path where to save the screen snapshot</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>True if matches else False</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>bool</p>
 </dd>
 </dl>
 </dd></dl>
