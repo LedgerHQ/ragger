@@ -91,13 +91,13 @@ The backends can be easily integrated in a `pytest` test suite with the followin
 TESTS_ROOT_DIR = Path(__file__).parent
 
 
-def test_something(client, firmware):
-    rapdu: RAPDU = client.exchange(<whatever>)
+def test_something(backend, firmware):
+    rapdu: RAPDU = backend.exchange(<whatever>)
     assert rapdu.status == 0x9000
 
 
-def test_with_user_action_and_screenshot_comparison(client, firmware, navigator, test_name):
-    with client.exchange_async(<whatever>)
+def test_with_user_action_and_screenshot_comparison(backend, firmware, navigator, test_name):
+    with backend.exchange_async(<whatever>)
         if firmware.device == "nanos":
             instructions = [
                 NavigationInstruction.RIGHT_CLICK,
@@ -106,12 +106,12 @@ def test_with_user_action_and_screenshot_comparison(client, firmware, navigator,
         else:
             instructions = <something else>
         navigator.navigate_and_compare(TESTS_ROOT_DIR, test_name, instructions)
-    rapdu: RAPDU = client.last_async_response
+    rapdu: RAPDU = backend.last_async_response
     assert rapdu.status == 0x9000
     assert verify(rapdu.data)
 ```
 
-The `client` fixture used to discuss with the instantiated backend is documented
+The `backend` fixture used to discuss with the instantiated backend is documented
 [here](src/ragger/backend/interface.py).
 
 The `navigator` fixture used to navigate with the instantiated backend is documented
