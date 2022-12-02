@@ -10,7 +10,7 @@ from ragger.utils import app_path_from_app_name
 # Adapt this path to your 'tests/elfs' directory
 APPS_DIRECTORY = (Path(__file__).parent.parent / "elfs").resolve()
 
-# Adapt this path to the APPNAME in your Makefile
+# Adapt this name part of the compiled app <name>_<device>.elf in the APPS_DIRECTORY
 APP_NAME = "MyAPP"
 
 BACKENDS = ["speculos", "ledgercomm", "ledgerwallet"]
