@@ -203,12 +203,12 @@ POSITIONS_BY_SDK = {
         "UseCaseSettings": {
             "single_page_exit": BUTTON_LOWER_MIDDLE,
             "multi_page_exit": BUTTON_LOWER_LEFT,
-            "back": BUTTON_LOWER_MIDDLE,
+            "previous": BUTTON_LOWER_MIDDLE,
             "next": BUTTON_LOWER_RIGHT,
         },
         "UseCaseSubSettings": {
             "exit": BUTTON_UPPER_LEFT,
-            "back": BUTTON_LOWER_LEFT,
+            "previous": BUTTON_LOWER_LEFT,
             "next": BUTTON_LOWER_RIGHT,
         },
         "UseCaseChoice": {
@@ -217,13 +217,13 @@ POSITIONS_BY_SDK = {
         },
         "UseCaseReview": {
             "tap": CENTER,
-            "back": BUTTON_UPPER_LEFT,
+            "previous": BUTTON_UPPER_LEFT,
             "confirm": BUTTON_ABOVE_LOWER_MIDDLE,
             "reject": BUTTON_LOWER_MIDDLE,
         },
         "UseCaseViewDetails": {
             "exit": BUTTON_LOWER_LEFT,
-            "back": BUTTON_LOWER_MIDDLE,
+            "previous": BUTTON_LOWER_MIDDLE,
             "next": BUTTON_LOWER_RIGHT,
         },
         "UseCaseAddressConfirmation": {

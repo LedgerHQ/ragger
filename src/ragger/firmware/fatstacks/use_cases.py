@@ -61,8 +61,8 @@ class UseCaseSettings(_UseCase):
     def multi_page_exit(self):
         self.client.finger_touch(*self.positions["multi_page_exit"])
 
-    def back(self):
-        self.client.finger_touch(*self.positions["back"])
+    def previous(self):
+        self.client.finger_touch(*self.positions["previous"])
 
     def next(self):
         self.client.finger_touch(*self.positions["next"])
@@ -73,8 +73,8 @@ class UseCaseSubSettings(_UseCase):
     def exit(self):
         self.client.finger_touch(*self.positions["exit"])
 
-    def back(self):
-        self.client.finger_touch(*self.positions["back"])
+    def previous(self):
+        self.client.finger_touch(*self.positions["previous"])
 
     def next(self):
         self.client.finger_touch(*self.positions["next"])
@@ -100,8 +100,8 @@ class UseCaseReview(_UseCase):
     def tap(self):
         self.client.finger_touch(*self.positions["tap"])
 
-    def back(self):
-        self.client.finger_touch(*self.positions["back"])
+    def previous(self):
+        self.client.finger_touch(*self.positions["previous"])
 
     def reject(self):
         self.client.finger_touch(*self.positions["reject"])
@@ -116,8 +116,8 @@ class UseCaseViewDetails(_UseCase):
     def exit(self):
         self.client.finger_touch(*self.positions["exit"])
 
-    def back(self):
-        self.client.finger_touch(*self.positions["back"])
+    def previous(self):
+        self.client.finger_touch(*self.positions["previous"])
 
     def next(self):
         self.client.finger_touch(*self.positions["next"])
