@@ -130,3 +130,13 @@ class TestNavigator(TestCase):
                                                            NavIns(NavInsID.BOTH_CLICK),
                                                            "WILL NOT BE FOUND")
                     self.assertIn("Timeout waiting for text", str(error.exception))
+
+    def test_navigate_until_text_screen_change_timeout(self):
+        with patch("speculos.client.subprocess"):
+            with SpeculosServerStub():
+                with self.backend:
+                    with self.assertRaises(TimeoutError) as error:
+                        self.navigator.navigate_until_text(NavIns(NavInsID.BOTH_CLICK),
+                                                           NavIns(NavInsID.BOTH_CLICK),
+                                                           "WILL NOT BE FOUND")
+                    self.assertIn("Timeout waiting for screen change", str(error.exception))

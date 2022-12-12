@@ -20,6 +20,23 @@ class EndPoint:
     EVENTS = "03"
 
 
+class Events:
+    back = [{"text": "Back", "x": 51, "y": 19}]
+    info = [{
+        "text": "Boilerplate App",
+        "x": 20,
+        "y": 3
+    }, {
+        "text": "(c) 2020 Ledger",
+        "x": 26,
+        "y": 17
+    }]
+    home = [{"text": "Boilerplate", "x": 41, "y": 3}, {"text": "is ready", "x": 41, "y": 17}]
+    version = [{"text": "Version", "x": 43, "y": 3}, {"text": "1.0.1", "x": 52, "y": 17}]
+    about = [{"text": "About", "x": 47, "y": 19}]
+    indexed = [home, version, about, info, back]
+
+
 # can't use lambdas: Flask stores functions using their names (and lambdas have none, so they'll
 # override each other)
 # Returned value must be a JSON, embedding a 'data' field with an hexa string ending with 9000 for
@@ -63,6 +80,9 @@ class Actions:
 
         return {}
 
+    def events(self, *args):
+        return {"data": {"events": Events.indexed[self.idx]}}, 200
+
     def screenshot(self, *args):
         path = Path(
             __file__).parent.resolve() / "snapshots/nanos/generic" / f"{str(self.idx).zfill(5)}.png"
@@ -70,10 +90,6 @@ class Actions:
         iobytes = BytesIO()
         img_temp.save(iobytes, format="PNG")
         return iobytes.getvalue(), 200
-
-
-def events(*args):
-    return {"data": EndPoint.EVENTS + f"{APDUStatus.SUCCESS:x}"}
 
 
 class SpeculosServerStub:
@@ -86,7 +102,7 @@ class SpeculosServerStub:
         self.app.add_url_rule("/button/right", methods=["GET", "POST"], view_func=actions.button)
         self.app.add_url_rule("/button/left", methods=["GET", "POST"], view_func=actions.button)
         self.app.add_url_rule("/button/both", methods=["GET", "POST"], view_func=actions.button)
-        self.app.add_url_rule("/events", view_func=events)
+        self.app.add_url_rule("/events", view_func=actions.events)
         self.app.add_url_rule("/screenshot", methods=["GET"], view_func=actions.screenshot)
         self.process = None
 
