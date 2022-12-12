@@ -202,6 +202,14 @@ class Navigator(ABC):
         :return: None
         :rtype: NoneType
         """
+        if self._golden_run:
+            # Increase waits when in golden run to be sure that potential processing
+            # has been done and next screen has been displayed before continuing.
+            # If initial timing was not enough, then it will fail when running without
+            # golden run mode and developer will be notified.
+            first_instruction_wait *= 2
+            middle_instruction_wait *= 5
+            last_instruction_wait *= 2
         snaps_tmp_path = self._init_snaps_temp_dir(path, test_case_name)
         snaps_golden_path = self._check_snaps_dir_path(path, test_case_name, True)
 
