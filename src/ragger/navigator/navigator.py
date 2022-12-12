@@ -372,14 +372,22 @@ class Navigator(ABC):
         """
 
         if not isinstance(self._backend, SpeculosBackend):
-            # When not using Speculos backend, taking snapshots is not possible
-            # therefore comparison is not possible too.
-            # TODO request user to interact with the device.
+            # TODO remove this once the proper behavior of
+            # other backends is implemented.
             return 0
 
         start = time()
 
         ctx = self._backend.wait_for_screen_change(2.0)
+        # Make sure to enter the navigation loop after
+        # there is a screen change (or wait 1 second).
+        # Useful when the navigate_until_text is used
+        # in transaction flows and the screen changes
+        # from the idle menu to a review start screen.
+        try:
+            ctx = self._backend.wait_for_screen_change(1.0, ctx)
+        except TimeoutError:
+            pass
 
         # Navigate until the text specified in argument is found.
         while True:

@@ -164,13 +164,12 @@ class SpeculosBackend(BackendInterface):
         if not context:
             return self._client.get_screen_content()
         else:
-            content = context
+            content = self._client.get_screen_content()
             while content == context:
-                content = self._client.get_screen_content()
-                now = time()
-                if (now - start > timeout):
-                    raise TimeoutError("Timeout waiting for screen change")
                 sleep(0.1)
+                if (time() - start > timeout):
+                    raise TimeoutError("Timeout waiting for screen change")
+                content = self._client.get_screen_content()
             return content
 
     def compare_screen_with_text(self, text: str):

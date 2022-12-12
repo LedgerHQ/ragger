@@ -344,7 +344,7 @@ class BackendInterface(ABC):
         Wait until the screen content (text) changes compared to what is provided
         by the context parameter. If no context is provided, the function returns
         immediately, returning the current screen content.
-        
+
         This method may be left void on backends connecting to physical devices,
         where a physical interaction must be performed instead.
         This will prevent the instrumentation to fail (the void method won't
@@ -357,7 +357,7 @@ class BackendInterface(ABC):
         :type timeout: float
         :param context: Context to compare screen content with.
         :type context: list
-        :return: Latest screen content after the screen change. 
+        :return: Latest screen content after the screen change.
         :rtype: list
         """
         raise NotImplementedError
@@ -367,7 +367,7 @@ class BackendInterface(ABC):
         """
         Checks if the current screen content contains the text
         string provided.
-        
+
         This method may be left void on backends connecting to physical devices,
         where a physical interaction must be performed instead.
         This will prevent the instrumentation to fail (the void method won't
@@ -375,9 +375,9 @@ class BackendInterface(ABC):
         get stuck (on further call to `receive` for instance) until the expected
         action is performed on the device.
 
-        :param text: 
+        :param text:
         :type text: str
-        :return: True if the content contains the string, False 
+        :return: True if the content contains the string, False
                  otherwise.
         :rtype: bool
         """
@@ -387,7 +387,7 @@ class BackendInterface(ABC):
     def get_screen_content(self) -> list:
         """
         Returns the current screen content as a list.
-        
+
         This method may be left void on backends connecting to physical devices,
         where a physical interaction must be performed instead.
         This will prevent the instrumentation to fail (the void method won't
