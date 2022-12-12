@@ -111,3 +111,13 @@ class LedgerWalletBackend(BackendInterface):
 
     def finger_touch(self, x: int = 0, y: int = 0, delay: float = 0.5) -> None:
         pass
+
+    def wait_for_screen_change(self, timeout: float = 10.0, context: list = []):
+        return []
+
+    def compare_screen_with_text(self, text: str):
+        return True
+
+    def get_screen_content(self) -> list:
+        return []
+
