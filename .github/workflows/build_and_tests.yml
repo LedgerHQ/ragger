@@ -18,18 +18,33 @@ jobs:
     - name: Clone
       uses: actions/checkout@v3
     - name: Speculos dependencies
-      run: sudo apt-get update && sudo apt-get install -y qemu-user-static
+      run: sudo apt-get update && sudo apt-get install -y qemu-user-static gcc-arm-linux-gnueabihf libvncserver-dev
     - name: Build & install
       run: |
         pip install --extra-index-url https://test.pypi.org/simple/ -U .[tests,all_backends]
         pip install -U click>=8
-    - name: Gather compiled Boilerplate application to run tests against
+    - name: Clone Speculos
+      uses: actions/checkout@v3
+      with:
+        repository: LedgerHQ/speculos
+        ref: improve_client_events
+        path: speculos
+    - name: Install Speculos 
+      run: |
+        cd speculos
+        pip install .
+    - name: Gather boilerplate for Nano S/X/S+ to run tests against
       uses: dawidd6/action-download-artifact@v2
       with:
         repo: LedgerHQ/app-boilerplate
         name: apps
         workflow: ci-workflow.yml
         path: tests/elfs/
+    - name: Renaming boilerplate binary artifacts
+      run: |
+        mv tests/elfs/boilerplate_nanos.elf tests/elfs/nanos.elf
+        mv tests/elfs/boilerplate_nanosp.elf tests/elfs/nanosp.elf
+        mv tests/elfs/boilerplate_nanox.elf tests/elfs/nanox.elf
     - name: Check the downloaded files
       run: tree .
     - name: Run tests and generate coverage
