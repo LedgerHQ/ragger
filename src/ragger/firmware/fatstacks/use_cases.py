@@ -109,10 +109,6 @@ class UseCaseViewDetails(_UseCase):
 
 
 class UseCaseAddressConfirmation(_UseCase):
-
-    def show_qr(self):
-        self.client.finger_touch(*self.positions["show_qr"])
-
     def exit_qr(self):
         self.client.finger_touch(*self.positions["exit_qr"])
 

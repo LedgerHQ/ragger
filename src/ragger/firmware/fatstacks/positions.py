@@ -221,7 +221,6 @@ POSITIONS_BY_SDK = {
             "next": BUTTON_LOWER_RIGHT,
         },
         "UseCaseAddressConfirmation": {
-            "show_qr": CENTER,
             "exit_qr": BUTTON_LOWER_MIDDLE,
             "confirm": BUTTON_ABOVE_LOWER_MIDDLE,
             "cancel": BUTTON_LOWER_MIDDLE,
