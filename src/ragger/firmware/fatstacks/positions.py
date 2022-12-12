@@ -201,8 +201,14 @@ POSITIONS_BY_SDK = {
             "quit": BUTTON_LOWER_MIDDLE
         },
         "UseCaseSettings": {
-            "exit": BUTTON_LOWER_LEFT,
+            "single_page_exit": BUTTON_LOWER_MIDDLE,
+            "multi_page_exit": BUTTON_LOWER_LEFT,
             "back": BUTTON_LOWER_MIDDLE,
+            "next": BUTTON_LOWER_RIGHT,
+        },
+        "UseCaseSubSettings": {
+            "exit": BUTTON_UPPER_LEFT,
+            "back": BUTTON_LOWER_LEFT,
             "next": BUTTON_LOWER_RIGHT,
         },
         "UseCaseChoice": {

@@ -23,8 +23,8 @@ from .layouts import CancelFooter, CenteredFooter, ChoiceList, ExitFooter, ExitH
     InfoFooter, InfoHeader, LeftHeader, LetterOnlyKeyboard, NavigationHeader, RightHeader, \
     SettingsFooter, Suggestions, TappableCenter
 
-from .use_cases import UseCaseHome, UseCaseSettings, UseCaseChoice, UseCaseStatus, \
-    UseCaseReview, UseCaseViewDetails, UseCaseAddressConfirmation
+from .use_cases import UseCaseHome, UseCaseSettings, UseCaseSubSettings, UseCaseChoice, \
+    UseCaseStatus, UseCaseReview, UseCaseViewDetails, UseCaseAddressConfirmation
 
 LAYOUT_PREFIX = "layout_"
 USE_CASE_PREFIX = "use_case_"
@@ -127,6 +127,7 @@ class FullScreen(metaclass=MetaScreen):
     settings_footer: SettingsFooter
     home: UseCaseHome
     settings: UseCaseSettings
+    sub_settings: UseCaseSubSettings
     choice: UseCaseChoice
     status: UseCaseStatus
     review: UseCaseReview
@@ -156,6 +157,7 @@ class FullScreen(metaclass=MetaScreen):
     # possible use cases
     use_case_home = UseCaseHome
     use_case_settings = UseCaseSettings
+    use_case_sub_settings = UseCaseSubSettings
     use_case_choice = UseCaseChoice
     use_case_status = UseCaseStatus
     use_case_review = UseCaseReview

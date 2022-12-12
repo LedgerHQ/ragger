@@ -55,6 +55,21 @@ class UseCaseHome(_UseCase):
 
 class UseCaseSettings(_UseCase):
 
+    def single_page_exit(self):
+        self.client.finger_touch(*self.positions["single_page_exit"])
+
+    def multi_page_exit(self):
+        self.client.finger_touch(*self.positions["multi_page_exit"])
+
+    def back(self):
+        self.client.finger_touch(*self.positions["back"])
+
+    def next(self):
+        self.client.finger_touch(*self.positions["next"])
+
+
+class UseCaseSubSettings(_UseCase):
+
     def exit(self):
         self.client.finger_touch(*self.positions["exit"])
 
@@ -109,6 +124,7 @@ class UseCaseViewDetails(_UseCase):
 
 
 class UseCaseAddressConfirmation(_UseCase):
+
     def exit_qr(self):
         self.client.finger_touch(*self.positions["exit_qr"])
 
