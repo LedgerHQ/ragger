@@ -362,13 +362,15 @@ class Navigator(ABC):
         :type navigate_instruction: NavIns
         :param validation_instruction: Navigation instruction to be performed once the text is found.
         :type validation_instruction: NavIns
-        :param first_instruction_wait: Sleeping time before the first snapshot
-        :type first_instruction_wait: float
-        :param timeout: Timeout of the navigation loop if last snapshot is not found.
+        :param text: Text string to look for.
+        :type text: str
+        :param timeout: Timeout of the navigation loop if the text string is not found.
         :type timeout: int
 
-        :return: img_idx
-        :rtype: int
+        :raises TimeoutError: If the text is not found.
+
+        :return: None
+        :rtype: NoneType
         """
 
         if not isinstance(self._backend, SpeculosBackend):
@@ -387,6 +389,10 @@ class Navigator(ABC):
         try:
             ctx = self._backend.wait_for_screen_change(1.0, ctx)
         except TimeoutError:
+            # Maybe the start screen of the transaction flow is
+            # already displayed so we'll wait 1 sec until
+            # the exception is thrown then we pass and go to the
+            # navigation loop.
             pass
 
         # Navigate until the text specified in argument is found.

@@ -18,7 +18,7 @@ from contextlib import contextmanager
 from enum import Enum, auto
 from pathlib import Path
 from types import TracebackType
-from typing import Optional, Type, Generator
+from typing import Optional, Type, Generator, Any
 
 from ragger.firmware import Firmware
 from ragger.utils import pack_APDU, RAPDU, Crop
@@ -339,7 +339,7 @@ class BackendInterface(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def wait_for_screen_change(self, timeout: float = 10.0, context: list = []):
+    def wait_for_screen_change(self, timeout: float = 10.0, context: Any = None) -> Any:
         """
         Wait until the screen content (text) changes compared to what is provided
         by the context parameter. If no context is provided, the function returns
@@ -358,7 +358,7 @@ class BackendInterface(ABC):
         :param context: Context to compare screen content with.
         :type context: list
         :return: Latest screen content after the screen change.
-        :rtype: list
+        :rtype: Any
         """
         raise NotImplementedError
 
@@ -384,9 +384,9 @@ class BackendInterface(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def get_screen_content(self) -> list:
+    def get_screen_content(self) -> Any:
         """
-        Returns the current screen content as a list.
+        Returns the current screen content.
 
         This method may be left void on backends connecting to physical devices,
         where a physical interaction must be performed instead.
@@ -395,7 +395,8 @@ class BackendInterface(ABC):
         get stuck (on further call to `receive` for instance) until the expected
         action is performed on the device.
 
-        :return: Current screen content as a list.
-        :rtype: list
+        :return: Current screen content as an opaque type depending on backend
+                 implem.
+        :rtype: Any
         """
         raise NotImplementedError

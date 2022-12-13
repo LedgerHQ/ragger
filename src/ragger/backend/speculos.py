@@ -17,7 +17,7 @@ from contextlib import contextmanager
 from io import BytesIO
 from pathlib import Path
 from PIL import Image
-from typing import Optional, Generator
+from typing import Optional, Generator, Any
 from time import time, sleep
 from json import dumps
 
@@ -159,7 +159,7 @@ class SpeculosBackend(BackendInterface):
         else:
             return screenshot_equal(f"{golden_snap_path}", snap)
 
-    def wait_for_screen_change(self, timeout: float = 10.0, context: list = []):
+    def wait_for_screen_change(self, timeout: float = 10.0, context: Any = None) -> Any:
         start = time()
         if not context:
             return self._client.get_screen_content()
@@ -175,5 +175,5 @@ class SpeculosBackend(BackendInterface):
     def compare_screen_with_text(self, text: str):
         return text in dumps(self._client.get_screen_content())
 
-    def get_screen_content(self) -> list:
+    def get_screen_content(self) -> Any:
         return self._client.get_screen_content()

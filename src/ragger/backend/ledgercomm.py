@@ -15,7 +15,7 @@
 """
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Optional, Generator
+from typing import Optional, Generator, Any
 
 from ledgercomm import Transport
 
@@ -114,12 +114,12 @@ class LedgerCommBackend(BackendInterface):
     def finger_touch(self, x: int = 0, y: int = 0, delay: float = 0.5) -> None:
         pass
 
-    def wait_for_screen_change(self, timeout: float = 10.0, context: list = []):
+    def wait_for_screen_change(self, timeout: float = 10.0, context: Any = None):
         return []
 
-    def compare_screen_with_text(self, text: str):
+    def compare_screen_with_text(self, text: str) -> bool:
         return True
 
-    def get_screen_content(self) -> list:
+    def get_screen_content(self) -> Any:
         return []
 

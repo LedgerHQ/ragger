@@ -15,7 +15,7 @@
 """
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Generator, Optional
+from typing import Generator, Optional, Any
 
 from ledgerwallet.client import LedgerClient, CommException
 from ledgerwallet.transport import HidDevice
@@ -112,12 +112,12 @@ class LedgerWalletBackend(BackendInterface):
     def finger_touch(self, x: int = 0, y: int = 0, delay: float = 0.5) -> None:
         pass
 
-    def wait_for_screen_change(self, timeout: float = 10.0, context: list = []):
+    def wait_for_screen_change(self, timeout: float = 10.0, context: Any = None) -> Any:
         return []
 
-    def compare_screen_with_text(self, text: str):
+    def compare_screen_with_text(self, text: str) -> bool:
         return True
 
-    def get_screen_content(self) -> list:
+    def get_screen_content(self) -> Any:
         return []
 
