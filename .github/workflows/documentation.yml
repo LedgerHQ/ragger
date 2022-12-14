@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Clone
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Install APT dependencies
         run: |
           sudo apt-get update
@@ -29,7 +29,7 @@ jobs:
       - name: Generate the documentation
         run: (cd doc && make html)
       - name: Upload app binary
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: documentation
           path: doc/build/html/
@@ -41,7 +41,7 @@ jobs:
     if: github.event_name == 'push'  && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop')
     steps:
       - name: Download documentation bundle
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
       - name: Deploy documentation on pages
         uses: peaceiris/actions-gh-pages@v3
         with:

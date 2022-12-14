@@ -18,9 +18,9 @@ ELF_DIRECTORY = Path(__file__).parent / 'elfs'
 BACKENDS = ["speculos", "ledgercomm", "ledgerwallet"]
 
 APPLICATIONS = [
-    Application(ELF_DIRECTORY / 'nanos.elf', Firmware('nanos', '2.1')),
-    Application(ELF_DIRECTORY / 'nanox.elf', Firmware('nanox', '2.0.2')),
-    Application(ELF_DIRECTORY / 'nanosp.elf', Firmware('nanosp', '1.0.3'))
+    Application(ELF_DIRECTORY / 'boilerplate_nanos.elf', Firmware('nanos', '2.1')),
+    Application(ELF_DIRECTORY / 'boilerplate_nanox.elf', Firmware('nanox', '2.0.2')),
+    Application(ELF_DIRECTORY / 'boilerplate_nanosp.elf', Firmware('nanosp', '1.0.3'))
 ]
 
 
