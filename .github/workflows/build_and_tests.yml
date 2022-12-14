@@ -23,33 +23,13 @@ jobs:
       run: |
         pip install --extra-index-url https://test.pypi.org/simple/ -U .[tests,all_backends]
         pip install -U click>=8
-    - name: Gather boilerplate NanoS to run tests against
+    - name: Gather compiled Boilerplate application to run tests against
       uses: dawidd6/action-download-artifact@v2
       with:
         repo: LedgerHQ/app-boilerplate
-        name: boilerplate-app-nanos
+        name: apps
         workflow: ci-workflow.yml
         path: tests/elfs/
-    - name: Renaming NanoS artifact
-      run: mv tests/elfs/app.elf tests/elfs/nanos.elf
-    - name: Gather boilerplate NanoX to run tests against
-      uses: dawidd6/action-download-artifact@v2
-      with:
-        repo: LedgerHQ/app-boilerplate
-        name: boilerplate-app-nanox
-        workflow: ci-workflow.yml
-        path: tests/elfs/
-    - name: Renaming NanoS artifact
-      run: mv tests/elfs/app.elf tests/elfs/nanox.elf
-    - name: Gather boilerplate NanoS+ to run tests against
-      uses: dawidd6/action-download-artifact@v2
-      with:
-        repo: LedgerHQ/app-boilerplate
-        name: boilerplate-app-nanosp
-        workflow: ci-workflow.yml
-        path: tests/elfs/
-    - name: Renaming NanoS artifact
-      run: mv tests/elfs/app.elf tests/elfs/nanosp.elf
     - name: Check the downloaded files
       run: tree .
     - name: Run tests and generate coverage
