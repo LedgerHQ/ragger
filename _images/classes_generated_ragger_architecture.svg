@@ -12,23 +12,23 @@
 <!-- ragger.bip.utils.BIP -->
 <g id="node1" class="node">
 <title>ragger.bip.utils.BIP</title>
-<polygon fill="aquamarine" stroke="aquamarine" points="1372.5,-38 1372.5,-107 1428.5,-107 1428.5,-38 1372.5,-38"/>
-<text text-anchor="middle" x="1400.5" y="-91.8" font-family="Times,serif" font-size="14.00">BIP</text>
-<polyline fill="none" stroke="aquamarine" points="1372.5,-84 1428.5,-84 "/>
-<text text-anchor="start" x="1380.5" y="-68.8" font-family="Times,serif" font-size="14.00">name</text>
-<polyline fill="none" stroke="aquamarine" points="1372.5,-61 1428.5,-61 "/>
-<text text-anchor="middle" x="1400.5" y="-45.8" font-family="Times,serif" font-size="14.00"> </text>
+<polygon fill="aquamarine" stroke="aquamarine" points="1425.5,-38 1425.5,-107 1481.5,-107 1481.5,-38 1425.5,-38"/>
+<text text-anchor="middle" x="1453.5" y="-91.8" font-family="Times,serif" font-size="14.00">BIP</text>
+<polyline fill="none" stroke="aquamarine" points="1425.5,-84 1481.5,-84 "/>
+<text text-anchor="start" x="1433.5" y="-68.8" font-family="Times,serif" font-size="14.00">name</text>
+<polyline fill="none" stroke="aquamarine" points="1425.5,-61 1481.5,-61 "/>
+<text text-anchor="middle" x="1453.5" y="-45.8" font-family="Times,serif" font-size="14.00"> </text>
 </g>
 <!-- ragger.bip.coins.BUContainer -->
 <g id="node2" class="node">
 <title>ragger.bip.coins.BUContainer</title>
-<polygon fill="aquamarine" stroke="aquamarine" points="1447,-30.5 1447,-114.5 1624,-114.5 1624,-30.5 1447,-30.5"/>
-<text text-anchor="middle" x="1535.5" y="-99.3" font-family="Times,serif" font-size="14.00">BUContainer</text>
-<polyline fill="none" stroke="aquamarine" points="1447,-91.5 1624,-91.5 "/>
-<text text-anchor="start" x="1455" y="-76.3" font-family="Times,serif" font-size="14.00">coin : _SpecialForm</text>
-<text text-anchor="start" x="1455" y="-61.3" font-family="Times,serif" font-size="14.00">key_cls : _SpecialForm</text>
-<polyline fill="none" stroke="aquamarine" points="1447,-53.5 1624,-53.5 "/>
-<text text-anchor="middle" x="1535.5" y="-38.3" font-family="Times,serif" font-size="14.00"> </text>
+<polygon fill="aquamarine" stroke="aquamarine" points="1499.5,-30.5 1499.5,-114.5 1623.5,-114.5 1623.5,-30.5 1499.5,-30.5"/>
+<text text-anchor="middle" x="1561.5" y="-99.3" font-family="Times,serif" font-size="14.00">BUContainer</text>
+<polyline fill="none" stroke="aquamarine" points="1499.5,-91.5 1623.5,-91.5 "/>
+<text text-anchor="start" x="1507.5" y="-76.3" font-family="Times,serif" font-size="14.00">coin : Union</text>
+<text text-anchor="start" x="1507.5" y="-61.3" font-family="Times,serif" font-size="14.00">key_cls : Union</text>
+<polyline fill="none" stroke="aquamarine" points="1499.5,-53.5 1623.5,-53.5 "/>
+<text text-anchor="middle" x="1561.5" y="-38.3" font-family="Times,serif" font-size="14.00"> </text>
 </g>
 <!-- ragger.backend.interface.BackendInterface -->
 <g id="node3" class="node">
