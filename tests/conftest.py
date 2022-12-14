@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from ragger import Firmware
+from ragger.firmware import Firmware
 from ragger.backend import SpeculosBackend, LedgerCommBackend, LedgerWalletBackend
 
 

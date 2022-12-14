@@ -2,7 +2,9 @@ from typing import Optional
 from unittest import TestCase
 from unittest.mock import patch, MagicMock
 
-from ragger import Firmware, RAPDU, ExceptionRAPDU
+from ragger.firmware import Firmware
+from ragger.error import ExceptionRAPDU
+from ragger.utils import RAPDU
 from ragger.backend import LedgerWalletBackend
 from ragger.backend import RaisePolicy
 

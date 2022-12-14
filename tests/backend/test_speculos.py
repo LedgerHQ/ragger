@@ -3,7 +3,9 @@ from unittest.mock import patch
 from pathlib import Path
 from typing import Optional
 
-from ragger import Firmware, RAPDU, ExceptionRAPDU
+from ragger.firmware import Firmware
+from ragger.error import ExceptionRAPDU
+from ragger.utils import RAPDU
 from ragger.backend import SpeculosBackend
 from ragger.backend import RaisePolicy
 

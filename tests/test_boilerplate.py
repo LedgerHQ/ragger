@@ -2,7 +2,8 @@ from requests.exceptions import ConnectionError
 
 import pytest
 
-from ragger import ExceptionRAPDU, RAPDU
+from ragger.error import ExceptionRAPDU
+from ragger.utils import RAPDU
 from ragger.backend import RaisePolicy
 
 

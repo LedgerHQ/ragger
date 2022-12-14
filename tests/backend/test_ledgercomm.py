@@ -1,7 +1,9 @@
 from unittest import TestCase
 from unittest.mock import patch
 
-from ragger import Firmware, RAPDU, ExceptionRAPDU
+from ragger.firmware import Firmware
+from ragger.error import ExceptionRAPDU
+from ragger.utils import RAPDU
 from ragger.backend import LedgerCommBackend
 from ragger.backend import RaisePolicy
 

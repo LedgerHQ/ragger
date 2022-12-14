@@ -15,11 +15,10 @@
 """
 from .structs import RAPDU, Crop
 from .packing import pack_APDU
-from .path import BtcDerivationPathFormat, pack_derivation_path
-from .path import bitcoin_pack_derivation_path
 from .misc import app_path_from_app_name, prefix_with_len
 from .misc import create_currency_config, split_message
 
-__all__ = ("RAPDU", "pack_APDU", "Crop", "BtcDerivationPathFormat", "pack_derivation_path",
-           "bitcoin_pack_derivation_path", "app_path_from_app_name", "prefix_with_len",
-           "create_currency_config", "split_message")
+__all__ = [
+    "app_path_from_app_name", "create_currency_config", "Crop", "pack_APDU", "prefix_with_len",
+    "RAPDU", "split_message"
+]

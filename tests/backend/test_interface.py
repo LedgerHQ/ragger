@@ -2,7 +2,7 @@ import struct
 from unittest import TestCase
 from unittest.mock import MagicMock
 
-from ragger import ExceptionRAPDU
+from ragger.error import ExceptionRAPDU
 from ragger.backend import BackendInterface
 from ragger.backend import RaisePolicy
 from ragger.firmware.structs import _Firmware
