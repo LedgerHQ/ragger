@@ -474,9 +474,9 @@ For instance, with the previously described application:
        layout_return_to_welcome_page = ExitFooter
 
 The metaclass will automatically detect all variables starting with ``layout_``
-and create related attributes when the ``RecoveryApp`` will be instantiated.
-This latter will need - like lots of ``Ragger`` classes - a :term:`backend` and
-a :term:`firmware` as arguments.
+and create related attributes when the ``RecoveryAppScreen`` will be
+instantiated. This latter will need - like a lot of ``Ragger`` classes - a
+:term:`backend` and a :term:`firmware` as arguments.
 
 Once instantiated, the created screen can be interacted with in a more flexible
 way than if positions were still necessary:
@@ -505,16 +505,17 @@ way than if positions were still necessary:
 
 .. note::
 
-   You may have noticed that the two centered lower buttons are exactly at the
-   same ``(x, y)`` positions, so why bother declaring them twice?
+   You may have noticed that the two centered lower buttons (the welcome page
+   "info" button and the info page "return" button) are exactly at the same
+   ``(x, y)`` positions, so why bother declaring them twice?
 
    First of all, the buttons may be at the same place, but they don't carry the
-   same purpose, and it may be a good idea to reflect that on the code.
+   same purpose, and it is a good idea to reflect that on the code.
 
    Second, if in a future version the Fatstacks design changes and one of these
    button moves somewhere else on the screen's footer, **the layouts will be
    updated accordingly** in ``Ragger``, and the ``InfoFooter`` or ``ExitFooter``
-   will still be valid.
+   will still be valid, hence all code using this class remains valid too.
 
    If these arguments does not convince you, ``Ragger`` provides purely
    positional Layouts, and you can use ``CenteredFooter`` in replacement of both
@@ -524,8 +525,8 @@ Use cases
 '''''''''
 
 But this is not simple enough *yet*. The previously shown screens are very
-common, so common in fact that the SDK provides dedicated Use Cases to simplify
-their creation.
+common, so common in fact that the SDK provides dedicated
+:term:`Use Cases <Use Case>` to simplify their creation.
 
 In this case, there is two. In the SDK, they are named:
 
@@ -536,7 +537,7 @@ In this case, there is two. In the SDK, they are named:
   need several pages to be displayed (hence needs navigation buttons).
 
 ``Ragger`` replicates these Use Cases, and provides more meaningful methods on
-top of that. Using Use Cases is very similar to Layouts; they need to be
+top of them. Using Use Cases is very similar to Layouts; they need to be
 declared as attribute of a class using the :py:class:`MetaScreen` metaclass,
 and start with ``use_case_``:
 
