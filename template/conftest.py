@@ -1,6 +1,6 @@
 import pytest
 from pathlib import Path
-from ragger import Firmware
+from ragger.firmware import Firmware
 from ragger.backend import SpeculosBackend, LedgerCommBackend, LedgerWalletBackend
 from ragger.navigator import NanoNavigator
 from ragger.utils import app_path_from_app_name
@@ -117,7 +117,7 @@ def use_only_on_backend(request, backend):
     if request.node.get_closest_marker('use_on_backend'):
         current_backend = request.node.get_closest_marker('use_on_backend').args[0]
         if current_backend != backend:
-            pytest.skip('skipped on this backend: {}'.format(current_backend))
+            pytest.skip(f'skipped on this backend: "{current_backend}"')
 
 
 def pytest_configure(config):

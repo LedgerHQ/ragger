@@ -2,7 +2,7 @@ from unittest import TestCase
 from unittest.mock import patch
 from pathlib import Path
 
-from ragger import Firmware
+from ragger.firmware import Firmware
 from ragger.backend import SpeculosBackend
 from ragger.navigator import NavInsID, NavIns, NanoNavigator
 

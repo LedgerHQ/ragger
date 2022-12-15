@@ -13,6 +13,13 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-from .seed import Seed
+from .path import BtcDerivationPathFormat, pack_derivation_path, bitcoin_pack_derivation_path
+from .seed import CurveChoice, calculate_public_key_and_chaincode
 
-__all__ = ["Seed"]
+__all__ = [
+    "bitcoin_pack_derivation_path",
+    "BtcDerivationPathFormat",
+    "calculate_public_key_and_chaincode",
+    "CurveChoice",
+    "pack_derivation_path",
+]

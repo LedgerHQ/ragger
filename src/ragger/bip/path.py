@@ -13,51 +13,36 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-from typing import Optional, Sequence, Union
-
-import bip_utils as bu
-
-from .utils import BIP
-
-I32_LAST_BIT_MASK = 0b01111111111111111111111111111111
+from bip_utils import Bip32Utils
+from enum import IntEnum
 
 
-# Bip44 format: m / purpose' / coin_type' / account' / change / address_index
-class ExtendedBip32Path(bu.Bip32Path):
-    Bip32PathArgs = Sequence[Union[int, bu.bip.bip32.bip32_key_data.Bip32KeyIndex]]
+class BtcDerivationPathFormat(IntEnum):
+    LEGACY = 0x00
+    P2SH = 0x01
+    BECH32 = 0x02
+    CASHADDR = 0x03  # Deprecated
+    BECH32M = 0x04
 
-    def __init__(self, elems: Optional[Union[bytes, Bip32PathArgs]] = None):
-        if not elems:
-            raise ValueError("A Bip32 path can't be empty")
-        if isinstance(elems, bytes):
-            super().__init__((elems[i:i + 4] for i in range(0, len(elems), 4)), is_absolute=True)
+
+def pack_derivation_path(derivation_path: str) -> bytes:
+    split = derivation_path.split("/")
+
+    if split[0] != "m":
+        raise ValueError("Error master expected")
+
+    path_bytes: bytes = (len(split) - 1).to_bytes(1, byteorder='big')
+    for value in split[1:]:
+        if value == "":
+            raise ValueError(f'Error missing value in split list "{split}"')
+        if value.endswith('\''):
+            path_bytes += Bip32Utils.HardenIndex(int(value[:-1])).to_bytes(4, byteorder='big')
         else:
-            super().__init__(elems, is_absolute=True)
+            path_bytes += int(value).to_bytes(4, byteorder='big')
+    return path_bytes
 
-    @staticmethod
-    def _to_int(b: bytes) -> int:
-        return int.from_bytes(b, 'big')
 
-    @property
-    def purpose(self) -> BIP:
-        bip_number: int = self._to_int(self[0]) & I32_LAST_BIT_MASK
-        try:
-            return BIP(bip_number)
-        except ValueError:
-            raise ValueError(f"Purpose (BIP number) '{bip_number}' is currently unknown")
-
-    @property
-    def coin_type(self) -> int:
-        return self._to_int(self[1]) & I32_LAST_BIT_MASK
-
-    @property
-    def account(self) -> int:
-        return self._to_int(self[2]) & I32_LAST_BIT_MASK
-
-    @property
-    def change(self) -> int:
-        return self._to_int(self[3])
-
-    @property
-    def address_index(self) -> int:
-        return self._to_int(self[4])
+def bitcoin_pack_derivation_path(format: BtcDerivationPathFormat, derivation_path: str) -> bytes:
+    if not isinstance(format, BtcDerivationPathFormat):
+        raise ValueError(f'"{format}" must be a BtcDerivationPathFormat enum')
+    return format.to_bytes(1, "big") + pack_derivation_path(derivation_path)
