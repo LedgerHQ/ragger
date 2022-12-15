@@ -14,7 +14,7 @@ class TestPath(TestCase):
             for hardening in [False, True]:
                 hardening_char = '\'' if hardening else ''
                 previous_levels = "0/" * (n - 1)
-                path = "m/{}{}{}".format(previous_levels, variant, hardening_char)
+                path = f'm/{previous_levels}{variant}{hardening_char}'
                 packed = pack_derivation_path(path)
                 self.assertEqual(packed[0], n)
                 self.assertEqual(len(packed), 1 + n * 4)

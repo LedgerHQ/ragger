@@ -35,7 +35,7 @@ def calculate_public_key_and_chaincode(
         path: str,
         mnemonic: Sequence[str] = SPECULOS_MNEMONIC) -> Tuple[str, str]:
     if not isinstance(curve, CurveChoice):
-        raise ValueError("{} must be a CurveChoice enum".format(curve))
+        raise ValueError(f'"{curve}" must be a CurveChoice enum')
 
     seed = Bip39SeedGenerator(mnemonic).Generate()
     root_node = GET_CURVE_OBJ[curve].FromSeed(seed_bytes=seed)

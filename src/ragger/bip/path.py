@@ -34,7 +34,7 @@ def pack_derivation_path(derivation_path: str) -> bytes:
     path_bytes: bytes = (len(split) - 1).to_bytes(1, byteorder='big')
     for value in split[1:]:
         if value == "":
-            raise ValueError("Error missing value in split list {}".format(split))
+            raise ValueError(f'Error missing value in split list "{split}"')
         if value.endswith('\''):
             path_bytes += Bip32Utils.HardenIndex(int(value[:-1])).to_bytes(4, byteorder='big')
         else:
@@ -44,5 +44,5 @@ def pack_derivation_path(derivation_path: str) -> bytes:
 
 def bitcoin_pack_derivation_path(format: BtcDerivationPathFormat, derivation_path: str) -> bytes:
     if not isinstance(format, BtcDerivationPathFormat):
-        raise ValueError("{} must be a BtcDerivationPathFormat enum".format(format))
+        raise ValueError(f'"{format}" must be a BtcDerivationPathFormat enum')
     return format.to_bytes(1, "big") + pack_derivation_path(derivation_path)
