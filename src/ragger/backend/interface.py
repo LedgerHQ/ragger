@@ -384,7 +384,7 @@ class BackendInterface(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def get_screen_content(self) -> Any:
+    def get_current_screen_content(self) -> Any:
         """
         Returns the current screen content.
 

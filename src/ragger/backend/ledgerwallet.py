@@ -118,6 +118,6 @@ class LedgerWalletBackend(BackendInterface):
     def compare_screen_with_text(self, text: str) -> bool:
         return True
 
-    def get_screen_content(self) -> Any:
+    def get_current_screen_content(self) -> Any:
         return []
 

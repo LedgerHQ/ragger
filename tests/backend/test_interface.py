@@ -56,8 +56,8 @@ class DummyBackend(BackendInterface):
     def compare_screen_with_text(self, text: str):
         return self.mock.compare_screen_with_text()
 
-    def get_screen_content(self):
-        return self.mock.get_screen_content()
+    def get_current_screen_content(self):
+        return self.mock.get_current_screen_content()
 
 
 class TestBackendInterface(TestCase):

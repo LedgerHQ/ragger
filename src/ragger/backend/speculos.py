@@ -162,18 +162,18 @@ class SpeculosBackend(BackendInterface):
     def wait_for_screen_change(self, timeout: float = 10.0, context: Any = None) -> Any:
         start = time()
         if not context:
-            return self._client.get_screen_content()
+            return self._client.get_current_screen_content()
         else:
-            content = self._client.get_screen_content()
+            content = self._client.get_current_screen_content()
             while content == context:
                 sleep(0.1)
                 if (time() - start > timeout):
                     raise TimeoutError("Timeout waiting for screen change")
-                content = self._client.get_screen_content()
+                content = self._client.get_current_screen_content()
             return content
 
     def compare_screen_with_text(self, text: str):
-        return text in dumps(self._client.get_screen_content())
+        return text in dumps(self._client.get_current_screen_content())
 
-    def get_screen_content(self) -> Any:
-        return self._client.get_screen_content()
+    def get_current_screen_content(self) -> Any:
+        return self._client.get_current_screen_content()
