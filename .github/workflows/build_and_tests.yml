@@ -40,11 +40,6 @@ jobs:
         name: apps
         workflow: ci-workflow.yml
         path: tests/elfs/
-    - name: Renaming boilerplate binary artifacts
-      run: |
-        mv tests/elfs/boilerplate_nanos.elf tests/elfs/nanos.elf
-        mv tests/elfs/boilerplate_nanosp.elf tests/elfs/nanosp.elf
-        mv tests/elfs/boilerplate_nanox.elf tests/elfs/nanox.elf
     - name: Check the downloaded files
       run: tree .
     - name: Run tests and generate coverage

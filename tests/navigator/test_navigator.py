@@ -140,3 +140,34 @@ class TestNavigator(TestCase):
                                                            NavIns(NavInsID.BOTH_CLICK),
                                                            "WILL NOT BE FOUND")
                     self.assertIn("Timeout waiting for screen change", str(error.exception))
+
+    def test_navigate_until_text_and_compare(self):
+        with patch("speculos.client.subprocess"):
+            with SpeculosServerStub():
+                with self.backend:
+                    self.navigator.navigate_until_text_and_compare(
+                        NavIns(NavInsID.RIGHT_CLICK), NavIns(NavInsID.BOTH_CLICK), "About",
+                        ROOT_SCREENSHOT_PATH, "test_navigate_until_text_and_compare")
+
+    def test_navigate_until_text_and_compare_no_golden(self):
+        with patch("speculos.client.subprocess"):
+            with SpeculosServerStub():
+                with self.backend:
+                    with self.assertRaises(FileNotFoundError) as error:
+                        self.navigator.navigate_until_text_and_compare(
+                            NavIns(NavInsID.RIGHT_CLICK), NavIns(NavInsID.BOTH_CLICK), "About",
+                            ROOT_SCREENSHOT_PATH, "test_navigate_and_compare_no_golden")
+                    self.assertIn("No such file or directory", str(error.exception))
+                    self.assertIn("test_navigate_and_compare_no_golden/00001.png",
+                                  str(error.exception))
+
+    def test_navigate_until_text_and_compare_wrong_golden(self):
+        with patch("speculos.client.subprocess"):
+            with SpeculosServerStub():
+                with self.backend:
+                    with self.assertRaises(AssertionError) as error:
+                        self.navigator.navigate_until_text_and_compare(
+                            NavIns(NavInsID.RIGHT_CLICK), NavIns(NavInsID.BOTH_CLICK), "About",
+                            ROOT_SCREENSHOT_PATH, "test_navigate_and_compare_wrong_golden")
+                    self.assertIn("Screen does not match golden", str(error.exception))
+                    self.assertIn("00001.png", str(error.exception))

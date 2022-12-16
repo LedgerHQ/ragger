@@ -120,4 +120,3 @@ class LedgerWalletBackend(BackendInterface):
 
     def get_current_screen_content(self) -> Any:
         return []
-

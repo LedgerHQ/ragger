@@ -355,9 +355,14 @@ class BackendInterface(ABC):
         :param timeout: Maximum time to wait for a screen change before an
                         exception is raised.
         :type timeout: float
-        :param context: Context to compare screen content with.
-        :type context: list
-        :return: Latest screen content after the screen change.
+        :param context: Context to compare screen content with. Type of this
+                        context depends on the backend implementation, it
+                        could be a string of text or something else. Usually
+                        you would use "get_current_screen_content" to get
+                        the current context and use it as input to this
+                        function.
+        :type context: Any
+        :return: Screen context after the screen change.
         :rtype: Any
         """
         raise NotImplementedError
