@@ -7,8 +7,10 @@ from ragger.utils import app_path_from_app_name
 
 
 # This variable is needed for Speculos only (physical tests need the application to be already installed)
+# Adapt this path to your 'tests/elfs' directory
 APPS_DIRECTORY = (Path(__file__).parent.parent / "elfs").resolve()
 
+# Adapt this name part of the compiled app <name>_<device>.elf in the APPS_DIRECTORY
 APP_NAME = "MyAPP"
 
 BACKENDS = ["speculos", "ledgercomm", "ledgerwallet"]
@@ -99,7 +101,7 @@ def create_backend(backend_name: str, firmware: Firmware, display: bool):
 
 # This final fixture will return the properly configured backend, to be used in tests
 @pytest.fixture
-def backend(backend, firmware, display):
+def backend(backend_name, firmware, display):
     with create_backend(backend_name, firmware, display) as b:
         yield b
 
