@@ -136,10 +136,15 @@ class NanoXVersions(VersionManager):
     V_2_0_2 = VersionInfo(2, 0, 2)
 
 
+class FatstacksVersions(VersionManager):
+    V_1_0_0 = VersionInfo(1, 0, 0)
+
+
 #: This global holds the currently supported device names and related SDK
 #: versions. Managed devices are currently: "nanos", "nanosp" and  "nanox"
 SDK_VERSIONS: Dict[str, Type[VersionManager]] = {
     "nanos": NanoSVersions,
     "nanosp": NanoSPVersions,
     "nanox": NanoXVersions,
+    "fat": FatstacksVersions,
 }

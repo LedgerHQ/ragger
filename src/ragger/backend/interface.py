@@ -289,6 +289,30 @@ class BackendInterface(ABC):
         raise NotImplementedError
 
     @abstractmethod
+    def finger_touch(self, x: int = 0, y: int = 0, delay: float = 0.5) -> None:
+        """
+        Performs a finger touch on the device screen.
+
+        This method may be left void on backends connecting to physical devices,
+        where a physical interaction must be performed instead.
+        This will prevent the instrumentation to fail (the void method won't
+        raise `NotImplementedError`), but the instrumentation flow will probably
+        get stuck (on further call to `receive` for instance) until the expected
+        action is performed on the device.
+
+        :param x: The x coordinate of the finger touch.
+        :type x: int
+        :param y: The y coordinate of the finger touch.
+        :type y: int
+        :param delay: Delay between finger touch press and release actions.
+        :type delay: float
+
+        :return: None
+        :rtype: NoneType
+        """
+        raise NotImplementedError
+
+    @abstractmethod
     def compare_screen_with_snapshot(self,
                                      golden_snap_path: Path,
                                      crop: Optional[Crop] = None,

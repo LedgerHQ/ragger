@@ -41,6 +41,9 @@ class DummyBackend(BackendInterface):
     def send_raw(self, *args, **kwargs):
         self.mock.send_raw(*args, **kwargs)
 
+    def finger_touch(self, *args, **kwargs):
+        self.mock.finger_touch(*args, **kwargs)
+
     def compare_screen_with_snapshot(self, snap_path, crop=None) -> bool:
         return self.mock.compare_screen_with_snapshot()
 

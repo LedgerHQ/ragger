@@ -13,8 +13,6 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-from .navigator import NavInsID, NavIns, Navigator
-from .fatstacks_navigator import FatstacksNavigator
-from .nano_navigator import NanoNavigator
+from .screen import MetaScreen, FullScreen
 
-__all__ = ["NavInsID", "NavIns", "Navigator", "FatstacksNavigator", "NanoNavigator"]
+__all__ = ["MetaScreen", "FullScreen"]

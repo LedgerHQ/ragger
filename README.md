@@ -2,6 +2,14 @@
 
 [![codecov](https://codecov.io/gh/LedgerHQ/ragger/branch/develop/graph/badge.svg)](https://codecov.io/gh/LedgerHQ/ragger)
 
+---
+**Warning**
+
+This library contains documentation and functionalities related to Ledger Stax hardware (also named `fatstacks`). As of the writing of the message, neither the SDK nor the Speculos support is available publicly for Ledger Stax hardware. This is therefore preventing users to use such functionalities.
+
+---
+
+
 This library aims at reducing the cost of running code on both Speculos emulator
 or on a real device.
 
@@ -69,6 +77,7 @@ The `src/ragger/backend/interface.py` file describes the methods that can be imp
 * `right_click`: perform a right click on a device.
 * `left_click`: perform a left click on a device.
 * `both_click`: perform a click on both buttons (left + right) of a device.
+* `finger_touch`: performs a finger touch on the device screen.
 * `compare_screen_with_snapshot`: compare the current device screen with the provided snapshot.
 
 The `src/ragger/navigator/navigator.py` file describes the methods that can be implemented by the different device navigators and that allow to interact with an emulated device:
@@ -100,11 +109,22 @@ def test_with_user_action_and_screenshot_comparison(backend, firmware, navigator
     with backend.exchange_async(<whatever>)
         if firmware.device == "nanos":
             instructions = [
-                NavigationInstruction.RIGHT_CLICK,
-                NavigationInstruction.BOTH_CLICK,
+                NavIns(NavInsID.RIGHT_CLICK),
+                NavIns(NavInsID.RIGHT_CLICK),
+                NavIns(NavInsID.BOTH_CLICK),
             ]
+        elif firmware.device == "fat":
+            instructions = [
+                    NavIns(NavInsID.USE_CASE_REVIEW_TAP),
+                    NavIns(NavInsID.USE_CASE_REVIEW_TAP),
+                    NavIns(NavInsID.USE_CASE_REVIEW_CONFIRM),
+                    NavIns(NavInsID.USE_CASE_STATUS_WAIT)
+                ]
         else:
-            instructions = <something else>
+            instructions = [
+                NavIns(NavInsID.RIGHT_CLICK),
+                NavIns(NavInsID.BOTH_CLICK),
+            ]
         navigator.navigate_and_compare(TESTS_ROOT_DIR, test_name, instructions)
     rapdu: RAPDU = backend.last_async_response
     assert rapdu.status == 0x9000

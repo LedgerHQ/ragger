@@ -32,6 +32,52 @@ class NavInsID(Enum):
     LEFT_CLICK = auto()
     BOTH_CLICK = auto()
 
+    # Navigation instructions for Fatstacks devices
+    TOUCH = auto()
+    # possible headers
+    RIGHT_HEADER_TAP = auto()
+    EXIT_HEADER_TAP = auto()
+    INFO_HEADER_TAP = auto()
+    LEFT_HEADER_TAP = auto()
+    NAVIGATION_HEADER_TAP = auto()
+    # possible centers
+    CHOICE_CHOOSE = auto()
+    SUGGESTION_CHOOSE = auto()
+    TAPPABLE_CENTER_TAP = auto()
+    KB_LETTER_ONLY_WRITE = auto()
+    KB_LETTERS_WRITE = auto()
+    KB_SPECIAL_CHAR_1_WRITE = auto()
+    KB_SPECIAL_CHAR_2_WRITE = auto()
+    # possible footers
+    CENTERED_FOOTER_TAP = auto()
+    CANCEL_FOOTER_TAP = auto()
+    EXIT_FOOTER_TAP = auto()
+    INFO_FOOTER_TAP = auto()
+    # use cases
+    USE_CASE_HOME_INFO = auto()
+    USE_CASE_HOME_SETTINGS = auto()
+    USE_CASE_HOME_QUIT = auto()
+    USE_CASE_SETTINGS_SINGLE_PAGE_EXIT = auto()
+    USE_CASE_SETTINGS_MULTI_PAGE_EXIT = auto()
+    USE_CASE_SETTINGS_PREVIOUS = auto()
+    USE_CASE_SETTINGS_NEXT = auto()
+    USE_CASE_SUB_SETTINGS_EXIT = auto()
+    USE_CASE_SUB_SETTINGS_PREVIOUS = auto()
+    USE_CASE_SUB_SETTINGS_NEXT = auto()
+    USE_CASE_CHOICE_CONFIRM = auto()
+    USE_CASE_CHOICE_REJECT = auto()
+    USE_CASE_STATUS_WAIT = auto()
+    USE_CASE_REVIEW_TAP = auto()
+    USE_CASE_REVIEW_PREVIOUS = auto()
+    USE_CASE_REVIEW_REJECT = auto()
+    USE_CASE_REVIEW_CONFIRM = auto()
+    USE_CASE_VIEW_DETAILS_EXIT = auto()
+    USE_CASE_VIEW_DETAILS_PREVIOUS = auto()
+    USE_CASE_VIEW_DETAILS_NEXT = auto()
+    USE_CASE_ADDRESS_CONFIRMATION_EXIT_QR = auto()
+    USE_CASE_ADDRESS_CONFIRMATION_CONFIRM = auto()
+    USE_CASE_ADDRESS_CONFIRMATION_CANCEL = auto()
+
 
 class NavIns:
 
@@ -159,6 +205,14 @@ class Navigator(ABC):
         :return: None
         :rtype: NoneType
         """
+        if self._golden_run:
+            # Increase waits when in golden run to be sure that potential processing
+            # has been done and next screen has been displayed before continuing.
+            # If initial timing was not enough, then it will fail when running without
+            # golden run mode and developer will be notified.
+            first_instruction_wait *= 2
+            middle_instruction_wait *= 5
+            last_instruction_wait *= 2
         snaps_tmp_path = self._init_snaps_temp_dir(path, test_case_name)
         snaps_golden_path = self._check_snaps_dir_path(path, test_case_name, True)
 
