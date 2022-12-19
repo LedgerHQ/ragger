@@ -70,6 +70,10 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#ragger-firmware"><code class="docutils literal notranslate"><span class="pre">ragger.firmware</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ragger-firmware-fatstacks"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.fatstacks</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ragger-firmware-fatstacks-screen"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.fatstacks.screen</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#ragger-firmware-firmware"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.firmware</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#ragger.firmware.Firmware"><code class="docutils literal notranslate"><span class="pre">Firmware</span></code></a></li>
 </ul>
@@ -142,22 +146,27 @@
 <li><p><a class="reference internal" href="#ragger-error" id="id6"><code class="docutils literal notranslate"><span class="pre">ragger.error</span></code></a></p></li>
 <li><p><a class="reference internal" href="#ragger-firmware" id="id7"><code class="docutils literal notranslate"><span class="pre">ragger.firmware</span></code></a></p>
 <ul>
-<li><p><a class="reference internal" href="#ragger-firmware-firmware" id="id8"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.firmware</span></code></a></p></li>
-<li><p><a class="reference internal" href="#ragger-firmware-version" id="id9"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.version</span></code></a></p>
+<li><p><a class="reference internal" href="#ragger-firmware-fatstacks" id="id8"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.fatstacks</span></code></a></p>
 <ul>
-<li><p><a class="reference internal" href="#versionmanager" id="id10">VersionManager</a></p></li>
-<li><p><a class="reference internal" href="#nano-s" id="id11">Nano S</a></p></li>
-<li><p><a class="reference internal" href="#id1" id="id12">Nano S+</a></p></li>
-<li><p><a class="reference internal" href="#nano-x" id="id13">Nano X</a></p></li>
-<li><p><a class="reference internal" href="#managed-sdk-versions" id="id14">Managed SDK &amp; versions</a></p></li>
+<li><p><a class="reference internal" href="#ragger-firmware-fatstacks-screen" id="id9"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.fatstacks.screen</span></code></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#ragger-firmware-firmware" id="id10"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.firmware</span></code></a></p></li>
+<li><p><a class="reference internal" href="#ragger-firmware-version" id="id11"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.version</span></code></a></p>
+<ul>
+<li><p><a class="reference internal" href="#versionmanager" id="id12">VersionManager</a></p></li>
+<li><p><a class="reference internal" href="#nano-s" id="id13">Nano S</a></p></li>
+<li><p><a class="reference internal" href="#id1" id="id14">Nano S+</a></p></li>
+<li><p><a class="reference internal" href="#nano-x" id="id15">Nano X</a></p></li>
+<li><p><a class="reference internal" href="#managed-sdk-versions" id="id16">Managed SDK &amp; versions</a></p></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#ragger-utils" id="id15"><code class="docutils literal notranslate"><span class="pre">ragger.utils</span></code></a></p>
+<li><p><a class="reference internal" href="#ragger-utils" id="id17"><code class="docutils literal notranslate"><span class="pre">ragger.utils</span></code></a></p>
 <ul>
-<li><p><a class="reference internal" href="#ragger-utils-structs" id="id16"><code class="docutils literal notranslate"><span class="pre">ragger.utils.structs</span></code></a></p></li>
-<li><p><a class="reference internal" href="#ragger-utils-misc" id="id17"><code class="docutils literal notranslate"><span class="pre">ragger.utils.misc</span></code></a></p></li>
+<li><p><a class="reference internal" href="#ragger-utils-structs" id="id18"><code class="docutils literal notranslate"><span class="pre">ragger.utils.structs</span></code></a></p></li>
+<li><p><a class="reference internal" href="#ragger-utils-misc" id="id19"><code class="docutils literal notranslate"><span class="pre">ragger.utils.misc</span></code></a></p></li>
 </ul>
 </li>
 </ul>
@@ -335,6 +344,33 @@ not registered as a <cite>valid_statuses</cite></p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p><a class="reference internal" href="#ragger.utils.structs.RAPDU" title="ragger.utils.structs.RAPDU">RAPDU</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ragger.backend.BackendInterface.finger_touch">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">finger_touch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ragger.backend.BackendInterface.finger_touch" title="Permalink to this definition"></a></dt>
+<dd><p>Performs a finger touch on the device screen.</p>
+<p>This method may be left void on backends connecting to physical devices,
+where a physical interaction must be performed instead.
+This will prevent the instrumentation to fail (the void method won’t
+raise <cite>NotImplementedError</cite>), but the instrumentation flow will probably
+get stuck (on further call to <cite>receive</cite> for instance) until the expected
+action is performed on the device.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>int</em>) – The x coordinate of the finger touch.</p></li>
+<li><p><strong>y</strong> (<em>int</em>) – The y coordinate of the finger touch.</p></li>
+<li><p><strong>delay</strong> (<em>float</em>) – Delay between finger touch press and release actions.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>NoneType</p>
 </dd>
 </dl>
 </dd></dl>
@@ -534,6 +570,61 @@ last bytes.</p></li>
 </div>
 <div class="section" id="ragger-firmware">
 <h2><code class="docutils literal notranslate"><span class="pre">ragger.firmware</span></code><a class="headerlink" href="#ragger-firmware" title="Permalink to this heading"></a></h2>
+<div class="section" id="ragger-firmware-fatstacks">
+<h3><code class="docutils literal notranslate"><span class="pre">ragger.firmware.fatstacks</span></code><a class="headerlink" href="#ragger-firmware-fatstacks" title="Permalink to this heading"></a></h3>
+<div class="section" id="ragger-firmware-fatstacks-screen">
+<h4><code class="docutils literal notranslate"><span class="pre">ragger.firmware.fatstacks.screen</span></code><a class="headerlink" href="#ragger-firmware-fatstacks-screen" title="Permalink to this heading"></a></h4>
+<dl class="py class">
+<dt class="sig sig-object py" id="ragger.firmware.fatstacks.screen.MetaScreen">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragger.firmware.fatstacks.screen.</span></span><span class="sig-name descname"><span class="pre">MetaScreen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parents</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namespace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragger.firmware.fatstacks.screen.MetaScreen" title="Permalink to this definition"></a></dt>
+<dd><p>Creates a class with a constructor automatically instantiating layouts
+and use cases from declared class attributes.</p>
+<p>The goal is to build a representation of a screen in a declarative way.
+Layouts and Use Cases must be declared as attributes of the class, their
+name starting with the prefix <cite>layout_</cite> and <cite>use_case_</cite>. These attributes
+will then be instantiated and stored in the class instance, without their
+prefix.</p>
+<p>For instance, let’s imagine an application with an information button
+header, a cancel/quit footer and a keyboard in the center of the screen.
+The declaration of such screen would be:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Screen</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">MetaScreen</span><span class="p">):</span>
+  <span class="n">layout_header</span> <span class="o">=</span> <span class="n">InfoHeader</span>
+  <span class="n">layout_keyboard</span> <span class="o">=</span> <span class="n">LetterOnlyKeyboard</span>
+  <span class="n">layout_footer</span> <span class="o">=</span> <span class="n">CancelFooter</span>
+</pre></div>
+</div>
+<p>When instantiated, the class <cite>Screen</cite> will also instantiate <cite>InfoHeader</cite>,
+<cite>LetterOnlyKeyboard</cite> and <cite>CancelFooter</cite>, and store them as instance
+attributes (after removing the <cite>layout_</cite> prefix).
+They could then be used immediately:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">screen</span> <span class="o">=</span> <span class="n">Screen</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">firmware</span><span class="p">)</span>
+
+<span class="n">screen</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">tap</span><span class="p">()</span>             <span class="c1"># entering the &#39;info&#39; view</span>
+<span class="n">screen</span><span class="o">.</span><span class="n">footer</span><span class="o">.</span><span class="n">tap</span><span class="p">()</span>             <span class="c1"># going out the &#39;info&#39; view</span>
+<span class="n">screen</span><span class="o">.</span><span class="n">keyboard</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span>  <span class="c1"># writting &#39;hello&#39; on the keyboard</span>
+<span class="n">screen</span><span class="o">.</span><span class="n">footer</span><span class="o">.</span><span class="n">tap</span><span class="p">()</span>             <span class="c1"># going out the &#39;app&#39; view</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">screen</span><span class="o">.</span><span class="n">footer</span><span class="o">.</span><span class="n">tap</span><span class="p">()</span>         <span class="c1"># quitting the application</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="k">pass</span>                        <span class="c1"># depending on the backend, the application</span>
+                                <span class="c1"># stop could raisean error</span>
+</pre></div>
+</div>
+<p>(Of course the navigation depends on the current application, so this
+example may not work in most cases).</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ragger.firmware.fatstacks.screen.FullScreen">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragger.firmware.fatstacks.screen.</span></span><span class="sig-name descname"><span class="pre">FullScreen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#ragger.backend.BackendInterface" title="ragger.backend.interface.BackendInterface"><span class="pre">BackendInterface</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">firmware</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#ragger.firmware.Firmware" title="ragger.firmware.structs.Firmware"><span class="pre">Firmware</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragger.firmware.fatstacks.screen.FullScreen" title="Permalink to this definition"></a></dt>
+<dd><p>This screen embeds every possible clickable layout and use case.
+It could be used to manipulate any Fatstacks application, at the cost of
+using an imprecise, unpersonalized and in way wrong representation of the
+application’s screen. Still, it could prove handy for fast testing.</p>
+</dd></dl>
+
+</div>
+</div>
 <div class="section" id="ragger-firmware-firmware">
 <h3><code class="docutils literal notranslate"><span class="pre">ragger.firmware.firmware</span></code><a class="headerlink" href="#ragger-firmware-firmware" title="Permalink to this heading"></a></h3>
 <p>Most <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> high-level class needs to know which <a class="reference internal" href="glossary.html#term-Firmware"><span class="xref std std-term">Firmware</span></a> they
@@ -738,7 +829,7 @@ two-digits strings (like “2.0”). A version of “2” will raise.</p>
 <h4>Managed SDK &amp; versions<a class="headerlink" href="#managed-sdk-versions" title="Permalink to this heading"></a></h4>
 <dl class="py data">
 <dt class="sig sig-object py" id="ragger.firmware.versions.SDK_VERSIONS">
-<span class="sig-prename descclassname"><span class="pre">ragger.firmware.versions.</span></span><span class="sig-name descname"><span class="pre">SDK_VERSIONS</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ragger.firmware.versions.VersionManager" title="ragger.firmware.versions.VersionManager"><span class="pre">VersionManager</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'nanos':</span> <span class="pre">&lt;enum</span> <span class="pre">'NanoSVersions'&gt;,</span> <span class="pre">'nanosp':</span> <span class="pre">&lt;enum</span> <span class="pre">'NanoSPVersions'&gt;,</span> <span class="pre">'nanox':</span> <span class="pre">&lt;enum</span> <span class="pre">'NanoXVersions'&gt;}</span></em><a class="headerlink" href="#ragger.firmware.versions.SDK_VERSIONS" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">ragger.firmware.versions.</span></span><span class="sig-name descname"><span class="pre">SDK_VERSIONS</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ragger.firmware.versions.VersionManager" title="ragger.firmware.versions.VersionManager"><span class="pre">VersionManager</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'fat':</span> <span class="pre">&lt;enum</span> <span class="pre">'FatstacksVersions'&gt;,</span> <span class="pre">'nanos':</span> <span class="pre">&lt;enum</span> <span class="pre">'NanoSVersions'&gt;,</span> <span class="pre">'nanosp':</span> <span class="pre">&lt;enum</span> <span class="pre">'NanoSPVersions'&gt;,</span> <span class="pre">'nanox':</span> <span class="pre">&lt;enum</span> <span class="pre">'NanoXVersions'&gt;}</span></em><a class="headerlink" href="#ragger.firmware.versions.SDK_VERSIONS" title="Permalink to this definition"></a></dt>
 <dd><p>This global holds the currently supported device names and related SDK
 versions. Managed devices are currently: “nanos”, “nanosp” and  “nanox”</p>
 </dd></dl>

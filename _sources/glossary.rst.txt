@@ -42,19 +42,38 @@ Glossary
      See also :term:`SDK`.
 
    Golden snapshot
-     In ``Ragger``, golden snapshots are :term:`application` screen's snapshots
-     which are considered as references. They are used when testing an
+     In ``Ragger``, **golden snapshots** are :term:`application` screen's
+     snapshots which are considered as references. They are used when testing an
      application to check the application behaves as expected.
 
+   Layout
+     In the Fatstacks SDK, a **Layout** refers to an element displayed on a
+     Fatstacks screen. Examples of Layouts can be a button, on a specific
+     location, a keyboard, or just a centered text. This name is used in
+     ``Ragger`` to designate the class allowing to interact with a displayed
+     layout.
+
+     Layouts are used to create :term:`Pages <Page>` and
+     :term:`Use Cases <Use Case>`
+
    LedgerComm
-     LedgerComm is the original open-source library allowing to communicate with
-     a Ledger device. It is hosted
+     **LedgerComm** is the original open-source library allowing to communicate
+     with a Ledger device. It is hosted
      `on GitHub <https://github.com/LedgerHQ/ledgercomm>`__.
 
    LedgerWallet
-     LedgerWallet is the newer open-source library allowing to communicate with
-     a Ledger device. It is hosted
+     **LedgerWallet** is the newer open-source library allowing to communicate
+     with a Ledger device. It is hosted
      `on GitHub <https://github.com/LedgerHQ/ledgerctl/>`__
+
+   Page
+     In the Fatstacks SDK, a **Page** refers to a specific displayed Fatstacks
+     screen.A welcome page, a setting page are example of Pages. This name is
+     also  used in ``Ragger`` to designate the class allowing to interact with a
+     displayed page.
+
+     Pages are created from :term:`Layouts <Layout>` and are used to create
+     :term:`Use Cases <Use Case>`
 
    Pytest
      `Pytest <https://docs.pytest.org/>`_ is a largely used, open-source Python
@@ -76,3 +95,13 @@ Glossary
 
      It is composed of the emulator itself, and a HTTP client-server module
      allowing to easily control and communicate with said emulator.
+
+   Use Case
+     In the Fatstacks SDK, a **Use Case** refers to a pre-designed :term"`Page`
+     or group of Pages. For instance, the settings Use Case manages one or
+     several :term:`Pages <Page>` in order to display and change the settings.
+     This name is used in ``Ragger`` to designate the class allowing to interact
+     with a Use Case.
+
+     Use Cases are created from :term:`Pages <Page>` and sometimes
+     :term:`Layouts <Layout>`

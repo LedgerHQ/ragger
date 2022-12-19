@@ -115,17 +115,32 @@ transaction, changing the configuration, …</p>
 <a class="reference internal" href="source.html#ragger.firmware.Firmware" title="ragger.firmware.Firmware"><code class="xref py py-class docutils literal notranslate"><span class="pre">Firmware</span></code></a> class.</p>
 <p>See also <a class="reference internal" href="#term-SDK"><span class="xref std std-term">SDK</span></a>.</p>
 </dd>
-<dt id="term-Golden-snapshot">Golden snapshot<a class="headerlink" href="#term-Golden-snapshot" title="Permalink to this term"></a></dt><dd><p>In <code class="docutils literal notranslate"><span class="pre">Ragger</span></code>, golden snapshots are <a class="reference internal" href="#term-Application"><span class="xref std std-term">application</span></a> screen’s snapshots
-which are considered as references. They are used when testing an
+<dt id="term-Golden-snapshot">Golden snapshot<a class="headerlink" href="#term-Golden-snapshot" title="Permalink to this term"></a></dt><dd><p>In <code class="docutils literal notranslate"><span class="pre">Ragger</span></code>, <strong>golden snapshots</strong> are <a class="reference internal" href="#term-Application"><span class="xref std std-term">application</span></a> screen’s
+snapshots which are considered as references. They are used when testing an
 application to check the application behaves as expected.</p>
 </dd>
-<dt id="term-LedgerComm">LedgerComm<a class="headerlink" href="#term-LedgerComm" title="Permalink to this term"></a></dt><dd><p>LedgerComm is the original open-source library allowing to communicate with
-a Ledger device. It is hosted
+<dt id="term-Layout">Layout<a class="headerlink" href="#term-Layout" title="Permalink to this term"></a></dt><dd><p>In the Fatstacks SDK, a <strong>Layout</strong> refers to an element displayed on a
+Fatstacks screen. Examples of Layouts can be a button, on a specific
+location, a keyboard, or just a centered text. This name is used in
+<code class="docutils literal notranslate"><span class="pre">Ragger</span></code> to designate the class allowing to interact with a displayed
+layout.</p>
+<p>Layouts are used to create <a class="reference internal" href="#term-Page"><span class="xref std std-term">Pages</span></a> and
+<a class="reference internal" href="#term-Use-Case"><span class="xref std std-term">Use Cases</span></a></p>
+</dd>
+<dt id="term-LedgerComm">LedgerComm<a class="headerlink" href="#term-LedgerComm" title="Permalink to this term"></a></dt><dd><p><strong>LedgerComm</strong> is the original open-source library allowing to communicate
+with a Ledger device. It is hosted
 <a class="reference external" href="https://github.com/LedgerHQ/ledgercomm">on GitHub</a>.</p>
 </dd>
-<dt id="term-LedgerWallet">LedgerWallet<a class="headerlink" href="#term-LedgerWallet" title="Permalink to this term"></a></dt><dd><p>LedgerWallet is the newer open-source library allowing to communicate with
-a Ledger device. It is hosted
+<dt id="term-LedgerWallet">LedgerWallet<a class="headerlink" href="#term-LedgerWallet" title="Permalink to this term"></a></dt><dd><p><strong>LedgerWallet</strong> is the newer open-source library allowing to communicate
+with a Ledger device. It is hosted
 <a class="reference external" href="https://github.com/LedgerHQ/ledgerctl/">on GitHub</a></p>
+</dd>
+<dt id="term-Page">Page<a class="headerlink" href="#term-Page" title="Permalink to this term"></a></dt><dd><p>In the Fatstacks SDK, a <strong>Page</strong> refers to a specific displayed Fatstacks
+screen.A welcome page, a setting page are example of Pages. This name is
+also  used in <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> to designate the class allowing to interact with a
+displayed page.</p>
+<p>Pages are created from <a class="reference internal" href="#term-Layout"><span class="xref std std-term">Layouts</span></a> and are used to create
+<a class="reference internal" href="#term-Use-Case"><span class="xref std std-term">Use Cases</span></a></p>
 </dd>
 <dt id="term-Pytest">Pytest<a class="headerlink" href="#term-Pytest" title="Permalink to this term"></a></dt><dd><p><a class="reference external" href="https://docs.pytest.org/">Pytest</a> is a largely used, open-source Python
 testing tool. Its <code class="docutils literal notranslate"><span class="pre">fixture</span></code> mechanism works neatly with <code class="docutils literal notranslate"><span class="pre">Ragger</span></code>.</p>
@@ -141,6 +156,14 @@ fast testing of an <a class="reference internal" href="#term-Application"><span 
 <a class="reference external" href="https://github.com/ledgerhq/speculos">on GitHub</a>.</p>
 <p>It is composed of the emulator itself, and a HTTP client-server module
 allowing to easily control and communicate with said emulator.</p>
+</dd>
+<dt id="term-Use-Case">Use Case<a class="headerlink" href="#term-Use-Case" title="Permalink to this term"></a></dt><dd><p>In the Fatstacks SDK, a <strong>Use Case</strong> refers to a pre-designed :term”<cite>Page</cite>
+or group of Pages. For instance, the settings Use Case manages one or
+several <a class="reference internal" href="#term-Page"><span class="xref std std-term">Pages</span></a> in order to display and change the settings.
+This name is used in <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> to designate the class allowing to interact
+with a Use Case.</p>
+<p>Use Cases are created from <a class="reference internal" href="#term-Page"><span class="xref std std-term">Pages</span></a> and sometimes
+<a class="reference internal" href="#term-Layout"><span class="xref std std-term">Layouts</span></a></p>
 </dd>
 </dl>
 </div>

@@ -62,8 +62,17 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#generalization">Generalization</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#to-other-firmware">To other firmware</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#to-other-firmwares">To other firmwares</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#to-other-backends">To other backends</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#abstracting-the-interactions">Abstracting the interactions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#fatstacks">Fatstacks</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#layouts">Layouts</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#use-cases">Use cases</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#the-fullscreen-class">The <code class="docutils literal notranslate"><span class="pre">FullScreen</span></code> class</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -114,8 +123,19 @@ of <code class="docutils literal notranslate"><span class="pre">Ragger</span></c
 </li>
 <li><p><a class="reference internal" href="#generalization" id="id10">Generalization</a></p>
 <ul>
-<li><p><a class="reference internal" href="#to-other-firmware" id="id11">To other firmware</a></p></li>
+<li><p><a class="reference internal" href="#to-other-firmwares" id="id11">To other firmwares</a></p></li>
 <li><p><a class="reference internal" href="#to-other-backends" id="id12">To other backends</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#abstracting-the-interactions" id="id13">Abstracting the interactions</a></p>
+<ul>
+<li><p><a class="reference internal" href="#fatstacks" id="id14">Fatstacks</a></p>
+<ul>
+<li><p><a class="reference internal" href="#layouts" id="id15">Layouts</a></p></li>
+<li><p><a class="reference internal" href="#use-cases" id="id16">Use cases</a></p></li>
+<li><p><a class="reference internal" href="#the-fullscreen-class" id="id17">The <code class="docutils literal notranslate"><span class="pre">FullScreen</span></code> class</a></p></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -220,8 +240,8 @@ test_something.py::test_something PASSED                                     <sp
 </div>
 <div class="section" id="generalization">
 <h2>Generalization<a class="headerlink" href="#generalization" title="Permalink to this heading"></a></h2>
-<div class="section" id="to-other-firmware">
-<h3>To other firmware<a class="headerlink" href="#to-other-firmware" title="Permalink to this heading"></a></h3>
+<div class="section" id="to-other-firmwares">
+<h3>To other firmwares<a class="headerlink" href="#to-other-firmwares" title="Permalink to this heading"></a></h3>
 <p>When testing an application, it sounds logical to test not only a specific
 <a class="reference internal" href="glossary.html#term-Firmware"><span class="xref std std-term">Firmware</span></a>, but all supported ones. The common practice is to test
 on the latest version of all Firmware (NanoS, NanoS+, NanoX). So we can declare
@@ -331,7 +351,7 @@ test_something.py::test_something<span class="o">[</span>nanosp <span class="m">
 <div class="section" id="to-other-backends">
 <h3>To other backends<a class="headerlink" href="#to-other-backends" title="Permalink to this heading"></a></h3>
 <p>So far only Speculos was used as a backend. Let’s see how to connect other ones.</p>
-<p>Other backend are simpler the Speculos, because they do not manage the
+<p>Other backends are simpler the Speculos, because they do not manage the
 application directly. Indeed, as Speculos embeds an emulator, the application
 ELF file must be passed as an argument (and parametrized, …).</p>
 <p>Other backends do not need this. They assume the application is already up and
@@ -450,6 +470,208 @@ test_something.py::test_something<span class="o">[</span>nanosp <span class="m">
 
 <span class="o">================================</span> <span class="m">1</span> passed <span class="k">in</span> <span class="m">0</span>.22s <span class="o">================================</span>
 </pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="abstracting-the-interactions">
+<h2>Abstracting the interactions<a class="headerlink" href="#abstracting-the-interactions" title="Permalink to this heading"></a></h2>
+<p>Interacting programmatically with an application tends to be a non-trivial
+thing, as complex processes (like performing a complete transaction) have to be
+implemented through low-level actions on the device: forging bytes payloads (the
+<a class="reference internal" href="glossary.html#term-APDU"><span class="xref std std-term">APDUs</span></a>), triggering the buttons or the screen at the right time,
+in the right places, in the right order, managing several screens, …</p>
+<div class="section" id="fatstacks">
+<h3>Fatstacks<a class="headerlink" href="#fatstacks" title="Permalink to this heading"></a></h3>
+<p>Interacting with the Fatstacks screen, in particular, can be bothersome. It is
+hard to keep track of button positions, pages layouts and such.</p>
+<p>For instance let’s imagine you develop an application with a welcome screen
+with the application icon in the center, a “quit” clickable button on the
+top right and a “info” clickable button on the lower center.</p>
+<p>If you click on the “quit” button, well the application shuts down.</p>
+<p>If you click on the “info” button the screen shows some application infos, with
+a clickable “return” button on the lower center, which brings back to the
+previous, welcome screen.</p>
+<a class=""
+               data-lightbox="group-fatstack_base_group"
+               href="_images/fatstacks_welcome.png"
+               title=""
+               data-title=""
+               
+               ><img src="_images/fatstacks_welcome.png"
+                     class=""
+                     width="30%"
+                     height="auto"
+                     alt=""/>
+                </a><a class=""
+               data-lightbox="group-fatstack_base_group"
+               href="_images/fatstacks_infos.png"
+               title=""
+               data-title=""
+               
+               ><img src="_images/fatstacks_infos.png"
+                     class=""
+                     width="30%"
+                     height="auto"
+                     alt=""/>
+                </a><p>This layouts has three clickable buttons. Basic interaction with them would be
+something like:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="c1"># going into the &quot;info&quot; screen</span>
+<span class="linenos">2</span><span class="n">backend</span><span class="o">.</span><span class="n">touch_finger</span><span class="p">(</span><span class="mi">197</span><span class="p">,</span> <span class="mi">606</span><span class="p">)</span>
+<span class="linenos">3</span>
+<span class="linenos">4</span><span class="c1"># going back into the &quot;welcome&quot; screen</span>
+<span class="linenos">5</span><span class="n">backend</span><span class="o">.</span><span class="n">touch_finger</span><span class="p">(</span><span class="mi">197</span><span class="p">,</span> <span class="mi">606</span><span class="p">)</span>
+<span class="linenos">6</span>
+<span class="linenos">7</span><span class="c1"># quitting the application</span>
+<span class="linenos">8</span><span class="n">backend</span><span class="o">.</span><span class="n">touch_finger</span><span class="p">(</span><span class="mi">342</span><span class="p">,</span> <span class="mi">55</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This does not look very complicated. However, this is just obfuscated code.
+Without extended comment, you can’t ask someone to understand or remember what
+this code does. This is a guaranteed path to hard to maintain code.</p>
+<p>Moreover, these pixel positions are not guaranteed to last. If the SDK chooses
+to change some button position, or if higher-level graphic objects (such as
+<code class="docutils literal notranslate"><span class="pre">Pages</span></code> or <code class="docutils literal notranslate"><span class="pre">UseCase</span></code>) changes the position (nothing prevents them to move
+the “quit” button to the top left), all this code becomes deprecated.</p>
+<p>That’s why <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> mimics the Fatstacks SDK graphics library and provides
+<a class="reference internal" href="glossary.html#term-Layout"><span class="xref std std-term">Layout</span></a> and <a class="reference internal" href="glossary.html#term-Use-Case"><span class="xref std std-term">Use Case</span></a> (<a class="reference internal" href="glossary.html#term-Page"><span class="xref std std-term">Page</span></a> will also come soon) classes
+that keep track of every interactive screen elements and expose meaningful
+method to interact with them.</p>
+<div class="section" id="layouts">
+<h4>Layouts<a class="headerlink" href="#layouts" title="Permalink to this heading"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">Ragger</span></code>’s <code class="xref py py-class docutils literal notranslate"><span class="pre">Layouts</span></code> and
+<code class="xref py py-class docutils literal notranslate"><span class="pre">UseCases</span></code> allows to
+quickly describe an application screens and its attached behavior in a purely
+declarative way, thanks to the
+<a class="reference internal" href="source.html#ragger.firmware.fatstacks.screen.MetaScreen" title="ragger.firmware.fatstacks.screen.MetaScreen"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetaScreen</span></code></a> metaclass.
+For instance, with the previously described application:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="kn">from</span> <span class="nn">ragger.firmware.fatstacks.screen</span> <span class="kn">import</span> <span class="n">MetaScreen</span>
+<span class="linenos">2</span><span class="kn">from</span> <span class="nn">ragger.firmware.fatstacks.layouts</span> <span class="kn">import</span> <span class="n">ExitFooter</span><span class="p">,</span> <span class="n">ExitHeader</span><span class="p">,</span> <span class="n">InfoFooter</span>
+<span class="linenos">3</span>
+<span class="linenos">4</span><span class="k">class</span> <span class="nc">RecoveryAppScreen</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">MetaScreen</span><span class="p">)</span>
+<span class="linenos">5</span>    <span class="n">layout_quit</span> <span class="o">=</span> <span class="n">ExitHeader</span>
+<span class="linenos">6</span>    <span class="n">layout_go_to_info_page</span> <span class="o">=</span> <span class="n">InfoFooter</span>
+<span class="linenos">7</span>    <span class="n">layout_return_to_welcome_page</span> <span class="o">=</span> <span class="n">ExitFooter</span>
+</pre></div>
+</div>
+<p>The metaclass will automatically detect all variables starting with <code class="docutils literal notranslate"><span class="pre">layout_</span></code>
+and create related attributes when the <code class="docutils literal notranslate"><span class="pre">RecoveryAppScreen</span></code> will be
+instantiated. This latter will need - like a lot of <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> classes - a
+<a class="reference internal" href="glossary.html#term-Backend"><span class="xref std std-term">backend</span></a> and a <a class="reference internal" href="glossary.html#term-Firmware"><span class="xref std std-term">firmware</span></a> as arguments.</p>
+<p>Once instantiated, the created screen can be interacted with in a more flexible
+way than if positions were still necessary:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1"># let&#39;s say we still have a ``backend`` and a ``firmware`` fixture</span>
+<span class="linenos"> 2</span><span class="n">screen</span> <span class="o">=</span> <span class="n">RecoveryAppScreen</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">firmware</span><span class="p">)</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="c1"># the application starts on the &quot;welcome&quot; page, from here we can either quit</span>
+<span class="linenos"> 5</span><span class="c1"># the application, or go to the &quot;info&quot; page</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span><span class="c1"># this method call will trigger a ``finger_touch`` with the positions related</span>
+<span class="linenos"> 8</span><span class="c1"># to the &quot;info&quot; centered lower button</span>
+<span class="linenos"> 9</span><span class="n">screen</span><span class="o">.</span><span class="n">go_to_info_page</span><span class="o">.</span><span class="n">tap</span><span class="p">()</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span><span class="c1"># now the application is on the &quot;info&quot; screen, it can only go back to the</span>
+<span class="linenos">12</span><span class="c1"># &quot;welcome&quot; page</span>
+<span class="linenos">13</span><span class="n">screen</span><span class="o">.</span><span class="n">return_to_welcome_page</span><span class="o">.</span><span class="n">tap</span><span class="p">()</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span><span class="c1"># now the application is back on the &quot;welcome&quot; screen. Let&#39;s quit</span>
+<span class="linenos">16</span><span class="n">screen</span><span class="o">.</span><span class="n">quit</span><span class="o">.</span><span class="n">tap</span><span class="p">()</span>
+<span class="linenos">17</span>
+<span class="linenos">18</span><span class="c1"># the application is now stopped</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You may have noticed that the two centered lower buttons (the welcome page
+“info” button and the info page “return” button) are exactly at the same
+<code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y)</span></code> positions, so why bother declaring them twice?</p>
+<p>First of all, the buttons may be at the same place, but they don’t carry the
+same purpose, and it is a good idea to reflect that on the code.</p>
+<p>Second, if in a future version the Fatstacks design changes and one of these
+button moves somewhere else on the screen’s footer, <strong>the layouts will be
+updated accordingly</strong> in <code class="docutils literal notranslate"><span class="pre">Ragger</span></code>, and the <code class="docutils literal notranslate"><span class="pre">InfoFooter</span></code> or <code class="docutils literal notranslate"><span class="pre">ExitFooter</span></code>
+will still be valid, hence all code using this class remains valid too.</p>
+<p>If these arguments does not convince you, <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> provides purely
+positional Layouts, and you can use <code class="docutils literal notranslate"><span class="pre">CenteredFooter</span></code> in replacement of both
+of these Layouts.</p>
+</div>
+</div>
+<div class="section" id="use-cases">
+<h4>Use cases<a class="headerlink" href="#use-cases" title="Permalink to this heading"></a></h4>
+<p>But this is not simple enough <em>yet</em>. The previously shown screens are very
+common, so common in fact that the SDK provides dedicated
+<a class="reference internal" href="glossary.html#term-Use-Case"><span class="xref std std-term">Use Cases</span></a> to simplify their creation.</p>
+<p>In this case, there is two. In the SDK, they are named:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">nbgl_useCaseHome</span></code>, which displays the “welcome” page, while allowing to
+access an “info” or “settings” page.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nbgl_useCaseSettings</span></code>, which displays an “info” or “settings” page. This
+Use Case is very convenient when dealing with multiple info or settings which
+need several pages to be displayed (hence needs navigation buttons).</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">Ragger</span></code> replicates these Use Cases, and provides more meaningful methods on
+top of them. Using Use Cases is very similar to Layouts; they need to be
+declared as attribute of a class using the <code class="xref py py-class docutils literal notranslate"><span class="pre">MetaScreen</span></code> metaclass,
+and start with <code class="docutils literal notranslate"><span class="pre">use_case_</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span> <span class="nn">ragger.firmware.fatstacks.screen</span> <span class="kn">import</span> <span class="n">MetaScreen</span>
+<span class="linenos"> 2</span><span class="kn">from</span> <span class="nn">ragger.firmware.fatstacks.use_case</span> <span class="kn">import</span> <span class="n">UseCaseHome</span><span class="p">,</span> <span class="n">UseCaseSettings</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="k">class</span> <span class="nc">RecoveryAppScreen</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">MetaScreen</span><span class="p">)</span>
+<span class="linenos"> 5</span>    <span class="n">use_case_welcome</span> <span class="o">=</span> <span class="n">UseCaseHome</span>
+<span class="linenos"> 6</span>    <span class="n">use_case_info</span> <span class="o">=</span> <span class="n">UseCaseSettings</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span><span class="c1"># let&#39;s say we still have a ``backend`` and a ``firmware`` fixture</span>
+<span class="linenos"> 9</span><span class="n">screen</span> <span class="o">=</span> <span class="n">RecoveryAppScreen</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">firmware</span><span class="p">)</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span><span class="c1"># the application starts on the &quot;welcome&quot; page, from here we can either quit</span>
+<span class="linenos">12</span><span class="c1"># the application, or go to the &quot;info&quot; page</span>
+<span class="linenos">13</span>
+<span class="linenos">14</span><span class="c1"># this method call will trigger a ``finger_touch`` with the positions related</span>
+<span class="linenos">15</span><span class="c1"># to the &quot;info&quot; centered lower button</span>
+<span class="linenos">16</span><span class="n">screen</span><span class="o">.</span><span class="n">welcome</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+<span class="linenos">17</span>
+<span class="linenos">18</span><span class="c1"># now the application is on the &quot;info&quot; screen, it can only go back to the</span>
+<span class="linenos">19</span><span class="c1"># &quot;welcome&quot; page.</span>
+<span class="linenos">20</span><span class="c1"># if the info needed to be shown on several pages, this Use Case also</span>
+<span class="linenos">21</span><span class="c1"># provides navigation methods, ``.next`` and ``.back``</span>
+<span class="linenos">22</span><span class="n">screen</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+<span class="linenos">23</span>
+<span class="linenos">24</span><span class="c1"># now the application is back on the &quot;welcome&quot; screen. Let&#39;s quit</span>
+<span class="linenos">25</span><span class="n">screen</span><span class="o">.</span><span class="n">welcome</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+<span class="linenos">26</span>
+<span class="linenos">27</span><span class="c1"># the application is now stopped</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="the-fullscreen-class">
+<h4>The <code class="docutils literal notranslate"><span class="pre">FullScreen</span></code> class<a class="headerlink" href="#the-fullscreen-class" title="Permalink to this heading"></a></h4>
+<p>All these classes helps you tailoring a fairly elegant and straight-forward
+client with meaningful and easy to write screen controls. However if you don’t
+feel like crafting you own screen representation, <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> comes with a
+<a class="reference internal" href="source.html#ragger.firmware.fatstacks.screen.FullScreen" title="ragger.firmware.fatstacks.screen.FullScreen"><code class="xref py py-class docutils literal notranslate"><span class="pre">FullScreen</span></code></a> class
+which embeds every existing <a class="reference internal" href="glossary.html#term-Layout"><span class="xref std std-term">Layout</span></a> and <a class="reference internal" href="glossary.html#term-Use-Case"><span class="xref std std-term">Use Case</span></a>.</p>
+<p>It can be used to quickly instantiate a screen which could work with any
+application screen, however of course, all action on this class are not
+guaranteed to trigger a desired reaction (or no reaction at all) on the
+application screen, as declared button can be totally fictional.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span> <span class="nn">ragger.firmware.fatstacks.screen</span> <span class="kn">import</span> <span class="n">FullScreen</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="n">screen</span> <span class="o">=</span> <span class="n">FullScreen</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">firmware</span><span class="p">)</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="c1"># these use case methods will work in our case</span>
+<span class="linenos"> 6</span><span class="n">screen</span><span class="o">.</span><span class="n">home</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+<span class="linenos"> 7</span><span class="n">screen</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+<span class="linenos"> 8</span><span class="n">screen</span><span class="o">.</span><span class="n">welcome</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span><span class="c1"># layouts are also available, on these method will work too</span>
+<span class="linenos">11</span><span class="n">screen</span><span class="o">.</span><span class="n">info_footer</span><span class="o">.</span><span class="n">tap</span><span class="p">()</span>
+<span class="linenos">12</span><span class="n">screen</span><span class="o">.</span><span class="n">exit_footer</span><span class="o">.</span><span class="n">tap</span><span class="p">()</span>
+<span class="linenos">13</span><span class="n">screen</span><span class="o">.</span><span class="n">exit_header</span><span class="o">.</span><span class="n">tap</span><span class="p">()</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span><span class="c1"># this, however, will just randomly click on the screen and may or may not</span>
+<span class="linenos">16</span><span class="c1"># trigger totally unrelated reaction</span>
+<span class="linenos">17</span><span class="n">screen</span><span class="o">.</span><span class="n">letter_only_keyboard</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;hello world!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 </div>
 </div>
 </div>

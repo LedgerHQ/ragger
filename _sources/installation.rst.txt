@@ -12,7 +12,7 @@ installed with ``pip``:
 
 
 By default - to avoid wasting useless time and space - the ``ragger`` package
-comes with no :term"`backend`. Specific backend can be installed with extras:
+comes with no :term:`backend`. Specific backend can be installed with extras:
 ``ragger[speculos]``, ``ragger[ledgercomm]``, ``ragger[ledgerwallet]``.
 All backends can be installed with ``ragger[all_backends]``.
 
