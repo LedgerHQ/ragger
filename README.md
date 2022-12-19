@@ -2,6 +2,14 @@
 
 [![codecov](https://codecov.io/gh/LedgerHQ/ragger/branch/develop/graph/badge.svg)](https://codecov.io/gh/LedgerHQ/ragger)
 
+---
+**Warning**
+
+This library contains documentation and functionalities related to Ledger Stax hardware (also named `fatstacks`). As of the writing of the message, neither the SDK nor the Speculos support is available publicly for Ledger Stax hardware. This is therefore preventing users to use such functionalities.
+
+---
+
+
 This library aims at reducing the cost of running code on both Speculos emulator
 or on a real device.
 
