@@ -30,10 +30,10 @@ SPECULOS_MNEMONIC = (
     "lawn turtle enact monster seven myth punch hobby comfort wild raise skin")
 
 
-def calculate_public_key_and_chaincode(
-        curve: CurveChoice,
-        path: str,
-        mnemonic: Sequence[str] = SPECULOS_MNEMONIC) -> Tuple[str, str]:
+def calculate_public_key_and_chaincode(curve: CurveChoice,
+                                       path: str,
+                                       mnemonic: Sequence[str] = SPECULOS_MNEMONIC,
+                                       compress_public_key: bool = False) -> Tuple[str, str]:
     if not isinstance(curve, CurveChoice):
         raise ValueError(f'"{curve}" must be a CurveChoice enum')
 
@@ -43,4 +43,8 @@ def calculate_public_key_and_chaincode(
     public_key = child_node.PublicKey()
     chaincode = child_node.ChainCode()
 
-    return public_key.RawUncompressed().ToHex(), chaincode.ToHex()
+    if compress_public_key:
+        raw_public_key = public_key.RawCompressed()
+    else:
+        raw_public_key = public_key.RawUncompressed()
+    return raw_public_key.ToHex(), chaincode.ToHex()
