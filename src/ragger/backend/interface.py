@@ -13,6 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
+import logging
 from abc import ABC, abstractmethod
 from contextlib import contextmanager
 from enum import Enum, auto
@@ -20,6 +21,7 @@ from pathlib import Path
 from types import TracebackType
 from typing import Optional, Type, Generator, Any
 
+from ragger import apdu_logger
 from ragger.firmware import Firmware
 from ragger.utils import pack_APDU, RAPDU, Crop
 
@@ -32,7 +34,7 @@ class RaisePolicy(Enum):
 
 class BackendInterface(ABC):
 
-    def __init__(self, firmware: Firmware):
+    def __init__(self, firmware: Firmware, log_apdu_file: Optional[Path]):
         """Initializes the Backend
 
         :param firmware: Which Firmware will be managed
@@ -41,6 +43,11 @@ class BackendInterface(ABC):
         self._firmware = firmware
         self._last_async_response: Optional[RAPDU] = None
         self.raise_policy = RaisePolicy.RAISE_ALL_BUT_0x9000
+        if log_apdu_file is not None:
+            apdu_handler = logging.FileHandler(filename=log_apdu_file, mode='w', delay=True)
+            apdu_handler.setFormatter(logging.Formatter('%(message)s'))
+            apdu_logger.addHandler(apdu_handler)
+            apdu_logger.disabled = False
 
     @property
     def firmware(self) -> Firmware:

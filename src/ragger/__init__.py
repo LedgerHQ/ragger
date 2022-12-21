@@ -19,8 +19,10 @@ import logging
 
 logger = logging.getLogger(__package__)
 logger.setLevel(level=logging.DEBUG)
-
 handler = logging.StreamHandler()
 handler.setFormatter(logging.Formatter('[%(asctime)s][%(levelname)s] %(name)s - %(message)s'))
-
 logger.addHandler(handler)
+
+apdu_logger = logging.getLogger(__package__ + "_apdu_logger")
+apdu_logger.setLevel(level=logging.DEBUG)
+apdu_logger.disabled = True

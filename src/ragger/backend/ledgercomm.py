@@ -48,9 +48,10 @@ class LedgerCommBackend(BackendInterface):
                  host: str = "127.0.0.1",
                  port: int = 9999,
                  interface: str = 'hid',
+                 log_apdu_file: Optional[Path] = None,
                  *args,
                  **kwargs):
-        super().__init__(firmware)
+        super().__init__(firmware=firmware, log_apdu_file=log_apdu_file)
         self._host = host
         self._port = port
         self._client: Optional[Transport] = None
