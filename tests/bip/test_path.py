@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from ragger.bip import pack_derivation_path
+from ragger.bip import path as p
 
 MAX_VALUE = 2**31 - 1
 
@@ -15,7 +15,7 @@ class TestPath(TestCase):
                 hardening_char = '\'' if hardening else ''
                 previous_levels = "0/" * (n - 1)
                 path = f'm/{previous_levels}{variant}{hardening_char}'
-                packed = pack_derivation_path(path)
+                packed = p.pack_derivation_path(path)
                 self.assertEqual(packed[0], n)
                 self.assertEqual(len(packed), 1 + n * 4)
                 last_value = int.from_bytes(packed[len(packed) - 4:len(packed)], byteorder="big")
@@ -23,16 +23,16 @@ class TestPath(TestCase):
 
     def test_errors(self):
         with self.assertRaises(ValueError) as e:
-            pack_derivation_path("")
+            p.pack_derivation_path("")
         with self.assertRaises(ValueError) as e:
-            pack_derivation_path("m/0/")
+            p.pack_derivation_path("m/0/")
         with self.assertRaises(ValueError) as e:
-            pack_derivation_path("m//0")
+            p.pack_derivation_path("m//0")
         with self.assertRaises(ValueError) as e:
-            pack_derivation_path("m/a")
+            p.pack_derivation_path("m/a")
 
     def test_level_path_0(self):
-        packed = pack_derivation_path("m")
+        packed = p.pack_derivation_path("m")
         self.assertEqual(packed[0], 0)
         self.assertEqual(len(packed), 1)
 
@@ -65,3 +65,13 @@ class TestPath(TestCase):
 
     def test_level_path_10(self):
         self._test_level_n(10)
+
+    def test_bitcoin_pack_derivation_path(self):
+        base = b"\x03\x80\x00\x00\x2c\x80\x00\x00\x00\x00\x00\x00\x00"
+        prefix = [b"\x00", b"\x01", b"\x02", b"\x03", b"\x04"]
+        for i, format in enumerate(p.BtcDerivationPathFormat):
+            self.assertEqual(prefix[i] + base, p.bitcoin_pack_derivation_path(format, "m/44'/0'/0"))
+
+    def test_bitcoin_pack_derivation_path_nok(self):
+        with self.assertRaises(ValueError):
+            p.bitcoin_pack_derivation_path(max(p.BtcDerivationPathFormat) + 1, "")
