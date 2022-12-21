@@ -34,7 +34,7 @@ class RaisePolicy(Enum):
 
 class BackendInterface(ABC):
 
-    def __init__(self, firmware: Firmware, log_apdu_file: Optional[Path]):
+    def __init__(self, firmware: Firmware, log_apdu_file: Optional[Path] = None):
         """Initializes the Backend
 
         :param firmware: Which Firmware will be managed
