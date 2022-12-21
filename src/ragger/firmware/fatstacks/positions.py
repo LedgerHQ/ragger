@@ -200,6 +200,12 @@ POSITIONS_BY_SDK = {
             "settings": BUTTON_UPPER_RIGHT,
             "quit": BUTTON_LOWER_MIDDLE
         },
+        "UseCaseHomeExt": {
+            "info": BUTTON_UPPER_RIGHT,
+            "settings": BUTTON_UPPER_RIGHT,
+            "action": BUTTON_ABOVE_LOWER_MIDDLE,
+            "quit": BUTTON_LOWER_MIDDLE
+        },
         "UseCaseSettings": {
             "single_page_exit": BUTTON_LOWER_MIDDLE,
             "multi_page_exit": BUTTON_LOWER_LEFT,

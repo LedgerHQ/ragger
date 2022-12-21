@@ -53,6 +53,12 @@ class UseCaseHome(_UseCase):
         self.client.finger_touch(*self.positions["quit"])
 
 
+class UseCaseHomeExt(UseCaseHome):
+
+    def action(self):
+        self.client.finger_touch(*self.positions["action"])
+
+
 class UseCaseSettings(_UseCase):
 
     def single_page_exit(self):
