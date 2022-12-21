@@ -20,7 +20,7 @@ from typing import Generator, Optional, Any
 from ledgerwallet.client import LedgerClient, CommException
 from ledgerwallet.transport import HidDevice
 
-from ragger import logger, apdu_logger
+from ragger import logger
 from ragger.utils import RAPDU, Crop
 from ragger.error import ExceptionRAPDU
 from .interface import BackendInterface
@@ -36,7 +36,7 @@ def raise_policy_enforcer(function):
             rapdu = RAPDU(error.sw, error.data)
 
         logger.debug("Receiving '%s'", rapdu)
-        apdu_logger.debug("<= %s%4x", rapdu.data.hex(), rapdu.status)
+        self.apdu_logger.debug("<= %s%4x", rapdu.data.hex(), rapdu.status)
 
         if self.is_raise_required(rapdu):
             raise ExceptionRAPDU(rapdu.status, rapdu.data)
@@ -63,7 +63,7 @@ class LedgerWalletBackend(BackendInterface):
 
     def send_raw(self, data: bytes = b"") -> None:
         logger.debug("Sending '%s'", data)
-        apdu_logger.debug("=> %s", data.hex())
+        self.apdu_logger.debug("=> %s", data.hex())
         assert self._client is not None
         self._client.device.write(data)
 
@@ -78,18 +78,18 @@ class LedgerWalletBackend(BackendInterface):
         status, payload = int.from_bytes(raw_result[-2:], "big"), raw_result[:-2] or b""
         result = RAPDU(status, payload)
         logger.debug("Receiving '%s'", result)
-        apdu_logger.debug("<= %s%4x", result.data.hex(), result.status)
+        self.apdu_logger.debug("<= %s%4x", result.data.hex(), result.status)
         return result
 
     @raise_policy_enforcer
     def exchange_raw(self, data: bytes = b"") -> RAPDU:
         logger.debug("Sending '%s'", data)
-        apdu_logger.debug("=> %s", data.hex())
+        self.apdu_logger.debug("=> %s", data.hex())
         assert self._client is not None
         raw_result = self._client.raw_exchange(data)
         result = RAPDU(int.from_bytes(raw_result[-2:], "big"), raw_result[:-2] or b"")
         logger.debug("Receiving '%s'", result)
-        apdu_logger.debug("<= %s%4x", result.data.hex(), result.status)
+        self.apdu_logger.debug("<= %s%4x", result.data.hex(), result.status)
         return result
 
     @contextmanager

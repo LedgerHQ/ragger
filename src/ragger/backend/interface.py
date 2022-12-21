@@ -22,7 +22,6 @@ from pathlib import Path
 from types import TracebackType
 from typing import Optional, Type, Generator, Any
 
-from ragger import apdu_logger
 from ragger.firmware import Firmware
 from ragger.utils import pack_APDU, RAPDU, Crop
 
@@ -44,15 +43,21 @@ class BackendInterface(ABC):
         self._firmware = firmware
         self._last_async_response: Optional[RAPDU] = None
         self.raise_policy = RaisePolicy.RAISE_ALL_BUT_0x9000
-        if log_apdu_file is not None:
+
+        self.apdu_logger = logging.getLogger(__package__ + "_apdu_logger")
+        self.apdu_logger.setLevel(level=logging.DEBUG)
+
+        if log_apdu_file is None:
+            self.apdu_logger.disabled = True
+        else:
             apdu_handler = logging.FileHandler(filename=log_apdu_file, mode='w', delay=True)
             apdu_handler.setFormatter(logging.Formatter('%(message)s'))
-            apdu_logger.addHandler(apdu_handler)
+            self.apdu_logger.addHandler(apdu_handler)
             atexit.register(self._cleanup)
-            apdu_logger.disabled = False
+            self.apdu_logger.disabled = False
 
     def _cleanup(self):
-        for handler in apdu_logger.handlers:
+        for handler in self.apdu_logger.handlers:
             if isinstance(handler, logging.FileHandler):
                 handler.close()
 
