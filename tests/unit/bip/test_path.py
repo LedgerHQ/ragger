@@ -22,13 +22,13 @@ class TestPath(TestCase):
                 self.assertEqual(last_value, variant | (HARDENED_INDEX if hardening else 0))
 
     def test_errors(self):
-        with self.assertRaises(ValueError) as e:
+        with self.assertRaises(ValueError):
             p.pack_derivation_path("")
-        with self.assertRaises(ValueError) as e:
+        with self.assertRaises(ValueError):
             p.pack_derivation_path("m/0/")
-        with self.assertRaises(ValueError) as e:
+        with self.assertRaises(ValueError):
             p.pack_derivation_path("m//0")
-        with self.assertRaises(ValueError) as e:
+        with self.assertRaises(ValueError):
             p.pack_derivation_path("m/a")
 
     def test_level_path_0(self):
