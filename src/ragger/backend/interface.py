@@ -14,6 +14,7 @@
    limitations under the License.
 """
 import logging
+import atexit
 from abc import ABC, abstractmethod
 from contextlib import contextmanager
 from enum import Enum, auto
@@ -47,7 +48,13 @@ class BackendInterface(ABC):
             apdu_handler = logging.FileHandler(filename=log_apdu_file, mode='w', delay=True)
             apdu_handler.setFormatter(logging.Formatter('%(message)s'))
             apdu_logger.addHandler(apdu_handler)
+            atexit.register(self._cleanup)
             apdu_logger.disabled = False
+
+    def _cleanup(self):
+        for handler in apdu_logger.handlers:
+            if isinstance(handler, logging.FileHandler):
+                handler.close()
 
     @property
     def firmware(self) -> Firmware:

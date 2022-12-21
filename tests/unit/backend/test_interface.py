@@ -1,7 +1,9 @@
 import struct
+from pathlib import Path
 from unittest import TestCase
 from unittest.mock import MagicMock
 
+from ragger import apdu_logger
 from ragger.error import ExceptionRAPDU
 from ragger.backend import BackendInterface
 from ragger.backend import RaisePolicy
@@ -101,3 +103,14 @@ class TestBackendInterface(TestCase):
             pass
         self.assertTrue(self.backend.mock.exchange_async_raw.called)
         self.assertEqual(self.backend.mock.exchange_async_raw.call_args, ((expected, ), ))
+
+    def test_log_apdu(self):
+        test_file = Path("/tmp/test_log_file.log").resolve()
+        ref_lines = ["Test logging", "hello world", "Lorem Ipsum"]
+        with DummyBackend(firmware=self.firmware, log_apdu_file=test_file) as backend:
+            for l in ref_lines:
+                apdu_logger.debug(l)
+        with open(test_file, mode='r') as fp:
+            read_lines = [l.strip() for l in fp.readlines()]
+            self.assertEqual(read_lines, ref_lines)
+
