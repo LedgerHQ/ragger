@@ -106,6 +106,7 @@ class SpeculosBackend(BackendInterface):
 
     @contextmanager
     def exchange_async_raw(self, data: bytes = b"") -> Generator[None, None, None]:
+        logger.debug("Sending '%s'", data.hex())
         with self._client.apdu_exchange_nowait(cla=data[0],
                                                ins=data[1],
                                                p1=data[2],
