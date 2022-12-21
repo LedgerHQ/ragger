@@ -44,17 +44,18 @@ class BackendInterface(ABC):
         self._last_async_response: Optional[RAPDU] = None
         self.raise_policy = RaisePolicy.RAISE_ALL_BUT_0x9000
 
-        self.apdu_logger = logging.getLogger(__package__ + "_apdu_logger")
+        self.apdu_logger = logging.getLogger("apdu_logger")
         self.apdu_logger.setLevel(level=logging.DEBUG)
+        handler = logging.StreamHandler()
+        formatter = logging.Formatter('[%(asctime)s][%(levelname)s] %(name)s - %(message)s')
+        handler.setFormatter(formatter)
+        self.apdu_logger.addHandler(handler)
 
-        if log_apdu_file is None:
-            self.apdu_logger.disabled = True
-        else:
+        if log_apdu_file is not None:
             apdu_handler = logging.FileHandler(filename=log_apdu_file, mode='w', delay=True)
             apdu_handler.setFormatter(logging.Formatter('%(message)s'))
             self.apdu_logger.addHandler(apdu_handler)
             atexit.register(self._cleanup)
-            self.apdu_logger.disabled = False
 
     def _cleanup(self):
         for handler in self.apdu_logger.handlers:

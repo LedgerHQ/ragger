@@ -35,7 +35,6 @@ def raise_policy_enforcer(function):
         except CommException as error:
             rapdu = RAPDU(error.sw, error.data)
 
-        logger.debug("Receiving '%s'", rapdu)
         self.apdu_logger.debug("<= %s%4x", rapdu.data.hex(), rapdu.status)
 
         if self.is_raise_required(rapdu):
@@ -62,7 +61,6 @@ class LedgerWalletBackend(BackendInterface):
         self._client.close()
 
     def send_raw(self, data: bytes = b"") -> None:
-        logger.debug("Sending '%s'", data)
         self.apdu_logger.debug("=> %s", data.hex())
         assert self._client is not None
         self._client.device.write(data)
@@ -77,18 +75,15 @@ class LedgerWalletBackend(BackendInterface):
             raw_result = self._client.device.read()
         status, payload = int.from_bytes(raw_result[-2:], "big"), raw_result[:-2] or b""
         result = RAPDU(status, payload)
-        logger.debug("Receiving '%s'", result)
         self.apdu_logger.debug("<= %s%4x", result.data.hex(), result.status)
         return result
 
     @raise_policy_enforcer
     def exchange_raw(self, data: bytes = b"") -> RAPDU:
-        logger.debug("Sending '%s'", data)
         self.apdu_logger.debug("=> %s", data.hex())
         assert self._client is not None
         raw_result = self._client.raw_exchange(data)
         result = RAPDU(int.from_bytes(raw_result[-2:], "big"), raw_result[:-2] or b"")
-        logger.debug("Receiving '%s'", result)
         self.apdu_logger.debug("<= %s%4x", result.data.hex(), result.status)
         return result
 

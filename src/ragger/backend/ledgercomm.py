@@ -31,7 +31,6 @@ def raise_policy_enforcer(function):
     def decoration(self: 'LedgerCommBackend', *args, **kwargs) -> RAPDU:
         rapdu: RAPDU = function(self, *args, **kwargs)
 
-        logger.debug("Receiving '%s'", rapdu)
         self.apdu_logger.debug("<= %s%4x", rapdu.data.hex(), rapdu.status)
 
         if self.is_raise_required(rapdu):
@@ -72,7 +71,6 @@ class LedgerCommBackend(BackendInterface):
         self._client.close()
 
     def send_raw(self, data: bytes = b"") -> None:
-        logger.debug("Sending '%s'", data)
         self.apdu_logger.debug("=> %s", data.hex())
         assert self._client is not None
         self._client.send_raw(data)
@@ -81,17 +79,14 @@ class LedgerCommBackend(BackendInterface):
     def receive(self) -> RAPDU:
         assert self._client is not None
         result = RAPDU(*self._client.recv())
-        logger.debug("Receiving '%s'", result)
         self.apdu_logger.debug("<= %s%4x", result.data.hex(), result.status)
         return result
 
     @raise_policy_enforcer
     def exchange_raw(self, data: bytes = b"") -> RAPDU:
-        logger.debug("Sending '%s'", data)
         self.apdu_logger.debug("=> %s", data.hex())
         assert self._client is not None
         result = RAPDU(*self._client.exchange_raw(data))
-        logger.debug("Receiving '%s'", result)
         self.apdu_logger.debug("<= %s%4x", result.data.hex(), result.status)
         return result
 

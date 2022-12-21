@@ -39,7 +39,6 @@ def raise_policy_enforcer(function):
         except ApduException as error:
             rapdu = RAPDU(error.sw, error.data)
 
-        logger.debug("Receiving '%s'", rapdu)
         self.apdu_logger.debug("<= %s%4x", rapdu.data.hex(), rapdu.status)
 
         if self.is_raise_required(rapdu):
@@ -102,7 +101,6 @@ class SpeculosBackend(BackendInterface):
         self._client.__exit__(*args, **kwargs)
 
     def send_raw(self, data: bytes = b"") -> None:
-        logger.debug("Sending '%s'", data.hex())
         self.apdu_logger.debug("=> %s", data.hex())
         self._pending = ApduResponse(self._client._apdu_exchange_nowait(data))
 
@@ -114,7 +112,6 @@ class SpeculosBackend(BackendInterface):
 
     @raise_policy_enforcer
     def exchange_raw(self, data: bytes = b"") -> RAPDU:
-        logger.debug("Sending '%s'", data.hex())
         self.apdu_logger.debug("=> %s", data.hex())
         return RAPDU(0x9000, self._client._apdu_exchange(data))
 
@@ -124,7 +121,6 @@ class SpeculosBackend(BackendInterface):
 
     @contextmanager
     def exchange_async_raw(self, data: bytes = b"") -> Generator[None, None, None]:
-        logger.debug("Sending '%s'", data.hex())
         self.apdu_logger.debug("=> %s", data.hex())
         with self._client.apdu_exchange_nowait(cla=data[0],
                                                ins=data[1],

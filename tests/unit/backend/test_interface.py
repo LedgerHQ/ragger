@@ -67,15 +67,14 @@ class TestBackendInterface(TestCase):
         self.firmware = _Firmware("nanos", "2.0.1", "other")
         self.errors = (ExceptionRAPDU(0x8888, "ERROR1"), ExceptionRAPDU(0x7777, "ERROR2"))
         self.valid_statuses = (0x9000, 0x9001, 0x9002)
-        self.backend = DummyBackend(self.firmware)
+        self.backend = DummyBackend(firmware=self.firmware)
 
     def test_init(self):
         self.assertEqual(self.backend.firmware, self.firmware)
         self.assertIsNone(self.backend.last_async_response)
 
-        backend = DummyBackend(self.firmware)
         # Default value
-        self.assertEqual(backend.raise_policy, RaisePolicy.RAISE_ALL_BUT_0x9000)
+        self.assertEqual(self.backend.raise_policy, RaisePolicy.RAISE_ALL_BUT_0x9000)
 
     def test_send(self):
         cla, ins, p1, p2 = 1, 2, 3, 4
@@ -103,12 +102,16 @@ class TestBackendInterface(TestCase):
         self.assertTrue(self.backend.mock.exchange_async_raw.called)
         self.assertEqual(self.backend.mock.exchange_async_raw.call_args, ((expected, ), ))
 
+
+class TestBackendInterfaceLogging(TestCase):
+
     def test_log_apdu(self):
+        self.firmware = _Firmware("nanos", "2.0.1", "other")
         test_file = Path("/tmp/test_log_file.log").resolve()
+        self.backend = DummyBackend(firmware=self.firmware, log_apdu_file=test_file)
         ref_lines = ["Test logging", "hello world", "Lorem Ipsum"]
-        backend = DummyBackend(firmware=self.firmware, log_apdu_file=test_file)
         for l in ref_lines:
-            backend.apdu_logger.debug(l)
+            self.backend.apdu_logger.debug(l)
         with open(test_file, mode='r') as fp:
             read_lines = [l.strip() for l in fp.readlines()]
             self.assertEqual(read_lines, ref_lines)
