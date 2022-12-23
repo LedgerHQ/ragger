@@ -342,3 +342,123 @@ class Navigator(ABC):
         else:
             raise ValueError(f"Could not find first snapshot {first_golden_snap}")
         return img_idx
+
+    def navigate_until_text_and_compare(self,
+                                        navigate_instruction: NavIns,
+                                        validation_instruction: NavIns,
+                                        text: str,
+                                        path: Optional[Path] = None,
+                                        test_case_name: Optional[Path] = None,
+                                        timeout: int = 30) -> None:
+        """
+        Navigate until some text is found on the screen content displayed then
+        compare each step snapshot with "golden images".
+
+        This method may be left void on backends connecting to physical devices,
+        where a physical interaction must be performed instead.
+        This will prevent the instrumentation to fail (the void method won't
+        raise `NotImplementedError`), but the instrumentation flow will probably
+        get stuck (on further call to `receive` for instance) until the expected
+        action is performed on the device.
+
+        :param path: Absolute path to the snapshots directory.
+        :type path: Path
+        :param test_case_name: Relative path to the test case snapshots directory (from path).
+        :type test_case_name: Path
+        :param navigate_instruction: Navigation instruction to be performed until the text is found.
+        :type navigate_instruction: NavIns
+        :param validation_instruction: Navigation instruction to be performed once the text is found.
+        :type validation_instruction: NavIns
+        :param text: Text string to look for.
+        :type text: str
+        :param timeout: Timeout of the navigation loop if the text string is not found.
+        :type timeout: int
+
+        :raises TimeoutError: If the text is not found.
+
+        :return: None
+        :rtype: NoneType
+        """
+        idx = None
+        snaps_tmp_path = None
+        snaps_golden_path = None
+        if path and test_case_name:
+            snaps_tmp_path = self._init_snaps_temp_dir(path, test_case_name)
+            snaps_golden_path = self._check_snaps_dir_path(path, test_case_name, True)
+            idx = 0
+
+        if not isinstance(self._backend, SpeculosBackend):
+            # TODO remove this once the proper behavior of
+            # other backends is implemented.
+            return
+
+        start = time()
+
+        ctx = self._backend.wait_for_screen_change(2.0)
+        # Make sure to enter the navigation loop after
+        # there is a screen change (or wait 1 second).
+        # Useful when the navigate_until_text is used
+        # in transaction flows and the screen changes
+        # from the idle menu to a review start screen.
+        try:
+            ctx = self._backend.wait_for_screen_change(1.0, ctx)
+        except TimeoutError:
+            # Maybe the start screen of the transaction flow is
+            # already displayed so we'll wait 1 sec until
+            # the exception is thrown then we pass and go to the
+            # navigation loop.
+            pass
+
+        # Navigate until the text specified in argument is found.
+        while True:
+            if idx is not None:
+                assert isinstance(snaps_tmp_path, Path)
+                assert isinstance(snaps_golden_path, Path)
+                self._compare_snap(snaps_tmp_path, snaps_golden_path, idx)
+                idx += 1
+
+            if not self._backend.compare_screen_with_text(text):
+                # Go to the next screen.
+                self.navigate([navigate_instruction])
+            else:
+                # Validation action when the text is found.
+                self.navigate([validation_instruction])
+                break
+
+            # Global navigation loop timeout in case the text is never found.
+            if (time() - start > timeout):
+                raise TimeoutError(f"Timeout waiting for text {text}")
+
+            ctx = self._backend.wait_for_screen_change(2.0, ctx)
+
+    def navigate_until_text(self,
+                            navigate_instruction: NavIns,
+                            validation_instruction: NavIns,
+                            text: str,
+                            timeout: int = 30) -> None:
+        """
+        Navigate until some text is found on the screen content displayed.
+
+        This method may be left void on backends connecting to physical devices,
+        where a physical interaction must be performed instead.
+        This will prevent the instrumentation to fail (the void method won't
+        raise `NotImplementedError`), but the instrumentation flow will probably
+        get stuck (on further call to `receive` for instance) until the expected
+        action is performed on the device.
+
+        :param navigate_instruction: Navigation instruction to be performed until the text is found.
+        :type navigate_instruction: NavIns
+        :param validation_instruction: Navigation instruction to be performed once the text is found.
+        :type validation_instruction: NavIns
+        :param text: Text string to look for.
+        :type text: str
+        :param timeout: Timeout of the navigation loop if the text string is not found.
+        :type timeout: int
+
+        :raises TimeoutError: If the text is not found.
+
+        :return: None
+        :rtype: NoneType
+        """
+        self.navigate_until_text_and_compare(navigate_instruction, validation_instruction, text,
+                                             None, None, timeout)

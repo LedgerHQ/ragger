@@ -50,6 +50,15 @@ class DummyBackend(BackendInterface):
     def save_screen_snapshot(self, path) -> None:
         self.mock.save_screen_snapshot()
 
+    def wait_for_screen_change(self, timeout: float = 10.0, context: list = []):
+        return self.mock.wait_for_screen_change()
+
+    def compare_screen_with_text(self, text: str):
+        return self.mock.compare_screen_with_text()
+
+    def get_current_screen_content(self):
+        return self.mock.get_current_screen_content()
+
 
 class TestBackendInterface(TestCase):
 

@@ -18,7 +18,7 @@ from contextlib import contextmanager
 from enum import Enum, auto
 from pathlib import Path
 from types import TracebackType
-from typing import Optional, Type, Generator
+from typing import Optional, Type, Generator, Any
 
 from ragger.firmware import Firmware
 from ragger.utils import pack_APDU, RAPDU, Crop
@@ -335,5 +335,73 @@ class BackendInterface(ABC):
 
         :return: True if matches else False
         :rtype: bool
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def wait_for_screen_change(self, timeout: float = 10.0, context: Any = None) -> Any:
+        """
+        Wait until the screen content (text) changes compared to what is provided
+        by the context parameter. If no context is provided, the function returns
+        immediately, returning the current screen content.
+
+        This method may be left void on backends connecting to physical devices,
+        where a physical interaction must be performed instead.
+        This will prevent the instrumentation to fail (the void method won't
+        raise `NotImplementedError`), but the instrumentation flow will probably
+        get stuck (on further call to `receive` for instance) until the expected
+        action is performed on the device.
+
+        :param timeout: Maximum time to wait for a screen change before an
+                        exception is raised.
+        :type timeout: float
+        :param context: Context to compare screen content with. Type of this
+                        context depends on the backend implementation, it
+                        could be a string of text or something else. Usually
+                        you would use "get_current_screen_content" to get
+                        the current context and use it as input to this
+                        function.
+        :type context: Any
+        :return: Screen context after the screen change.
+        :rtype: Any
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def compare_screen_with_text(self, text: str):
+        """
+        Checks if the current screen content contains the text
+        string provided.
+
+        This method may be left void on backends connecting to physical devices,
+        where a physical interaction must be performed instead.
+        This will prevent the instrumentation to fail (the void method won't
+        raise `NotImplementedError`), but the instrumentation flow will probably
+        get stuck (on further call to `receive` for instance) until the expected
+        action is performed on the device.
+
+        :param text:
+        :type text: str
+        :return: True if the content contains the string, False
+                 otherwise.
+        :rtype: bool
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_current_screen_content(self) -> Any:
+        """
+        Returns the current screen content.
+
+        This method may be left void on backends connecting to physical devices,
+        where a physical interaction must be performed instead.
+        This will prevent the instrumentation to fail (the void method won't
+        raise `NotImplementedError`), but the instrumentation flow will probably
+        get stuck (on further call to `receive` for instance) until the expected
+        action is performed on the device.
+
+        :return: Current screen content as an opaque type depending on backend
+                 implem.
+        :rtype: Any
         """
         raise NotImplementedError
