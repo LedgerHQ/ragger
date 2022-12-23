@@ -18,22 +18,12 @@ jobs:
     - name: Clone
       uses: actions/checkout@v3
     - name: Speculos dependencies
-      run: sudo apt-get update && sudo apt-get install -y qemu-user-static gcc-arm-linux-gnueabihf libvncserver-dev
+      run: sudo apt-get update && sudo apt-get install -y qemu-user-static
     - name: Build & install
       run: |
         pip install --extra-index-url https://test.pypi.org/simple/ -U .[tests,all_backends]
         pip install -U click>=8
-    - name: Clone Speculos
-      uses: actions/checkout@v3
-      with:
-        repository: LedgerHQ/speculos
-        ref: improve_client_events
-        path: speculos
-    - name: Install Speculos 
-      run: |
-        cd speculos
-        pip install .
-    - name: Gather boilerplate for Nano S/X/S+ to run tests against
+    - name: Gather compiled Boilerplate application to run tests against
       uses: dawidd6/action-download-artifact@v2
       with:
         repo: LedgerHQ/app-boilerplate
