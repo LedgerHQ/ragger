@@ -394,17 +394,20 @@ class Navigator(ABC):
 
         start = time()
 
-        ctx = self._backend.wait_for_screen_change(2.0)
+        # Retrieve the screen context.
+        # On Speculos backend it immediately returns without any wait.
+        ctx = self._backend.wait_for_screen_change(0.1)
+
         # Make sure to enter the navigation loop after
-        # there is a screen change (or wait 1 second).
+        # there is a screen change (or wait 2 seconds).
         # Useful when the navigate_until_text is used
         # in transaction flows and the screen changes
         # from the idle menu to a review start screen.
         try:
-            ctx = self._backend.wait_for_screen_change(1.0, ctx)
+            ctx = self._backend.wait_for_screen_change(2.0, ctx)
         except TimeoutError:
             # Maybe the start screen of the transaction flow is
-            # already displayed so we'll wait 1 sec until
+            # already displayed so we'll wait 2.0 sec until
             # the exception is thrown then we pass and go to the
             # navigation loop.
             pass

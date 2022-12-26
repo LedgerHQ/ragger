@@ -166,7 +166,8 @@ class SpeculosBackend(BackendInterface):
         else:
             content = self._client.get_current_screen_content()
             while content == context:
-                sleep(0.1)
+                # Give some time to other threads, and mostly Speculos one
+                sleep(0.2)
                 if (time() - start > timeout):
                     raise TimeoutError("Timeout waiting for screen change")
                 content = self._client.get_current_screen_content()
