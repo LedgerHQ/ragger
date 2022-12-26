@@ -339,11 +339,10 @@ class BackendInterface(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def wait_for_screen_change(self, timeout: float = 10.0, context: Any = None) -> Any:
+    def wait_for_screen_change(self, timeout: float = 10.0) -> None:
         """
-        Wait until the screen content (text) changes compared to what is provided
-        by the context parameter. If no context is provided, the function returns
-        immediately, returning the current screen content.
+        Wait until the screen content (text) changes compared to the last
+        reference stored stored internally by the backend.
 
         This method may be left void on backends connecting to physical devices,
         where a physical interaction must be performed instead.
@@ -355,20 +354,14 @@ class BackendInterface(ABC):
         :param timeout: Maximum time to wait for a screen change before an
                         exception is raised.
         :type timeout: float
-        :param context: Context to compare screen content with. Type of this
-                        context depends on the backend implementation, it
-                        could be a string of text or something else. Usually
-                        you would use "get_current_screen_content" to get
-                        the current context and use it as input to this
-                        function.
-        :type context: Any
-        :return: Screen context after the screen change.
-        :rtype: Any
+
+        :return: None
+        :rtype: NoneType
         """
         raise NotImplementedError
 
     @abstractmethod
-    def compare_screen_with_text(self, text: str):
+    def compare_screen_with_text(self, text: str) -> bool:
         """
         Checks if the current screen content contains the text
         string provided.
@@ -392,6 +385,8 @@ class BackendInterface(ABC):
     def get_current_screen_content(self) -> Any:
         """
         Returns the current screen content.
+        This also update the screen content reference stored stored internally
+        by the backend.
 
         This method may be left void on backends connecting to physical devices,
         where a physical interaction must be performed instead.

@@ -81,7 +81,7 @@ class Actions:
         return {}
 
     def events(self, *args):
-        return {"data": {"events": Events.indexed[self.idx]}}, 200
+        return {"events": Events.indexed[self.idx]}, 200
 
     def screenshot(self, *args):
         path = Path(

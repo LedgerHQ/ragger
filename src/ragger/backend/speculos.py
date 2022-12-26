@@ -17,7 +17,7 @@ from contextlib import contextmanager
 from io import BytesIO
 from pathlib import Path
 from PIL import Image
-from typing import Optional, Generator, Any
+from typing import Optional, Generator
 from time import time, sleep
 from json import dumps
 
@@ -74,6 +74,7 @@ class SpeculosBackend(BackendInterface):
                                                       api_url=self.url,
                                                       **kwargs)
         self._pending: Optional[ApduResponse] = None
+        self._screen_content: dict = {}
 
     @property
     def url(self) -> str:
@@ -82,6 +83,17 @@ class SpeculosBackend(BackendInterface):
     def __enter__(self) -> "SpeculosBackend":
         logger.info(f"Starting {self.__class__.__name__} stream")
         self._client.__enter__()
+
+        # Wait until some text is displayed on the screen.
+        start = time()
+        while not self._screen_content.get("events", []):
+            # Give some time to other threads, and mostly Speculos one
+            sleep(0.2)
+            if (time() - start > 5.0):
+                raise TimeoutError(
+                    "Timeout waiting for screen content upon Ragger Speculos Instance start")
+            self._screen_content = self._client.get_current_screen_content()
+
         return self
 
     def __exit__(self, *args, **kwargs):
@@ -159,22 +171,22 @@ class SpeculosBackend(BackendInterface):
         else:
             return screenshot_equal(f"{golden_snap_path}", snap)
 
-    def wait_for_screen_change(self, timeout: float = 10.0, context: Any = None) -> Any:
-        start = time()
-        if not context:
-            return self._client.get_current_screen_content()
-        else:
-            content = self._client.get_current_screen_content()
-            while content == context:
-                # Give some time to other threads, and mostly Speculos one
-                sleep(0.2)
-                if (time() - start > timeout):
-                    raise TimeoutError("Timeout waiting for screen change")
-                content = self._client.get_current_screen_content()
-            return content
+    def get_current_screen_content(self) -> dict:
+        self._screen_content = self._client.get_current_screen_content()
+        return self._screen_content
 
-    def compare_screen_with_text(self, text: str):
+    def compare_screen_with_text(self, text: str) -> bool:
         return text in dumps(self._client.get_current_screen_content())
 
-    def get_current_screen_content(self) -> Any:
-        return self._client.get_current_screen_content()
+    def wait_for_screen_change(self, timeout: float = 10.0) -> None:
+        start = time()
+        content = self._client.get_current_screen_content()
+        while content == self._screen_content:
+            # Give some time to other threads, and mostly Speculos one
+            sleep(0.2)
+            if (time() - start > timeout):
+                raise TimeoutError("Timeout waiting for screen change")
+            content = self._client.get_current_screen_content()
+
+        # Update self._screen_content to use it as reference for next calls
+        self._screen_content = content
