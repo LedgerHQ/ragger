@@ -181,8 +181,8 @@ class Navigator(ABC):
             self._callbacks[instruction.id](*instruction.args, **instruction.kwargs)
 
     def navigate_and_compare(self,
-                             path: Path,
-                             test_case_name: Path,
+                             path: Optional[Path],
+                             test_case_name: Optional[Path],
                              instructions: List[NavIns],
                              timeout: float = 10.0,
                              screen_change_before_first_instruction: bool = True,
@@ -193,9 +193,9 @@ class Navigator(ABC):
         provided then compare each step snapshot with "golden images".
 
         :param path: Absolute path to the snapshots directory.
-        :type path: Path
+        :type path: Optional[Path]
         :param test_case_name: Relative path to the test case snapshots directory (from path).
-        :type test_case_name: Path
+        :type test_case_name: Optional[Path]
         :param instructions: List of navigation instructions.
         :type instructions: List[NavIns]
         :param timeout: Timeout for each navigation step.
@@ -212,15 +212,19 @@ class Navigator(ABC):
         :return: None
         :rtype: NoneType
         """
-        snaps_tmp_path = self._init_snaps_temp_dir(path, test_case_name)
-        snaps_golden_path = self._check_snaps_dir_path(path, test_case_name, True)
+        snaps_tmp_path = None
+        snaps_golden_path = None
+        if path and test_case_name:
+            snaps_tmp_path = self._init_snaps_temp_dir(path, test_case_name)
+            snaps_golden_path = self._check_snaps_dir_path(path, test_case_name, True)
 
         if screen_change_before_first_instruction:
             self._backend.wait_for_screen_change(timeout)
 
         # First navigate to the last step and take snapshots of every screen in the flow.
         for idx, instruction in enumerate(instructions):
-            self._compare_snap(snaps_tmp_path, snaps_golden_path, idx + snap_start_idx)
+            if snaps_tmp_path and snaps_golden_path:
+                self._compare_snap(snaps_tmp_path, snaps_golden_path, idx + snap_start_idx)
 
             self.navigate([instruction])
 
@@ -231,8 +235,9 @@ class Navigator(ABC):
             self._backend.wait_for_screen_change(timeout)
 
             # Compare last screen snapshot
-            self._compare_snap(snaps_tmp_path, snaps_golden_path,
-                               len(instructions) + snap_start_idx)
+            if snaps_tmp_path and snaps_golden_path:
+                self._compare_snap(snaps_tmp_path, snaps_golden_path,
+                                   len(instructions) + snap_start_idx)
 
     def navigate_until_snap(self,
                             navigate_instruction: NavIns,
@@ -345,15 +350,15 @@ class Navigator(ABC):
             raise ValueError(f"Could not find first snapshot {first_golden_snap}")
         return img_idx
 
-    def navigate_until_text_and_compare(
-            self,
-            navigate_instruction: NavIns,
-            validation_instruction: NavIns,
-            text: str,
-            path: Optional[Path] = None,
-            test_case_name: Optional[Path] = None,
-            timeout: int = 30,
-            screen_change_before_first_instruction: bool = True) -> None:
+    def navigate_until_text_and_compare(self,
+                                        navigate_instruction: NavIns,
+                                        validation_instructions: List[NavIns],
+                                        text: str,
+                                        path: Optional[Path] = None,
+                                        test_case_name: Optional[Path] = None,
+                                        timeout: int = 30,
+                                        screen_change_before_first_instruction: bool = True,
+                                        screen_change_after_last_instruction: bool = True) -> None:
         """
         Navigate until some text is found on the screen content displayed then
         compare each step snapshot with "golden images".
@@ -371,27 +376,29 @@ class Navigator(ABC):
         :type test_case_name: Path
         :param navigate_instruction: Navigation instruction to be performed until the text is found.
         :type navigate_instruction: NavIns
-        :param validation_instruction: Navigation instruction to be performed once the text is found.
-        :type validation_instruction: NavIns
+        :param validation_instructions: Navigation instructions to be performed once the text is found.
+        :type validation_instructions: List[NavIns]
         :param text: Text string to look for.
         :type text: str
         :param timeout: Timeout for the whole navigation loop.
         :type timeout: int
         :param screen_change_before_first_instruction: Wait for a screen change before first instruction.
         :type screen_change_before_first_instruction: bool
+        :param screen_change_after_last_instruction: Wait for a screen change after last instruction.
+        :type screen_change_after_last_instruction: bool
 
         :raises TimeoutError: If the text is not found.
 
         :return: None
         :rtype: NoneType
         """
-        idx = None
+        idx = 0
         snaps_tmp_path = None
         snaps_golden_path = None
+
         if path and test_case_name:
             snaps_tmp_path = self._init_snaps_temp_dir(path, test_case_name)
             snaps_golden_path = self._check_snaps_dir_path(path, test_case_name, True)
-            idx = 0
 
         if not isinstance(self._backend, SpeculosBackend):
             # TODO remove this once the proper behavior of other backends is implemented.
@@ -404,18 +411,15 @@ class Navigator(ABC):
 
         # Navigate until the text specified in argument is found.
         while True:
-            if idx is not None:
-                assert isinstance(snaps_tmp_path, Path)
-                assert isinstance(snaps_golden_path, Path)
+            if snaps_tmp_path and snaps_golden_path:
                 self._compare_snap(snaps_tmp_path, snaps_golden_path, idx)
-                idx += 1
 
             if not self._backend.compare_screen_with_text(text):
                 # Go to the next screen.
                 self.navigate([navigate_instruction])
+                idx += 1
             else:
-                # Validation action when the text is found.
-                self.navigate([validation_instruction])
+                # Validation screen text found, exit the loop
                 break
 
             # Global navigation loop timeout in case the text is never found.
@@ -425,12 +429,25 @@ class Navigator(ABC):
 
             self._backend.wait_for_screen_change(remaining)
 
+        # Perform navigation validation instructions in an "navigate_and_compare" way.
+        if validation_instructions:
+            remaining = timeout - (time() - start)
+            self.navigate_and_compare(
+                path,
+                test_case_name,
+                validation_instructions,
+                timeout=remaining,
+                screen_change_before_first_instruction=False,
+                screen_change_after_last_instruction=screen_change_after_last_instruction,
+                snap_start_idx=idx)
+
     def navigate_until_text(self,
                             navigate_instruction: NavIns,
-                            validation_instruction: NavIns,
+                            validation_instructions: List[NavIns],
                             text: str,
                             timeout: int = 30,
-                            screen_change_before_first_instruction: bool = True) -> None:
+                            screen_change_before_first_instruction: bool = True,
+                            screen_change_after_last_instruction: bool = True) -> None:
         """
         Navigate until some text is found on the screen content displayed.
 
@@ -443,20 +460,23 @@ class Navigator(ABC):
 
         :param navigate_instruction: Navigation instruction to be performed until the text is found.
         :type navigate_instruction: NavIns
-        :param validation_instruction: Navigation instruction to be performed once the text is found.
-        :type validation_instruction: NavIns
+        :param validation_instructions: Navigation instructions to be performed once the text is found.
+        :type validation_instructions: List[NavIns]
         :param text: Text string to look for.
         :type text: str
         :param timeout: Timeout for the whole navigation loop.
         :type timeout: int
         :param screen_change_before_first_instruction: Wait for a screen change before first instruction.
         :type screen_change_before_first_instruction: bool
+        :param screen_change_after_last_instruction: Wait for a screen change after last instruction.
+        :type screen_change_after_last_instruction: bool
 
         :raises TimeoutError: If the text is not found.
 
         :return: None
         :rtype: NoneType
         """
-        self.navigate_until_text_and_compare(navigate_instruction, validation_instruction, text,
+        self.navigate_until_text_and_compare(navigate_instruction, validation_instructions, text,
                                              None, None, timeout,
-                                             screen_change_before_first_instruction)
+                                             screen_change_before_first_instruction,
+                                             screen_change_after_last_instruction)

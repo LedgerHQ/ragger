@@ -158,7 +158,7 @@ class TestNavigator(TestCase):
         self.navigator._callbacks = {ni1.id: cb1, ni2.id: cb2}
         self.navigator._compare_snap = MagicMock()
 
-        self.assertIsNone(self.navigator.navigate_until_text_and_compare(ni1, ni2, text))
+        self.assertIsNone(self.navigator.navigate_until_text_and_compare(ni1, [ni2], text))
         # no snapshot to check, so no call
         self.assertFalse(self.navigator._compare_snap.called)
         # backend compare function called 3 times with the text
@@ -182,10 +182,10 @@ class TestNavigator(TestCase):
         self.navigator._compare_snap = MagicMock()
 
         self.assertIsNone(
-            self.navigator.navigate_until_text_and_compare(ni1, ni2, text, self.pathdir,
+            self.navigator.navigate_until_text_and_compare(ni1, [ni2], text, self.pathdir,
                                                            self.pathdir))
-        # snapshots checked, so 3 calls
-        self.assertEqual(self.navigator._compare_snap.call_count, 3)
+        # snapshots checked, so 5 calls
+        self.assertEqual(self.navigator._compare_snap.call_count, 5)
         # backend compare function called 3 times with the text
         self.assertEqual(self.navigator._backend.compare_screen_with_text.call_count, 3)
         self.assertEqual(self.navigator._backend.compare_screen_with_text.call_args_list,
@@ -206,4 +206,4 @@ class TestNavigator(TestCase):
         self.navigator._compare_snap = MagicMock()
 
         with self.assertRaises(TimeoutError):
-            self.navigator.navigate_until_text_and_compare(ni, None, "not important", timeout=0)
+            self.navigator.navigate_until_text_and_compare(ni, [], "not important", timeout=0)

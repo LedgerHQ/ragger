@@ -127,7 +127,7 @@ class TestNavigator(TestCase):
             with SpeculosServerStub():
                 with self.backend:
                     self.navigator.navigate_until_text(NavIns(NavInsID.RIGHT_CLICK),
-                                                       NavIns(NavInsID.BOTH_CLICK),
+                                                       [NavIns(NavInsID.BOTH_CLICK)],
                                                        "About",
                                                        screen_change_before_first_instruction=False)
 
@@ -137,8 +137,7 @@ class TestNavigator(TestCase):
                 with self.backend:
                     with self.assertRaises(TimeoutError) as error:
                         self.navigator.navigate_until_text(
-                            NavIns(NavInsID.RIGHT_CLICK),
-                            NavIns(NavInsID.BOTH_CLICK),
+                            NavIns(NavInsID.RIGHT_CLICK), [NavIns(NavInsID.BOTH_CLICK)],
                             "WILL NOT BE FOUND",
                             screen_change_before_first_instruction=False)
                     self.assertIn("Timeout waiting for text", str(error.exception))
@@ -149,8 +148,7 @@ class TestNavigator(TestCase):
                 with self.backend:
                     with self.assertRaises(TimeoutError) as error:
                         self.navigator.navigate_until_text(
-                            NavIns(NavInsID.BOTH_CLICK),
-                            NavIns(NavInsID.BOTH_CLICK),
+                            NavIns(NavInsID.BOTH_CLICK), [NavIns(NavInsID.BOTH_CLICK)],
                             "WILL NOT BE FOUND",
                             timeout=5,
                             screen_change_before_first_instruction=False)
@@ -161,8 +159,7 @@ class TestNavigator(TestCase):
             with SpeculosServerStub():
                 with self.backend:
                     self.navigator.navigate_until_text_and_compare(
-                        NavIns(NavInsID.RIGHT_CLICK),
-                        NavIns(NavInsID.BOTH_CLICK),
+                        NavIns(NavInsID.RIGHT_CLICK), [NavIns(NavInsID.BOTH_CLICK)],
                         "About",
                         ROOT_SCREENSHOT_PATH,
                         "test_navigate_until_text_and_compare",
@@ -174,8 +171,7 @@ class TestNavigator(TestCase):
                 with self.backend:
                     with self.assertRaises(FileNotFoundError) as error:
                         self.navigator.navigate_until_text_and_compare(
-                            NavIns(NavInsID.RIGHT_CLICK),
-                            NavIns(NavInsID.BOTH_CLICK),
+                            NavIns(NavInsID.RIGHT_CLICK), [NavIns(NavInsID.BOTH_CLICK)],
                             "About",
                             ROOT_SCREENSHOT_PATH,
                             "test_navigate_and_compare_no_golden",
@@ -190,8 +186,7 @@ class TestNavigator(TestCase):
                 with self.backend:
                     with self.assertRaises(AssertionError) as error:
                         self.navigator.navigate_until_text_and_compare(
-                            NavIns(NavInsID.RIGHT_CLICK),
-                            NavIns(NavInsID.BOTH_CLICK),
+                            NavIns(NavInsID.RIGHT_CLICK), [NavIns(NavInsID.BOTH_CLICK)],
                             "About",
                             ROOT_SCREENSHOT_PATH,
                             "test_navigate_and_compare_wrong_golden",
