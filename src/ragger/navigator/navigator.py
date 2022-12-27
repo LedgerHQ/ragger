@@ -186,7 +186,8 @@ class Navigator(ABC):
                              instructions: List[NavIns],
                              timeout: float = 10.0,
                              screen_change_before_first_instruction: bool = True,
-                             screen_change_after_last_instruction: bool = True) -> None:
+                             screen_change_after_last_instruction: bool = True,
+                             snap_start_idx: int = 0) -> None:
         """
         Navigate on the device according to a set of navigation instructions
         provided then compare each step snapshot with "golden images".
@@ -203,6 +204,8 @@ class Navigator(ABC):
         :type screen_change_before_first_instruction: bool
         :param screen_change_after_last_instruction: Wait for a screen change after last instruction.
         :type screen_change_after_last_instruction: bool
+        :param snap_start_idx: Index of the first snap for this navigation.
+        :type snap_start_idx: int
 
         :raises ValueError: If one of the snapshots does not match.
 
@@ -217,7 +220,7 @@ class Navigator(ABC):
 
         # First navigate to the last step and take snapshots of every screen in the flow.
         for idx, instruction in enumerate(instructions):
-            self._compare_snap(snaps_tmp_path, snaps_golden_path, idx)
+            self._compare_snap(snaps_tmp_path, snaps_golden_path, idx + snap_start_idx)
 
             self.navigate([instruction])
 
@@ -228,7 +231,8 @@ class Navigator(ABC):
             self._backend.wait_for_screen_change(timeout)
 
             # Compare last screen snapshot
-            self._compare_snap(snaps_tmp_path, snaps_golden_path, len(instructions))
+            self._compare_snap(snaps_tmp_path, snaps_golden_path,
+                               len(instructions) + snap_start_idx)
 
     def navigate_until_snap(self,
                             navigate_instruction: NavIns,
