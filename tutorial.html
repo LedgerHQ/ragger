@@ -145,7 +145,7 @@ of <code class="docutils literal notranslate"><span class="pre">Ragger</span></c
 <p>First step of all is the installation of <code class="docutils literal notranslate"><span class="pre">Ragger</span></code>. At first, we are going to
 test it with <a class="reference internal" href="glossary.html#term-Speculos"><span class="xref std std-term">Speculos</span></a>, so we are going to install <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> with Speculos
 dependencies:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pip install --extra-index-url https://test.pypi.org/simple/ ragger<span class="o">[</span>speculos<span class="o">]</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--extra-index-url<span class="w"> </span>https://test.pypi.org/simple/<span class="w"> </span>ragger<span class="o">[</span>speculos<span class="o">]</span>
 </pre></div>
 </div>
 <p>Some explanation on arguments:</p>
@@ -226,14 +226,14 @@ take place in a <code class="docutils literal notranslate"><span class="pre">con
 </div>
 </div>
 <p>This code can then be trigger with <code class="docutils literal notranslate"><span class="pre">Pytest</span></code> like this:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pytest -v test_something.py
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pytest<span class="w"> </span>-v<span class="w"> </span>test_something.py
 
-<span class="o">===============================</span> <span class="nb">test</span> session <span class="nv">starts</span> <span class="o">===============================</span>
-collected <span class="m">1</span> item
+<span class="o">===============================</span><span class="w"> </span><span class="nb">test</span><span class="w"> </span>session<span class="w"> </span><span class="nv">starts</span><span class="w"> </span><span class="o">===============================</span>
+collected<span class="w"> </span><span class="m">1</span><span class="w"> </span>item
 
-test_something.py::test_something PASSED                                     <span class="o">[</span><span class="m">100</span>%<span class="o">]</span>
+test_something.py::test_something<span class="w"> </span>PASSED<span class="w">                                     </span><span class="o">[</span><span class="m">100</span>%<span class="o">]</span>
 
-<span class="o">================================</span> <span class="m">1</span> passed <span class="k">in</span> <span class="m">0</span>.41s <span class="o">================================</span>
+<span class="o">================================</span><span class="w"> </span><span class="m">1</span><span class="w"> </span>passed<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">0</span>.41s<span class="w"> </span><span class="o">================================</span>
 </pre></div>
 </div>
 </div>
@@ -335,16 +335,16 @@ name and location:</p>
 </div>
 </div>
 <p>And with this, all test should pass gracefully.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pytest -v <span class="nv">test_something</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pytest<span class="w"> </span>-v<span class="w"> </span><span class="nv">test_something</span>
 
-<span class="o">===============================</span> <span class="nb">test</span> session <span class="nv">starts</span> <span class="o">===============================</span>
-collected <span class="m">3</span> items
+<span class="o">===============================</span><span class="w"> </span><span class="nb">test</span><span class="w"> </span>session<span class="w"> </span><span class="nv">starts</span><span class="w"> </span><span class="o">===============================</span>
+collected<span class="w"> </span><span class="m">3</span><span class="w"> </span>items
 
-test_something.py::test_something<span class="o">[</span>nanos <span class="m">2</span>.1<span class="o">]</span> PASSED                          <span class="o">[</span> <span class="m">33</span>%<span class="o">]</span>
-test_something.py::test_something<span class="o">[</span>nanox <span class="m">2</span>.0.2<span class="o">]</span> PASSED                        <span class="o">[</span> <span class="m">66</span>%<span class="o">]</span>
-test_something.py::test_something<span class="o">[</span>nanosp <span class="m">1</span>.0.3<span class="o">]</span> PASSED                       <span class="o">[</span><span class="m">100</span>%<span class="o">]</span>
+test_something.py::test_something<span class="o">[</span>nanos<span class="w"> </span><span class="m">2</span>.1<span class="o">]</span><span class="w"> </span>PASSED<span class="w">                          </span><span class="o">[</span><span class="w"> </span><span class="m">33</span>%<span class="o">]</span>
+test_something.py::test_something<span class="o">[</span>nanox<span class="w"> </span><span class="m">2</span>.0.2<span class="o">]</span><span class="w"> </span>PASSED<span class="w">                        </span><span class="o">[</span><span class="w"> </span><span class="m">66</span>%<span class="o">]</span>
+test_something.py::test_something<span class="o">[</span>nanosp<span class="w"> </span><span class="m">1</span>.0.3<span class="o">]</span><span class="w"> </span>PASSED<span class="w">                       </span><span class="o">[</span><span class="m">100</span>%<span class="o">]</span>
 
-<span class="o">================================</span> <span class="m">3</span> passed <span class="k">in</span> <span class="m">1</span>.90s <span class="o">================================</span>
+<span class="o">================================</span><span class="w"> </span><span class="m">3</span><span class="w"> </span>passed<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">1</span>.90s<span class="w"> </span><span class="o">================================</span>
 </pre></div>
 </div>
 </div>
@@ -386,8 +386,8 @@ returning the correct backend:</p>
 </pre></div>
 </div>
 <p>Test can now be launched to run with another backend:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ <span class="c1"># start the application on a physical device connected to the computer, or on an emulator</span>
-$ pytest -v --backend ledgercomm test_something.py
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="c1"># start the application on a physical device connected to the computer, or on an emulator</span>
+$<span class="w"> </span>pytest<span class="w"> </span>-v<span class="w"> </span>--backend<span class="w"> </span>ledgercomm<span class="w"> </span>test_something.py
 </pre></div>
 </div>
 <div class="admonition warning">
@@ -460,15 +460,15 @@ the application currently started could only be of one SDK version!</p>
 </div>
 </div>
 <p>And now we can easily specify which firmware should be used:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ <span class="c1"># start the application on a physical device connected to the computer, or on an emulator</span>
-$ pytest -v --nanosp --backend ledgercomm test_something.py
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="c1"># start the application on a physical device connected to the computer, or on an emulator</span>
+$<span class="w"> </span>pytest<span class="w"> </span>-v<span class="w"> </span>--nanosp<span class="w"> </span>--backend<span class="w"> </span>ledgercomm<span class="w"> </span>test_something.py
 
-<span class="o">===============================</span> <span class="nb">test</span> session <span class="nv">starts</span> <span class="o">===============================</span>
-collected <span class="m">1</span> items
+<span class="o">===============================</span><span class="w"> </span><span class="nb">test</span><span class="w"> </span>session<span class="w"> </span><span class="nv">starts</span><span class="w"> </span><span class="o">===============================</span>
+collected<span class="w"> </span><span class="m">1</span><span class="w"> </span>items
 
-test_something.py::test_something<span class="o">[</span>nanosp <span class="m">1</span>.0.3<span class="o">]</span> PASSED                       <span class="o">[</span><span class="m">100</span>%<span class="o">]</span>
+test_something.py::test_something<span class="o">[</span>nanosp<span class="w"> </span><span class="m">1</span>.0.3<span class="o">]</span><span class="w"> </span>PASSED<span class="w">                       </span><span class="o">[</span><span class="m">100</span>%<span class="o">]</span>
 
-<span class="o">================================</span> <span class="m">1</span> passed <span class="k">in</span> <span class="m">0</span>.22s <span class="o">================================</span>
+<span class="o">================================</span><span class="w"> </span><span class="m">1</span><span class="w"> </span>passed<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">0</span>.22s<span class="w"> </span><span class="o">================================</span>
 </pre></div>
 </div>
 </div>
