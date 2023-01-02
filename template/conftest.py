@@ -1,4 +1,5 @@
 import pytest
+from typing import Optional
 from pathlib import Path
 from ragger.firmware import Firmware
 from ragger.backend import SpeculosBackend, LedgerCommBackend, LedgerWalletBackend
@@ -96,9 +97,9 @@ def prepare_speculos_args(firmware: Firmware, display: bool):
 # device depending on the backend
 def create_backend(backend_name: str, firmware: Firmware, display: bool, log_apdu_file: Optional[Path]):
     if backend_name.lower() == "ledgercomm":
-        return LedgerCommBackend(firmware, interface="hid", log_apdu_file=log_apdu_file)
+        return LedgerCommBackend(firmware=firmware, interface="hid", log_apdu_file=log_apdu_file)
     elif backend_name.lower() == "ledgerwallet":
-        return LedgerWalletBackend(firmware, log_apdu_file=log_apdu_file)
+        return LedgerWalletBackend(firmware=firmware, log_apdu_file=log_apdu_file)
     elif backend_name.lower() == "speculos":
         args, kwargs = prepare_speculos_args(firmware, display)
         return SpeculosBackend(*args, firmware=firmware, log_apdu_file=log_apdu_file, **kwargs)
@@ -108,8 +109,8 @@ def create_backend(backend_name: str, firmware: Firmware, display: bool, log_apd
 
 # This final fixture will return the properly configured backend, to be used in tests
 @pytest.fixture
-def backend(backend_name, firmware, display):
-    with create_backend(backend_name, firmware, display) as b:
+def backend(backend_name, firmware, display, log_apdu_file):
+    with create_backend(backend_name, firmware, display, log_apdu_file) as b:
         yield b
 
 
