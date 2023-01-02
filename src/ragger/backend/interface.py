@@ -13,8 +13,6 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-import logging
-import atexit
 from abc import ABC, abstractmethod
 from contextlib import contextmanager
 from enum import Enum, auto
@@ -24,6 +22,7 @@ from typing import Optional, Type, Generator, Any
 
 from ragger.firmware import Firmware
 from ragger.utils import pack_APDU, RAPDU, Crop
+from ragger.logger import get_default_logger, get_apdu_logger, set_apdu_logger_file
 
 
 class RaisePolicy(Enum):
@@ -44,23 +43,11 @@ class BackendInterface(ABC):
         self._last_async_response: Optional[RAPDU] = None
         self.raise_policy = RaisePolicy.RAISE_ALL_BUT_0x9000
 
-        self.apdu_logger = logging.getLogger("apdu_logger")
-        self.apdu_logger.setLevel(level=logging.DEBUG)
-        handler = logging.StreamHandler()
-        formatter = logging.Formatter('[%(asctime)s][%(levelname)s] %(name)s - %(message)s')
-        handler.setFormatter(formatter)
-        self.apdu_logger.addHandler(handler)
+        if log_apdu_file:
+            set_apdu_logger_file(log_apdu_file=log_apdu_file)
 
-        if log_apdu_file is not None:
-            apdu_handler = logging.FileHandler(filename=log_apdu_file, mode='w', delay=True)
-            apdu_handler.setFormatter(logging.Formatter('%(message)s'))
-            self.apdu_logger.addHandler(apdu_handler)
-            atexit.register(self._cleanup)
-
-    def _cleanup(self):
-        for handler in self.apdu_logger.handlers:
-            if isinstance(handler, logging.FileHandler):
-                handler.close()
+        self.logger = get_default_logger()
+        self.apdu_logger = get_apdu_logger()
 
     @property
     def firmware(self) -> Firmware:

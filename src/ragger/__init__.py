@@ -15,10 +15,6 @@
 """
 __version__ = "1.1.0"
 
-import logging
+from ragger.logger import init_loggers
 
-logger = logging.getLogger(__package__)
-logger.setLevel(level=logging.DEBUG)
-handler = logging.StreamHandler()
-handler.setFormatter(logging.Formatter('[%(asctime)s][%(levelname)s] %(name)s - %(message)s'))
-logger.addHandler(handler)
+init_loggers()

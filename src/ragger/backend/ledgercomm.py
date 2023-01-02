@@ -19,7 +19,6 @@ from typing import Optional, Generator, Any
 
 from ledgercomm import Transport
 
-from ragger import logger
 from ragger.firmware import Firmware
 from ragger.utils import RAPDU, Crop
 from ragger.error import ExceptionRAPDU
@@ -59,7 +58,7 @@ class LedgerCommBackend(BackendInterface):
         self._args = (args, kwargs)
 
     def __enter__(self) -> "LedgerCommBackend":
-        logger.info(f"Starting {self.__class__.__name__} stream")
+        self.logger.info(f"Starting {self.__class__.__name__} stream")
         self._client = Transport(server=self._host,
                                  port=self._port,
                                  *self._args[0],

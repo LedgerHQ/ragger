@@ -23,7 +23,6 @@ from json import dumps
 
 from speculos.client import SpeculosClient, screenshot_equal, ApduResponse, ApduException
 
-from ragger import logger
 from ragger.error import ExceptionRAPDU
 from ragger.firmware import Firmware
 from ragger.utils import RAPDU, Crop
@@ -39,7 +38,7 @@ def raise_policy_enforcer(function):
         except ApduException as error:
             rapdu = RAPDU(error.sw, error.data)
 
-        self.apdu_logger.debug("<= %s%4x", rapdu.data.hex(), rapdu.status)
+        self.apdu_logger.info("<= %s%4x", rapdu.data.hex(), rapdu.status)
 
         if self.is_raise_required(rapdu):
             raise ExceptionRAPDU(rapdu.status, rapdu.data)
@@ -82,7 +81,7 @@ class SpeculosBackend(BackendInterface):
         return f"http://{self._host}:{self._port}"
 
     def __enter__(self) -> "SpeculosBackend":
-        logger.info(f"Starting {self.__class__.__name__} stream")
+        self.logger.info(f"Starting {self.__class__.__name__} stream")
         self._client.__enter__()
 
         # Wait until some text is displayed on the screen.
@@ -101,7 +100,7 @@ class SpeculosBackend(BackendInterface):
         self._client.__exit__(*args, **kwargs)
 
     def send_raw(self, data: bytes = b"") -> None:
-        self.apdu_logger.debug("=> %s", data.hex())
+        self.apdu_logger.info("=> %s", data.hex())
         self._pending = ApduResponse(self._client._apdu_exchange_nowait(data))
 
     @raise_policy_enforcer
@@ -112,7 +111,7 @@ class SpeculosBackend(BackendInterface):
 
     @raise_policy_enforcer
     def exchange_raw(self, data: bytes = b"") -> RAPDU:
-        self.apdu_logger.debug("=> %s", data.hex())
+        self.apdu_logger.info("=> %s", data.hex())
         return RAPDU(0x9000, self._client._apdu_exchange(data))
 
     @raise_policy_enforcer
@@ -121,7 +120,7 @@ class SpeculosBackend(BackendInterface):
 
     @contextmanager
     def exchange_async_raw(self, data: bytes = b"") -> Generator[None, None, None]:
-        self.apdu_logger.debug("=> %s", data.hex())
+        self.apdu_logger.info("=> %s", data.hex())
         with self._client.apdu_exchange_nowait(cla=data[0],
                                                ins=data[1],
                                                p1=data[2],

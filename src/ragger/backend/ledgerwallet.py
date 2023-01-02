@@ -20,7 +20,6 @@ from typing import Generator, Optional, Any
 from ledgerwallet.client import LedgerClient, CommException
 from ledgerwallet.transport import HidDevice
 
-from ragger import logger
 from ragger.utils import RAPDU, Crop
 from ragger.error import ExceptionRAPDU
 from .interface import BackendInterface
@@ -52,7 +51,7 @@ class LedgerWalletBackend(BackendInterface):
         self._client: Optional[LedgerClient] = None
 
     def __enter__(self) -> "LedgerWalletBackend":
-        logger.info(f"Starting {self.__class__.__name__} stream")
+        self.logger.info(f"Starting {self.__class__.__name__} stream")
         self._client = LedgerClient()
         return self
 
