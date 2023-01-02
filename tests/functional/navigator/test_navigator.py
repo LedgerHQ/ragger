@@ -51,8 +51,12 @@ class TestNavigator(TestCase):
                         NavIns(NavInsID.BOTH_CLICK),
                         NavIns(NavInsID.WAIT, (2, ))
                     ]
-                    self.navigator.navigate_and_compare(ROOT_SCREENSHOT_PATH,
-                                                        "test_navigate_and_compare", instructions)
+                    self.navigator.navigate_and_compare(
+                        ROOT_SCREENSHOT_PATH,
+                        "test_navigate_and_compare",
+                        instructions,
+                        screen_change_before_first_instruction=False,
+                        screen_change_after_last_instruction=False)
 
     def test_navigate_and_compare_no_golden(self):
         with patch("speculos.client.subprocess"):
@@ -60,9 +64,11 @@ class TestNavigator(TestCase):
                 with self.backend:
                     instructions = [NavIns(NavInsID.RIGHT_CLICK)]
                     with self.assertRaises(FileNotFoundError) as error:
-                        self.navigator.navigate_and_compare(ROOT_SCREENSHOT_PATH,
-                                                            "test_navigate_and_compare_no_golden",
-                                                            instructions)
+                        self.navigator.navigate_and_compare(
+                            ROOT_SCREENSHOT_PATH,
+                            "test_navigate_and_compare_no_golden",
+                            instructions,
+                            screen_change_before_first_instruction=False)
                     self.assertIn("No such file or directory", str(error.exception))
                     self.assertIn("test_navigate_and_compare_no_golden/00001.png",
                                   str(error.exception))
@@ -74,8 +80,10 @@ class TestNavigator(TestCase):
                     instructions = [NavIns(NavInsID.RIGHT_CLICK)]
                     with self.assertRaises(AssertionError) as error:
                         self.navigator.navigate_and_compare(
-                            ROOT_SCREENSHOT_PATH, "test_navigate_and_compare_wrong_golden",
-                            instructions)
+                            ROOT_SCREENSHOT_PATH,
+                            "test_navigate_and_compare_wrong_golden",
+                            instructions,
+                            screen_change_before_first_instruction=False)
                     self.assertIn("Screen does not match golden", str(error.exception))
                     self.assertIn("00001.png", str(error.exception))
 
@@ -119,16 +127,19 @@ class TestNavigator(TestCase):
             with SpeculosServerStub():
                 with self.backend:
                     self.navigator.navigate_until_text(NavIns(NavInsID.RIGHT_CLICK),
-                                                       NavIns(NavInsID.BOTH_CLICK), "About")
+                                                       [NavIns(NavInsID.BOTH_CLICK)],
+                                                       "About",
+                                                       screen_change_before_first_instruction=False)
 
     def test_navigate_until_text_cannot_find_text(self):
         with patch("speculos.client.subprocess"):
             with SpeculosServerStub():
                 with self.backend:
                     with self.assertRaises(TimeoutError) as error:
-                        self.navigator.navigate_until_text(NavIns(NavInsID.RIGHT_CLICK),
-                                                           NavIns(NavInsID.BOTH_CLICK),
-                                                           "WILL NOT BE FOUND")
+                        self.navigator.navigate_until_text(
+                            NavIns(NavInsID.RIGHT_CLICK), [NavIns(NavInsID.BOTH_CLICK)],
+                            "WILL NOT BE FOUND",
+                            screen_change_before_first_instruction=False)
                     self.assertIn("Timeout waiting for text", str(error.exception))
 
     def test_navigate_until_text_screen_change_timeout(self):
@@ -136,9 +147,11 @@ class TestNavigator(TestCase):
             with SpeculosServerStub():
                 with self.backend:
                     with self.assertRaises(TimeoutError) as error:
-                        self.navigator.navigate_until_text(NavIns(NavInsID.BOTH_CLICK),
-                                                           NavIns(NavInsID.BOTH_CLICK),
-                                                           "WILL NOT BE FOUND")
+                        self.navigator.navigate_until_text(
+                            NavIns(NavInsID.BOTH_CLICK), [NavIns(NavInsID.BOTH_CLICK)],
+                            "WILL NOT BE FOUND",
+                            timeout=5,
+                            screen_change_before_first_instruction=False)
                     self.assertIn("Timeout waiting for screen change", str(error.exception))
 
     def test_navigate_until_text_and_compare(self):
@@ -146,8 +159,11 @@ class TestNavigator(TestCase):
             with SpeculosServerStub():
                 with self.backend:
                     self.navigator.navigate_until_text_and_compare(
-                        NavIns(NavInsID.RIGHT_CLICK), NavIns(NavInsID.BOTH_CLICK), "About",
-                        ROOT_SCREENSHOT_PATH, "test_navigate_until_text_and_compare")
+                        NavIns(NavInsID.RIGHT_CLICK), [NavIns(NavInsID.BOTH_CLICK)],
+                        "About",
+                        ROOT_SCREENSHOT_PATH,
+                        "test_navigate_until_text_and_compare",
+                        screen_change_before_first_instruction=False)
 
     def test_navigate_until_text_and_compare_no_golden(self):
         with patch("speculos.client.subprocess"):
@@ -155,8 +171,11 @@ class TestNavigator(TestCase):
                 with self.backend:
                     with self.assertRaises(FileNotFoundError) as error:
                         self.navigator.navigate_until_text_and_compare(
-                            NavIns(NavInsID.RIGHT_CLICK), NavIns(NavInsID.BOTH_CLICK), "About",
-                            ROOT_SCREENSHOT_PATH, "test_navigate_and_compare_no_golden")
+                            NavIns(NavInsID.RIGHT_CLICK), [NavIns(NavInsID.BOTH_CLICK)],
+                            "About",
+                            ROOT_SCREENSHOT_PATH,
+                            "test_navigate_and_compare_no_golden",
+                            screen_change_before_first_instruction=False)
                     self.assertIn("No such file or directory", str(error.exception))
                     self.assertIn("test_navigate_and_compare_no_golden/00001.png",
                                   str(error.exception))
@@ -167,7 +186,10 @@ class TestNavigator(TestCase):
                 with self.backend:
                     with self.assertRaises(AssertionError) as error:
                         self.navigator.navigate_until_text_and_compare(
-                            NavIns(NavInsID.RIGHT_CLICK), NavIns(NavInsID.BOTH_CLICK), "About",
-                            ROOT_SCREENSHOT_PATH, "test_navigate_and_compare_wrong_golden")
+                            NavIns(NavInsID.RIGHT_CLICK), [NavIns(NavInsID.BOTH_CLICK)],
+                            "About",
+                            ROOT_SCREENSHOT_PATH,
+                            "test_navigate_and_compare_wrong_golden",
+                            screen_change_before_first_instruction=False)
                     self.assertIn("Screen does not match golden", str(error.exception))
                     self.assertIn("00001.png", str(error.exception))

@@ -130,35 +130,20 @@ class TestNavigator(TestCase):
     def test_navigate_and_compare_ok(self):
         cb1, cb2 = MagicMock(), MagicMock()
         ni1, ni2 = NavIns(1, (1, ), {'1': 1}), NavIns(2, (2, ), {'2': 2})
-        s1, s2, s3 = 1, 2, 3
         self.navigator._callbacks = {ni1.id: cb1, ni2.id: cb2}
-        with patch("ragger.navigator.navigator.sleep") as patched_sleep:
-            self.navigator.navigate_and_compare(self.pathdir, self.pathdir, [ni1, ni2], s1, s2, s3)
-        self.assertEqual(patched_sleep.call_count, 1 + 1 + 2)  # first + last + 2 instructions
-        self.assertEqual(
-            patched_sleep.call_args_list,
-            [
-                ((s1, ), ),  # first sleep
-                ((s2, ), ),  # first instruction sleep
-                ((s2, ), ),  # second instruction sleep
-                ((s3, ), ),  # last sleep
-            ])
+        self.navigator._backend = MagicMock(spec=SpeculosBackend)
+        self.navigator._compare_snap = MagicMock()
+        self.navigator.navigate_and_compare(self.pathdir, self.pathdir, [ni1, ni2])
 
-    def test_navigate_and_compare_ok_golden(self):
-        self.navigator._golden_run = True
-        cb1, cb2 = MagicMock(), MagicMock()
-        ni1, ni2 = NavIns(1, (1, ), {'1': 1}), NavIns(2, (2, ), {'2': 2})
-        s1, s2, s3 = 1, 2, 3
-        self.navigator._callbacks = {ni1.id: cb1, ni2.id: cb2}
-        with patch("ragger.navigator.navigator.sleep") as patched_sleep:
-            self.navigator.navigate_and_compare(self.pathdir, self.pathdir, [ni1, ni2], s1, s2, s3)
-        self.assertEqual(patched_sleep.call_count, 1 + 1 + 2)  # first + last + 2 instructions
-        self.assertEqual(patched_sleep.call_args_list, [
-            ((s1 * self.navigator.GOLDEN_INSTRUCTION_SLEEP_MULTIPLIER_FIRST, ), ),
-            ((s2 * self.navigator.GOLDEN_INSTRUCTION_SLEEP_MULTIPLIER_MIDDLE, ), ),
-            ((s2 * self.navigator.GOLDEN_INSTRUCTION_SLEEP_MULTIPLIER_MIDDLE, ), ),
-            ((s3 * self.navigator.GOLDEN_INSTRUCTION_SLEEP_MULTIPLIER_LAST, ), ),
-        ])
+        # backend wait_for_screen_change function called 3 times
+        self.assertEqual(self.navigator._backend.wait_for_screen_change.call_count, 3)
+
+        # snapshots checked, so 3 calls
+        self.assertEqual(self.navigator._compare_snap.call_count, 3)
+
+        for cb, ni in [(cb1, ni1), (cb2, ni2)]:
+            self.assertEqual(cb.call_count, 1)
+            self.assertEqual(cb.call_args, (ni.args, ni.kwargs))
 
     def test_navigate_until_text_and_compare_is_not_Speculos(self):
         self.assertIsNone(self.navigator.navigate_until_text_and_compare(None, None, None))
@@ -173,7 +158,7 @@ class TestNavigator(TestCase):
         self.navigator._callbacks = {ni1.id: cb1, ni2.id: cb2}
         self.navigator._compare_snap = MagicMock()
 
-        self.assertIsNone(self.navigator.navigate_until_text_and_compare(ni1, ni2, text))
+        self.assertIsNone(self.navigator.navigate_until_text_and_compare(ni1, [ni2], text))
         # no snapshot to check, so no call
         self.assertFalse(self.navigator._compare_snap.called)
         # backend compare function called 3 times with the text
@@ -197,10 +182,10 @@ class TestNavigator(TestCase):
         self.navigator._compare_snap = MagicMock()
 
         self.assertIsNone(
-            self.navigator.navigate_until_text_and_compare(ni1, ni2, text, self.pathdir,
+            self.navigator.navigate_until_text_and_compare(ni1, [ni2], text, self.pathdir,
                                                            self.pathdir))
-        # snapshots checked, so 3 calls
-        self.assertEqual(self.navigator._compare_snap.call_count, 3)
+        # snapshots checked, so 5 calls
+        self.assertEqual(self.navigator._compare_snap.call_count, 5)
         # backend compare function called 3 times with the text
         self.assertEqual(self.navigator._backend.compare_screen_with_text.call_count, 3)
         self.assertEqual(self.navigator._backend.compare_screen_with_text.call_args_list,
@@ -221,4 +206,4 @@ class TestNavigator(TestCase):
         self.navigator._compare_snap = MagicMock()
 
         with self.assertRaises(TimeoutError):
-            self.navigator.navigate_until_text_and_compare(ni, None, "not important", timeout=0)
+            self.navigator.navigate_until_text_and_compare(ni, [], "not important", timeout=0)

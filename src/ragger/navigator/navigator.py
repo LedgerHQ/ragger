@@ -16,7 +16,7 @@
 from abc import ABC
 from enum import auto, Enum
 from pathlib import Path
-from time import sleep, time
+from time import time
 from typing import Any, Dict, List, Optional
 
 from ragger.backend import BackendInterface, SpeculosBackend
@@ -181,60 +181,63 @@ class Navigator(ABC):
             self._callbacks[instruction.id](*instruction.args, **instruction.kwargs)
 
     def navigate_and_compare(self,
-                             path: Path,
-                             test_case_name: Path,
+                             path: Optional[Path],
+                             test_case_name: Optional[Path],
                              instructions: List[NavIns],
-                             first_instruction_wait: float = 1.0,
-                             middle_instruction_wait: float = 0.1,
-                             last_instruction_wait: float = 0.5) -> None:
+                             timeout: float = 10.0,
+                             screen_change_before_first_instruction: bool = True,
+                             screen_change_after_last_instruction: bool = True,
+                             snap_start_idx: int = 0) -> None:
         """
         Navigate on the device according to a set of navigation instructions
         provided then compare each step snapshot with "golden images".
 
         :param path: Absolute path to the snapshots directory.
-        :type path: Path
+        :type path: Optional[Path]
         :param test_case_name: Relative path to the test case snapshots directory (from path).
-        :type test_case_name: Path
+        :type test_case_name: Optional[Path]
         :param instructions: List of navigation instructions.
         :type instructions: List[NavIns]
-        :param first_instruction_wait: Sleeping time before the first snapshot
-        :type first_instruction_wait: float
-        :param middle_instruction_wait: Sleeping time between between each navigation instruction
-        :type middle_instruction_wait: float
-        :param last_instruction_wait: Sleeping time after the last navigation instruction
-        :type last_instruction_wait: float
+        :param timeout: Timeout for each navigation step.
+        :type timeout: int
+        :param screen_change_before_first_instruction: Wait for a screen change before first instruction.
+        :type screen_change_before_first_instruction: bool
+        :param screen_change_after_last_instruction: Wait for a screen change after last instruction.
+        :type screen_change_after_last_instruction: bool
+        :param snap_start_idx: Index of the first snap for this navigation.
+        :type snap_start_idx: int
 
         :raises ValueError: If one of the snapshots does not match.
 
         :return: None
         :rtype: NoneType
         """
-        if self._golden_run:
-            # Increase waits when in golden run to be sure that potential processing
-            # has been done and next screen has been displayed before continuing.
-            # If initial timing was not enough, then it will fail when running without
-            # golden run mode and developer will be notified.
-            first_instruction_wait *= self.GOLDEN_INSTRUCTION_SLEEP_MULTIPLIER_FIRST
-            middle_instruction_wait *= self.GOLDEN_INSTRUCTION_SLEEP_MULTIPLIER_MIDDLE
-            last_instruction_wait *= self.GOLDEN_INSTRUCTION_SLEEP_MULTIPLIER_LAST
-        snaps_tmp_path = self._init_snaps_temp_dir(path, test_case_name)
-        snaps_golden_path = self._check_snaps_dir_path(path, test_case_name, True)
+        snaps_tmp_path = None
+        snaps_golden_path = None
+        if path and test_case_name:
+            snaps_tmp_path = self._init_snaps_temp_dir(path, test_case_name)
+            snaps_golden_path = self._check_snaps_dir_path(path, test_case_name, True)
 
-        # TODO replace hardcoded wait by Speculos screen change event wait mechanism
-        sleep(first_instruction_wait)
+        if screen_change_before_first_instruction:
+            self._backend.wait_for_screen_change(timeout)
 
         # First navigate to the last step and take snapshots of every screen in the flow.
         for idx, instruction in enumerate(instructions):
-            self._compare_snap(snaps_tmp_path, snaps_golden_path, idx)
+            if snaps_tmp_path and snaps_golden_path:
+                self._compare_snap(snaps_tmp_path, snaps_golden_path, idx + snap_start_idx)
 
             self.navigate([instruction])
 
-            sleep(middle_instruction_wait)
+            if idx != len(instructions) - 1:
+                self._backend.wait_for_screen_change(timeout)
 
-        sleep(last_instruction_wait)
+        if screen_change_after_last_instruction:
+            self._backend.wait_for_screen_change(timeout)
 
-        # Compare last screen snapshot
-        self._compare_snap(snaps_tmp_path, snaps_golden_path, len(instructions))
+            # Compare last screen snapshot
+            if snaps_tmp_path and snaps_golden_path:
+                self._compare_snap(snaps_tmp_path, snaps_golden_path,
+                                   len(instructions) + snap_start_idx)
 
     def navigate_until_snap(self,
                             navigate_instruction: NavIns,
@@ -349,11 +352,13 @@ class Navigator(ABC):
 
     def navigate_until_text_and_compare(self,
                                         navigate_instruction: NavIns,
-                                        validation_instruction: NavIns,
+                                        validation_instructions: List[NavIns],
                                         text: str,
                                         path: Optional[Path] = None,
                                         test_case_name: Optional[Path] = None,
-                                        timeout: int = 30) -> None:
+                                        timeout: int = 30,
+                                        screen_change_before_first_instruction: bool = True,
+                                        screen_change_after_last_instruction: bool = True) -> None:
         """
         Navigate until some text is found on the screen content displayed then
         compare each step snapshot with "golden images".
@@ -371,25 +376,29 @@ class Navigator(ABC):
         :type test_case_name: Path
         :param navigate_instruction: Navigation instruction to be performed until the text is found.
         :type navigate_instruction: NavIns
-        :param validation_instruction: Navigation instruction to be performed once the text is found.
-        :type validation_instruction: NavIns
+        :param validation_instructions: Navigation instructions to be performed once the text is found.
+        :type validation_instructions: List[NavIns]
         :param text: Text string to look for.
         :type text: str
-        :param timeout: Timeout of the navigation loop if the text string is not found.
+        :param timeout: Timeout for the whole navigation loop.
         :type timeout: int
+        :param screen_change_before_first_instruction: Wait for a screen change before first instruction.
+        :type screen_change_before_first_instruction: bool
+        :param screen_change_after_last_instruction: Wait for a screen change after last instruction.
+        :type screen_change_after_last_instruction: bool
 
         :raises TimeoutError: If the text is not found.
 
         :return: None
         :rtype: NoneType
         """
-        idx = None
+        idx = 0
         snaps_tmp_path = None
         snaps_golden_path = None
+
         if path and test_case_name:
             snaps_tmp_path = self._init_snaps_temp_dir(path, test_case_name)
             snaps_golden_path = self._check_snaps_dir_path(path, test_case_name, True)
-            idx = 0
 
         if not isinstance(self._backend, SpeculosBackend):
             # TODO remove this once the proper behavior of other backends is implemented.
@@ -397,47 +406,48 @@ class Navigator(ABC):
 
         start = time()
 
-        # Retrieve the screen context.
-        # On Speculos backend it immediately returns without any wait.
-        ctx = self._backend.wait_for_screen_change(0.1)
-
-        # Make sure to enter the navigation loop after there is a screen change (or wait 2 seconds).
-        # Useful when the navigate_until_text is used in transaction flows and the screen changes
-        # from the idle menu to a review start screen.
-        try:
-            ctx = self._backend.wait_for_screen_change(2.0, ctx)
-        except TimeoutError:
-            # Maybe the start screen of the transaction flow is already displayed so we'll wait 2.0
-            # sec until the exception is thrown then we pass and go to the navigation loop.
-            pass
+        if screen_change_before_first_instruction:
+            self._backend.wait_for_screen_change(timeout)
 
         # Navigate until the text specified in argument is found.
         while True:
-            if idx is not None:
-                assert isinstance(snaps_tmp_path, Path)
-                assert isinstance(snaps_golden_path, Path)
+            if snaps_tmp_path and snaps_golden_path:
                 self._compare_snap(snaps_tmp_path, snaps_golden_path, idx)
-                idx += 1
 
             if not self._backend.compare_screen_with_text(text):
                 # Go to the next screen.
                 self.navigate([navigate_instruction])
+                idx += 1
             else:
-                # Validation action when the text is found.
-                self.navigate([validation_instruction])
+                # Validation screen text found, exit the loop
                 break
 
             # Global navigation loop timeout in case the text is never found.
-            if (time() - start > timeout):
+            remaining = timeout - (time() - start)
+            if (remaining < 0):
                 raise TimeoutError(f"Timeout waiting for text {text}")
 
-            ctx = self._backend.wait_for_screen_change(2.0, ctx)
+            self._backend.wait_for_screen_change(remaining)
+
+        # Perform navigation validation instructions in an "navigate_and_compare" way.
+        if validation_instructions:
+            remaining = timeout - (time() - start)
+            self.navigate_and_compare(
+                path,
+                test_case_name,
+                validation_instructions,
+                timeout=remaining,
+                screen_change_before_first_instruction=False,
+                screen_change_after_last_instruction=screen_change_after_last_instruction,
+                snap_start_idx=idx)
 
     def navigate_until_text(self,
                             navigate_instruction: NavIns,
-                            validation_instruction: NavIns,
+                            validation_instructions: List[NavIns],
                             text: str,
-                            timeout: int = 30) -> None:
+                            timeout: int = 30,
+                            screen_change_before_first_instruction: bool = True,
+                            screen_change_after_last_instruction: bool = True) -> None:
         """
         Navigate until some text is found on the screen content displayed.
 
@@ -450,17 +460,23 @@ class Navigator(ABC):
 
         :param navigate_instruction: Navigation instruction to be performed until the text is found.
         :type navigate_instruction: NavIns
-        :param validation_instruction: Navigation instruction to be performed once the text is found.
-        :type validation_instruction: NavIns
+        :param validation_instructions: Navigation instructions to be performed once the text is found.
+        :type validation_instructions: List[NavIns]
         :param text: Text string to look for.
         :type text: str
-        :param timeout: Timeout of the navigation loop if the text string is not found.
+        :param timeout: Timeout for the whole navigation loop.
         :type timeout: int
+        :param screen_change_before_first_instruction: Wait for a screen change before first instruction.
+        :type screen_change_before_first_instruction: bool
+        :param screen_change_after_last_instruction: Wait for a screen change after last instruction.
+        :type screen_change_after_last_instruction: bool
 
         :raises TimeoutError: If the text is not found.
 
         :return: None
         :rtype: NoneType
         """
-        self.navigate_until_text_and_compare(navigate_instruction, validation_instruction, text,
-                                             None, None, timeout)
+        self.navigate_until_text_and_compare(navigate_instruction, validation_instructions, text,
+                                             None, None, timeout,
+                                             screen_change_before_first_instruction,
+                                             screen_change_after_last_instruction)
