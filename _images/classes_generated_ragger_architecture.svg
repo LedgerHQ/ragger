@@ -21,7 +21,7 @@
 <polyline fill="none" stroke="antiquewhite" points="1701,-701.5 2673,-701.5 "/>
 <text text-anchor="start" x="1709" y="-686.3" font-family="Times,serif" font-size="14.00">both_click(): None</text>
 <text text-anchor="start" x="1709" y="-671.3" font-family="Times,serif" font-size="14.00">compare_screen_with_snapshot(golden_snap_path: Path, crop: Optional[Crop], tmp_snap_path: Optional[Path], golden_run: bool): bool</text>
-<text text-anchor="start" x="1709" y="-656.3" font-family="Times,serif" font-size="14.00">compare_screen_with_text(text: str)</text>
+<text text-anchor="start" x="1709" y="-656.3" font-family="Times,serif" font-size="14.00">compare_screen_with_text(text: str): bool</text>
 <text text-anchor="start" x="1709" y="-641.3" font-family="Times,serif" font-size="14.00">exchange(cla: int, ins: int, p1: int, p2: int, data: bytes): RAPDU</text>
 <text text-anchor="start" x="1709" y="-626.3" font-family="Times,serif" font-size="14.00">exchange_async(cla: int, ins: int, p1: int, p2: int, data: bytes): Generator[None, None, None]</text>
 <text text-anchor="start" x="1709" y="-611.3" font-family="Times,serif" font-size="14.00">exchange_async_raw(data: bytes): Generator[None, None, None]</text>
@@ -34,30 +34,30 @@
 <text text-anchor="start" x="1709" y="-506.3" font-family="Times,serif" font-size="14.00">right_click(): None</text>
 <text text-anchor="start" x="1709" y="-491.3" font-family="Times,serif" font-size="14.00">send(cla: int, ins: int, p1: int, p2: int, data: bytes): None</text>
 <text text-anchor="start" x="1709" y="-476.3" font-family="Times,serif" font-size="14.00">send_raw(data: bytes): None</text>
-<text text-anchor="start" x="1709" y="-461.3" font-family="Times,serif" font-size="14.00">wait_for_screen_change(timeout: float, context: Any): Any</text>
+<text text-anchor="start" x="1709" y="-461.3" font-family="Times,serif" font-size="14.00">wait_for_screen_change(timeout: float): None</text>
 </g>
 <!-- ragger.navigator.navigator.Navigator -->
 <g id="node27" class="node">
 <title>ragger.navigator.navigator.Navigator</title>
-<polygon fill="cadetblue" stroke="cadetblue" points="949.5,-1152 949.5,-1311 2712.5,-1311 2712.5,-1152 949.5,-1152"/>
-<text text-anchor="middle" x="1831" y="-1295.8" font-family="Times,serif" font-size="14.00">Navigator</text>
-<polyline fill="none" stroke="cadetblue" points="949.5,-1288 2712.5,-1288 "/>
-<text text-anchor="start" x="957.5" y="-1272.8" font-family="Times,serif" font-size="14.00">GOLDEN_INSTRUCTION_SLEEP_MULTIPLIER_FIRST : int</text>
-<text text-anchor="start" x="957.5" y="-1257.8" font-family="Times,serif" font-size="14.00">GOLDEN_INSTRUCTION_SLEEP_MULTIPLIER_LAST : int</text>
-<text text-anchor="start" x="957.5" y="-1242.8" font-family="Times,serif" font-size="14.00">GOLDEN_INSTRUCTION_SLEEP_MULTIPLIER_MIDDLE : int</text>
-<polyline fill="none" stroke="cadetblue" points="949.5,-1235 2712.5,-1235 "/>
-<text text-anchor="start" x="957.5" y="-1219.8" font-family="Times,serif" font-size="14.00">navigate(instructions: List[NavIns])</text>
-<text text-anchor="start" x="957.5" y="-1204.8" font-family="Times,serif" font-size="14.00">navigate_and_compare(path: Path, test_case_name: Path, instructions: List[NavIns], first_instruction_wait: float, middle_instruction_wait: float, last_instruction_wait: float): None</text>
-<text text-anchor="start" x="957.5" y="-1189.8" font-family="Times,serif" font-size="14.00">navigate_until_snap(navigate_instruction: NavIns, validation_instruction: NavIns, path: Path, test_case_name: Path, start_img_name: str, last_img_name: str, take_snaps: bool, timeout: int, crop_first: Optional[Crop], crop_last: Optional[Crop]): int</text>
-<text text-anchor="start" x="957.5" y="-1174.8" font-family="Times,serif" font-size="14.00">navigate_until_text(navigate_instruction: NavIns, validation_instruction: NavIns, text: str, timeout: int): None</text>
-<text text-anchor="start" x="957.5" y="-1159.8" font-family="Times,serif" font-size="14.00">navigate_until_text_and_compare(navigate_instruction: NavIns, validation_instruction: NavIns, text: str, path: Optional[Path], test_case_name: Optional[Path], timeout: int): None</text>
+<polygon fill="cadetblue" stroke="cadetblue" points="794.5,-1152 794.5,-1311 2763.5,-1311 2763.5,-1152 794.5,-1152"/>
+<text text-anchor="middle" x="1779" y="-1295.8" font-family="Times,serif" font-size="14.00">Navigator</text>
+<polyline fill="none" stroke="cadetblue" points="794.5,-1288 2763.5,-1288 "/>
+<text text-anchor="start" x="802.5" y="-1272.8" font-family="Times,serif" font-size="14.00">GOLDEN_INSTRUCTION_SLEEP_MULTIPLIER_FIRST : int</text>
+<text text-anchor="start" x="802.5" y="-1257.8" font-family="Times,serif" font-size="14.00">GOLDEN_INSTRUCTION_SLEEP_MULTIPLIER_LAST : int</text>
+<text text-anchor="start" x="802.5" y="-1242.8" font-family="Times,serif" font-size="14.00">GOLDEN_INSTRUCTION_SLEEP_MULTIPLIER_MIDDLE : int</text>
+<polyline fill="none" stroke="cadetblue" points="794.5,-1235 2763.5,-1235 "/>
+<text text-anchor="start" x="802.5" y="-1219.8" font-family="Times,serif" font-size="14.00">navigate(instructions: List[NavIns])</text>
+<text text-anchor="start" x="802.5" y="-1204.8" font-family="Times,serif" font-size="14.00">navigate_and_compare(path: Optional[Path], test_case_name: Optional[Path], instructions: List[NavIns], timeout: float, screen_change_before_first_instruction: bool, screen_change_after_last_instruction: bool, snap_start_idx: int): None</text>
+<text text-anchor="start" x="802.5" y="-1189.8" font-family="Times,serif" font-size="14.00">navigate_until_snap(navigate_instruction: NavIns, validation_instruction: NavIns, path: Path, test_case_name: Path, start_img_name: str, last_img_name: str, take_snaps: bool, timeout: int, crop_first: Optional[Crop], crop_last: Optional[Crop]): int</text>
+<text text-anchor="start" x="802.5" y="-1174.8" font-family="Times,serif" font-size="14.00">navigate_until_text(navigate_instruction: NavIns, validation_instructions: List[NavIns], text: str, timeout: int, screen_change_before_first_instruction: bool, screen_change_after_last_instruction: bool): None</text>
+<text text-anchor="start" x="802.5" y="-1159.8" font-family="Times,serif" font-size="14.00">navigate_until_text_and_compare(navigate_instruction: NavIns, validation_instructions: List[NavIns], text: str, path: Optional[Path], test_case_name: Optional[Path], timeout: int, screen_change_before_first_instruction: bool, screen_change_after_last_instruction: bool): None</text>
 </g>
 <!-- ragger.backend.interface.BackendInterface&#45;&gt;ragger.navigator.navigator.Navigator -->
 <g id="edge35" class="edge">
 <title>ragger.backend.interface.BackendInterface&#45;&gt;ragger.navigator.navigator.Navigator</title>
-<path fill="none" stroke="black" d="M2093.47,-777.82C2026.15,-893.92 1937.86,-1046.2 1882.78,-1141.2"/>
-<polygon fill="black" stroke="black" points="1882.75,-1141.25 1883.2,-1148.45 1876.73,-1151.63 1876.28,-1144.44 1882.75,-1141.25"/>
-<text text-anchor="middle" x="2115.5" y="-799.8" font-family="Times,serif" font-size="14.00" fill="green">_backend</text>
+<path fill="none" stroke="black" d="M2079.8,-777.82C2002.58,-894.04 1901.26,-1046.51 1838.15,-1141.49"/>
+<polygon fill="black" stroke="black" points="1838.05,-1141.64 1838.06,-1148.85 1831.41,-1151.63 1831.4,-1144.42 1838.05,-1141.64"/>
+<text text-anchor="middle" x="2100.5" y="-799.8" font-family="Times,serif" font-size="14.00" fill="green">_backend</text>
 </g>
 <!-- ragger.firmware.fatstacks.layouts._Layout -->
 <g id="node48" class="node">
@@ -74,8 +74,8 @@
 <!-- ragger.backend.interface.BackendInterface&#45;&gt;ragger.firmware.fatstacks.layouts._Layout -->
 <g id="edge33" class="edge">
 <title>ragger.backend.interface.BackendInterface&#45;&gt;ragger.firmware.fatstacks.layouts._Layout</title>
-<path fill="none" stroke="black" d="M2662.14,-777.51C2683.24,-793.15 2703.05,-810.27 2721,-829 2983.15,-1102.64 2740.59,-1359.65 3002,-1634 3078.53,-1714.32 3884.04,-1720.03 4099.99,-1720.11"/>
-<polygon fill="black" stroke="black" points="4100.18,-1720.11 4106.18,-1716.11 4112.18,-1720.11 4106.18,-1724.11 4100.18,-1720.11"/>
+<path fill="none" stroke="black" d="M2668.63,-777.57C2721.67,-798.57 2760.76,-816.95 2772,-829 3025.72,-1101.17 2753.18,-1357.34 3002,-1634 3076.23,-1716.54 3884.3,-1720.62 4100.22,-1720.23"/>
+<polygon fill="black" stroke="black" points="4100.4,-1720.23 4106.39,-1716.22 4112.4,-1720.2 4106.41,-1724.22 4100.4,-1720.23"/>
 <text text-anchor="middle" x="3025.5" y="-1227.8" font-family="Times,serif" font-size="14.00" fill="green">_client</text>
 </g>
 <!-- ragger.firmware.fatstacks.use_cases._UseCase -->
@@ -326,8 +326,8 @@
 <!-- ragger.navigator.fatstacks_navigator.FatstacksNavigator&#45;&gt;ragger.navigator.navigator.Navigator -->
 <g id="edge31" class="edge">
 <title>ragger.navigator.fatstacks_navigator.FatstacksNavigator&#45;&gt;ragger.navigator.navigator.Navigator</title>
-<path fill="none" stroke="black" d="M1478.53,-650.57C1495.67,-683.5 1522.79,-734.63 1548,-778 1622.99,-907.02 1715.63,-1052.8 1774.04,-1143.18"/>
-<polygon fill="none" stroke="black" points="1771.21,-1145.26 1779.58,-1151.75 1777.09,-1141.46 1771.21,-1145.26"/>
+<path fill="none" stroke="black" d="M1478.78,-650.83C1527.16,-744.24 1662.32,-1005.21 1733.63,-1142.9"/>
+<polygon fill="none" stroke="black" points="1730.52,-1144.51 1738.23,-1151.78 1736.74,-1141.29 1730.52,-1144.51"/>
 </g>
 <!-- ragger.firmware.versions.FatstacksVersions -->
 <g id="node9" class="node">
@@ -375,8 +375,8 @@
 <!-- ragger.firmware.structs.Firmware&#45;&gt;ragger.navigator.navigator.Navigator -->
 <g id="edge89" class="edge">
 <title>ragger.firmware.structs.Firmware&#45;&gt;ragger.navigator.navigator.Navigator</title>
-<path fill="none" stroke="black" d="M3004.79,-319.27C2996.89,-353.1 2984.99,-406.4 2977,-453 2964.69,-524.78 2979.37,-720.26 2935,-778 2784.59,-973.75 2534.95,-1085.31 2311.08,-1148.65"/>
-<polygon fill="black" stroke="black" points="2310.98,-1148.67 2306.28,-1154.14 2299.43,-1151.91 2304.13,-1146.44 2310.98,-1148.67"/>
+<path fill="none" stroke="black" d="M3004.79,-319.27C2996.89,-353.1 2984.99,-406.4 2977,-453 2964.69,-524.78 2979.83,-720.61 2935,-778 2781.62,-974.37 2531,-1085.66 2302.25,-1148.67"/>
+<polygon fill="black" stroke="black" points="2301.92,-1148.76 2297.18,-1154.2 2290.34,-1151.92 2295.08,-1146.48 2301.92,-1148.76"/>
 <text text-anchor="middle" x="3013" y="-611.8" font-family="Times,serif" font-size="14.00" fill="green">_firmware</text>
 </g>
 <!-- ragger.firmware.structs._Firmware -->
@@ -540,7 +540,7 @@
 <text text-anchor="start" x="998" y="-219.3" font-family="Times,serif" font-size="14.00">receive(): RAPDU</text>
 <text text-anchor="start" x="998" y="-204.3" font-family="Times,serif" font-size="14.00">right_click(): None</text>
 <text text-anchor="start" x="998" y="-189.3" font-family="Times,serif" font-size="14.00">send_raw(data: bytes): None</text>
-<text text-anchor="start" x="998" y="-174.3" font-family="Times,serif" font-size="14.00">wait_for_screen_change(timeout: float, context: Any)</text>
+<text text-anchor="start" x="998" y="-174.3" font-family="Times,serif" font-size="14.00">wait_for_screen_change(timeout: float): None</text>
 </g>
 <!-- ragger.backend.ledgercomm.LedgerCommBackend&#45;&gt;ragger.backend.interface.BackendInterface -->
 <g id="edge1" class="edge">
@@ -566,7 +566,7 @@
 <text text-anchor="start" x="1988" y="-219.3" font-family="Times,serif" font-size="14.00">receive(): RAPDU</text>
 <text text-anchor="start" x="1988" y="-204.3" font-family="Times,serif" font-size="14.00">right_click(): None</text>
 <text text-anchor="start" x="1988" y="-189.3" font-family="Times,serif" font-size="14.00">send_raw(data: bytes): None</text>
-<text text-anchor="start" x="1988" y="-174.3" font-family="Times,serif" font-size="14.00">wait_for_screen_change(timeout: float, context: Any): Any</text>
+<text text-anchor="start" x="1988" y="-174.3" font-family="Times,serif" font-size="14.00">wait_for_screen_change(timeout: float): None</text>
 </g>
 <!-- ragger.backend.ledgerwallet.LedgerWalletBackend&#45;&gt;ragger.backend.interface.BackendInterface -->
 <g id="edge2" class="edge">
@@ -677,8 +677,8 @@
 <!-- ragger.navigator.nano_navigator.NanoNavigator&#45;&gt;ragger.navigator.navigator.Navigator -->
 <g id="edge32" class="edge">
 <title>ragger.navigator.nano_navigator.NanoNavigator&#45;&gt;ragger.navigator.navigator.Navigator</title>
-<path fill="none" stroke="black" d="M1631.8,-650.83C1663.83,-744.05 1753.22,-1004.17 1800.61,-1142.07"/>
-<polygon fill="none" stroke="black" points="1797.39,-1143.46 1803.95,-1151.78 1804.01,-1141.19 1797.39,-1143.46"/>
+<path fill="none" stroke="black" d="M1628.89,-650.83C1653.03,-744.05 1720.39,-1004.17 1756.1,-1142.07"/>
+<polygon fill="none" stroke="black" points="1752.72,-1142.98 1758.62,-1151.78 1759.5,-1141.23 1752.72,-1142.98"/>
 </g>
 <!-- ragger.firmware.versions.NanoSPVersions -->
 <g id="node22" class="node">
@@ -803,16 +803,16 @@
 <polyline fill="none" stroke="antiquewhite" points="0,-355 972,-355 "/>
 <text text-anchor="start" x="8" y="-339.8" font-family="Times,serif" font-size="14.00">both_click(): None</text>
 <text text-anchor="start" x="8" y="-324.8" font-family="Times,serif" font-size="14.00">compare_screen_with_snapshot(golden_snap_path: Path, crop: Optional[Crop], tmp_snap_path: Optional[Path], golden_run: bool): bool</text>
-<text text-anchor="start" x="8" y="-309.8" font-family="Times,serif" font-size="14.00">compare_screen_with_text(text: str)</text>
+<text text-anchor="start" x="8" y="-309.8" font-family="Times,serif" font-size="14.00">compare_screen_with_text(text: str): bool</text>
 <text text-anchor="start" x="8" y="-294.8" font-family="Times,serif" font-size="14.00">exchange_async_raw(data: bytes): Generator[None, None, None]</text>
 <text text-anchor="start" x="8" y="-279.8" font-family="Times,serif" font-size="14.00">exchange_raw(data: bytes): RAPDU</text>
 <text text-anchor="start" x="8" y="-264.8" font-family="Times,serif" font-size="14.00">finger_touch(x: int, y: int, delay: float): None</text>
-<text text-anchor="start" x="8" y="-249.8" font-family="Times,serif" font-size="14.00">get_current_screen_content(): Any</text>
+<text text-anchor="start" x="8" y="-249.8" font-family="Times,serif" font-size="14.00">get_current_screen_content(): dict</text>
 <text text-anchor="start" x="8" y="-234.8" font-family="Times,serif" font-size="14.00">left_click(): None</text>
 <text text-anchor="start" x="8" y="-219.8" font-family="Times,serif" font-size="14.00">receive(): RAPDU</text>
 <text text-anchor="start" x="8" y="-204.8" font-family="Times,serif" font-size="14.00">right_click(): None</text>
 <text text-anchor="start" x="8" y="-189.8" font-family="Times,serif" font-size="14.00">send_raw(data: bytes): None</text>
-<text text-anchor="start" x="8" y="-174.8" font-family="Times,serif" font-size="14.00">wait_for_screen_change(timeout: float, context: Any): Any</text>
+<text text-anchor="start" x="8" y="-174.8" font-family="Times,serif" font-size="14.00">wait_for_screen_change(timeout: float): None</text>
 </g>
 <!-- ragger.utils.structs.RAPDU&#45;&gt;ragger.backend.speculos.SpeculosBackend -->
 <g id="edge93" class="edge">
