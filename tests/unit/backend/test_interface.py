@@ -1,4 +1,5 @@
 import struct
+import tempfile
 from pathlib import Path
 from unittest import TestCase
 from unittest.mock import MagicMock
@@ -107,11 +108,12 @@ class TestBackendInterfaceLogging(TestCase):
 
     def test_log_apdu(self):
         self.firmware = _Firmware("nanos", "2.0.1", "other")
-        test_file = Path("/tmp/test_log_file.log").resolve()
-        self.backend = DummyBackend(firmware=self.firmware, log_apdu_file=test_file)
-        ref_lines = ["Test logging", "hello world", "Lorem Ipsum"]
-        for l in ref_lines:
-            self.backend.apdu_logger.debug(l)
-        with open(test_file, mode='r') as fp:
-            read_lines = [l.strip() for l in fp.readlines()]
-            self.assertEqual(read_lines, ref_lines)
+        with tempfile.TemporaryDirectory() as td:
+            test_file = (Path(td) / "test_log_file.log").resolve()
+            self.backend = DummyBackend(firmware=self.firmware, log_apdu_file=test_file)
+            ref_lines = ["Test logging", "hello world", "Lorem Ipsum"]
+            for l in ref_lines:
+                self.backend.apdu_logger.debug(l)
+            with open(test_file, mode='r') as fp:
+                read_lines = [l.strip() for l in fp.readlines()]
+                self.assertEqual(read_lines, ref_lines)
