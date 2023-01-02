@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- conftest: `--log_apdu_file <filename>` option
+
 ### Fixed
 
 
