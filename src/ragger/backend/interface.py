@@ -22,6 +22,7 @@ from typing import Optional, Type, Generator, Any
 
 from ragger.firmware import Firmware
 from ragger.utils import pack_APDU, RAPDU, Crop
+from ragger.logger import get_default_logger, get_apdu_logger, set_apdu_logger_file
 
 
 class RaisePolicy(Enum):
@@ -32,7 +33,7 @@ class RaisePolicy(Enum):
 
 class BackendInterface(ABC):
 
-    def __init__(self, firmware: Firmware):
+    def __init__(self, firmware: Firmware, log_apdu_file: Optional[Path] = None):
         """Initializes the Backend
 
         :param firmware: Which Firmware will be managed
@@ -41,6 +42,12 @@ class BackendInterface(ABC):
         self._firmware = firmware
         self._last_async_response: Optional[RAPDU] = None
         self.raise_policy = RaisePolicy.RAISE_ALL_BUT_0x9000
+
+        if log_apdu_file:
+            set_apdu_logger_file(log_apdu_file=log_apdu_file)
+
+        self.logger = get_default_logger()
+        self.apdu_logger = get_apdu_logger()
 
     @property
     def firmware(self) -> Firmware:

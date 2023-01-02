@@ -20,7 +20,6 @@ from typing import Generator, Optional, Any
 from ledgerwallet.client import LedgerClient, CommException
 from ledgerwallet.transport import HidDevice
 
-from ragger import logger
 from ragger.utils import RAPDU, Crop
 from ragger.error import ExceptionRAPDU
 from .interface import BackendInterface
@@ -35,7 +34,7 @@ def raise_policy_enforcer(function):
         except CommException as error:
             rapdu = RAPDU(error.sw, error.data)
 
-        logger.debug("Receiving '%s'", rapdu)
+        self.apdu_logger.debug("<= %s%4x", rapdu.data.hex(), rapdu.status)
 
         if self.is_raise_required(rapdu):
             raise ExceptionRAPDU(rapdu.status, rapdu.data)
@@ -52,7 +51,7 @@ class LedgerWalletBackend(BackendInterface):
         self._client: Optional[LedgerClient] = None
 
     def __enter__(self) -> "LedgerWalletBackend":
-        logger.info(f"Starting {self.__class__.__name__} stream")
+        self.logger.info(f"Starting {self.__class__.__name__} stream")
         self._client = LedgerClient()
         return self
 
@@ -61,7 +60,7 @@ class LedgerWalletBackend(BackendInterface):
         self._client.close()
 
     def send_raw(self, data: bytes = b"") -> None:
-        logger.debug("Sending '%s'", data)
+        self.apdu_logger.debug("=> %s", data.hex())
         assert self._client is not None
         self._client.device.write(data)
 
@@ -75,16 +74,16 @@ class LedgerWalletBackend(BackendInterface):
             raw_result = self._client.device.read()
         status, payload = int.from_bytes(raw_result[-2:], "big"), raw_result[:-2] or b""
         result = RAPDU(status, payload)
-        logger.debug("Receiving '%s'", result)
+        self.apdu_logger.debug("<= %s%4x", result.data.hex(), result.status)
         return result
 
     @raise_policy_enforcer
     def exchange_raw(self, data: bytes = b"") -> RAPDU:
-        logger.debug("Exchange: sending   > '%s'", data)
+        self.apdu_logger.debug("=> %s", data.hex())
         assert self._client is not None
         raw_result = self._client.raw_exchange(data)
         result = RAPDU(int.from_bytes(raw_result[-2:], "big"), raw_result[:-2] or b"")
-        logger.debug("Exchange: receiving < '%s'", result)
+        self.apdu_logger.debug("<= %s%4x", result.data.hex(), result.status)
         return result
 
     @contextmanager

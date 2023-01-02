@@ -19,7 +19,6 @@ from typing import Optional, Generator, Any
 
 from ledgercomm import Transport
 
-from ragger import logger
 from ragger.firmware import Firmware
 from ragger.utils import RAPDU, Crop
 from ragger.error import ExceptionRAPDU
@@ -31,7 +30,7 @@ def raise_policy_enforcer(function):
     def decoration(self: 'LedgerCommBackend', *args, **kwargs) -> RAPDU:
         rapdu: RAPDU = function(self, *args, **kwargs)
 
-        logger.debug("Receiving '%s'", rapdu)
+        self.apdu_logger.debug("<= %s%4x", rapdu.data.hex(), rapdu.status)
 
         if self.is_raise_required(rapdu):
             raise ExceptionRAPDU(rapdu.status, rapdu.data)
@@ -48,9 +47,10 @@ class LedgerCommBackend(BackendInterface):
                  host: str = "127.0.0.1",
                  port: int = 9999,
                  interface: str = 'hid',
+                 log_apdu_file: Optional[Path] = None,
                  *args,
                  **kwargs):
-        super().__init__(firmware)
+        super().__init__(firmware=firmware, log_apdu_file=log_apdu_file)
         self._host = host
         self._port = port
         self._client: Optional[Transport] = None
@@ -58,7 +58,7 @@ class LedgerCommBackend(BackendInterface):
         self._args = (args, kwargs)
 
     def __enter__(self) -> "LedgerCommBackend":
-        logger.info(f"Starting {self.__class__.__name__} stream")
+        self.logger.info(f"Starting {self.__class__.__name__} stream")
         self._client = Transport(server=self._host,
                                  port=self._port,
                                  *self._args[0],
@@ -70,7 +70,7 @@ class LedgerCommBackend(BackendInterface):
         self._client.close()
 
     def send_raw(self, data: bytes = b"") -> None:
-        logger.debug("Sending '%s'", data)
+        self.apdu_logger.debug("=> %s", data.hex())
         assert self._client is not None
         self._client.send_raw(data)
 
@@ -78,15 +78,15 @@ class LedgerCommBackend(BackendInterface):
     def receive(self) -> RAPDU:
         assert self._client is not None
         result = RAPDU(*self._client.recv())
-        logger.debug("Receiving '%s'", result)
+        self.apdu_logger.debug("<= %s%4x", result.data.hex(), result.status)
         return result
 
     @raise_policy_enforcer
     def exchange_raw(self, data: bytes = b"") -> RAPDU:
-        logger.debug("Exchange: sending   > '%s'", data)
+        self.apdu_logger.debug("=> %s", data.hex())
         assert self._client is not None
         result = RAPDU(*self._client.exchange_raw(data))
-        logger.debug("Exchange: receiving < '%s'", result)
+        self.apdu_logger.debug("<= %s%4x", result.data.hex(), result.status)
         return result
 
     @contextmanager

@@ -73,11 +73,12 @@ Standard useful pytest options
 
 Custom pytest options
 ```
-    --backend <backend>  run the tests against the backend [speculos, ledgercomm, ledgerwallet]. Speculos is the default
-    --display            on Speculos, enables the display of the app screen using QT
-    --golden_run         on Speculos, screen comparison functions will save the current screen instead of comparing
-    --nanos              run only the test for the nanos device
-    --nanox              run only the test for the nanox device
-    --nanosp             run only the test for the nanosp device
+    --backend <backend>         run the tests against the backend [speculos, ledgercomm, ledgerwallet]. Speculos is the default
+    --display                   on Speculos, enables the display of the app screen using QT
+    --golden_run                on Speculos, screen comparison functions will save the current screen instead of comparing
+    --log_apdu_file <filepath>  log all apdu exchanges to the file in parameter. The previous file content is erased
+    --nanos                     run only the test for the nanos device
+    --nanox                     run only the test for the nanox device
+    --nanosp                    run only the test for the nanosp device
 ``` 
 
