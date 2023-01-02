@@ -60,7 +60,6 @@ class Firmware(_Firmware):
         :class:`VersionManager <ragger.firmware.versions.VersionManager>`
         related to the ``SDK_VERSION[device]``, will raise a ``ValueError``.
         """
-        assert device.lower() in SDK_VERSIONS.keys()
         try:
             versions = SDK_VERSIONS[device.lower()]
         except KeyError:

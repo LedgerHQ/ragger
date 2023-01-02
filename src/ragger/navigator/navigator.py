@@ -14,10 +14,10 @@
    limitations under the License.
 """
 from abc import ABC
-from enum import Enum, auto
+from enum import auto, Enum
 from pathlib import Path
-from typing import List, Optional, Dict, Any
 from time import sleep, time
+from typing import Any, Dict, List, Optional
 
 from ragger.backend import BackendInterface, SpeculosBackend
 from ragger.firmware import Firmware
@@ -88,6 +88,10 @@ class NavIns:
 
 
 class Navigator(ABC):
+
+    GOLDEN_INSTRUCTION_SLEEP_MULTIPLIER_FIRST = 2
+    GOLDEN_INSTRUCTION_SLEEP_MULTIPLIER_MIDDLE = 5
+    GOLDEN_INSTRUCTION_SLEEP_MULTIPLIER_LAST = 2
 
     def __init__(self,
                  backend: BackendInterface,
@@ -173,7 +177,7 @@ class Navigator(ABC):
         """
         for instruction in instructions:
             if instruction.id not in self._callbacks:
-                raise NotImplementedError
+                raise NotImplementedError()
             self._callbacks[instruction.id](*instruction.args, **instruction.kwargs)
 
     def navigate_and_compare(self,
@@ -200,7 +204,7 @@ class Navigator(ABC):
         :param last_instruction_wait: Sleeping time after the last navigation instruction
         :type last_instruction_wait: float
 
-        :raises ValueError: If one of the snapshots do not match.
+        :raises ValueError: If one of the snapshots does not match.
 
         :return: None
         :rtype: NoneType
@@ -210,13 +214,13 @@ class Navigator(ABC):
             # has been done and next screen has been displayed before continuing.
             # If initial timing was not enough, then it will fail when running without
             # golden run mode and developer will be notified.
-            first_instruction_wait *= 2
-            middle_instruction_wait *= 5
-            last_instruction_wait *= 2
+            first_instruction_wait *= self.GOLDEN_INSTRUCTION_SLEEP_MULTIPLIER_FIRST
+            middle_instruction_wait *= self.GOLDEN_INSTRUCTION_SLEEP_MULTIPLIER_MIDDLE
+            last_instruction_wait *= self.GOLDEN_INSTRUCTION_SLEEP_MULTIPLIER_LAST
         snaps_tmp_path = self._init_snaps_temp_dir(path, test_case_name)
         snaps_golden_path = self._check_snaps_dir_path(path, test_case_name, True)
 
-        # TODO replace hardcoded wait by Speculos sreen change event wait mechanism
+        # TODO replace hardcoded wait by Speculos screen change event wait mechanism
         sleep(first_instruction_wait)
 
         # First navigate to the last step and take snapshots of every screen in the flow.
@@ -388,8 +392,7 @@ class Navigator(ABC):
             idx = 0
 
         if not isinstance(self._backend, SpeculosBackend):
-            # TODO remove this once the proper behavior of
-            # other backends is implemented.
+            # TODO remove this once the proper behavior of other backends is implemented.
             return
 
         start = time()
@@ -398,18 +401,14 @@ class Navigator(ABC):
         # On Speculos backend it immediately returns without any wait.
         ctx = self._backend.wait_for_screen_change(0.1)
 
-        # Make sure to enter the navigation loop after
-        # there is a screen change (or wait 2 seconds).
-        # Useful when the navigate_until_text is used
-        # in transaction flows and the screen changes
+        # Make sure to enter the navigation loop after there is a screen change (or wait 2 seconds).
+        # Useful when the navigate_until_text is used in transaction flows and the screen changes
         # from the idle menu to a review start screen.
         try:
             ctx = self._backend.wait_for_screen_change(2.0, ctx)
         except TimeoutError:
-            # Maybe the start screen of the transaction flow is
-            # already displayed so we'll wait 2.0 sec until
-            # the exception is thrown then we pass and go to the
-            # navigation loop.
+            # Maybe the start screen of the transaction flow is already displayed so we'll wait 2.0
+            # sec until the exception is thrown then we pass and go to the navigation loop.
             pass
 
         # Navigate until the text specified in argument is found.

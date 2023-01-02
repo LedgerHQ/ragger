@@ -1,13 +1,12 @@
-from unittest import TestCase
-from unittest.mock import patch
 from pathlib import Path
 from typing import Optional
+from unittest import TestCase
+from unittest.mock import patch
 
-from ragger.firmware import Firmware
+from ragger.backend import SpeculosBackend, RaisePolicy
 from ragger.error import ExceptionRAPDU
+from ragger.firmware import Firmware
 from ragger.utils import RAPDU
-from ragger.backend import SpeculosBackend
-from ragger.backend import RaisePolicy
 
 from tests.stubs import SpeculosServerStub, EndPoint, APDUStatus
 
@@ -35,25 +34,15 @@ class TestbackendSpeculos(TestCase):
     - else means the response has a APDUStatus.ERROR status (arbitrarily set to 0x8000)
     """
 
-    def setUp(self):
-        self.firmware = Firmware('nanos', '2.1')
-        self.backend = SpeculosBackend("some app", self.firmware)
-
     def check_rapdu(self, rapdu: RAPDU, expected: Optional[bytes] = None, status: int = 0x9000):
         self.assertEqual(rapdu.status, status)
         if expected is None:
             return
         self.assertEqual(rapdu.data, expected)
 
-    def test___init__ok(self):
-        SpeculosBackend("some app", firmware=self.firmware)
-
-    def test___init__args_ok(self):
-        SpeculosBackend("some app", firmware=self.firmware, args=["some", "specific", "arguments"])
-
-    def test___init__args_nok(self):
-        with self.assertRaises(AssertionError):
-            SpeculosBackend("some app", firmware=self.firmware, args="not a list")
+    def setUp(self):
+        self.firmware = Firmware('nanos', '2.1')
+        self.backend = SpeculosBackend("some app", self.firmware)
 
     def test_exchange_raw(self):
         with patch("speculos.client.subprocess"):

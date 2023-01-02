@@ -20,3 +20,7 @@ class TestFirmware(TestCase):
         self.assertEqual(firmware.version, version)
         # WARNING: this may need to be updated if a new firmware *patch* version is released on NanoS+ (1.0.5)
         self.assertEqual(firmware.semantic_version, VersionInfo(1, 0, 4))
+
+    def test_firmware_not_existing_version(self):
+        with self.assertRaises(KeyError):
+            Firmware("non existing device", "not important")

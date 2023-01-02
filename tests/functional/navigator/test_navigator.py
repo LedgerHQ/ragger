@@ -8,7 +8,7 @@ from ragger.navigator import NavInsID, NavIns, NanoNavigator
 
 from tests.stubs import SpeculosServerStub
 
-ROOT_SCREENSHOT_PATH = Path(__file__).parent.parent.resolve()
+ROOT_SCREENSHOT_PATH = Path(__file__).parent.parent.parent.resolve()
 
 
 class TestNavigator(TestCase):
