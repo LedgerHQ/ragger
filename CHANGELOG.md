@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - firmware: `Firmware:have_bagl` and `Firmware:have_nbgl` properties indicates which graphical
             interface the firmware implements.
 - navigator: Add USE_CASE_ADDRESS_CONFIRMATION_TAP
+- navigator: `add_callback()` method to register callbacks after Navigator initialization
 
 ### Fixed
 

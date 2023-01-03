@@ -164,6 +164,29 @@ class Navigator(ABC):
             golden, tmp_snap_path=tmp,
             golden_run=self._golden_run), f"Screen does not match golden {tmp}."
 
+    def add_callback(self, ins_id: NavInsID, callback: Callable, override: bool = True) -> None:
+        """
+        Register a new callback.
+
+        :param ins_id: The navigation instruction ID which will trigger the callback
+        :type ins_id: NavInsID
+        :param callback: The callback to call
+        :type callback: Callable
+        :param override: Replace an existing callback if the navigation instruction ID already
+                         exists. Defaults to `True`
+        :type override: bool
+
+        :raises KeyError: If the navigation instruction ID already exists and `override` is set to
+                          False
+
+        :return: None
+        :rtype: NoneType
+        """
+        if not override and ins_id in self._callbacks:
+            raise KeyError(f"Navigation instruction ID '{ins_id}' already exists in the "
+                           "registered callbacks")
+        self._callbacks[ins_id] = callback
+
     def navigate(self, instructions: List[NavIns]):
         """
         Navigate on the device according to a set of navigation instructions provided.
