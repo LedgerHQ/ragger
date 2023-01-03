@@ -15,6 +15,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - navigator: Add USE_CASE_ADDRESS_CONFIRMATION_TAP
 - navigator: `add_callback()` method to register callbacks after Navigator initialization
 
+### Changed
+
+- navigator: `NavIns` arguments of `navigate()` and higher-level methods can now also be `NavInsID`,
+             which will automatically be converted to `NavIns` (with no argument for the callback)
+
 ### Fixed
 
 

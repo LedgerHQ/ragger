@@ -135,7 +135,10 @@ class TestNavigator(TestCase):
         self.navigator._callbacks = {ni1.id: cb1, ni2.id: cb2}
         self.navigator._backend = MagicMock(spec=SpeculosBackend)
         self.navigator._compare_snap = MagicMock()
-        self.navigator.navigate_and_compare(self.pathdir, self.pathdir, [ni1, ni2])
+        self.navigator.navigate_and_compare(self.pathdir,
+                                            self.pathdir, [ni1, ni2],
+                                            screen_change_before_first_instruction=True,
+                                            screen_change_after_last_instruction=True)
 
         # backend wait_for_screen_change function called 3 times
         self.assertEqual(self.navigator._backend.wait_for_screen_change.call_count, 3)
