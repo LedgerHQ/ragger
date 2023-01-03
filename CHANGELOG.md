@@ -21,10 +21,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Fatstacks UseCaseHomeExt
+- Fatstacks `UseCaseHomeExt`
 - navigator: Improve navigation by waiting screen changes instead of hardcoded sleeps
-- navigator: navigate_and_compare(): Add optional snap_start_idx parameter
-- navigator: navigate_until_text(): take a list of validation instructions and check last screen
+- navigator: `navigate_and_compare()`: add optional snap_start_idx parameter
+- navigator: `navigate_until_text()`: take a list of validation instructions and check last screen
 
 
 ## [1.0.0] - 2022-12-26

@@ -17,7 +17,7 @@ from abc import ABC
 from enum import auto, Enum
 from pathlib import Path
 from time import time
-from typing import Any, Dict, List, Optional
+from typing import Any, Callable, Dict, List, Optional, Union
 
 from ragger.backend import BackendInterface, SpeculosBackend
 from ragger.firmware import Firmware
@@ -97,7 +97,7 @@ class Navigator(ABC):
     def __init__(self,
                  backend: BackendInterface,
                  firmware: Firmware,
-                 callbacks: Dict[NavInsID, Any],
+                 callbacks: Dict[NavInsID, Callable],
                  golden_run: bool = False):
         """Initializes the Backend
 
