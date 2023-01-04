@@ -361,23 +361,25 @@
 <!-- ragger.firmware.structs.Firmware -->
 <g id="node10" class="node">
 <title>ragger.firmware.structs.Firmware</title>
-<polygon fill="burlywood" stroke="burlywood" points="2970,-249 2970,-319 3056,-319 3056,-249 2970,-249"/>
-<text text-anchor="middle" x="3013" y="-303.8" font-family="Times,serif" font-size="14.00">Firmware</text>
-<polyline fill="none" stroke="burlywood" points="2970,-296 3056,-296 "/>
-<polyline fill="none" stroke="burlywood" points="2970,-272 3056,-272 "/>
-<text text-anchor="middle" x="3013" y="-256.8" font-family="Times,serif" font-size="14.00"> </text>
+<polygon fill="burlywood" stroke="burlywood" points="2970,-242 2970,-326 3056,-326 3056,-242 2970,-242"/>
+<text text-anchor="middle" x="3013" y="-310.8" font-family="Times,serif" font-size="14.00">Firmware</text>
+<polyline fill="none" stroke="burlywood" points="2970,-303 3056,-303 "/>
+<text text-anchor="start" x="2978" y="-287.8" font-family="Times,serif" font-size="14.00">has_bagl</text>
+<text text-anchor="start" x="2978" y="-272.8" font-family="Times,serif" font-size="14.00">has_nbgl</text>
+<polyline fill="none" stroke="burlywood" points="2970,-265 3056,-265 "/>
+<text text-anchor="middle" x="3013" y="-249.8" font-family="Times,serif" font-size="14.00"> </text>
 </g>
 <!-- ragger.firmware.structs.Firmware&#45;&gt;ragger.backend.interface.BackendInterface -->
 <g id="edge86" class="edge">
 <title>ragger.firmware.structs.Firmware&#45;&gt;ragger.backend.interface.BackendInterface</title>
-<path fill="none" stroke="black" d="M3006.85,-319.04C3000.19,-345.73 2986.85,-381.66 2961,-402 2959.62,-403.09 2739.94,-442.46 2685.05,-452.99"/>
+<path fill="none" stroke="black" d="M3004.94,-326.27C2997.75,-351.92 2984.58,-383.44 2961,-402 2959.62,-403.09 2739.94,-442.46 2685.05,-452.99"/>
 <polygon fill="black" stroke="black" points="2684.82,-453.03 2679.73,-458.15 2673.05,-455.42 2678.14,-450.31 2684.82,-453.03"/>
 <text text-anchor="middle" x="2899" y="-423.8" font-family="Times,serif" font-size="14.00" fill="green">_firmware</text>
 </g>
 <!-- ragger.firmware.structs.Firmware&#45;&gt;ragger.navigator.navigator.Navigator -->
 <g id="edge89" class="edge">
 <title>ragger.firmware.structs.Firmware&#45;&gt;ragger.navigator.navigator.Navigator</title>
-<path fill="none" stroke="black" d="M3004.68,-319.25C2996.69,-353.07 2984.74,-406.36 2977,-453 2964,-531.37 2983.56,-745.13 2935,-808 2783.24,-1004.46 2534.02,-1115.74 2305.76,-1178.71"/>
+<path fill="none" stroke="black" d="M3003.04,-326.22C2995.13,-360.1 2984.23,-409.45 2977,-453 2964,-531.37 2983.56,-745.13 2935,-808 2783.24,-1004.46 2534.02,-1115.74 2305.76,-1178.71"/>
 <polygon fill="black" stroke="black" points="2305.45,-1178.8 2300.72,-1184.23 2293.87,-1181.95 2298.61,-1176.52 2305.45,-1178.8"/>
 <text text-anchor="middle" x="3013" y="-626.8" font-family="Times,serif" font-size="14.00" fill="green">_firmware</text>
 </g>
@@ -396,20 +398,20 @@
 <!-- ragger.firmware.structs.Firmware&#45;&gt;ragger.firmware.structs._Firmware -->
 <g id="edge26" class="edge">
 <title>ragger.firmware.structs.Firmware&#45;&gt;ragger.firmware.structs._Firmware</title>
-<path fill="none" stroke="black" d="M2999.69,-319.02C2989.96,-342.77 2975.91,-374.94 2961,-402 2960.69,-402.56 2892.07,-505.23 2847.15,-572.43"/>
+<path fill="none" stroke="black" d="M2996.73,-326.17C2987.22,-348.97 2974.46,-377.57 2961,-402 2960.69,-402.56 2892.07,-505.23 2847.15,-572.43"/>
 <polygon fill="none" stroke="black" points="2844.17,-570.59 2841.52,-580.85 2849.99,-574.48 2844.17,-570.59"/>
 </g>
 <!-- ragger.firmware.structs.Firmware&#45;&gt;ragger.firmware.fatstacks.layouts._Layout -->
 <g id="edge87" class="edge">
 <title>ragger.firmware.structs.Firmware&#45;&gt;ragger.firmware.fatstacks.layouts._Layout</title>
-<path fill="none" stroke="black" d="M3021.55,-319.21C3029.71,-353.01 3041.79,-406.27 3049,-453 3133,-997.42 2892.33,-1308.35 3313,-1664 3373.2,-1714.9 3925.28,-1740.98 4100.14,-1748.01"/>
+<path fill="none" stroke="black" d="M3023.22,-326.18C3031.29,-360.04 3042.27,-409.37 3049,-453 3133,-997.42 2892.33,-1308.35 3313,-1664 3373.2,-1714.9 3925.28,-1740.98 4100.14,-1748.01"/>
 <polygon fill="black" stroke="black" points="4100.32,-1748.02 4106.47,-1744.26 4112.31,-1748.5 4106.16,-1752.26 4100.32,-1748.02"/>
 <text text-anchor="middle" x="3103" y="-829.8" font-family="Times,serif" font-size="14.00" fill="green">_firmware</text>
 </g>
 <!-- ragger.firmware.structs.Firmware&#45;&gt;ragger.firmware.fatstacks.use_cases._UseCase -->
 <g id="edge88" class="edge">
 <title>ragger.firmware.structs.Firmware&#45;&gt;ragger.firmware.fatstacks.use_cases._UseCase</title>
-<path fill="none" stroke="black" d="M3032.38,-319.19C3046.71,-345.88 3065.63,-384.28 3077,-420 3135.51,-603.87 3012.03,-751.55 3183,-841 3758.5,-1142.1 4561.77,-1235.38 4777.73,-1255.76"/>
+<path fill="none" stroke="black" d="M3036.04,-326.08C3049.8,-352.24 3066.58,-387.25 3077,-420 3135.51,-603.87 3012.03,-751.55 3183,-841 3758.5,-1142.1 4561.77,-1235.38 4777.73,-1255.76"/>
 <polygon fill="black" stroke="black" points="4777.98,-1255.78 4784.32,-1252.35 4789.93,-1256.89 4783.58,-1260.32 4777.98,-1255.78"/>
 <text text-anchor="middle" x="3169" y="-626.8" font-family="Times,serif" font-size="14.00" fill="green">_firmware</text>
 </g>
