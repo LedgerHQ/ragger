@@ -22,7 +22,9 @@ ERROR_MSG = "This backend needs {}. Please install this package (run `pip instal
 
 try:
     from .speculos import SpeculosBackend
-except ImportError:
+except ImportError as e:
+    if "speculos" not in str(e):
+        raise e
 
     def SpeculosBackend(*args, **kwargs):  # type: ignore
         raise ImportError(
@@ -31,7 +33,9 @@ except ImportError:
 
 try:
     from .ledgercomm import LedgerCommBackend
-except ImportError:
+except ImportError as e:
+    if "ledgercomm" not in str(e):
+        raise e
 
     def LedgerCommBackend(*args, **kwargs):  # type: ignore
         raise ImportError(
@@ -40,7 +44,9 @@ except ImportError:
 
 try:
     from .ledgerwallet import LedgerWalletBackend
-except ImportError:
+except ImportError as e:
+    if "ledgerwallet" not in str(e):
+        raise e
 
     def LedgerWalletBackend(*args, **kwargs):  # type: ignore
         raise ImportError(
