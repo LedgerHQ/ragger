@@ -68,6 +68,7 @@ class FatstacksNavigator(Navigator):
             NavInsID.USE_CASE_VIEW_DETAILS_EXIT: screen.view_details.exit,
             NavInsID.USE_CASE_VIEW_DETAILS_PREVIOUS: screen.view_details.previous,
             NavInsID.USE_CASE_VIEW_DETAILS_NEXT: screen.view_details.next,
+            NavInsID.USE_CASE_ADDRESS_CONFIRMATION_TAP: screen.address_confirmation.tap,
             NavInsID.USE_CASE_ADDRESS_CONFIRMATION_EXIT_QR: screen.address_confirmation.exit_qr,
             NavInsID.USE_CASE_ADDRESS_CONFIRMATION_CONFIRM: screen.address_confirmation.confirm,
             NavInsID.USE_CASE_ADDRESS_CONFIRMATION_CANCEL: screen.address_confirmation.cancel,
