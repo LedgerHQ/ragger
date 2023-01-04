@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - conftest: `--log_apdu_file <filename>` option
+- firmware: `Firmware:have_bagl` and `Firmware:have_nbgl` properties indicates which graphical
+            interface the firmware implements.
 
 ### Fixed
 

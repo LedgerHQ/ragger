@@ -66,3 +66,11 @@ class Firmware(_Firmware):
             raise KeyError(f"Version {version} for {device} is not supported or does not exist")
         # Some versions used are not semantic, like 2.0 and such. These are managed here
         super().__init__(device.lower(), version, versions.get_last_from_string(version))
+
+    @property
+    def has_bagl(self):
+        return self.device.lower().startswith("nano")
+
+    @property
+    def has_nbgl(self):
+        return self.device.lower().startswith("fat")

@@ -24,3 +24,11 @@ class TestFirmware(TestCase):
     def test_firmware_not_existing_version(self):
         with self.assertRaises(KeyError):
             Firmware("non existing device", "not important")
+
+    def test_has_bagl(self):
+        self.assertTrue(Firmware("nanosp", "1.0").has_bagl)
+        self.assertFalse(Firmware("fat", "1.0").has_bagl)
+
+    def test_has_nbgl(self):
+        self.assertFalse(Firmware("nanosp", "1.0").has_nbgl)
+        self.assertTrue(Firmware("fat", "1.0").has_nbgl)
