@@ -17,7 +17,7 @@ from abc import ABC
 from enum import auto, Enum
 from pathlib import Path
 from time import time
-from typing import Any, Dict, List, Optional
+from typing import Any, Callable, Dict, List, Optional, Union
 
 from ragger.backend import BackendInterface, SpeculosBackend
 from ragger.firmware import Firmware
@@ -97,7 +97,7 @@ class Navigator(ABC):
     def __init__(self,
                  backend: BackendInterface,
                  firmware: Firmware,
-                 callbacks: Dict[NavInsID, Any],
+                 callbacks: Dict[NavInsID, Callable],
                  golden_run: bool = False):
         """Initializes the Backend
 
@@ -164,12 +164,37 @@ class Navigator(ABC):
             golden, tmp_snap_path=tmp,
             golden_run=self._golden_run), f"Screen does not match golden {tmp}."
 
-    def navigate(self, instructions: List[NavIns]):
+    def add_callback(self, ins_id: NavInsID, callback: Callable, override: bool = True) -> None:
+        """
+        Register a new callback.
+
+        :param ins_id: The navigation instruction ID which will trigger the callback
+        :type ins_id: NavInsID
+        :param callback: The callback to call
+        :type callback: Callable
+        :param override: Replace an existing callback if the navigation instruction ID already
+                         exists. Defaults to `True`
+        :type override: bool
+
+        :raises KeyError: If the navigation instruction ID already exists and `override` is set to
+                          False
+
+        :return: None
+        :rtype: NoneType
+        """
+        if not override and ins_id in self._callbacks:
+            raise KeyError(f"Navigation instruction ID '{ins_id}' already exists in the "
+                           "registered callbacks")
+        self._callbacks[ins_id] = callback
+
+    def navigate(self, instructions: List[Union[NavIns, NavInsID]]):
         """
         Navigate on the device according to a set of navigation instructions provided.
 
-        :param instructions: Set of navigation instructions.
-        :type instructions: List[NavIns]
+        :param instructions: Set of navigation instructions. Navigation instruction IDs are also
+                             accepted, and will be converted into navigation instruction (without
+                             any argument)
+        :type instructions: List[Union[NavIns, NavInsID]]
 
         :raises NotImplementedError: If the navigation instruction is not implemented.
 
@@ -177,6 +202,8 @@ class Navigator(ABC):
         :rtype: NoneType
         """
         for instruction in instructions:
+            if isinstance(instruction, NavInsID):
+                instruction = NavIns(instruction)
             if instruction.id not in self._callbacks:
                 raise NotImplementedError()
             self._callbacks[instruction.id](*instruction.args, **instruction.kwargs)
@@ -184,7 +211,7 @@ class Navigator(ABC):
     def navigate_and_compare(self,
                              path: Optional[Path],
                              test_case_name: Optional[Path],
-                             instructions: List[NavIns],
+                             instructions: List[Union[Union[NavIns, NavInsID]]],
                              timeout: float = 10.0,
                              screen_change_before_first_instruction: bool = True,
                              screen_change_after_last_instruction: bool = True,
@@ -197,11 +224,14 @@ class Navigator(ABC):
         :type path: Optional[Path]
         :param test_case_name: Relative path to the test case snapshots directory (from path).
         :type test_case_name: Optional[Path]
-        :param instructions: List of navigation instructions.
-        :type instructions: List[NavIns]
+        :param instructions: Set of navigation instructions. Navigation instruction IDs are also
+                             accepted.
+        :type instructions: List[Union[NavIns, NavInsID]]
         :param timeout: Timeout for each navigation step.
         :type timeout: int
-        :param screen_change_before_first_instruction: Wait for a screen change before first instruction.
+        :param screen_change_before_first_instruction: Wait for a screen change before first
+                                                       instruction, like a confirmation screen
+                                                       triggered through APDUs.
         :type screen_change_before_first_instruction: bool
         :param screen_change_after_last_instruction: Wait for a screen change after last instruction.
         :type screen_change_after_last_instruction: bool
@@ -241,8 +271,8 @@ class Navigator(ABC):
                                    len(instructions) + snap_start_idx)
 
     def navigate_until_snap(self,
-                            navigate_instruction: NavIns,
-                            validation_instruction: NavIns,
+                            navigate_instruction: Union[NavIns, NavInsID],
+                            validation_instruction: Union[NavIns, NavInsID],
                             path: Path,
                             test_case_name: Path,
                             start_img_name: str,
@@ -262,9 +292,11 @@ class Navigator(ABC):
         action is performed on the device.
 
         :param navigate_instruction: Navigation instruction to be performed until last snapshot is found.
-        :type navigate_instruction: NavIns
+                                     Navigation instruction ID is also accepted.
+        :type navigate_instruction: Union[NavIns, NavInsID]
         :param validation_instruction: Navigation instruction to be performed once last snapshot is found.
-        :type validation_instruction: NavIns
+                                       Navigation instruction ID is also accepted.
+        :type validation_instruction: Union[NavIns, NavInsID]
         :param path: Absolute path to the snapshots directory.
         :type path: Path
         :param test_case_name: Relative path to the test case snapshots directory (from path).
@@ -352,8 +384,8 @@ class Navigator(ABC):
         return img_idx
 
     def navigate_until_text_and_compare(self,
-                                        navigate_instruction: NavIns,
-                                        validation_instructions: List[NavIns],
+                                        navigate_instruction: Union[NavIns, NavInsID],
+                                        validation_instructions: List[Union[NavIns, NavInsID]],
                                         text: str,
                                         path: Optional[Path] = None,
                                         test_case_name: Optional[Path] = None,
@@ -376,9 +408,11 @@ class Navigator(ABC):
         :param test_case_name: Relative path to the test case snapshots directory (from path).
         :type test_case_name: Path
         :param navigate_instruction: Navigation instruction to be performed until the text is found.
-        :type navigate_instruction: NavIns
+                                     Navigation instruction ID is also accepted.
+        :type navigate_instruction: Union[NavIns, NavInsID]
         :param validation_instructions: Navigation instructions to be performed once the text is found.
-        :type validation_instructions: List[NavIns]
+                                        Navigation instruction IDs are also accepted.
+        :type validation_instructions: List[Union[NavIns, NavInsID]]
         :param text: Text string to look for.
         :type text: str
         :param timeout: Timeout for the whole navigation loop.
@@ -443,8 +477,8 @@ class Navigator(ABC):
                 snap_start_idx=idx)
 
     def navigate_until_text(self,
-                            navigate_instruction: NavIns,
-                            validation_instructions: List[NavIns],
+                            navigate_instruction: Union[NavIns, NavInsID],
+                            validation_instructions: List[Union[NavIns, NavInsID]],
                             text: str,
                             timeout: int = 30,
                             screen_change_before_first_instruction: bool = True,
@@ -460,9 +494,11 @@ class Navigator(ABC):
         action is performed on the device.
 
         :param navigate_instruction: Navigation instruction to be performed until the text is found.
-        :type navigate_instruction: NavIns
+                                     Navigation instruction ID is also accepted.
+        :type navigate_instruction: Union[NavIns, NavInsID]
         :param validation_instructions: Navigation instructions to be performed once the text is found.
-        :type validation_instructions: List[NavIns]
+                                        Navigation instruction IDs are also accepted.
+        :type validation_instructions: List[Union[NavIns, NavInsID]]
         :param text: Text string to look for.
         :type text: str
         :param timeout: Timeout for the whole navigation loop.

@@ -13,6 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - firmware: `Firmware:have_bagl` and `Firmware:have_nbgl` properties indicates which graphical
             interface the firmware implements.
 - navigator: Add USE_CASE_ADDRESS_CONFIRMATION_TAP
+- navigator: `add_callback()` method to register callbacks after Navigator initialization
+
+### Changed
+
+- navigator: `NavIns` arguments of `navigate()` and higher-level methods can now also be `NavInsID`,
+             which will automatically be converted to `NavIns` (with no argument for the callback)
 
 ### Fixed
 
@@ -21,10 +27,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Fatstacks UseCaseHomeExt
+- Fatstacks `UseCaseHomeExt`
 - navigator: Improve navigation by waiting screen changes instead of hardcoded sleeps
-- navigator: navigate_and_compare(): Add optional snap_start_idx parameter
-- navigator: navigate_until_text(): take a list of validation instructions and check last screen
+- navigator: `navigate_and_compare()`: add optional snap_start_idx parameter
+- navigator: `navigate_until_text()`: take a list of validation instructions and check last screen
 
 
 ## [1.0.0] - 2022-12-26

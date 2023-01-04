@@ -5,7 +5,7 @@ from unittest.mock import MagicMock, patch
 
 from ragger.backend import SpeculosBackend
 from ragger.firmware import Firmware
-from ragger.navigator import Navigator, NavIns
+from ragger.navigator import Navigator, NavIns, NavInsID
 
 
 class TestNavigator(TestCase):
@@ -118,14 +118,16 @@ class TestNavigator(TestCase):
         with self.assertRaises(NotImplementedError):
             self.navigator.navigate([NavIns(2)])
 
-    def test_navigate_ok_raises(self):
-        cb1, cb2 = MagicMock(), MagicMock()
-        ni1, ni2 = NavIns(1, (1, ), {'1': 1}), NavIns(2, (2, ), {'2': 2})
-        self.navigator._callbacks = {ni1.id: cb1, ni2.id: cb2}
-        self.navigator.navigate([ni1, ni2])
+    def test_navigate_ok(self):
+        cb1, cb2, cb3 = MagicMock(), MagicMock(), MagicMock()
+        ni1, ni2, ni3 = NavIns(1, (1, ), {'1': 1}), NavIns(2, (2, ), {'2': 2}), NavInsID.WAIT
+        self.navigator._callbacks = {ni1.id: cb1, ni2.id: cb2, ni3: cb3}
+        self.navigator.navigate([ni1, ni2, ni3])
         for cb, ni in [(cb1, ni1), (cb2, ni2)]:
             self.assertEqual(cb.call_count, 1)
             self.assertEqual(cb.call_args, (ni.args, ni.kwargs))
+        self.assertEqual(cb3.call_count, 1)
+        self.assertEqual(cb3.call_args, ((), ))
 
     def test_navigate_and_compare_ok(self):
         cb1, cb2 = MagicMock(), MagicMock()
@@ -133,7 +135,10 @@ class TestNavigator(TestCase):
         self.navigator._callbacks = {ni1.id: cb1, ni2.id: cb2}
         self.navigator._backend = MagicMock(spec=SpeculosBackend)
         self.navigator._compare_snap = MagicMock()
-        self.navigator.navigate_and_compare(self.pathdir, self.pathdir, [ni1, ni2])
+        self.navigator.navigate_and_compare(self.pathdir,
+                                            self.pathdir, [ni1, ni2],
+                                            screen_change_before_first_instruction=True,
+                                            screen_change_after_last_instruction=True)
 
         # backend wait_for_screen_change function called 3 times
         self.assertEqual(self.navigator._backend.wait_for_screen_change.call_count, 3)

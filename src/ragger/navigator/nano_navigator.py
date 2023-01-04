@@ -14,6 +14,7 @@
    limitations under the License.
 """
 from time import sleep
+from typing import Callable, Dict
 
 from ragger.backend import BackendInterface
 from ragger.firmware import Firmware
@@ -23,7 +24,7 @@ from .navigator import NavInsID, Navigator
 class NanoNavigator(Navigator):
 
     def __init__(self, backend: BackendInterface, firmware: Firmware, golden_run: bool = False):
-        callbacks = {
+        callbacks: Dict[NavInsID, Callable] = {
             NavInsID.WAIT: sleep,
             NavInsID.RIGHT_CLICK: backend.right_click,
             NavInsID.LEFT_CLICK: backend.left_click,

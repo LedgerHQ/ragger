@@ -87,17 +87,17 @@ class FullKeyboardLetters(_FullKeyboard):
         self.client.finger_touch(*self.positions["change_case"])
 
 
-class FullKeyboardSpecialCharacters(_FullKeyboard):
+class _FullKeyboardSpecialCharacters(_FullKeyboard):
 
     def more_specials(self):
         self.client.finger_touch(*self.positions["more_specials"])
 
 
-class FullKeyboardSpecialCharacters1(FullKeyboardSpecialCharacters):
+class FullKeyboardSpecialCharacters1(_FullKeyboardSpecialCharacters):
     pass
 
 
-class FullKeyboardSpecialCharacters2(FullKeyboardSpecialCharacters):
+class FullKeyboardSpecialCharacters2(_FullKeyboardSpecialCharacters):
     pass
 
 

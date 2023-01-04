@@ -14,6 +14,7 @@
    limitations under the License.
 """
 from time import sleep
+from typing import Callable, Dict
 
 from ragger.backend import BackendInterface
 from ragger.firmware import Firmware
@@ -25,7 +26,7 @@ class FatstacksNavigator(Navigator):
 
     def __init__(self, backend: BackendInterface, firmware: Firmware, golden_run: bool = False):
         screen = FullScreen(backend, firmware)
-        callbacks = {
+        callbacks: Dict[NavInsID, Callable] = {
             NavInsID.WAIT: sleep,
             NavInsID.TOUCH: backend.finger_touch,
             # possible headers

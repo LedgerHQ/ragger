@@ -35,4 +35,4 @@ class ExceptionRAPDU(Exception):
     data: bytes = bytes()
 
     def __str__(self):
-        return f"Error [0x{self.status:x}] {self.data}"
+        return f"Error [0x{self.status:x}] {str(self.data)}"
