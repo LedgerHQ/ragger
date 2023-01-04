@@ -131,6 +131,9 @@ class UseCaseViewDetails(_UseCase):
 
 class UseCaseAddressConfirmation(_UseCase):
 
+    def tap(self):
+        self.client.finger_touch(*self.positions["tap"])
+
     def exit_qr(self):
         self.client.finger_touch(*self.positions["exit_qr"])
 
