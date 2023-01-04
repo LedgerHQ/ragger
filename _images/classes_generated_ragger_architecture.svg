@@ -15,7 +15,7 @@
 <polygon fill="antiquewhite" stroke="antiquewhite" points="1701,-453.5 1701,-807.5 2673,-807.5 2673,-453.5 1701,-453.5"/>
 <text text-anchor="middle" x="2187" y="-792.3" font-family="Times,serif" font-size="14.00">BackendInterface</text>
 <polyline fill="none" stroke="antiquewhite" points="1701,-784.5 2673,-784.5 "/>
-<text text-anchor="start" x="1709" y="-769.3" font-family="Times,serif" font-size="14.00">apdu_logger : RootLogger, Logger, NoneType</text>
+<text text-anchor="start" x="1709" y="-769.3" font-family="Times,serif" font-size="14.00">apdu_logger : Logger, RootLogger, NoneType</text>
 <text text-anchor="start" x="1709" y="-754.3" font-family="Times,serif" font-size="14.00">firmware</text>
 <text text-anchor="start" x="1709" y="-739.3" font-family="Times,serif" font-size="14.00">last_async_response</text>
 <text text-anchor="start" x="1709" y="-724.3" font-family="Times,serif" font-size="14.00">logger : RootLogger, Logger, NoneType</text>
@@ -959,32 +959,33 @@
 <!-- ragger.firmware.fatstacks.use_cases.UseCaseAddressConfirmation -->
 <g id="node35" class="node">
 <title>ragger.firmware.fatstacks.use_cases.UseCaseAddressConfirmation</title>
-<polygon fill="burlywood" stroke="burlywood" points="9171,-580.5 9171,-680.5 9401,-680.5 9401,-580.5 9171,-580.5"/>
-<text text-anchor="middle" x="9286" y="-665.3" font-family="Times,serif" font-size="14.00">UseCaseAddressConfirmation</text>
-<polyline fill="none" stroke="burlywood" points="9171,-657.5 9401,-657.5 "/>
-<polyline fill="none" stroke="burlywood" points="9171,-633.5 9401,-633.5 "/>
-<text text-anchor="start" x="9179" y="-618.3" font-family="Times,serif" font-size="14.00">cancel()</text>
-<text text-anchor="start" x="9179" y="-603.3" font-family="Times,serif" font-size="14.00">confirm()</text>
-<text text-anchor="start" x="9179" y="-588.3" font-family="Times,serif" font-size="14.00">exit_qr()</text>
+<polygon fill="burlywood" stroke="burlywood" points="9171,-573 9171,-688 9401,-688 9401,-573 9171,-573"/>
+<text text-anchor="middle" x="9286" y="-672.8" font-family="Times,serif" font-size="14.00">UseCaseAddressConfirmation</text>
+<polyline fill="none" stroke="burlywood" points="9171,-665 9401,-665 "/>
+<polyline fill="none" stroke="burlywood" points="9171,-641 9401,-641 "/>
+<text text-anchor="start" x="9179" y="-625.8" font-family="Times,serif" font-size="14.00">cancel()</text>
+<text text-anchor="start" x="9179" y="-610.8" font-family="Times,serif" font-size="14.00">confirm()</text>
+<text text-anchor="start" x="9179" y="-595.8" font-family="Times,serif" font-size="14.00">exit_qr()</text>
+<text text-anchor="start" x="9179" y="-580.8" font-family="Times,serif" font-size="14.00">tap()</text>
 </g>
 <!-- ragger.firmware.fatstacks.use_cases.UseCaseAddressConfirmation&#45;&gt;ragger.firmware.fatstacks.screen.FullScreen -->
 <g id="edge70" class="edge">
 <title>ragger.firmware.fatstacks.use_cases.UseCaseAddressConfirmation&#45;&gt;ragger.firmware.fatstacks.screen.FullScreen</title>
-<path fill="none" stroke="black" d="M9298.96,-680.52C9308.23,-727.77 9313.06,-798.22 9274,-841 9094.13,-1037.99 7214.08,-1201.23 6631.28,-1247.42"/>
+<path fill="none" stroke="black" d="M9300.4,-688.29C9308.62,-735.22 9310.97,-800.51 9274,-841 9094.13,-1037.99 7214.08,-1201.23 6631.28,-1247.42"/>
 <polygon fill="black" stroke="black" points="6630.98,-1247.44 6625.31,-1251.9 6619.01,-1248.39 6624.68,-1243.93 6630.98,-1247.44"/>
 <text text-anchor="middle" x="9362" y="-829.8" font-family="Times,serif" font-size="14.00" fill="green">address_confirmation</text>
 </g>
 <!-- ragger.firmware.fatstacks.use_cases.UseCaseAddressConfirmation&#45;&gt;ragger.firmware.fatstacks.screen.FullScreen -->
 <g id="edge71" class="edge">
 <title>ragger.firmware.fatstacks.use_cases.UseCaseAddressConfirmation&#45;&gt;ragger.firmware.fatstacks.screen.FullScreen</title>
-<path fill="none" stroke="black" d="M9312.19,-680.7C9334.38,-718.94 9369.08,-771.46 9410,-808 9422.46,-819.13 9434.47,-811.63 9443,-826 9446.4,-831.73 9447.37,-835.97 9443,-841 9396.18,-894.87 7258.86,-1162.06 6631.43,-1239.46"/>
+<path fill="none" stroke="black" d="M9316.66,-688.31C9338.91,-725.68 9371.73,-773.83 9410,-808 9422.46,-819.13 9434.47,-811.63 9443,-826 9446.4,-831.73 9447.37,-835.97 9443,-841 9396.18,-894.87 7258.86,-1162.06 6631.43,-1239.46"/>
 <polygon fill="black" stroke="black" points="6631.05,-1239.5 6625.59,-1244.21 6619.14,-1240.97 6624.61,-1236.27 6631.05,-1239.5"/>
 <text text-anchor="middle" x="9557.5" y="-829.8" font-family="Times,serif" font-size="14.00" fill="green">use_case_address_confirmation</text>
 </g>
 <!-- ragger.firmware.fatstacks.use_cases.UseCaseAddressConfirmation&#45;&gt;ragger.firmware.fatstacks.use_cases._UseCase -->
 <g id="edge17" class="edge">
 <title>ragger.firmware.fatstacks.use_cases.UseCaseAddressConfirmation&#45;&gt;ragger.firmware.fatstacks.use_cases._UseCase</title>
-<path fill="none" stroke="black" d="M9258.85,-680.94C9227.78,-731.83 9171.65,-808.19 9099,-841 9027.94,-873.1 6369.24,-848.31 6292,-859 5728.27,-936.99 5073.89,-1170.48 4885.92,-1240.46"/>
+<path fill="none" stroke="black" d="M9254.42,-688.1C9222.59,-738.75 9168.31,-809.69 9099,-841 9027.94,-873.1 6369.24,-848.31 6292,-859 5728.27,-936.99 5073.89,-1170.48 4885.92,-1240.46"/>
 <polygon fill="none" stroke="black" points="4884.43,-1237.28 4876.28,-1244.06 4886.88,-1243.84 4884.43,-1237.28"/>
 </g>
 <!-- ragger.firmware.fatstacks.use_cases.UseCaseChoice -->
