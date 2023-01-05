@@ -91,7 +91,7 @@ def pytest_generate_tests(metafunc):
         if not fw_list:
             raise ValueError(f"No device specified")
 
-        metafunc.parametrize("firmware", fw_list, ids=ids)
+        metafunc.parametrize("firmware", fw_list, ids=ids, scope="session")
 
 
 def prepare_speculos_args(firmware: Firmware, display: bool, elfs_dir: str):
@@ -124,14 +124,16 @@ def create_backend(backend_name: str, firmware: Firmware, display: bool, elfs_di
         raise ValueError(f"Backend '{backend_name}' is unknown. Valid backends are: {BACKENDS}")
 
 
-# This final fixture will return the properly configured backend, to be used in tests
-@pytest.fixture
+# This fixture will return the properly configured backend, to be used in tests.
+# If your tests needs to be run on independent Speculos instances (in case they affect
+# setting for example), then you should change this fixture scope.
+@pytest.fixture(scope="session")
 def backend(backend_name, firmware, display, elfs_dir, log_apdu_file):
     with create_backend(backend_name, firmware, display, elfs_dir, log_apdu_file) as b:
         yield b
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def navigator(backend, firmware, golden_run):
     if firmware.device.startswith("nano"):
         return NanoNavigator(backend, firmware, golden_run)
