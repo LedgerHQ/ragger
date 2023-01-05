@@ -26,17 +26,9 @@ exit
 
 ### Run a simple test using the Speculos emulator
 
-Copy the compiled binaries to the `elfs` directory, create the directory if necessary.
-```
-mkdir -p tests/elfs/
-cp bin/app.elf tests/elfs/<appname>_<device>.elf    # replace <device> with one of [nanos, nanox, nanosp]
-                                                    # replace <appname> with the name of your app, (eg boilerplate)
-                                                    # so for example tests/elfs/boilerplate_nanos.elf
-```
-
 You can use the following command to get your first experience with Ragger and Speculos
 ```
-pytest -v --tb=short --nanox --display
+pytest -v --tb=short --<device> --display # replace <device> with one of [nanos, nanox, nanosp] depending on the device you built the application for
 ```
 Or you can refer to the section `Available pytest options` to configure the options you want to use
 
@@ -76,6 +68,7 @@ Custom pytest options
     --backend <backend>         run the tests against the backend [speculos, ledgercomm, ledgerwallet]. Speculos is the default
     --display                   on Speculos, enables the display of the app screen using QT
     --golden_run                on Speculos, screen comparison functions will save the current screen instead of comparing
+    --elfs_dir <dirpath>        use elfs located in specified directory
     --log_apdu_file <filepath>  log all apdu exchanges to the file in parameter. The previous file content is erased
     --nanos                     run only the test for the nanos device
     --nanox                     run only the test for the nanox device

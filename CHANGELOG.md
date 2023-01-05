@@ -8,8 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- conftest: `--elfs_dir` argument to specify elfs directories
 
 ### Changed
+- conftest: Default to using elf file in `bin/app.elf` if `--elfs_dir` is not specified
 
 ### Fixed
 

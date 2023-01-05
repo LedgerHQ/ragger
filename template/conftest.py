@@ -7,9 +7,8 @@ from ragger.navigator import NanoNavigator
 from ragger.utils import app_path_from_app_name
 
 
-# This variable is needed for Speculos only (physical tests need the application to be already installed)
-# Adapt this path to your 'tests/elfs' directory
-APPS_DIRECTORY = (Path(__file__).parent.parent / "elfs").resolve()
+# Adapt this path to your application root directory
+APP_ROOT_DIR = (Path(__file__).parent.parent.parent).resolve()
 
 # Adapt this name part of the compiled app <name>_<device>.elf in the APPS_DIRECTORY
 APP_NAME = "MyAPP"
@@ -24,6 +23,7 @@ FIRMWARES = [Firmware('nanos', '2.1'),
 def pytest_addoption(parser):
     parser.addoption("--backend", action="store", default="speculos")
     parser.addoption("--display", action="store_true", default=False)
+    parser.addoption("--elfs_dir", action="store", default="bin")
     parser.addoption("--golden_run", action="store_true", default=False)
     parser.addoption("--log_apdu_file", action="store", default=None)
     # Enable using --'device' in the pytest command line to restrict testing to specific devices
@@ -39,6 +39,11 @@ def backend_name(pytestconfig):
 @pytest.fixture(scope="session")
 def display(pytestconfig):
     return pytestconfig.getoption("display")
+
+
+@pytest.fixture(scope="session")
+def elfs_dir(pytestconfig):
+    return pytestconfig.getoption("elfs_dir")
 
 
 @pytest.fixture(scope="session")
@@ -81,13 +86,17 @@ def pytest_generate_tests(metafunc):
         metafunc.parametrize("firmware", fw_list, ids=ids)
 
 
-def prepare_speculos_args(firmware: Firmware, display: bool):
+def prepare_speculos_args(firmware: Firmware, display: bool, elfs_dir: str):
     speculos_args = []
 
     if display:
         speculos_args += ["--display", "qt"]
 
-    app_path = app_path_from_app_name(APPS_DIRECTORY, APP_NAME, firmware.device)
+    if elfs_dir == "bin":
+        app_path = APP_ROOT_DIR / elfs_dir / "app.elf"
+        assert app_path.is_file(), f"{app_path} must exist"
+    else:
+        app_path = app_path_from_app_name(APP_ROOT_DIR / elfs_dir, APP_NAME, firmware.device)
 
     return ([app_path], {"args": speculos_args})
 
@@ -95,13 +104,13 @@ def prepare_speculos_args(firmware: Firmware, display: bool):
 # Depending on the "--backend" option value, a different backend is
 # instantiated, and the tests will either run on Speculos or on a physical
 # device depending on the backend
-def create_backend(backend_name: str, firmware: Firmware, display: bool, log_apdu_file: Optional[Path]):
+def create_backend(backend_name: str, firmware: Firmware, display: bool, elfs_dir: str, log_apdu_file: Optional[Path]):
     if backend_name.lower() == "ledgercomm":
         return LedgerCommBackend(firmware=firmware, interface="hid", log_apdu_file=log_apdu_file)
     elif backend_name.lower() == "ledgerwallet":
         return LedgerWalletBackend(firmware=firmware, log_apdu_file=log_apdu_file)
     elif backend_name.lower() == "speculos":
-        args, kwargs = prepare_speculos_args(firmware, display)
+        args, kwargs = prepare_speculos_args(firmware, display, elfs_dir)
         return SpeculosBackend(*args, firmware=firmware, log_apdu_file=log_apdu_file, **kwargs)
     else:
         raise ValueError(f"Backend '{backend_name}' is unknown. Valid backends are: {BACKENDS}")
@@ -109,8 +118,8 @@ def create_backend(backend_name: str, firmware: Firmware, display: bool, log_apd
 
 # This final fixture will return the properly configured backend, to be used in tests
 @pytest.fixture
-def backend(backend_name, firmware, display, log_apdu_file):
-    with create_backend(backend_name, firmware, display, log_apdu_file) as b:
+def backend(backend_name, firmware, display, elfs_dir, log_apdu_file):
+    with create_backend(backend_name, firmware, display, elfs_dir, log_apdu_file) as b:
         yield b
 
 
