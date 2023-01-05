@@ -45,10 +45,10 @@ make clean && make BOLOS_SDK=$<device>_SDK load     # replace <device> with one 
 exit
 ```
 
-You can use the following command to get your first experience with Ragger and Ledgerwallet on a NANOX.
+You can use the following command to get your first experience with Ragger and Ledgerwallet on a NANOS.
 Make sure that the device is plugged, unlocked, and that the tested application is open.
 ```
-pytest -v --tb=short --nanox --backend ledgerwallet
+pytest -v --tb=short --nanos --backend ledgerwallet
 ```
 Or you can refer to the section `Available pytest options` to configure the options you want to use
 
@@ -70,8 +70,8 @@ Custom pytest options
     --golden_run                on Speculos, screen comparison functions will save the current screen instead of comparing
     --elfs_dir <dirpath>        use elfs located in specified directory
     --log_apdu_file <filepath>  log all apdu exchanges to the file in parameter. The previous file content is erased
-    --nanos                     run only the test for the nanos device
-    --nanox                     run only the test for the nanox device
-    --nanosp                    run only the test for the nanosp device
+    --nanos              run the tests on the nanos device
+    --nanox              run the tests on the nanox device
+    --nanosp             run the tests on the nanosp device
+    --all                run the tests on all the devices
 ``` 
-

@@ -9,9 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - conftest: `--elfs_dir` argument to specify elfs directories
+- conftest: `--all` argument to run tests on all devices
 
 ### Changed
 - conftest: Default to using elf file in `bin/app.elf` if `--elfs_dir` is not specified
+- conftest: Targeted device must be specified, in doesn't default to all by default anymore
 
 ### Fixed
 

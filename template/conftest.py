@@ -28,7 +28,8 @@ def pytest_addoption(parser):
     parser.addoption("--log_apdu_file", action="store", default=None)
     # Enable using --'device' in the pytest command line to restrict testing to specific devices
     for fw in FIRMWARES:
-        parser.addoption("--"+fw.device, action="store_true", help="run on nanos only")
+        parser.addoption("--"+fw.device, action="store_true", help=f"run on {fw.device} only")
+    parser.addoption("--all", action="store_true", help="run on all devices")
 
 
 @pytest.fixture(scope="session")
@@ -73,16 +74,23 @@ def pytest_generate_tests(metafunc):
     if "firmware" in metafunc.fixturenames:
         fw_list = []
         ids = []
-        # First pass: enable only demanded firmwares
-        for fw in FIRMWARES:
-            if metafunc.config.getoption(fw.device):
-                fw_list.append(fw)
-                ids.append(fw.device + " " + fw.version)
-        # Second pass if no specific firmware demanded: add them all
-        if not fw_list:
+
+        # If "all" was specified, run on all firmwares
+        if metafunc.config.getoption("all"):
             for fw in FIRMWARES:
                 fw_list.append(fw)
                 ids.append(fw.device + " " + fw.version)
+
+        else:
+            # Enable only demanded firmwares
+            for fw in FIRMWARES:
+                if metafunc.config.getoption(fw.device):
+                    fw_list.append(fw)
+                    ids.append(fw.device + " " + fw.version)
+
+        if not fw_list:
+            raise ValueError(f"No device specified")
+
         metafunc.parametrize("firmware", fw_list, ids=ids)
 
 
