@@ -11,6 +11,12 @@ on:
       - master
 
 jobs:
+  check_dependencies_compatibility:
+    runs-on: ubuntu-latest
+    - name: Check dependencies compatibility
+      run: |
+        pip install --extra-index-url https://test.pypi.org/simple/ -U .[tests,all_backends]
+
   build_install_test:
     name: Build, install and test the library
     runs-on: ubuntu-latest
@@ -21,7 +27,7 @@ jobs:
       run: sudo apt-get update && sudo apt-get install -y qemu-user-static
     - name: Build & install
       run: |
-        pip install --extra-index-url https://test.pypi.org/simple/ -U .[tests,all_backends]
+        pip install --extra-index-url https://test.pypi.org/simple/ -U .[tests,speculos]
         pip install -U click>=8
     - name: Gather compiled Boilerplate application to run tests against
       uses: dawidd6/action-download-artifact@v2
