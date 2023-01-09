@@ -78,7 +78,7 @@ def pytest_generate_tests(metafunc):
             for fw in FIRMWARES:
                 fw_list.append(fw)
                 ids.append(fw.device + " " + fw.version)
-        metafunc.parametrize("firmware", fw_list, ids=ids)
+        metafunc.parametrize("firmware", fw_list, ids=ids, scope="session")
 
 
 def prepare_speculos_args(firmware: Firmware, display: bool):
@@ -107,8 +107,12 @@ def create_backend(backend_name: str, firmware: Firmware, display: bool, log_apd
         raise ValueError(f"Backend '{backend_name}' is unknown. Valid backends are: {BACKENDS}")
 
 
-# This final fixture will return the properly configured backend, to be used in tests
-@pytest.fixture
+# This fixture will return the properly configured backend, to be used in tests.
+# As Speculos instantiation takes some time, this fixture scope is by default "session".
+# If your tests needs to be run on independent Speculos instances (in case they affect
+# settings for example), then you should change this fixture scope and choose between
+# function, class, module or session.
+@pytest.fixture(scope="session")
 def backend(backend_name, firmware, display, log_apdu_file):
     with create_backend(backend_name, firmware, display, log_apdu_file) as b:
         yield b
