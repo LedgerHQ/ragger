@@ -11,9 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - template: conftest.py: Use session scope for firmware and backend fixtures
-- template: conftest.py: Targeted device must be specified with new `--device' required option.
+- template: conftest.py: Targeted device must be specified with new `--device` required option.
 
 ### Fixed
+- requirements: Removed the dependancy on protobuf package
 
 
 ## [1.2.0] - 2023-01-04
