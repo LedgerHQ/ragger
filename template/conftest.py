@@ -16,19 +16,19 @@ APP_NAME = "MyAPP"
 
 BACKENDS = ["speculos", "ledgercomm", "ledgerwallet"]
 
+DEVICES = ["nanos", "nanox", "nanosp", "all"]
+
 FIRMWARES = [Firmware('nanos', '2.1'),
              Firmware('nanox', '2.0.2'),
              Firmware('nanosp', '1.0.3')]
 
 
 def pytest_addoption(parser):
-    parser.addoption("--backend", action="store", default="speculos")
+    parser.addoption("--device", choices=DEVICES, required=True)
+    parser.addoption("--backend", choices=BACKENDS, default="speculos")
     parser.addoption("--display", action="store_true", default=False)
     parser.addoption("--golden_run", action="store_true", default=False)
     parser.addoption("--log_apdu_file", action="store", default=None)
-    # Enable using --'device' in the pytest command line to restrict testing to specific devices
-    for fw in FIRMWARES:
-        parser.addoption("--"+fw.device, action="store_true", help="run on nanos only")
 
 
 @pytest.fixture(scope="session")
@@ -68,16 +68,26 @@ def pytest_generate_tests(metafunc):
     if "firmware" in metafunc.fixturenames:
         fw_list = []
         ids = []
-        # First pass: enable only demanded firmwares
-        for fw in FIRMWARES:
-            if metafunc.config.getoption(fw.device):
-                fw_list.append(fw)
-                ids.append(fw.device + " " + fw.version)
-        # Second pass if no specific firmware demanded: add them all
-        if not fw_list:
+
+        device = metafunc.config.getoption("device")
+        backend_name = metafunc.config.getoption("backend")
+
+        if device == "all":
+            if backend_name != "speculos":
+                raise ValueError("Invalid device parameter on this backend")
+
+            # Add all supported firmwares
             for fw in FIRMWARES:
                 fw_list.append(fw)
                 ids.append(fw.device + " " + fw.version)
+
+        else:
+            # Enable firmware for demanded device
+            for fw in FIRMWARES:
+                if device == fw.device:
+                    fw_list.append(fw)
+                    ids.append(fw.device + " " + fw.version)
+
         metafunc.parametrize("firmware", fw_list, ids=ids, scope="session")
 
 
