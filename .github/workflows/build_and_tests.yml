@@ -16,6 +16,13 @@ jobs:
     - name: Check dependencies compatibility
       run: |
         pip install --extra-index-url https://test.pypi.org/simple/ -U .[tests,all_backends]
+        python -c "from ragger.backend import *"
+        python -c "from ragger.bip import *"
+        python -c "from ragger.error import *"
+        python -c "from ragger.firmware import *"
+        python -c "from ragger.logger import *"
+        python -c "from ragger.navigator import *"
+        python -c "from ragger.utils import *"
 
   build_install_test:
     name: Build, install and test the library
@@ -39,7 +46,7 @@ jobs:
     - name: Check the downloaded files
       run: tree .
     - name: Run tests and generate coverage
-      run: PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python pytest tests/ --cov ragger --cov-report xml
+      run: pytest tests/ --cov ragger --cov-report xml
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
       with:
