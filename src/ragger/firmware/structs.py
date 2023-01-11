@@ -73,4 +73,4 @@ class Firmware(_Firmware):
 
     @property
     def has_nbgl(self):
-        return self.device.lower().startswith("fat")
+        return self.device.lower().startswith("stax")

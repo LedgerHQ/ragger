@@ -40,16 +40,16 @@ tinker with the ``RaisePolicy``:
 ``ragger.firmware``
 -------------------
 
-``ragger.firmware.fatstacks``
+``ragger.firmware.stax``
 +++++++++++++++++++++++++++++
 
-``ragger.firmware.fatstacks.screen``
+``ragger.firmware.stax.screen``
 ''''''''''''''''''''''''''''''''''''
 
-.. autoclass:: ragger.firmware.fatstacks.screen.MetaScreen
+.. autoclass:: ragger.firmware.stax.screen.MetaScreen
 
 
-.. autoclass:: ragger.firmware.fatstacks.screen.FullScreen
+.. autoclass:: ragger.firmware.stax.screen.FullScreen
 
 ``ragger.firmware.firmware``
 ++++++++++++++++++++++++++++

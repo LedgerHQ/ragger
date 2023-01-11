@@ -32,7 +32,7 @@ class NavInsID(Enum):
     LEFT_CLICK = auto()
     BOTH_CLICK = auto()
 
-    # Navigation instructions for Fatstacks devices
+    # Navigation instructions for Stax devices
     TOUCH = auto()
     # possible headers
     RIGHT_HEADER_TAP = auto()

@@ -14,7 +14,7 @@
    limitations under the License.
 """
 from .navigator import NavInsID, NavIns, Navigator
-from .fatstacks_navigator import FatstacksNavigator
+from .stax_navigator import StaxNavigator
 from .nano_navigator import NanoNavigator
 
-__all__ = ["NavInsID", "NavIns", "Navigator", "FatstacksNavigator", "NanoNavigator"]
+__all__ = ["NavInsID", "NavIns", "Navigator", "StaxNavigator", "NanoNavigator"]

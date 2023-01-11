@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - template: conftest.py: Use session scope for firmware and backend fixtures
 - template: conftest.py: Targeted device must be specified with new `--device` required option.
+- unified naming of the Ledger Stax product: from `fat` or `fatstacks` to stax
 
 ### Fixed
 - requirements: Removed the dependancy on protobuf package

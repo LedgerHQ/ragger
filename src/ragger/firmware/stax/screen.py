@@ -100,7 +100,7 @@ class MetaScreen(type):
 class FullScreen(metaclass=MetaScreen):
     """
     This screen embeds every possible clickable layout and use case.
-    It could be used to manipulate any Fatstacks application, at the cost of
+    It could be used to manipulate any Stax application, at the cost of
     using an imprecise, unpersonalized and in way wrong representation of the
     application's screen. Still, it could prove handy for fast testing.
     """

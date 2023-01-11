@@ -15,7 +15,7 @@
 """
 from dataclasses import astuple, dataclass
 
-from ragger.firmware.versions import FatstacksVersions
+from ragger.firmware.versions import StaxVersions
 
 
 @dataclass(frozen=True)
@@ -27,7 +27,7 @@ class Position:
         return iter(astuple(self))
 
 
-# Fatstacks resolution is 400x670
+# Stax resolution is 400x670
 CENTER = Position(200, 335)
 BUTTON_UPPER_LEFT = Position(36, 36)
 BUTTON_UPPER_RIGHT = Position(342, 55)
@@ -37,7 +37,7 @@ BUTTON_LOWER_RIGHT = Position(342, 606)
 BUTTON_ABOVE_LOWER_MIDDLE = Position(200, 515)
 
 POSITIONS_BY_SDK = {
-    FatstacksVersions.V_1_0_0.value: {
+    StaxVersions.V_1_0_0.value: {
         "ChoiceList": {
             # Up to 6 (5?) choice in a list
             1: Position(200, 190),
