@@ -397,7 +397,7 @@ implemented through low-level actions on the device: forging bytes payloads (the
 in the right places, in the right order, managing several screens, ...
 
 Stax
-+++++++++
+++++
 
 Interacting with the Stax screen, in particular, can be bothersome. It is
 hard to keep track of button positions, pages layouts and such.

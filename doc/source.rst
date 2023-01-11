@@ -41,10 +41,10 @@ tinker with the ``RaisePolicy``:
 -------------------
 
 ``ragger.firmware.stax``
-+++++++++++++++++++++++++++++
+++++++++++++++++++++++++
 
 ``ragger.firmware.stax.screen``
-''''''''''''''''''''''''''''''''''''
+'''''''''''''''''''''''''''''''
 
 .. autoclass:: ragger.firmware.stax.screen.MetaScreen
 
