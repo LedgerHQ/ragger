@@ -11,22 +11,11 @@ on:
       - master
 
 jobs:
-  check_dependencies_compatibility:
-    runs-on: ubuntu-latest
-    - name: Check dependencies compatibility
-      run: |
-        pip install --extra-index-url https://test.pypi.org/simple/ -U .[tests,all_backends]
-        python -c "from ragger.backend import *"
-        python -c "from ragger.bip import *"
-        python -c "from ragger.error import *"
-        python -c "from ragger.firmware import *"
-        python -c "from ragger.logger import *"
-        python -c "from ragger.navigator import *"
-        python -c "from ragger.utils import *"
-
   build_install_test:
     name: Build, install and test the library
     runs-on: ubuntu-latest
+    env:
+      PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION: python
     steps:
     - name: Clone
       uses: actions/checkout@v3
@@ -34,7 +23,7 @@ jobs:
       run: sudo apt-get update && sudo apt-get install -y qemu-user-static
     - name: Build & install
       run: |
-        pip install --extra-index-url https://test.pypi.org/simple/ -U .[tests,speculos]
+        pip install --extra-index-url https://test.pypi.org/simple/ -U .[tests,all_backends]
         pip install -U click>=8
     - name: Gather compiled Boilerplate application to run tests against
       uses: dawidd6/action-download-artifact@v2
