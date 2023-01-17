@@ -67,7 +67,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#abstracting-the-interactions">Abstracting the interactions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#fatstacks">Fatstacks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#stax">Stax</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#layouts">Layouts</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#use-cases">Use cases</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#the-fullscreen-class">The <code class="docutils literal notranslate"><span class="pre">FullScreen</span></code> class</a></li>
@@ -129,7 +129,7 @@ of <code class="docutils literal notranslate"><span class="pre">Ragger</span></c
 </li>
 <li><p><a class="reference internal" href="#abstracting-the-interactions" id="id13">Abstracting the interactions</a></p>
 <ul>
-<li><p><a class="reference internal" href="#fatstacks" id="id14">Fatstacks</a></p>
+<li><p><a class="reference internal" href="#stax" id="id14">Stax</a></p>
 <ul>
 <li><p><a class="reference internal" href="#layouts" id="id15">Layouts</a></p></li>
 <li><p><a class="reference internal" href="#use-cases" id="id16">Use cases</a></p></li>
@@ -480,9 +480,9 @@ thing, as complex processes (like performing a complete transaction) have to be
 implemented through low-level actions on the device: forging bytes payloads (the
 <a class="reference internal" href="glossary.html#term-APDU"><span class="xref std std-term">APDUs</span></a>), triggering the buttons or the screen at the right time,
 in the right places, in the right order, managing several screens, …</p>
-<div class="section" id="fatstacks">
-<h3>Fatstacks<a class="headerlink" href="#fatstacks" title="Permalink to this heading"></a></h3>
-<p>Interacting with the Fatstacks screen, in particular, can be bothersome. It is
+<div class="section" id="stax">
+<h3>Stax<a class="headerlink" href="#stax" title="Permalink to this heading"></a></h3>
+<p>Interacting with the Stax screen, in particular, can be bothersome. It is
 hard to keep track of button positions, pages layouts and such.</p>
 <p>For instance let’s imagine you develop an application with a welcome screen
 with the application icon in the center, a “quit” clickable button on the
@@ -492,23 +492,23 @@ top right and a “info” clickable button on the lower center.</p>
 a clickable “return” button on the lower center, which brings back to the
 previous, welcome screen.</p>
 <a class=""
-               data-lightbox="group-fatstack_base_group"
-               href="_images/fatstacks_welcome.png"
+               data-lightbox="group-stax_base_group"
+               href="_images/stax_welcome.png"
                title=""
                data-title=""
                
-               ><img src="_images/fatstacks_welcome.png"
+               ><img src="_images/stax_welcome.png"
                      class=""
                      width="30%"
                      height="auto"
                      alt=""/>
                 </a><a class=""
-               data-lightbox="group-fatstack_base_group"
-               href="_images/fatstacks_infos.png"
+               data-lightbox="group-stax_base_group"
+               href="_images/stax_infos.png"
                title=""
                data-title=""
                
-               ><img src="_images/fatstacks_infos.png"
+               ><img src="_images/stax_infos.png"
                      class=""
                      width="30%"
                      height="auto"
@@ -532,7 +532,7 @@ this code does. This is a guaranteed path to hard to maintain code.</p>
 to change some button position, or if higher-level graphic objects (such as
 <code class="docutils literal notranslate"><span class="pre">Pages</span></code> or <code class="docutils literal notranslate"><span class="pre">UseCase</span></code>) changes the position (nothing prevents them to move
 the “quit” button to the top left), all this code becomes deprecated.</p>
-<p>That’s why <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> mimics the Fatstacks SDK graphics library and provides
+<p>That’s why <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> mimics the Stax SDK graphics library and provides
 <a class="reference internal" href="glossary.html#term-Layout"><span class="xref std std-term">Layout</span></a> and <a class="reference internal" href="glossary.html#term-Use-Case"><span class="xref std std-term">Use Case</span></a> (<a class="reference internal" href="glossary.html#term-Page"><span class="xref std std-term">Page</span></a> will also come soon) classes
 that keep track of every interactive screen elements and expose meaningful
 method to interact with them.</p>
@@ -542,10 +542,10 @@ method to interact with them.</p>
 <code class="xref py py-class docutils literal notranslate"><span class="pre">UseCases</span></code> allows to
 quickly describe an application screens and its attached behavior in a purely
 declarative way, thanks to the
-<a class="reference internal" href="source.html#ragger.firmware.fatstacks.screen.MetaScreen" title="ragger.firmware.fatstacks.screen.MetaScreen"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetaScreen</span></code></a> metaclass.
+<a class="reference internal" href="source.html#ragger.firmware.stax.screen.MetaScreen" title="ragger.firmware.stax.screen.MetaScreen"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetaScreen</span></code></a> metaclass.
 For instance, with the previously described application:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="kn">from</span> <span class="nn">ragger.firmware.fatstacks.screen</span> <span class="kn">import</span> <span class="n">MetaScreen</span>
-<span class="linenos">2</span><span class="kn">from</span> <span class="nn">ragger.firmware.fatstacks.layouts</span> <span class="kn">import</span> <span class="n">ExitFooter</span><span class="p">,</span> <span class="n">ExitHeader</span><span class="p">,</span> <span class="n">InfoFooter</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="kn">from</span> <span class="nn">ragger.firmware.stax.screen</span> <span class="kn">import</span> <span class="n">MetaScreen</span>
+<span class="linenos">2</span><span class="kn">from</span> <span class="nn">ragger.firmware.stax.layouts</span> <span class="kn">import</span> <span class="n">ExitFooter</span><span class="p">,</span> <span class="n">ExitHeader</span><span class="p">,</span> <span class="n">InfoFooter</span>
 <span class="linenos">3</span>
 <span class="linenos">4</span><span class="k">class</span> <span class="nc">RecoveryAppScreen</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">MetaScreen</span><span class="p">)</span>
 <span class="linenos">5</span>    <span class="n">layout_quit</span> <span class="o">=</span> <span class="n">ExitHeader</span>
@@ -586,7 +586,7 @@ way than if positions were still necessary:</p>
 <code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y)</span></code> positions, so why bother declaring them twice?</p>
 <p>First of all, the buttons may be at the same place, but they don’t carry the
 same purpose, and it is a good idea to reflect that on the code.</p>
-<p>Second, if in a future version the Fatstacks design changes and one of these
+<p>Second, if in a future version the Stax design changes and one of these
 button moves somewhere else on the screen’s footer, <strong>the layouts will be
 updated accordingly</strong> in <code class="docutils literal notranslate"><span class="pre">Ragger</span></code>, and the <code class="docutils literal notranslate"><span class="pre">InfoFooter</span></code> or <code class="docutils literal notranslate"><span class="pre">ExitFooter</span></code>
 will still be valid, hence all code using this class remains valid too.</p>
@@ -612,8 +612,8 @@ need several pages to be displayed (hence needs navigation buttons).</p></li>
 top of them. Using Use Cases is very similar to Layouts; they need to be
 declared as attribute of a class using the <code class="xref py py-class docutils literal notranslate"><span class="pre">MetaScreen</span></code> metaclass,
 and start with <code class="docutils literal notranslate"><span class="pre">use_case_</span></code>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span> <span class="nn">ragger.firmware.fatstacks.screen</span> <span class="kn">import</span> <span class="n">MetaScreen</span>
-<span class="linenos"> 2</span><span class="kn">from</span> <span class="nn">ragger.firmware.fatstacks.use_case</span> <span class="kn">import</span> <span class="n">UseCaseHome</span><span class="p">,</span> <span class="n">UseCaseSettings</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span> <span class="nn">ragger.firmware.stax.screen</span> <span class="kn">import</span> <span class="n">MetaScreen</span>
+<span class="linenos"> 2</span><span class="kn">from</span> <span class="nn">ragger.firmware.stax.use_case</span> <span class="kn">import</span> <span class="n">UseCaseHome</span><span class="p">,</span> <span class="n">UseCaseSettings</span>
 <span class="linenos"> 3</span>
 <span class="linenos"> 4</span><span class="k">class</span> <span class="nc">RecoveryAppScreen</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">MetaScreen</span><span class="p">)</span>
 <span class="linenos"> 5</span>    <span class="n">use_case_welcome</span> <span class="o">=</span> <span class="n">UseCaseHome</span>
@@ -647,13 +647,13 @@ and start with <code class="docutils literal notranslate"><span class="pre">use_
 <p>All these classes helps you tailoring a fairly elegant and straight-forward
 client with meaningful and easy to write screen controls. However if you don’t
 feel like crafting you own screen representation, <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> comes with a
-<a class="reference internal" href="source.html#ragger.firmware.fatstacks.screen.FullScreen" title="ragger.firmware.fatstacks.screen.FullScreen"><code class="xref py py-class docutils literal notranslate"><span class="pre">FullScreen</span></code></a> class
+<a class="reference internal" href="source.html#ragger.firmware.stax.screen.FullScreen" title="ragger.firmware.stax.screen.FullScreen"><code class="xref py py-class docutils literal notranslate"><span class="pre">FullScreen</span></code></a> class
 which embeds every existing <a class="reference internal" href="glossary.html#term-Layout"><span class="xref std std-term">Layout</span></a> and <a class="reference internal" href="glossary.html#term-Use-Case"><span class="xref std std-term">Use Case</span></a>.</p>
 <p>It can be used to quickly instantiate a screen which could work with any
 application screen, however of course, all action on this class are not
 guaranteed to trigger a desired reaction (or no reaction at all) on the
 application screen, as declared button can be totally fictional.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span> <span class="nn">ragger.firmware.fatstacks.screen</span> <span class="kn">import</span> <span class="n">FullScreen</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span> <span class="nn">ragger.firmware.stax.screen</span> <span class="kn">import</span> <span class="n">FullScreen</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="n">screen</span> <span class="o">=</span> <span class="n">FullScreen</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">firmware</span><span class="p">)</span>
 <span class="linenos"> 4</span>

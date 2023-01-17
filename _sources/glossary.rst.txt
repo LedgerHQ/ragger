@@ -47,8 +47,8 @@ Glossary
      application to check the application behaves as expected.
 
    Layout
-     In the Fatstacks SDK, a **Layout** refers to an element displayed on a
-     Fatstacks screen. Examples of Layouts can be a button, on a specific
+     In the Stax SDK, a **Layout** refers to an element displayed on a
+     Stax screen. Examples of Layouts can be a button, on a specific
      location, a keyboard, or just a centered text. This name is used in
      ``Ragger`` to designate the class allowing to interact with a displayed
      layout.
@@ -67,7 +67,7 @@ Glossary
      `on GitHub <https://github.com/LedgerHQ/ledgerctl/>`__
 
    Page
-     In the Fatstacks SDK, a **Page** refers to a specific displayed Fatstacks
+     In the Stax SDK, a **Page** refers to a specific displayed Stax
      screen.A welcome page, a setting page are example of Pages. This name is
      also  used in ``Ragger`` to designate the class allowing to interact with a
      displayed page.
@@ -97,7 +97,7 @@ Glossary
      allowing to easily control and communicate with said emulator.
 
    Use Case
-     In the Fatstacks SDK, a **Use Case** refers to a pre-designed :term"`Page`
+     In the Stax SDK, a **Use Case** refers to a pre-designed :term"`Page`
      or group of Pages. For instance, the settings Use Case manages one or
      several :term:`Pages <Page>` in order to display and change the settings.
      This name is used in ``Ragger`` to designate the class allowing to interact

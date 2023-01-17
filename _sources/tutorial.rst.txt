@@ -396,10 +396,10 @@ implemented through low-level actions on the device: forging bytes payloads (the
 :term:`APDUs <APDU>`), triggering the buttons or the screen at the right time,
 in the right places, in the right order, managing several screens, ...
 
-Fatstacks
-+++++++++
+Stax
+++++
 
-Interacting with the Fatstacks screen, in particular, can be bothersome. It is
+Interacting with the Stax screen, in particular, can be bothersome. It is
 hard to keep track of button positions, pages layouts and such.
 
 For instance let's imagine you develop an application with a welcome screen
@@ -412,12 +412,12 @@ If you click on the "info" button the screen shows some application infos, with
 a clickable "return" button on the lower center, which brings back to the
 previous, welcome screen.
 
-.. thumbnail:: images/fatstacks_welcome.png
-   :group: fatstack_base_group
+.. thumbnail:: images/stax_welcome.png
+   :group: stax_base_group
    :width: 30%
 
-.. thumbnail:: images/fatstacks_infos.png
-   :group: fatstack_base_group
+.. thumbnail:: images/stax_infos.png
+   :group: stax_base_group
    :width: 30%
 
 This layouts has three clickable buttons. Basic interaction with them would be
@@ -446,7 +446,7 @@ to change some button position, or if higher-level graphic objects (such as
 the "quit" button to the top left), all this code becomes deprecated.
 
 
-That's why ``Ragger`` mimics the Fatstacks SDK graphics library and provides
+That's why ``Ragger`` mimics the Stax SDK graphics library and provides
 :term:`Layout` and :term:`Use Case` (:term:`Page` will also come soon) classes
 that keep track of every interactive screen elements and expose meaningful
 method to interact with them.
@@ -454,19 +454,19 @@ method to interact with them.
 Layouts
 '''''''
 
-``Ragger``'s :py:class:`Layouts <ragger.firmware.fatstacks.layout._Layout>` and
-:py:class:`UseCases <ragger.firmware.fatstacks.use_case._UseCase>` allows to
+``Ragger``'s :py:class:`Layouts <ragger.firmware.stax.layout._Layout>` and
+:py:class:`UseCases <ragger.firmware.stax.use_case._UseCase>` allows to
 quickly describe an application screens and its attached behavior in a purely
 declarative way, thanks to the
-:py:class:`MetaScreen <ragger.firmware.fatstacks.screen.MetaScreen>` metaclass.
+:py:class:`MetaScreen <ragger.firmware.stax.screen.MetaScreen>` metaclass.
 For instance, with the previously described application:
 
 .. code-block:: python
    :linenos:
 
 
-   from ragger.firmware.fatstacks.screen import MetaScreen
-   from ragger.firmware.fatstacks.layouts import ExitFooter, ExitHeader, InfoFooter
+   from ragger.firmware.stax.screen import MetaScreen
+   from ragger.firmware.stax.layouts import ExitFooter, ExitHeader, InfoFooter
 
    class RecoveryAppScreen(metaclass=MetaScreen)
        layout_quit = ExitHeader
@@ -512,7 +512,7 @@ way than if positions were still necessary:
    First of all, the buttons may be at the same place, but they don't carry the
    same purpose, and it is a good idea to reflect that on the code.
 
-   Second, if in a future version the Fatstacks design changes and one of these
+   Second, if in a future version the Stax design changes and one of these
    button moves somewhere else on the screen's footer, **the layouts will be
    updated accordingly** in ``Ragger``, and the ``InfoFooter`` or ``ExitFooter``
    will still be valid, hence all code using this class remains valid too.
@@ -544,8 +544,8 @@ and start with ``use_case_``:
 .. code-block:: python
    :linenos:
 
-   from ragger.firmware.fatstacks.screen import MetaScreen
-   from ragger.firmware.fatstacks.use_case import UseCaseHome, UseCaseSettings
+   from ragger.firmware.stax.screen import MetaScreen
+   from ragger.firmware.stax.use_case import UseCaseHome, UseCaseSettings
 
    class RecoveryAppScreen(metaclass=MetaScreen)
        use_case_welcome = UseCaseHome
@@ -578,7 +578,7 @@ The ``FullScreen`` class
 All these classes helps you tailoring a fairly elegant and straight-forward
 client with meaningful and easy to write screen controls. However if you don't
 feel like crafting you own screen representation, ``Ragger`` comes with a
-:py:class:`FullScreen <ragger.firmware.fatstacks.screen.FullScreen>` class
+:py:class:`FullScreen <ragger.firmware.stax.screen.FullScreen>` class
 which embeds every existing :term:`Layout` and :term:`Use Case`.
 
 It can be used to quickly instantiate a screen which could work with any
@@ -589,7 +589,7 @@ application screen, as declared button can be totally fictional.
 .. code-block:: python
    :linenos:
 
-   from ragger.firmware.fatstacks.screen import FullScreen
+   from ragger.firmware.stax.screen import FullScreen
 
    screen = FullScreen(backend, firmware)
 
