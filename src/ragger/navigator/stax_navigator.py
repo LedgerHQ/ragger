@@ -18,11 +18,11 @@ from typing import Callable, Dict
 
 from ragger.backend import BackendInterface
 from ragger.firmware import Firmware
-from ragger.firmware.fatstacks import FullScreen
+from ragger.firmware.stax import FullScreen
 from ragger.navigator import NavInsID, Navigator
 
 
-class FatstacksNavigator(Navigator):
+class StaxNavigator(Navigator):
 
     def __init__(self, backend: BackendInterface, firmware: Firmware, golden_run: bool = False):
         screen = FullScreen(backend, firmware)

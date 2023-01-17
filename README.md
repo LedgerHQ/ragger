@@ -5,7 +5,7 @@
 ---
 **Warning**
 
-This library contains documentation and functionalities related to Ledger Stax hardware (also named `fatstacks`). As of the writing of the message, neither the SDK nor the Speculos support is available publicly for Ledger Stax hardware. This is therefore preventing users to use such functionalities.
+This library contains documentation and functionalities related to Ledger Stax hardware (sometimes refered as `fatstacks`). As of the writing of the message, neither the SDK nor the Speculos support is available publicly for Ledger Stax hardware. This is therefore preventing users to use such functionalities.
 
 ---
 
@@ -115,7 +115,7 @@ def test_with_user_action_and_screenshot_comparison(backend, firmware, navigator
                 NavIns(NavInsID.RIGHT_CLICK),
                 NavIns(NavInsID.BOTH_CLICK),
             ]
-        elif firmware.device == "fat":
+        elif firmware.device == "stax":
             instructions = [
                     NavIns(NavInsID.USE_CASE_REVIEW_TAP),
                     NavIns(NavInsID.USE_CASE_REVIEW_TAP),

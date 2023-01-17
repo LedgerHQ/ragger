@@ -27,8 +27,8 @@ class TestFirmware(TestCase):
 
     def test_has_bagl(self):
         self.assertTrue(Firmware("nanosp", "1.0").has_bagl)
-        self.assertFalse(Firmware("fat", "1.0").has_bagl)
+        self.assertFalse(Firmware("stax", "1.0").has_bagl)
 
     def test_has_nbgl(self):
         self.assertFalse(Firmware("nanosp", "1.0").has_nbgl)
-        self.assertTrue(Firmware("fat", "1.0").has_nbgl)
+        self.assertTrue(Firmware("stax", "1.0").has_nbgl)

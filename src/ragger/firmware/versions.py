@@ -136,7 +136,7 @@ class NanoXVersions(VersionManager):
     V_2_0_2 = VersionInfo(2, 0, 2)
 
 
-class FatstacksVersions(VersionManager):
+class StaxVersions(VersionManager):
     V_1_0_0 = VersionInfo(1, 0, 0)
 
 
@@ -146,5 +146,5 @@ SDK_VERSIONS: Dict[str, Type[VersionManager]] = {
     "nanos": NanoSVersions,
     "nanosp": NanoSPVersions,
     "nanox": NanoXVersions,
-    "fat": FatstacksVersions,
+    "stax": StaxVersions,
 }

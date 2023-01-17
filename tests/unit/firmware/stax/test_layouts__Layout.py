@@ -1,7 +1,7 @@
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
-from ragger.firmware.fatstacks.layouts import _Layout
+from ragger.firmware.stax.layouts import _Layout
 
 
 class Test_Layout(TestCase):
@@ -10,7 +10,7 @@ class Test_Layout(TestCase):
         client = MagicMock()
         firmware = MagicMock()
         positions = MagicMock()
-        with patch("ragger.firmware.fatstacks.layouts.POSITIONS_BY_SDK") as positions_by_sdk:
+        with patch("ragger.firmware.stax.layouts.POSITIONS_BY_SDK") as positions_by_sdk:
             positions_by_sdk.__contains__.return_value = [firmware.semantic_version]
             positions_by_sdk.__getitem__.return_value = {_Layout.__name__: positions}
 

@@ -2,15 +2,15 @@ from unittest import TestCase
 from unittest.mock import MagicMock
 
 from ragger.firmware import Firmware
-from ragger.firmware.fatstacks import FullScreen
-from ragger.firmware.fatstacks.positions import POSITIONS_BY_SDK
+from ragger.firmware.stax import FullScreen
+from ragger.firmware.stax.positions import POSITIONS_BY_SDK
 
 
 class TestFullScreen(TestCase):
 
     def setUp(self):
         self.backend = MagicMock()
-        self.firmware = Firmware("fat", "1.0")
+        self.firmware = Firmware("stax", "1.0")
         self.positions = POSITIONS_BY_SDK[self.firmware.semantic_version]
         self.screen = FullScreen(self.backend, self.firmware)
 
