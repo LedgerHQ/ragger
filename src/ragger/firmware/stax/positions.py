@@ -50,10 +50,10 @@ POSITIONS_BY_SDK = {
         "Suggestions": {
             # 4 suggestions max, 2 rows of 2
             # indexes for left to right, from up to down
-            1: Position(100, 235),
-            2: Position(290, 235),
-            3: Position(110, 305),
-            4: Position(290, 305),
+            1: Position(100, 310),
+            2: Position(290, 310),
+            3: Position(110, 380),
+            4: Position(290, 380),
         },
         "LetterOnlyKeyboard": {
             # first line

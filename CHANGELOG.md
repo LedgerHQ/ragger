@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- firmware/stax : the "Suggestions" positions are shifted by Y+75px in order to fit with BOLOS
+                  suggestion buttons, which are under the typing text area, not above.
 
 ## [1.3.0] - 2023-01-18
 
