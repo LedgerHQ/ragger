@@ -15,10 +15,10 @@
 <polygon fill="antiquewhite" stroke="antiquewhite" points="8201.16,-453.5 8201.16,-807.5 9173.16,-807.5 9173.16,-453.5 8201.16,-453.5"/>
 <text text-anchor="middle" x="8687.16" y="-792.3" font-family="Times,serif" font-size="14.00">BackendInterface</text>
 <polyline fill="none" stroke="antiquewhite" points="8201.16,-784.5 9173.16,-784.5 "/>
-<text text-anchor="start" x="8209.16" y="-769.3" font-family="Times,serif" font-size="14.00">apdu_logger : RootLogger, Logger, NoneType</text>
+<text text-anchor="start" x="8209.16" y="-769.3" font-family="Times,serif" font-size="14.00">apdu_logger : NoneType, RootLogger, Logger</text>
 <text text-anchor="start" x="8209.16" y="-754.3" font-family="Times,serif" font-size="14.00">firmware</text>
 <text text-anchor="start" x="8209.16" y="-739.3" font-family="Times,serif" font-size="14.00">last_async_response</text>
-<text text-anchor="start" x="8209.16" y="-724.3" font-family="Times,serif" font-size="14.00">logger : RootLogger, Logger, NoneType</text>
+<text text-anchor="start" x="8209.16" y="-724.3" font-family="Times,serif" font-size="14.00">logger : Logger, RootLogger, NoneType</text>
 <text text-anchor="start" x="8209.16" y="-709.3" font-family="Times,serif" font-size="14.00">raise_policy : RAISE_ALL_BUT_0x9000</text>
 <polyline fill="none" stroke="antiquewhite" points="8201.16,-701.5 9173.16,-701.5 "/>
 <text text-anchor="start" x="8209.16" y="-686.3" font-family="Times,serif" font-size="14.00">both_click(): None</text>
