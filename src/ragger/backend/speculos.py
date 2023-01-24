@@ -189,7 +189,7 @@ class SpeculosBackend(BackendInterface):
                 raise TimeoutError("Timeout waiting for screen change")
             content = self._client.get_current_screen_content()
 
-        # We have received at least one new event to redisplay the screen
+        # Speculos has received at least one new event to redisplay the screen
         # Wait a bit to ensure the event batch is received and processed by Speculos before returning
         sleep(0.2)
 
