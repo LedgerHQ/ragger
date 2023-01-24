@@ -131,11 +131,19 @@ class Navigator(ABC):
                 raise ValueError(f"Golden snapshots directory ({dir_path}) does not exist.")
         return dir_path
 
-    def _init_snaps_temp_dir(self, path: Path, test_case_name: Path) -> Path:
+    def _init_snaps_temp_dir(self, path: Path, test_case_name: Path, start_idx: int = 0) -> Path:
         snaps_tmp_path = self._get_snaps_dir_path(path, test_case_name, False)
         if snaps_tmp_path.exists():
             for file in snaps_tmp_path.iterdir():
-                file.unlink()
+                # Remove all files in format "index.png" with index >= start_idx
+                if not file.name.endswith(".png"):
+                    continue
+                file_idx_str = file.name.replace(".png", "")
+                if not file_idx_str.isnumeric():
+                    continue
+                file_idx = int(file_idx_str)
+                if file_idx >= start_idx:
+                    file.unlink()
         else:
             snaps_tmp_path.mkdir(parents=True)
         return snaps_tmp_path
@@ -246,7 +254,7 @@ class Navigator(ABC):
         snaps_tmp_path = None
         snaps_golden_path = None
         if path and test_case_name:
-            snaps_tmp_path = self._init_snaps_temp_dir(path, test_case_name)
+            snaps_tmp_path = self._init_snaps_temp_dir(path, test_case_name, snap_start_idx)
             snaps_golden_path = self._check_snaps_dir_path(path, test_case_name, True)
 
         if screen_change_before_first_instruction:

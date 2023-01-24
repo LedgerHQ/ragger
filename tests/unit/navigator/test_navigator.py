@@ -70,18 +70,22 @@ class TestNavigator(TestCase):
         self.assertTrue(expected.exists())
 
     def test___init_snaps_temp_dir_ok_unlink_files(self):
-        existing_files = ["first", "second"]
-        name = "some_name"
-        expected = self.pathdir / "snapshots-tmp" / self.firmware.device / name
-        expected.mkdir(parents=True)
-        for filename in existing_files:
-            (expected / filename).touch()
-            self.assertTrue((expected / filename).exists())
-        result = self.navigator._init_snaps_temp_dir(self.pathdir, name)
-        self.assertEqual(result, expected)
-        self.assertTrue(expected.exists())
-        for filename in existing_files:
-            self.assertFalse((expected / filename).exists())
+        for start_idx in [0, 1]:
+            existing_files = ["00000.png", "00001.png", "00002.png"]
+            name = "some_name"
+            expected = self.pathdir / "snapshots-tmp" / self.firmware.device / name
+            expected.mkdir(parents=True, exist_ok=True)
+            for filename in existing_files:
+                (expected / filename).touch()
+                self.assertTrue((expected / filename).exists())
+            if start_idx:
+                result = self.navigator._init_snaps_temp_dir(self.pathdir, name, start_idx)
+            else:
+                result = self.navigator._init_snaps_temp_dir(self.pathdir, name)
+            self.assertEqual(result, expected)
+            self.assertTrue(expected.exists())
+            for filename in existing_files[start_idx:]:
+                self.assertFalse((expected / filename).exists())
 
     def test__get_snap_path(self):
         path = Path("not important")
