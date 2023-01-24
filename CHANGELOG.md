@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - firmware/stax : the "Suggestions" positions are shifted by Y+75px in order to fit with BOLOS
                   suggestion buttons, which are under the typing text area, not above.
+- navigator: Don't clean already existing snapshots when running `navigate_and_compare()` through `navigate_until_text_and_compare()`.
 
 ## [1.3.0] - 2023-01-18
 
