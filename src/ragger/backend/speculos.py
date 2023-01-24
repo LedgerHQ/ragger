@@ -142,6 +142,7 @@ class SpeculosBackend(BackendInterface):
         self._client.finger_touch(x, y, delay)
 
     def _save_screen_snapshot(self, snap: BytesIO, path: Path) -> None:
+        self.logger.info(f"Saving screenshot to image '{path}'")
         img = Image.open(snap)
         img.save(path)
 
@@ -188,5 +189,10 @@ class SpeculosBackend(BackendInterface):
                 raise TimeoutError("Timeout waiting for screen change")
             content = self._client.get_current_screen_content()
 
+        # We have received at least one new event to redisplay the screen
+        # Wait a bit to ensure the event batch is received and processed by Speculos before returning
+        sleep(0.2)
+
         # Update self._screen_content to use it as reference for next calls
-        self._screen_content = content
+        self._screen_content = self._client.get_current_screen_content()
+        self.logger.info(f"Received new screen event '{self._screen_content}'")
