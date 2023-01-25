@@ -35,7 +35,7 @@ jobs:
     - name: Check the downloaded files
       run: tree .
     - name: Run tests and generate coverage
-      run: pytest tests/ --cov ragger --cov-report xml
+      run: pytest tests/ --cov ragger --cov-report xml --device all
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
       with:
