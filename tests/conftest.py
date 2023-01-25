@@ -6,7 +6,6 @@ from ragger.backend import SpeculosBackend, LedgerCommBackend, LedgerWalletBacke
 from ragger.navigator import NanoNavigator
 from ragger.utils import app_path_from_app_name
 
-
 # This variable is needed for Speculos only (physical tests need the application to be already installed)
 # Adapt this path to your 'tests/elfs' directory
 APPS_DIRECTORY = (Path(__file__).parent / "elfs").resolve()
@@ -18,9 +17,7 @@ BACKENDS = ["speculos", "ledgercomm", "ledgerwallet"]
 
 DEVICES = ["nanos", "nanox", "nanosp", "all"]
 
-FIRMWARES = [Firmware('nanos', '2.1'),
-             Firmware('nanox', '2.0.2'),
-             Firmware('nanosp', '1.0.3')]
+FIRMWARES = [Firmware('nanos', '2.1'), Firmware('nanox', '2.0.2'), Firmware('nanosp', '1.0.3')]
 
 
 def pytest_addoption(parser):
@@ -105,7 +102,8 @@ def prepare_speculos_args(firmware: Firmware, display: bool):
 # Depending on the "--backend" option value, a different backend is
 # instantiated, and the tests will either run on Speculos or on a physical
 # device depending on the backend
-def create_backend(backend_name: str, firmware: Firmware, display: bool, log_apdu_file: Optional[Path]):
+def create_backend(backend_name: str, firmware: Firmware, display: bool,
+                   log_apdu_file: Optional[Path]):
     if backend_name.lower() == "ledgercomm":
         return LedgerCommBackend(firmware=firmware, interface="hid", log_apdu_file=log_apdu_file)
     elif backend_name.lower() == "ledgerwallet":
@@ -146,5 +144,6 @@ def use_only_on_backend(request, backend_name):
 
 def pytest_configure(config):
     config.addinivalue_line(
-        "markers", "use_only_on_backend(backend): skip test if not on the specified backend",
+        "markers",
+        "use_only_on_backend(backend): skip test if not on the specified backend",
     )

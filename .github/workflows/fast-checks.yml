@@ -31,6 +31,7 @@ jobs:
         pip install yapf toml
         yapf src/ --recursive -d
         yapf tests/ --recursive -d
+        yapf template/ --recursive -d
 
   mypy:
     name: Type checking
