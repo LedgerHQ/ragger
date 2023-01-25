@@ -136,11 +136,11 @@ def navigator(backend, firmware, golden_run):
         raise ValueError(f"Device '{firmware.device}' is unsupported.")
 
 
-@pytest.fixture(autouse=True)
-def use_only_on_backend(request, backend):
+@pytest.fixture
+def use_only_on_backend(request, backend_name):
     if request.node.get_closest_marker('use_on_backend'):
         current_backend = request.node.get_closest_marker('use_on_backend').args[0]
-        if current_backend != backend:
+        if current_backend != backend_name:
             pytest.skip(f'skipped on this backend: "{current_backend}"')
 
 
