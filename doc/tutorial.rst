@@ -84,7 +84,7 @@ emulator, for other backend it could be as simple as closing a socket.
 Backend as a fixture
 ++++++++++++++++++++
 
-From this, we are not far away from writing a :term:`Pytest` fixture, wich could
+From this, we are not far away from writing a :term:`Pytest` fixture, which could
 take place in a ``conftest.py`` file, and used in a ``test_something.py`` file:
 
 .. code-block:: python
@@ -275,7 +275,7 @@ access it:
   def backend_name(pytestconfig):
       return pytestconfig.getoption("backend")
 
-Now that we are able to now wich backend is chosen, we can write a function
+Now that we are able to now which backend is chosen, we can write a function
 returning the correct backend:
 
 

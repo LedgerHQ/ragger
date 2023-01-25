@@ -51,7 +51,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - unified naming of the Ledger Stax product: from `fat` or `fatstacks` to stax
 
 ### Fixed
-- requirements: Removed the dependancy on protobuf package
+- requirements: Removed the dependency on protobuf package
 
 
 ## [1.2.0] - 2023-01-04

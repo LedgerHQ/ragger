@@ -51,3 +51,15 @@ jobs:
     - run: pip install bandit
     - name: Bandit security checking
       run: bandit -r src -ll
+
+  misspell:
+    name: Check misspellings
+    runs-on: ubuntu-latest
+    steps:
+    - name: Clone
+      uses: actions/checkout@v3
+    - name: Check misspellings
+      uses: codespell-project/actions-codespell@v1
+      with:
+        builtin: clear,rare
+        check_filenames: true

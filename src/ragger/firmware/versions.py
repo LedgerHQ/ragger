@@ -57,11 +57,11 @@ class VersionManager(Enum):
 
         If no suitable version are found, raises a ``ValueError``.
 
-        :param major: The major version in semantic versionning
+        :param major: The major version in semantic versioning
         :type major: int
-        :param minor: The minor version in semantic versionning
+        :param minor: The minor version in semantic versioning
         :type minor: int
-        :param patch: The patch version in semantic versionning
+        :param patch: The patch version in semantic versioning
         :type patch: int
         :return: The latest matching version
         :rtype: :class:`semver.VersionInfo`

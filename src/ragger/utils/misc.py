@@ -17,29 +17,17 @@ from typing import Optional, Tuple, List
 from pathlib import Path
 
 
-def app_path_from_app_name(app_dir: Path, app_name: str, device: str) -> Path:
-    """
-    Builds an application ELF path according to a directory, an application name
-    and a device name.
+def _is_root(path_to_check: Path) -> bool:
+    return (path_to_check).resolve() == Path("/").resolve()
 
-    The resulting path will be formated like:
-    ``<directory>/<application name>_<device name>.elf``
 
-    Example: ``tests/elfs/exchange_nanox.elf``
-
-    The directory and resulting path existance are checked.
-
-    :param app_dir: The directory where the application ELF is
-    :type app_dir: Path
-    :param app_name: The name of the application
-    :type app_name: str
-    :param device: The device type name (ex: 'nanos', 'nanosp', ...)
-    :type device: str
-    """
-    assert app_dir.is_dir(), f"{app_dir} is not a directory"
-    app_path = app_dir / (app_name + "_" + device + ".elf")
-    assert app_path.is_file(), f"{app_path} must exist"
-    return app_path
+def find_project_root_dir(origin: Path) -> Path:
+    project_root_dir = origin
+    while not _is_root(project_root_dir) and not (project_root_dir / ".git").resolve().is_dir():
+        project_root_dir = project_root_dir.parent
+    if _is_root(project_root_dir):
+        raise ValueError("Could not find project top directory")
+    return project_root_dir
 
 
 def prefix_with_len(to_prefix: bytes) -> bytes:

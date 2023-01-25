@@ -142,7 +142,7 @@ class BackendInterface(ABC):
         """
         Formats and sends an APDU to the backend, then receives its response.
 
-        The length is automaticaly added to the APDU message.
+        The length is automatically added to the APDU message.
 
         :param cla: The application ID
         :type cla: int
