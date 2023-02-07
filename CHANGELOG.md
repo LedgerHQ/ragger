@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
+- template: conftest.py: Target nanosp release 1.0.4 which is now supported by speculos
+- backend: speculos.py: Do not pass `--sdk` argument anymore, this enforce using either last speculos supported SDK or app elf file with metadata.
 
 ### Fixed
 
