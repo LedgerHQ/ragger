@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- firmware/stax: Classes using `MetaScreen` can now declare their own `__init__` without it being overridden
+
 ## [1.3.1] - 2023-01-24
 
 ### Added
@@ -21,7 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- backend/speculos : improved reliability of wait_for_screen_change 
+- backend/speculos : improved reliability of wait_for_screen_change
 - firmware/stax : the "Suggestions" positions are shifted by Y+75px in order to fit with BOLOS
                   suggestion buttons, which are under the typing text area, not above.
 - navigator: Don't clean already existing snapshots when running `navigate_and_compare()` through `navigate_until_text_and_compare()`.

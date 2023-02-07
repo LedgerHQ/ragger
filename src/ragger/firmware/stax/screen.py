@@ -86,12 +86,14 @@ class MetaScreen(type):
             key.split(USE_CASE_PREFIX)[1]: namespace.pop(key)
             for key in list(namespace.keys()) if key.startswith(USE_CASE_PREFIX)
         }
+        original_init = namespace.pop("__init__", lambda *args, **kwargs: None)
 
-        def init(self, client: BackendInterface, firmware: Firmware):
+        def init(self, client: BackendInterface, firmware: Firmware, *args, **kwargs):
             for attribute, cls in layouts.items():
                 setattr(self, attribute, cls(client, firmware))
             for attribute, cls in use_cases.items():
                 setattr(self, attribute, cls(client, firmware))
+            original_init(self, client, firmware, *args, **kwargs)
 
         namespace["__init__"] = init
         return super().__new__(cls, name, parents, namespace)
