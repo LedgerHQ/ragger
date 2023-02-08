@@ -3,7 +3,7 @@ from typing import Optional
 from pathlib import Path
 from ragger.firmware import Firmware
 from ragger.backend import SpeculosBackend, LedgerCommBackend, LedgerWalletBackend
-from ragger.navigator import NanoNavigator
+from ragger.navigator import NanoNavigator, StaxNavigator
 from ragger.utils import app_path_from_app_name
 
 # This variable is needed for Speculos only (physical tests need the application to be already installed)
@@ -15,9 +15,14 @@ APP_NAME = "MyAPP"
 
 BACKENDS = ["speculos", "ledgercomm", "ledgerwallet"]
 
-DEVICES = ["nanos", "nanox", "nanosp", "all"]
+DEVICES = ["nanos", "nanox", "nanosp", "stax", "all"]
 
-FIRMWARES = [Firmware('nanos', '2.1'), Firmware('nanox', '2.0.2'), Firmware('nanosp', '1.0.3')]
+FIRMWARES = [
+    Firmware('nanos', '2.1'),
+    Firmware('nanox', '2.0.2'),
+    Firmware('nanosp', '1.0.4'),
+    Firmware('stax', '1.0')
+]
 
 
 def pytest_addoption(parser):
@@ -130,6 +135,8 @@ def backend(backend_name, firmware, display, log_apdu_file):
 def navigator(backend, firmware, golden_run):
     if firmware.device.startswith("nano"):
         return NanoNavigator(backend, firmware, golden_run)
+    elif firmware.device.startswith("stax"):
+        return StaxNavigator(backend, firmware, golden_run)
     else:
         raise ValueError(f"Device '{firmware.device}' is unsupported.")
 
