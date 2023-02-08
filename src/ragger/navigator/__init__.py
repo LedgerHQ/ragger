@@ -13,7 +13,8 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-from .navigator import NavInsID, NavIns, Navigator
+from .instruction import NavInsID, NavIns
+from .navigator import  Navigator
 from .stax_navigator import StaxNavigator
 from .nano_navigator import NanoNavigator
 

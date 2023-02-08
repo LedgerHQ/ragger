@@ -22,7 +22,7 @@ from typing import Tuple, Any
 
 from .interface import RaggerMainWindow
 from ragger.logger import get_gui_logger
-from ragger.navigator import NavInsID
+from ragger.navigator.instruction import NavInsID
 
 NAVIGATION_ACTIONS = {
     NavInsID.RIGHT_CLICK: "right button",
@@ -56,9 +56,19 @@ class ProcessCommunicationWorker(QObject):
             if command == "screenshot":
                 self.logger.debug("Image received")
                 self._main_window.display_screenshot(argument)
-            if command == "action":
-                self.logger.debug("Action required")
+            if command == "text_search":
+                self.logger.debug(f"Text search received : '{argument}'")
+                self._main_window.display_text_search(argument)
+            if command == "click_action":
+                self.logger.debug("Click action required")
                 self._main_window.display_action(NAVIGATION_ACTIONS[argument])
+            if command == "touch_action":
+                self.logger.debug("Touch action required")
+                self._main_window.display_action("touch",*argument)
+            
+            if command == "action_done":
+                self.logger.debug("Action done")
+                self._main_window.action_done()
             self.logger.debug("Interface updated")
 
     def __del__(self):
@@ -67,10 +77,11 @@ class ProcessCommunicationWorker(QObject):
 
 class RaggerGUI(Process):
 
-    def __init__(self, args=None):
+    def __init__(self, device: str, args=None):
         super().__init__()
         self.logger = get_gui_logger().getChild("RaggerGUI")
         self._queues = (Queue(), Queue())
+        self._device = device
         self.logger.info("Initiated")
 
     def _send(self, obj: Any):
@@ -86,9 +97,18 @@ class RaggerGUI(Process):
         self._send(("screenshot", image))
         return self._receive()
 
-    def ask_for_action(self, ins_id: NavInsID):
-        self._send(("action", ins_id))
+    def check_text(self, text: str):
+        self._send(("text_search", text))    
         return self._receive()
+
+    def ask_for_click_action(self, ins_id: NavInsID):
+        self._send(("click_action", ins_id))
+        return self._receive()
+
+    def ask_for_touch_action(self, x:int = 0, y:int = 0):
+        self._send(("touch_action", (x, y)))
+        return self._receive()
+
 
     def _configure_worker(self):
         self.thread = QThread()
@@ -98,12 +118,16 @@ class RaggerGUI(Process):
         self.worker.finished.connect(self.thread.quit)
         self.thread.start()
         self.logger.info("Worker started")
-
+    
+    def _button_cb(self,obj: Any):
+        self._queues[1].put(obj)
+        self._send(("action_done", "")) 
+        
     def run(self):
         self._app = QApplication([])
         self._app.setStyle("Fusion")
-        self._main_window = RaggerMainWindow()
-        self._main_window.set_button_cb(self._queues[1].put)
+        self._main_window = RaggerMainWindow(device=self._device)
+        self._main_window.set_button_cb(self._button_cb)
         self._configure_worker()
         self.logger.info("Starting the interface...")
         sys.exit(self._app.exec())

@@ -20,6 +20,7 @@ from typing import Generator, Optional
 from ledgerwallet.client import LedgerClient, CommException
 from ledgerwallet.transport import HidDevice
 
+from ragger.firmware import Firmware
 from ragger.utils import RAPDU
 from ragger.error import ExceptionRAPDU
 from .physical_backend import PhysicalBackend
@@ -46,8 +47,8 @@ def raise_policy_enforcer(function):
 
 class LedgerWalletBackend(PhysicalBackend):
 
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
+    def __init__(self, firmware: Firmware, *args, with_gui: bool = False, **kwargs):
+        super().__init__(firmware=firmware, *args, with_gui=with_gui, **kwargs)
         self._client: Optional[LedgerClient] = None
 
     def __enter__(self) -> "LedgerWalletBackend":

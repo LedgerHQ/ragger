@@ -45,14 +45,14 @@ class LedgerCommBackend(PhysicalBackend):
 
     def __init__(self,
                  firmware: Firmware,
+                 *args,
                  host: str = "127.0.0.1",
                  port: int = 9999,
                  interface: str = 'hid',
                  log_apdu_file: Optional[Path] = None,
                  with_gui: bool = False,
-                 *args,
                  **kwargs):
-        super().__init__(firmware=firmware, log_apdu_file=log_apdu_file, with_gui=with_gui)
+        super().__init__(firmware, *args, log_apdu_file=log_apdu_file, with_gui=with_gui, **kwargs)
         self._host = host
         self._port = port
         self._client: Optional[Transport] = None

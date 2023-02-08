@@ -15,18 +15,23 @@
 """
 from pathlib import Path
 from typing import Any, Optional
+from pytesseract import image_to_data, Output
+from PIL import Image, ImageOps
 
+from ragger.firmware import Firmware
 from ragger.gui import RaggerGUI
-from ragger.navigator import NavInsID
+from ragger.navigator.instruction import NavInsID
 from ragger.utils import Crop
 from .interface import BackendInterface
 
 
 class PhysicalBackend(BackendInterface):
 
-    def __init__(self, *args, with_gui: bool = False, **kwargs):
-        super().__init__(*args, **kwargs)
-        self._ui: Optional[RaggerGUI] = RaggerGUI() if with_gui else None
+    def __init__(self, firmware: Firmware, *args, with_gui: bool = False, **kwargs):
+        super().__init__(firmware=firmware, *args, **kwargs)
+        self._ui: Optional[RaggerGUI] = RaggerGUI(device=firmware.device) if with_gui else None
+        self._device = firmware.device
+        self._last_valid_snap_path = None
 
     def init_gui(self):
         """
@@ -41,19 +46,19 @@ class PhysicalBackend(BackendInterface):
         if self._ui is None:
             return
         self.init_gui()
-        self._ui.ask_for_action(NavInsID.RIGHT_CLICK)
+        self._ui.ask_for_click_action(NavInsID.RIGHT_CLICK)
 
     def left_click(self) -> None:
         if self._ui is None:
             return
         self.init_gui()
-        self._ui.ask_for_action(NavInsID.LEFT_CLICK)
+        self._ui.ask_for_click_action(NavInsID.LEFT_CLICK)
 
     def both_click(self) -> None:
         if self._ui is None:
             return
         self.init_gui()
-        self._ui.ask_for_action(NavInsID.BOTH_CLICK)
+        self._ui.ask_for_click_action(NavInsID.BOTH_CLICK)
 
     def compare_screen_with_snapshot(self,
                                      golden_snap_path: Path,
@@ -63,16 +68,46 @@ class PhysicalBackend(BackendInterface):
         if self._ui is None:
             return True
         self.init_gui()
-        return self._ui.check_screenshot(golden_snap_path)
+
+        # If for some reason we ask twice to compare the
+        # the same snapshot, just return True.
+        if(self._last_valid_snap_path == golden_snap_path):
+            return True
+
+        if(self._ui.check_screenshot(golden_snap_path)):
+            self._last_valid_snap_path = golden_snap_path
+            return True
+        else:
+            self._last_valid_snap_path = None
+            return False
 
     def finger_touch(self, x: int = 0, y: int = 0, delay: float = 0.5) -> None:
-        pass
+        if self._ui is None:
+            return
+        self.init_gui()
+        self._ui.ask_for_touch_action(x,y)
 
     def wait_for_screen_change(self, timeout: float = 10.0) -> None:
         return
 
     def compare_screen_with_text(self, text: str) -> bool:
-        return True
+        if self._ui is None:
+            return True
+        self.init_gui()
+        if self._last_valid_snap_path :
+            image = Image.open(self._last_valid_snap_path)
+            # Nano (s,sp,x) snapshots are white/blue text on black backgound,
+            # tesseract cannot do OCR on these. Invert image so it has
+            # dark text on white background.
+            if self._device.startswith("nan"):
+                image = ImageOps.invert(image)
+            data = image_to_data(image,output_type=Output.DICT)
+            for item in range(len(data["text"])):
+                if text in data["text"][item]:
+                    return True
+            return False
+        else:
+            return self._ui.check_text(text)
 
     def get_current_screen_content(self) -> Any:
         return []
