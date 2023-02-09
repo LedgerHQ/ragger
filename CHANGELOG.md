@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - template: conftest.py: Target nanosp release 1.0.4 which is now supported by speculos
 - backend: speculos.py: Do not pass `--sdk` argument anymore, this enforce using either last speculos supported SDK or app elf file with metadata.
 - template: conftest.py/usage.md: Enable full Stax support
+- Dependency: Use ledgerwallet>=0.2.3 to fix protobuff version issues
+- Dependency: Use speculos>=0.1.202 to enable support for Last Stax firmware
 
 ### Fixed
 
