@@ -1,6 +1,8 @@
 # Ragger
 
 [![codecov](https://codecov.io/gh/LedgerHQ/ragger/branch/develop/graph/badge.svg)](https://codecov.io/gh/LedgerHQ/ragger)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=LedgerHQ_ragger&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=LedgerHQ_ragger)
+[![CodeQL](https://github.com/LedgerHQ/ragger/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/LedgerHQ/ragger/actions/workflows/codeql-analysis.yml)
 
 
 This library aims at reducing the cost of running code on both Speculos emulator
