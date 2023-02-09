@@ -15,10 +15,9 @@ jobs:
     steps:
     - name: Clone
       uses: actions/checkout@v3
-    - name: Lint Python code
-      run: |
-        pip install flake8
-        find src/ -type f -name '*.py' -exec flake8 --max-line-length=120 '{}' '+'
+    - run: pip install flake8
+    - name: Flake8 lint Python code
+      run: find src/ -type f -name '*.py' -exec flake8 --max-line-length=120 '{}' '+'
 
   yapf:
     name: Formatting
@@ -26,9 +25,9 @@ jobs:
     steps:
     - name: Clone
       uses: actions/checkout@v3
+    - run: pip install yapf toml
     - name: Yapf source formatting
       run: |
-        pip install yapf toml
         yapf src/ --recursive -d
         yapf tests/ --recursive -d
         yapf template/ --recursive -d
@@ -39,7 +38,16 @@ jobs:
     steps:
     - name: Clone
       uses: actions/checkout@v3
+    - run: pip install mypy
     - name: Mypy type checking
-      run: |
-        pip install mypy
-        mypy src
+      run: mypy src
+
+  bandit:
+    name: Security checking
+    runs-on: ubuntu-latest
+    steps:
+    - name: Clone
+      uses: actions/checkout@v3
+    - run: pip install bandit
+    - name: Bandit security checking
+      run: bandit -r src -ll
