@@ -2,12 +2,11 @@ from typing import Dict, Any
 
 # The following parameters, if any, are required.
 # Please set their values in your 'conftest.py' file
-REQUIRED_CONFIGURATION: Dict[str, Any] = {
-}
+REQUIRED: Dict[str, Any] = {}
 
 # The following parameters are optional and can be used to customize your tests
 # You can set their values in your 'conftest.py' file if you want to use them
-OPTIONAL_CONFIGURATION: Dict[str, Any] = {
+OPTIONAL: Dict[str, Any] = {
 
     # use this parameter if you want Speculos to emulate other applications being installed on the device
     # example: {"bitcoin": "Bitcoin", "ethereum": "Ethereum"}

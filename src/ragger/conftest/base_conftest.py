@@ -7,7 +7,7 @@ from ragger.navigator import NanoNavigator, StaxNavigator
 from ragger.utils import find_project_root_dir
 from ragger.logger import get_default_logger
 
-from ragger.conftest import configuration
+from ragger.conftest import configuration as conf
 
 BACKENDS = ["speculos", "ledgercomm", "ledgerwallet"]
 
@@ -49,9 +49,11 @@ def log_apdu_file(pytestconfig):
     filename = pytestconfig.getoption("log_apdu_file")
     return Path(filename).resolve() if filename is not None else None
 
+
 @pytest.fixture(scope="session")
 def root_pytest_dir(request):
     return Path(request.config.rootdir).resolve()
+
 
 @pytest.fixture
 def test_name(request):
@@ -107,21 +109,22 @@ def prepare_speculos_args(root_pytest_dir: Path, firmware: Firmware, display: bo
 
     app_path = Path(project_root_dir / "build" / device / "bin" / "app.elf").resolve()
     if not app_path.is_file():
-        raise ValueError(f"File '{app_path}' does not exist. Did you compile for this target?")
+        raise ValueError(f"File '{app_path}' missing. Did you compile for this target?")
 
-    if not len(configuration.OPTIONAL_CONFIGURATION["SIDELOADED_APPS"]) == 0:
-        if configuration.OPTIONAL_CONFIGURATION["SIDELOADED_APPS_DIR"] == "":
-            raise ValueError(f"OPTIONAL_CONFIGURATION[\"SIDELOADED_APPS_DIR\"] is mandatory if SIDELOADED_APPS is used")
-        libs_dir = Path(project_root_dir / configuration.OPTIONAL_CONFIGURATION["SIDELOADED_APPS_DIR"]).resolve()
+    if not len(conf.OPTIONAL["SIDELOADED_APPS"]) == 0:
+        if conf.OPTIONAL["SIDELOADED_APPS_DIR"] == "":
+            raise ValueError("Configuration \"SIDELOADED_APPS_DIR\" is mandatory if \
+                             \"SIDELOADED_APPS\" is used")
+        libs_dir = Path(project_root_dir / conf.OPTIONAL["SIDELOADED_APPS_DIR"]).resolve()
         if not libs_dir.is_dir():
-            raise ValueError(f"Sideloaded apps directory '{libs_dir}' does not exist. Did you gather the elfs?")
-
+            raise ValueError(f"Sideloaded apps directory '{libs_dir}' missing. \
+                             Did you gather the elfs?")
 
         # Add "-l Appname:filepath" to Speculos command line for every required lib app
-        for file_name, lib_name in configuration.OPTIONAL_CONFIGURATION["SIDELOADED_APPS"].items():
-            lib_path = Path(project_root_dir / "test" / "libs" / file_name / device / "bin" / "app.elf").resolve()
+        for file_name, lib_name in conf.OPTIONAL["SIDELOADED_APPS"].items():
+            lib_path = Path(libs_dir / file_name / device / "bin/app.elf").resolve()
             if not lib_path.is_file():
-                raise ValueError(f"File '{lib_path}' does not exist. Did you compile for this target?")
+                raise ValueError(f"File '{lib_path}' missing. Did you compile for this target?")
             speculos_args.append(f"-l{lib_name}:{lib_path}")
 
     return (app_path, {"args": speculos_args})
@@ -147,7 +150,7 @@ def create_backend(root_pytest_dir: Path, backend_name: str, firmware: Firmware,
 
 
 # Backend scope can be configured by the user
-@pytest.fixture(scope=configuration.OPTIONAL_CONFIGURATION["BACKEND_SCOPE"])
+@pytest.fixture(scope=conf.OPTIONAL["BACKEND_SCOPE"])
 def backend(root_pytest_dir, backend_name, firmware, display, log_apdu_file):
     with create_backend(root_pytest_dir, backend_name, firmware, display, log_apdu_file) as b:
         yield b
@@ -180,20 +183,20 @@ def pytest_configure(config):
 
 def log_full_conf():
     logger = get_default_logger()
-    logger.debug("Running Ragger with the following configuration:")
-    for key, value in configuration.REQUIRED_CONFIGURATION.items():
+    logger.debug("Running Ragger with the following conf:")
+    for key, value in conf.REQUIRED.items():
         logger.debug(f"    {key} = '{value}'")
-    for key, value in configuration.OPTIONAL_CONFIGURATION.items():
+    for key, value in conf.OPTIONAL.items():
         logger.debug(f"    {key} = '{value}'")
 
 
 def assert_full_conf():
     missing = []
-    for key, value in configuration.REQUIRED_CONFIGURATION.items():
+    for key, value in conf.REQUIRED.items():
         if value == "":
             missing.append(key)
     if missing:
-        raise ValueError(f"Missing required configuration parameters: '{missing}")
+        raise ValueError(f"Missing required conf parameters: '{missing}")
 
 
 # RUN ON IMPORT
