@@ -52,7 +52,7 @@ def log_apdu_file(pytestconfig):
 
 @pytest.fixture(scope="session")
 def root_pytest_dir(request):
-    return Path(request.config.rootdir).resolve()
+    return Path(request.config.rootpath).resolve()
 
 
 @pytest.fixture
@@ -121,8 +121,9 @@ def prepare_speculos_args(root_pytest_dir: Path, firmware: Firmware, display: bo
                              Did you gather the elfs?")
 
         # Add "-l Appname:filepath" to Speculos command line for every required lib app
-        for file_name, lib_name in conf.OPTIONAL["SIDELOADED_APPS"].items():
-            lib_path = Path(libs_dir / file_name / device / "bin/app.elf").resolve()
+        for coin_name, lib_name in conf.OPTIONAL["SIDELOADED_APPS"].items():
+            file_name = coin_name + "_" + device + ".elf"
+            lib_path = Path(libs_dir / file_name).resolve()
             if not lib_path.is_file():
                 raise ValueError(f"File '{lib_path}' missing. Did you compile for this target?")
             speculos_args.append(f"-l{lib_name}:{lib_path}")
