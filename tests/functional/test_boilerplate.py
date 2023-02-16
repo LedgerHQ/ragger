@@ -5,7 +5,7 @@ import pytest
 from ragger.error import ExceptionRAPDU
 from ragger.utils import RAPDU
 from ragger.backend import RaisePolicy
-from ragger.navigator import NavInsID, NavIns
+from ragger.navigator import NavInsID
 
 
 def test_error_returns_not_raises(backend):

@@ -4,10 +4,11 @@ from pathlib import Path
 from ragger.firmware import Firmware
 from ragger.backend import SpeculosBackend, LedgerCommBackend, LedgerWalletBackend
 from ragger.navigator import NanoNavigator, StaxNavigator
-from ragger.utils import find_project_root_dir
+from ragger.utils import find_project_root_dir, app_path_from_app_name
 from ragger.logger import get_default_logger
+from dataclasses import fields
 
-from ragger.conftest import configuration as conf
+from . import configuration as conf
 
 BACKENDS = ["speculos", "ledgercomm", "ledgerwallet"]
 
@@ -111,19 +112,18 @@ def prepare_speculos_args(root_pytest_dir: Path, firmware: Firmware, display: bo
     if not app_path.is_file():
         raise ValueError(f"File '{app_path}' missing. Did you compile for this target?")
 
-    if not len(conf.OPTIONAL["SIDELOADED_APPS"]) == 0:
-        if conf.OPTIONAL["SIDELOADED_APPS_DIR"] == "":
+    if not len(conf.OPTIONAL.SIDELOADED_APPS) == 0:
+        if conf.OPTIONAL.SIDELOADED_APPS_DIR == "":
             raise ValueError("Configuration \"SIDELOADED_APPS_DIR\" is mandatory if \
                              \"SIDELOADED_APPS\" is used")
-        libs_dir = Path(project_root_dir / conf.OPTIONAL["SIDELOADED_APPS_DIR"]).resolve()
+        libs_dir = Path(project_root_dir / conf.OPTIONAL.SIDELOADED_APPS_DIR).resolve()
         if not libs_dir.is_dir():
             raise ValueError(f"Sideloaded apps directory '{libs_dir}' missing. \
                              Did you gather the elfs?")
 
         # Add "-l Appname:filepath" to Speculos command line for every required lib app
-        for coin_name, lib_name in conf.OPTIONAL["SIDELOADED_APPS"].items():
-            file_name = coin_name + "_" + device + ".elf"
-            lib_path = Path(libs_dir / file_name).resolve()
+        for coin_name, lib_name in conf.OPTIONAL.SIDELOADED_APPS.items():
+            lib_path = app_path_from_app_name(libs_dir, coin_name, device)
             if not lib_path.is_file():
                 raise ValueError(f"File '{lib_path}' missing. Did you compile for this target?")
             speculos_args.append(f"-l{lib_name}:{lib_path}")
@@ -151,7 +151,7 @@ def create_backend(root_pytest_dir: Path, backend_name: str, firmware: Firmware,
 
 
 # Backend scope can be configured by the user
-@pytest.fixture(scope=conf.OPTIONAL["BACKEND_SCOPE"])
+@pytest.fixture(scope=conf.OPTIONAL.BACKEND_SCOPE)
 def backend(root_pytest_dir, backend_name, firmware, display, log_apdu_file):
     with create_backend(root_pytest_dir, backend_name, firmware, display, log_apdu_file) as b:
         yield b
@@ -185,21 +185,9 @@ def pytest_configure(config):
 def log_full_conf():
     logger = get_default_logger()
     logger.debug("Running Ragger with the following conf:")
-    for key, value in conf.REQUIRED.items():
-        logger.debug(f"    {key} = '{value}'")
-    for key, value in conf.OPTIONAL.items():
-        logger.debug(f"    {key} = '{value}'")
-
-
-def assert_full_conf():
-    missing = []
-    for key, value in conf.REQUIRED.items():
-        if value == "":
-            missing.append(key)
-    if missing:
-        raise ValueError(f"Missing required conf parameters: '{missing}")
+    for field in fields(conf.OPTIONAL):
+        logger.debug(f"\t{field.name} = '{getattr(conf.OPTIONAL, field.name)}'")
 
 
 # RUN ON IMPORT
 log_full_conf()
-assert_full_conf()

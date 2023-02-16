@@ -12,18 +12,16 @@ on:
 jobs:
   build_boilerplate_application:
     name: Build boilerplate application using the reusable workflow
-    uses: LedgerHQ/ledger-app-workflows/.github/workflows/reusable_build.yml@fbe/more_options
+    uses: LedgerHQ/ledger-app-workflows/.github/workflows/reusable_build.yml@v1
     with:
       app_repository: LedgerHQ/app-boilerplate
       app_branch_name: master
-      app_binaries_artifact: boilerplate_binaries
+      upload_app_binaries_artifact: boilerplate_binaries
 
   build_install_test:
     name: Install and test the library
     needs: build_boilerplate_application
     runs-on: ubuntu-latest
-    env:
-      PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION: python
 
     steps:
     - name: Clone
