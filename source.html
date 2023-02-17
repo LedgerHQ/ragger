@@ -270,7 +270,7 @@ otherwise.</p>
 <dt class="sig sig-object py" id="ragger.backend.BackendInterface.exchange">
 <span class="sig-name descname"><span class="pre">exchange</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cla</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ins</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">b''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#ragger.utils.structs.RAPDU" title="ragger.utils.structs.RAPDU"><span class="pre">RAPDU</span></a></span></span><a class="headerlink" href="#ragger.backend.BackendInterface.exchange" title="Permalink to this definition"></a></dt>
 <dd><p>Formats and sends an APDU to the backend, then receives its response.</p>
-<p>The length is automaticaly added to the APDU message.</p>
+<p>The length is automatically added to the APDU message.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -678,7 +678,7 @@ They could then be used immediately:</p>
 
 <span class="n">screen</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">tap</span><span class="p">()</span>             <span class="c1"># entering the &#39;info&#39; view</span>
 <span class="n">screen</span><span class="o">.</span><span class="n">footer</span><span class="o">.</span><span class="n">tap</span><span class="p">()</span>             <span class="c1"># going out the &#39;info&#39; view</span>
-<span class="n">screen</span><span class="o">.</span><span class="n">keyboard</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span>  <span class="c1"># writting &#39;hello&#39; on the keyboard</span>
+<span class="n">screen</span><span class="o">.</span><span class="n">keyboard</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span>  <span class="c1"># writing &#39;hello&#39; on the keyboard</span>
 <span class="n">screen</span><span class="o">.</span><span class="n">footer</span><span class="o">.</span><span class="n">tap</span><span class="p">()</span>             <span class="c1"># going out the &#39;app&#39; view</span>
 <span class="k">try</span><span class="p">:</span>
     <span class="n">screen</span><span class="o">.</span><span class="n">footer</span><span class="o">.</span><span class="n">tap</span><span class="p">()</span>         <span class="c1"># quitting the application</span>
@@ -778,9 +778,9 @@ major and minor, and minor needs major (else the function raises a
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>major</strong> (<em>int</em>) – The major version in semantic versionning</p></li>
-<li><p><strong>minor</strong> (<em>int</em>) – The minor version in semantic versionning</p></li>
-<li><p><strong>patch</strong> (<em>int</em>) – The patch version in semantic versionning</p></li>
+<li><p><strong>major</strong> (<em>int</em>) – The major version in semantic versioning</p></li>
+<li><p><strong>minor</strong> (<em>int</em>) – The minor version in semantic versioning</p></li>
+<li><p><strong>patch</strong> (<em>int</em>) – The patch version in semantic versioning</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -939,20 +939,17 @@ the two last bytes)</p></li>
 <dt class="sig sig-object py" id="ragger.utils.misc.app_path_from_app_name">
 <span class="sig-prename descclassname"><span class="pre">ragger.utils.misc.</span></span><span class="sig-name descname"><span class="pre">app_path_from_app_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">app_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span></span></span><a class="headerlink" href="#ragger.utils.misc.app_path_from_app_name" title="Permalink to this definition"></a></dt>
 <dd><p>Builds an application ELF path according to a directory, an application name
-and a device name.</p>
-<p>The resulting path will be formated like:
-<code class="docutils literal notranslate"><span class="pre">&lt;directory&gt;/&lt;application</span> <span class="pre">name&gt;_&lt;device</span> <span class="pre">name&gt;.elf</span></code></p>
-<p>Example: <code class="docutils literal notranslate"><span class="pre">tests/elfs/exchange_nanox.elf</span></code></p>
-<p>The directory and resulting path existance are checked.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>app_dir</strong> (<em>Path</em>) – The directory where the application ELF is</p></li>
-<li><p><strong>app_name</strong> (<em>str</em>) – The name of the application</p></li>
-<li><p><strong>device</strong> (<em>str</em>) – The device type name (ex: ‘nanos’, ‘nanosp’, …)</p></li>
-</ul>
-</dd>
-</dl>
+and a device name.
+The resulting path will be formatted like:
+<code class="docutils literal notranslate"><span class="pre">&lt;directory&gt;/&lt;application</span> <span class="pre">name&gt;_&lt;device</span> <span class="pre">name&gt;.elf</span></code>
+Example: <code class="docutils literal notranslate"><span class="pre">tests/elfs/exchange_nanox.elf</span></code>
+The directory and resulting path existence are checked.
+:param app_dir: The directory where the application ELF is
+:type app_dir: Path
+:param app_name: The name of the application
+:type app_name: str
+:param device: The device type name (ex: ‘nanos’, ‘nanosp’, …)
+:type device: str</p>
 </dd></dl>
 
 </div>

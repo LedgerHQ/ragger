@@ -203,7 +203,7 @@ emulator, for other backend it could be as simple as closing a socket.</p>
 </div>
 <div class="section" id="backend-as-a-fixture">
 <h3>Backend as a fixture<a class="headerlink" href="#backend-as-a-fixture" title="Permalink to this heading"></a></h3>
-<p>From this, we are not far away from writing a <a class="reference internal" href="glossary.html#term-Pytest"><span class="xref std std-term">Pytest</span></a> fixture, wich could
+<p>From this, we are not far away from writing a <a class="reference internal" href="glossary.html#term-Pytest"><span class="xref std std-term">Pytest</span></a> fixture, which could
 take place in a <code class="docutils literal notranslate"><span class="pre">conftest.py</span></code> file, and used in a <code class="docutils literal notranslate"><span class="pre">test_something.py</span></code> file:</p>
 <div class="literal-block-wrapper docutils container" id="id2">
 <div class="code-block-caption"><span class="caption-text">conftest.py</span><a class="headerlink" href="#id2" title="Permalink to this code"></a></div>
@@ -371,7 +371,7 @@ access it:</p>
 <span class="linenos">6</span>    <span class="k">return</span> <span class="n">pytestconfig</span><span class="o">.</span><span class="n">getoption</span><span class="p">(</span><span class="s2">&quot;backend&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Now that we are able to now wich backend is chosen, we can write a function
+<p>Now that we are able to now which backend is chosen, we can write a function
 returning the correct backend:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span> <span class="nn">ragger.backend</span> <span class="kn">import</span> <span class="n">LedgerCommBackend</span><span class="p">,</span> <span class="n">LedgerWalletBackend</span>
 <span class="linenos"> 2</span>
