@@ -46,7 +46,7 @@ def raise_policy_enforcer(function):
 
 class LedgerWalletBackend(BackendInterface):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self._client: Optional[LedgerClient] = None
 

@@ -1,9 +1,19 @@
+import os
 from contextlib import contextmanager
 from pathlib import Path
 from tempfile import mkdtemp
 from unittest import TestCase
-
 from ragger.utils import misc
+
+
+def rmdir(directory):
+    directory = Path(directory)
+    for item in directory.iterdir():
+        if item.is_dir():
+            rmdir(item)
+        else:
+            item.unlink()
+    directory.rmdir()
 
 
 class TestMisc(TestCase):
@@ -12,9 +22,7 @@ class TestMisc(TestCase):
     def directory(self):
         dir_path = Path(mkdtemp())
         yield dir_path
-        for filee in dir_path.iterdir():
-            filee.unlink()
-        dir_path.rmdir()
+        rmdir(dir_path)
 
     def test_app_path_from_app_name_ok(self):
         with self.directory() as dir_path:
@@ -31,6 +39,26 @@ class TestMisc(TestCase):
         with self.directory() as dir_path:
             with self.assertRaises(AssertionError):
                 misc.app_path_from_app_name(dir_path, "a", "b")
+
+    def test_find_project_root_dir_ok(self):
+        with self.directory() as dir_path:
+            os.mkdir(Path(dir_path / ".git").resolve())
+            nested_dir = Path(dir_path / "subfolder").resolve()
+            os.mkdir(nested_dir)
+            nested_dir = Path(nested_dir / "another_subfolder").resolve()
+            os.mkdir(nested_dir)
+            self.assertEqual(
+                Path(dir_path).resolve(),
+                Path(misc.find_project_root_dir(nested_dir)).resolve())
+
+    def test_find_project_root_dir_nok(self):
+        with self.directory() as dir_path:
+            nested_dir = Path(dir_path / "subfolder").resolve()
+            os.mkdir(nested_dir)
+            nested_dir = Path(nested_dir / "another_subfolder").resolve()
+            os.mkdir(nested_dir)
+            with self.assertRaises(ValueError):
+                misc.find_project_root_dir(nested_dir)
 
     def test_prefix_with_len(self):
         buffer = bytes.fromhex("0123456789")

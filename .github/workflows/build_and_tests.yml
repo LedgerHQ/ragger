@@ -1,41 +1,52 @@
 name: Build, test and deploy Ragger
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - master
+      - main
       - develop
   pull_request:
-    branches:
-      - develop
-      - master
 
 jobs:
+  build_boilerplate_application:
+    name: Build boilerplate application using the reusable workflow
+    uses: LedgerHQ/ledger-app-workflows/.github/workflows/reusable_build.yml@v1
+    with:
+      app_repository: LedgerHQ/app-boilerplate
+      app_branch_name: master
+      upload_app_binaries_artifact: boilerplate_binaries
+
   build_install_test:
-    name: Build, install and test the library
+    name: Install and test the library
+    needs: build_boilerplate_application
     runs-on: ubuntu-latest
-    env:
-      PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION: python
+
     steps:
     - name: Clone
       uses: actions/checkout@v3
+
     - name: Speculos dependencies
-      run: sudo apt-get update && sudo apt-get install -y qemu-user-static
+      run: sudo apt-get update && sudo apt-get install -y qemu-user-static tesseract-ocr libtesseract-dev
+
     - name: Build & install
       run: |
         pip install --extra-index-url https://test.pypi.org/simple/ -U .[tests,all_backends]
         pip install -U click>=8
-    - name: Gather compiled Boilerplate application to run tests against
-      uses: dawidd6/action-download-artifact@v2
+
+    - name: Download app binaries
+      uses: actions/download-artifact@v3
       with:
-        repo: LedgerHQ/app-boilerplate
-        name: apps
-        workflow: ci-workflow.yml
-        path: tests/elfs/
+        name: boilerplate_binaries
+        path: ./build/
+
     - name: Check the downloaded files
       run: tree .
+
     - name: Run tests and generate coverage
-      run: pytest tests/ --cov ragger --cov-report xml --device all
+      run: pytest -v --tb=short tests/ --cov ragger --cov-report xml --device all
+
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
       with:

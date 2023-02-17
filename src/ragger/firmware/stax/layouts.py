@@ -64,7 +64,7 @@ class _GenericKeyboard(_Layout):
 
     def write(self, word: str):
         for letter in word.lower():
-            logging.info("Writting letter '%s', position '%s'", letter, self.positions[letter])
+            logging.info("Writing letter '%s', position '%s'", letter, self.positions[letter])
             self.client.finger_touch(*self.positions[letter])
 
     def back(self):

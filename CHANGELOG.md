@@ -8,10 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+ - conftest: new module that provides a base_conftest for unifying conftest features
 
 ### Changed
+ - tests: the existing tests now use the new conftest module
+ - CI: the CI now uses the reusable workflows for boilerplate compilation
 
 ### Fixed
+ - tests: all tests are passing for Stax
+ - misspelling fixes and new CI
 
 ## [1.4.0] - 2023-02-09
 
@@ -51,7 +56,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - unified naming of the Ledger Stax product: from `fat` or `fatstacks` to stax
 
 ### Fixed
-- requirements: Removed the dependancy on protobuf package
+- requirements: Removed the dependency on protobuf package
 
 
 ## [1.2.0] - 2023-01-04

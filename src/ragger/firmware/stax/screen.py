@@ -65,7 +65,7 @@ class MetaScreen(type):
 
         screen.header.tap()             # entering the 'info' view
         screen.footer.tap()             # going out the 'info' view
-        screen.keyboard.write("hello")  # writting 'hello' on the keyboard
+        screen.keyboard.write("hello")  # writing 'hello' on the keyboard
         screen.footer.tap()             # going out the 'app' view
         try:
             screen.footer.tap()         # quitting the application

@@ -21,14 +21,10 @@ def app_path_from_app_name(app_dir: Path, app_name: str, device: str) -> Path:
     """
     Builds an application ELF path according to a directory, an application name
     and a device name.
-
-    The resulting path will be formated like:
+    The resulting path will be formatted like:
     ``<directory>/<application name>_<device name>.elf``
-
     Example: ``tests/elfs/exchange_nanox.elf``
-
-    The directory and resulting path existance are checked.
-
+    The directory and resulting path existence are checked.
     :param app_dir: The directory where the application ELF is
     :type app_dir: Path
     :param app_name: The name of the application
@@ -40,6 +36,19 @@ def app_path_from_app_name(app_dir: Path, app_name: str, device: str) -> Path:
     app_path = app_dir / (app_name + "_" + device + ".elf")
     assert app_path.is_file(), f"{app_path} must exist"
     return app_path
+
+
+def _is_root(path_to_check: Path) -> bool:
+    return (path_to_check).resolve() == Path("/").resolve()
+
+
+def find_project_root_dir(origin: Path) -> Path:
+    project_root_dir = origin
+    while not _is_root(project_root_dir) and not (project_root_dir / ".git").resolve().is_dir():
+        project_root_dir = project_root_dir.parent
+    if _is_root(project_root_dir):
+        raise ValueError("Could not find project top directory")
+    return project_root_dir
 
 
 def prefix_with_len(to_prefix: bytes) -> bytes:

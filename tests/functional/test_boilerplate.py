@@ -5,6 +5,7 @@ import pytest
 from ragger.error import ExceptionRAPDU
 from ragger.utils import RAPDU
 from ragger.backend import RaisePolicy
+from ragger.navigator import NavInsID
 
 
 def test_error_returns_not_raises(backend):
@@ -24,11 +25,17 @@ def test_error_raises_not_returns(backend):
 
 
 @pytest.mark.use_on_backend("speculos")
-def test_quit_app(backend, firmware):
-    right_clicks = {'nanos': 3, 'nanox': 3, 'nanosp': 3}
-    for _ in range(right_clicks[firmware.device]):
-        backend.right_click()
+def test_quit_app(backend, firmware, navigator):
+    if firmware.device.startswith("nano"):
+        right_clicks = {'nanos': 3, 'nanox': 3, 'nanosp': 3}
+        for _ in range(right_clicks[firmware.device]):
+            backend.right_click()
 
-    with pytest.raises(ConnectionError):
-        # clicking on "Quit", Speculos then stops and raises
-        backend.both_click()
+        with pytest.raises(ConnectionError):
+            # clicking on "Quit", Speculos then stops and raises
+            backend.both_click()
+
+    else:
+        with pytest.raises(ConnectionError):
+            # clicking on "Quit", Speculos then stops and raises
+            navigator.navigate([NavInsID.USE_CASE_HOME_QUIT])
