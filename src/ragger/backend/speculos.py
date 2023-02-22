@@ -89,7 +89,7 @@ class SpeculosBackend(BackendInterface):
         while not self._screen_content.get("events", []):
             # Give some time to other threads, and mostly Speculos one
             sleep(0.2)
-            if (time() - start > 5.0):
+            if (time() - start > 10.0):
                 raise TimeoutError(
                     "Timeout waiting for screen content upon Ragger Speculos Instance start")
             self._screen_content = self._client.get_current_screen_content()
