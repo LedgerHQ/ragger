@@ -6,6 +6,7 @@ class OptionalOptions:
     SIDELOADED_APPS: dict
     SIDELOADED_APPS_DIR: str
     BACKEND_SCOPE: str
+    CUSTOM_SEED: str
 
 
 OPTIONAL = OptionalOptions(
@@ -25,4 +26,9 @@ OPTIONAL = OptionalOptions(
     # When using "session" all your tests will share a single backend instance (faster)
     # When using "function" each test will have its independent backend instance (no collusion)
     BACKEND_SCOPE="class",
+
+    # Use this parameter if you want speculos to use a custom seed instead of the default one.
+    # This would result in speculos being launched with --seed <CUSTOM_SEED>
+    # If a seed is provided through the "--seed" pytest command line option, it will override this one.
+    CUSTOM_SEED=str(),
 )
