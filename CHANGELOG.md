@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+### Changed
+
+### Fixed
+
+## [1.6.0] - 2023-02-27
+
+### Added
 - navigator: Add USE_CASE_STATUS_DISMISS, this allows to dismiss the status instead of waiting for its end with USE_CASE_STATUS_WAIT.
 - conftest: add configuration and pytest options that allow a custom seed to be used for speculos.
 
