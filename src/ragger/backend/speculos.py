@@ -80,6 +80,20 @@ class SpeculosBackend(BackendInterface):
     def url(self) -> str:
         return f"http://{self._host}:{self._port}"
 
+    def _retrieve_client_screen_content(self) -> dict:
+        raw_content = self._client.get_current_screen_content()
+        # Keep only text events
+        # This removes events such as: {'text': ' ', 'x': 0, 'y': 464}
+        # They probably comes from long press progress bar on Stax
+        # and if not removed they falsely make wait_for_screen_change
+        # consider screen as changed when screen text didn't and that's
+        # what we want here.
+        events = []
+        for event in raw_content.get("events", []):
+            if event.get("text", "").strip():
+                events.append(event)
+        return {"events": events}
+
     def __enter__(self) -> "SpeculosBackend":
         self.logger.info(f"Starting {self.__class__.__name__} stream")
         self._client.__enter__()
@@ -92,7 +106,7 @@ class SpeculosBackend(BackendInterface):
             if (time() - start > 10.0):
                 raise TimeoutError(
                     "Timeout waiting for screen content upon Ragger Speculos Instance start")
-            self._screen_content = self._client.get_current_screen_content()
+            self._screen_content = self._retrieve_client_screen_content()
 
         return self
 
@@ -173,26 +187,26 @@ class SpeculosBackend(BackendInterface):
             return screenshot_equal(f"{golden_snap_path}", snap)
 
     def get_current_screen_content(self) -> dict:
-        self._screen_content = self._client.get_current_screen_content()
+        self._screen_content = self._retrieve_client_screen_content()
         return self._screen_content
 
     def compare_screen_with_text(self, text: str) -> bool:
-        return text in dumps(self._client.get_current_screen_content())
+        return text in dumps(self._retrieve_client_screen_content())
 
     def wait_for_screen_change(self, timeout: float = 10.0) -> None:
         start = time()
-        content = self._client.get_current_screen_content()
+        content = self._retrieve_client_screen_content()
         while content == self._screen_content:
             # Give some time to other threads, and mostly Speculos one
             sleep(0.2)
             if (time() - start > timeout):
                 raise TimeoutError("Timeout waiting for screen change")
-            content = self._client.get_current_screen_content()
+            content = self._retrieve_client_screen_content()
 
         # Speculos has received at least one new event to redisplay the screen
         # Wait a bit to ensure the event batch is received and processed by Speculos before returning
         sleep(0.2)
 
         # Update self._screen_content to use it as reference for next calls
-        self._screen_content = self._client.get_current_screen_content()
+        self._screen_content = self._retrieve_client_screen_content()
         self.logger.info(f"Received new screen event '{self._screen_content}'")
