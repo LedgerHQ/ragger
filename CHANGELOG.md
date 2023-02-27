@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - navigator: Add USE_CASE_STATUS_DISMISS, this allows to dismiss the status instead of waiting for its end with USE_CASE_STATUS_WAIT.
 
 ### Changed
+- Dependency: Use speculos>=0.1.224 to avoid issues when running in slow setup.
 
 ### Fixed
  - backend: speculos.py: Strip empty text events from Speculos. This avoid false detection of screen change in navigation.
