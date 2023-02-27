@@ -15,11 +15,11 @@
 <polygon fill="antiquewhite" stroke="antiquewhite" points="8198.1,-452.5 8198.1,-790.5 9171.1,-790.5 9171.1,-452.5 8198.1,-452.5"/>
 <text text-anchor="start" x="8621.6" y="-775.3" font-family="Times,serif" font-size="14.00">BackendInterface</text>
 <polyline fill="none" stroke="antiquewhite" points="8198.1,-767.5 9171.1,-767.5 "/>
-<text text-anchor="start" x="8522.6" y="-752.3" font-family="Times,serif" font-size="14.00">apdu_logger : RootLogger, NoneType, Logger</text>
-<text text-anchor="start" x="8522.6" y="-737.3" font-family="Times,serif" font-size="14.00">firmware</text>
-<text text-anchor="start" x="8522.6" y="-722.3" font-family="Times,serif" font-size="14.00">last_async_response</text>
-<text text-anchor="start" x="8522.6" y="-707.3" font-family="Times,serif" font-size="14.00">logger : Logger, NoneType, RootLogger</text>
-<text text-anchor="start" x="8522.6" y="-692.3" font-family="Times,serif" font-size="14.00">raise_policy : RAISE_ALL_BUT_0x9000</text>
+<text text-anchor="start" x="8523.6" y="-752.3" font-family="Times,serif" font-size="14.00">apdu_logger : Logger, RootLogger, NoneType</text>
+<text text-anchor="start" x="8523.6" y="-737.3" font-family="Times,serif" font-size="14.00">firmware</text>
+<text text-anchor="start" x="8523.6" y="-722.3" font-family="Times,serif" font-size="14.00">last_async_response</text>
+<text text-anchor="start" x="8523.6" y="-707.3" font-family="Times,serif" font-size="14.00">logger : Logger, RootLogger, NoneType</text>
+<text text-anchor="start" x="8523.6" y="-692.3" font-family="Times,serif" font-size="14.00">raise_policy : RAISE_ALL_BUT_0x9000</text>
 <polyline fill="none" stroke="antiquewhite" points="8198.1,-684.5 9171.1,-684.5 "/>
 <text text-anchor="start" x="8206.1" y="-670.3" font-family="Times,serif" font-style="italic" font-size="14.00">both_click</text>
 <text text-anchor="start" x="8278.1" y="-670.3" font-family="Times,serif" font-size="14.00">(): None</text>
@@ -748,14 +748,15 @@
 <!-- ragger.conftest.configuration.OptionalOptions -->
 <g id="node25" class="node">
 <title>ragger.conftest.configuration.OptionalOptions</title>
-<polygon fill="burlywood" stroke="burlywood" points="11037.6,-8 11037.6,-107 11267.6,-107 11267.6,-8 11037.6,-8"/>
-<text text-anchor="start" x="11094.1" y="-91.8" font-family="Times,serif" font-size="14.00">OptionalOptions</text>
-<polyline fill="none" stroke="burlywood" points="11037.6,-84 11267.6,-84 "/>
-<text text-anchor="start" x="11045.6" y="-68.8" font-family="Times,serif" font-size="14.00">BACKEND_SCOPE : str</text>
-<text text-anchor="start" x="11045.6" y="-53.8" font-family="Times,serif" font-size="14.00">SIDELOADED_APPS : dict</text>
-<text text-anchor="start" x="11045.6" y="-38.8" font-family="Times,serif" font-size="14.00">SIDELOADED_APPS_DIR : str</text>
-<polyline fill="none" stroke="burlywood" points="11037.6,-31 11267.6,-31 "/>
-<text text-anchor="start" x="11150.1" y="-15.8" font-family="Times,serif" font-size="14.00"> </text>
+<polygon fill="burlywood" stroke="burlywood" points="11037.6,-0.5 11037.6,-114.5 11267.6,-114.5 11267.6,-0.5 11037.6,-0.5"/>
+<text text-anchor="start" x="11094.1" y="-99.3" font-family="Times,serif" font-size="14.00">OptionalOptions</text>
+<polyline fill="none" stroke="burlywood" points="11037.6,-91.5 11267.6,-91.5 "/>
+<text text-anchor="start" x="11045.6" y="-76.3" font-family="Times,serif" font-size="14.00">BACKEND_SCOPE : str</text>
+<text text-anchor="start" x="11045.6" y="-61.3" font-family="Times,serif" font-size="14.00">CUSTOM_SEED : str</text>
+<text text-anchor="start" x="11045.6" y="-46.3" font-family="Times,serif" font-size="14.00">SIDELOADED_APPS : dict</text>
+<text text-anchor="start" x="11045.6" y="-31.3" font-family="Times,serif" font-size="14.00">SIDELOADED_APPS_DIR : str</text>
+<polyline fill="none" stroke="burlywood" points="11037.6,-23.5 11267.6,-23.5 "/>
+<text text-anchor="start" x="11150.1" y="-8.3" font-family="Times,serif" font-size="14.00"> </text>
 </g>
 <!-- ragger.firmware.stax.positions.Position -->
 <g id="node26" class="node">
