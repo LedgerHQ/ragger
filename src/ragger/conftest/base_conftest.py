@@ -28,6 +28,7 @@ def pytest_addoption(parser):
     parser.addoption("--display", action="store_true", default=False)
     parser.addoption("--golden_run", action="store_true", default=False)
     parser.addoption("--log_apdu_file", action="store", default=None)
+    parser.addoption("--seed", action="store", default=None)
 
 
 @pytest.fixture(scope="session")
@@ -49,6 +50,11 @@ def golden_run(pytestconfig):
 def log_apdu_file(pytestconfig):
     filename = pytestconfig.getoption("log_apdu_file")
     return Path(filename).resolve() if filename is not None else None
+
+
+@pytest.fixture(scope="session")
+def cli_user_seed(pytestconfig):
+    return pytestconfig.getoption("seed")
 
 
 @pytest.fixture(scope="session")
@@ -95,7 +101,8 @@ def pytest_generate_tests(metafunc):
         metafunc.parametrize("firmware", fw_list, ids=ids, scope="session")
 
 
-def prepare_speculos_args(root_pytest_dir: Path, firmware: Firmware, display: bool):
+def prepare_speculos_args(root_pytest_dir: Path, firmware: Firmware, display: bool,
+                          cli_user_seed: str):
     speculos_args = []
 
     if display:
@@ -128,6 +135,13 @@ def prepare_speculos_args(root_pytest_dir: Path, firmware: Firmware, display: bo
                 raise ValueError(f"File '{lib_path}' missing. Did you compile for this target?")
             speculos_args.append(f"-l{lib_name}:{lib_path}")
 
+    # Check if custom user seed has been provided through CLI or optional configuration.
+    # CLI user seed has priority over the optional configuration seed.
+    if cli_user_seed:
+        speculos_args += ["--seed", cli_user_seed]
+    elif not len(conf.OPTIONAL.CUSTOM_SEED) == 0:
+        speculos_args += ["--seed", conf.OPTIONAL.CUSTOM_SEED]
+
     return (app_path, {"args": speculos_args})
 
 
@@ -135,13 +149,14 @@ def prepare_speculos_args(root_pytest_dir: Path, firmware: Firmware, display: bo
 # instantiated, and the tests will either run on Speculos or on a physical
 # device depending on the backend
 def create_backend(root_pytest_dir: Path, backend_name: str, firmware: Firmware, display: bool,
-                   log_apdu_file: Optional[Path]):
+                   log_apdu_file: Optional[Path], cli_user_seed: str):
     if backend_name.lower() == "ledgercomm":
         return LedgerCommBackend(firmware=firmware, interface="hid", log_apdu_file=log_apdu_file)
     elif backend_name.lower() == "ledgerwallet":
         return LedgerWalletBackend(firmware=firmware, log_apdu_file=log_apdu_file)
     elif backend_name.lower() == "speculos":
-        app_path, speculos_args = prepare_speculos_args(root_pytest_dir, firmware, display)
+        app_path, speculos_args = prepare_speculos_args(root_pytest_dir, firmware, display,
+                                                        cli_user_seed)
         return SpeculosBackend(app_path,
                                firmware=firmware,
                                log_apdu_file=log_apdu_file,
@@ -152,8 +167,9 @@ def create_backend(root_pytest_dir: Path, backend_name: str, firmware: Firmware,
 
 # Backend scope can be configured by the user
 @pytest.fixture(scope=conf.OPTIONAL.BACKEND_SCOPE)
-def backend(root_pytest_dir, backend_name, firmware, display, log_apdu_file):
-    with create_backend(root_pytest_dir, backend_name, firmware, display, log_apdu_file) as b:
+def backend(root_pytest_dir, backend_name, firmware, display, log_apdu_file, cli_user_seed):
+    with create_backend(root_pytest_dir, backend_name, firmware, display, log_apdu_file,
+                        cli_user_seed) as b:
         yield b
 
 

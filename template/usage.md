@@ -70,5 +70,6 @@ Custom pytest options
     --display                   on Speculos, enables the display of the app screen using QT
     --golden_run                on Speculos, screen comparison functions will save the current screen instead of comparing
     --log_apdu_file <filepath>  log all apdu exchanges to the file in parameter. The previous file content is erased
-``` 
+    --seed                      on Speculos, use the seed (mnemonic) provided.
+```
 
