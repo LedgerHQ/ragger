@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 ### Fixed
+ - backend: speculos.py: Strip empty text events from Speculos. This avoid false detection of screen change in navigation.
 
 ## [1.5.0] - 2023-02-17
 
