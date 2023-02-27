@@ -15,10 +15,10 @@
 <polygon fill="antiquewhite" stroke="antiquewhite" points="8198.1,-452.5 8198.1,-790.5 9171.1,-790.5 9171.1,-452.5 8198.1,-452.5"/>
 <text text-anchor="start" x="8621.6" y="-775.3" font-family="Times,serif" font-size="14.00">BackendInterface</text>
 <polyline fill="none" stroke="antiquewhite" points="8198.1,-767.5 9171.1,-767.5 "/>
-<text text-anchor="start" x="8522.6" y="-752.3" font-family="Times,serif" font-size="14.00">apdu_logger : NoneType, RootLogger, Logger</text>
+<text text-anchor="start" x="8522.6" y="-752.3" font-family="Times,serif" font-size="14.00">apdu_logger : RootLogger, NoneType, Logger</text>
 <text text-anchor="start" x="8522.6" y="-737.3" font-family="Times,serif" font-size="14.00">firmware</text>
 <text text-anchor="start" x="8522.6" y="-722.3" font-family="Times,serif" font-size="14.00">last_async_response</text>
-<text text-anchor="start" x="8522.6" y="-707.3" font-family="Times,serif" font-size="14.00">logger : Logger, RootLogger, NoneType</text>
+<text text-anchor="start" x="8522.6" y="-707.3" font-family="Times,serif" font-size="14.00">logger : Logger, NoneType, RootLogger</text>
 <text text-anchor="start" x="8522.6" y="-692.3" font-family="Times,serif" font-size="14.00">raise_policy : RAISE_ALL_BUT_0x9000</text>
 <polyline fill="none" stroke="antiquewhite" points="8198.1,-684.5 9171.1,-684.5 "/>
 <text text-anchor="start" x="8206.1" y="-670.3" font-family="Times,serif" font-style="italic" font-size="14.00">both_click</text>
@@ -1158,30 +1158,31 @@
 <!-- ragger.firmware.stax.use_cases.UseCaseStatus -->
 <g id="node41" class="node">
 <title>ragger.firmware.stax.use_cases.UseCaseStatus</title>
-<polygon fill="cadetblue" stroke="cadetblue" points="5267.1,-586.1 5267.1,-656.9 5392.1,-656.9 5392.1,-586.1 5267.1,-586.1"/>
-<text text-anchor="start" x="5275.1" y="-641.7" font-family="Times,serif" font-size="14.00">UseCaseStatus</text>
-<polyline fill="none" stroke="cadetblue" points="5267.1,-633.9 5392.1,-633.9 "/>
-<polyline fill="none" stroke="cadetblue" points="5267.1,-609.1 5392.1,-609.1 "/>
-<text text-anchor="start" x="5308.6" y="-593.9" font-family="Times,serif" font-size="14.00">wait()</text>
+<polygon fill="cadetblue" stroke="cadetblue" points="5267.1,-578.6 5267.1,-664.4 5392.1,-664.4 5392.1,-578.6 5267.1,-578.6"/>
+<text text-anchor="start" x="5275.1" y="-649.2" font-family="Times,serif" font-size="14.00">UseCaseStatus</text>
+<polyline fill="none" stroke="cadetblue" points="5267.1,-641.4 5392.1,-641.4 "/>
+<polyline fill="none" stroke="cadetblue" points="5267.1,-616.6 5392.1,-616.6 "/>
+<text text-anchor="start" x="5297.1" y="-601.4" font-family="Times,serif" font-size="14.00">dismiss()</text>
+<text text-anchor="start" x="5297.1" y="-586.4" font-family="Times,serif" font-size="14.00">wait()</text>
 </g>
 <!-- ragger.firmware.stax.use_cases.UseCaseStatus&#45;&gt;ragger.firmware.stax.screen.FullScreen -->
 <g id="edge77" class="edge">
 <title>ragger.firmware.stax.use_cases.UseCaseStatus&#45;&gt;ragger.firmware.stax.screen.FullScreen</title>
-<path fill="none" stroke="black" d="M5336.79,-657.19C5343.82,-701.58 5348.26,-778.22 5307.6,-824 5089.35,-1069.75 4073.51,-1189.71 3664.19,-1228.71"/>
+<path fill="none" stroke="black" d="M5337.91,-664.74C5344.17,-709.86 5346.04,-780.72 5307.6,-824 5089.35,-1069.75 4073.51,-1189.71 3664.19,-1228.71"/>
 <polygon fill="black" stroke="black" points="3663.91,-1228.74 3658.31,-1233.29 3651.96,-1229.87 3657.56,-1225.32 3663.91,-1228.74"/>
 <text text-anchor="middle" x="5340.1" y="-812.8" font-family="Times,serif" font-size="14.00" fill="green">status</text>
 </g>
 <!-- ragger.firmware.stax.use_cases.UseCaseStatus&#45;&gt;ragger.firmware.stax.screen.FullScreen -->
 <g id="edge78" class="edge">
 <title>ragger.firmware.stax.use_cases.UseCaseStatus&#45;&gt;ragger.firmware.stax.screen.FullScreen</title>
-<path fill="none" stroke="black" d="M5310.93,-656.91C5284.08,-702.85 5230.07,-783.16 5160.6,-824 4668.05,-1113.6 3979.91,-1204.64 3663.76,-1232.16"/>
+<path fill="none" stroke="black" d="M5306.36,-664.62C5278.23,-711.38 5226.33,-785.35 5160.6,-824 4668.05,-1113.6 3979.91,-1204.64 3663.76,-1232.16"/>
 <polygon fill="black" stroke="black" points="3663.71,-1232.16 3658.07,-1236.66 3651.75,-1233.19 3657.39,-1228.69 3663.71,-1232.16"/>
 <text text-anchor="middle" x="5236.1" y="-812.8" font-family="Times,serif" font-size="14.00" fill="green">use_case_status</text>
 </g>
 <!-- ragger.firmware.stax.use_cases.UseCaseStatus&#45;&gt;ragger.firmware.stax.use_cases._UseCase -->
 <g id="edge23" class="edge">
 <title>ragger.firmware.stax.use_cases.UseCaseStatus&#45;&gt;ragger.firmware.stax.use_cases._UseCase</title>
-<path fill="none" stroke="black" d="M5348.87,-657.03C5373.74,-697.7 5421.23,-763.21 5482.6,-791 5537.22,-815.73 6518.26,-767.58 6561.6,-809 6663.06,-905.96 6631.55,-1090.84 6606.58,-1185.1"/>
+<path fill="none" stroke="black" d="M5353.47,-664.43C5379.36,-705.25 5424.83,-764.84 5482.6,-791 5537.22,-815.73 6518.26,-767.58 6561.6,-809 6663.06,-905.96 6631.55,-1090.84 6606.58,-1185.1"/>
 <polygon fill="none" stroke="black" points="6603.2,-1184.19 6603.96,-1194.76 6609.95,-1186.03 6603.2,-1184.19"/>
 </g>
 <!-- ragger.firmware.stax.use_cases.UseCaseSubSettings -->
