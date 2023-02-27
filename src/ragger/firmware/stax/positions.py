@@ -221,6 +221,9 @@ POSITIONS_BY_SDK = {
             "confirm": BUTTON_ABOVE_LOWER_MIDDLE,
             "reject": BUTTON_LOWER_MIDDLE,
         },
+        "UseCaseStatus": {
+            "dismiss": CENTER,
+        },
         "UseCaseReview": {
             "tap": CENTER,
             "previous": BUTTON_UPPER_LEFT,

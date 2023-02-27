@@ -67,6 +67,7 @@ class NavInsID(Enum):
     USE_CASE_CHOICE_CONFIRM = auto()
     USE_CASE_CHOICE_REJECT = auto()
     USE_CASE_STATUS_WAIT = auto()
+    USE_CASE_STATUS_DISMISS = auto()
     USE_CASE_REVIEW_TAP = auto()
     USE_CASE_REVIEW_PREVIOUS = auto()
     USE_CASE_REVIEW_REJECT = auto()

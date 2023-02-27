@@ -100,6 +100,9 @@ class UseCaseStatus(_UseCase):
     def wait(self):
         sleep(3)
 
+    def dismiss(self):
+        self.client.finger_touch(*self.positions["dismiss"])
+
 
 class UseCaseReview(_UseCase):
 
