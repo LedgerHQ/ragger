@@ -398,7 +398,7 @@ class Navigator(ABC):
                                         text: str,
                                         path: Optional[Path] = None,
                                         test_case_name: Optional[Path] = None,
-                                        timeout: int = 30,
+                                        timeout: int = 300,
                                         screen_change_before_first_instruction: bool = True,
                                         screen_change_after_last_instruction: bool = True) -> None:
         """
@@ -489,7 +489,7 @@ class Navigator(ABC):
                             navigate_instruction: Union[NavIns, NavInsID],
                             validation_instructions: List[Union[NavIns, NavInsID]],
                             text: str,
-                            timeout: int = 30,
+                            timeout: int = 300,
                             screen_change_before_first_instruction: bool = True,
                             screen_change_after_last_instruction: bool = True) -> None:
         """
