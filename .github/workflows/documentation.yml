@@ -28,7 +28,7 @@ jobs:
         run: (cd doc && make gen_resources)
       - name: Generate the documentation
         run: (cd doc && make html)
-      - name: Upload app binary
+      - name: Upload documentation bundle
         uses: actions/upload-artifact@v3
         with:
           name: documentation

@@ -26,6 +26,9 @@ from ragger.utils import Crop
 
 
 class NavInsID(Enum):
+    """
+    Pre-defined instruction ID to navigate into a device UI.
+    """
     WAIT = auto()
 
     # Navigation instructions that embedded a call to

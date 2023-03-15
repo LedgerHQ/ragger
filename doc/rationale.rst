@@ -1,7 +1,8 @@
 .. _Rationale:
 
-Rationale
-=========
+===========
+ Rationale
+===========
 
 Testing, easily manipulating a Ledger :term:`application` is hard. Although
 :term:`Speculos` strongly eases it, it cannot always replace IRL tests on
@@ -16,7 +17,7 @@ button or sending APDUs. Applications can be complex pieces of software and
 testing one require higher-level code.
 
 Abstracting the backends
-------------------------
+========================
 
 The original goal of ``Ragger`` is to make the manipulation of an
 :term:`application` oblivious of the underlying device. Most applications are
@@ -57,14 +58,14 @@ physical device is documented in the :ref:`tutorial section<Tutorial>`.
 
 
 Easing the development of application clients
----------------------------------------------
+=============================================
 
 On top of abstracting the backend, ``Ragger`` provides tools and mechanisms
 allowing to ease the development of application clients and write more thorough
 tests.
 
 Navigation
-++++++++++
+----------
 
 In particular, ``Ragger`` offers abstraction layers to declare application flows
 without repeating oneself. This is the role of the
@@ -92,3 +93,58 @@ This does not sound like much, but as soon as an application get a bit complex,
 it helps a lot to write code which on the first hand manipulate high-level
 concept as validating a transaction, and on the other hand deal with low-level
 details such as crafting an :term:`APDU` and click on a button at the right time.
+
+Stax screen management
+----------------------
+
+Dealing with UI and user interaction is never simple. Nano devices has only two
+user physical inputs, through the two buttons, which already allows some
+elaborate combinations that could be challenging to test automatically.
+
+With the Stax device and its touchable screen, the number of possibilities
+drastically increases.
+
+``Ragger`` embeds tools allowing to ease the development and the maintenance of
+UI clients. this tools mainly consist of 3 components:
+
+- the :py:class:`layout classes <ragger.firmware.stax.layouts>`, representing
+  the layouts proposed in the NBGL section of the C SDK,
+- the :py:class:`use cases classes <ragger.firmware.stax.use_cases>`,
+  representing the use cases proposed in the NBGL section of the C SDK,
+- the :py:mod:`screen module <ragger.firmware.stax.screen>`, allowing to nest
+  the previous components in a single, centralized object.
+
+.. note::
+
+   If you are familiar with the :term:`NBGL` library, you will notice that
+   ``Ragger`` does not implement a :term:`Page` representation. It will be
+   integrated eventually.
+
+
+These components bring multiple benefits:
+
+- these abstractions prevent to directly use ``(X, Y)`` coordinates to interact
+  with the screen and propose higher-level methods (for instance, when using the
+  :py:class:`UseCaseHome <ragger.firmware.stax.use_cases.UseCaseHome>` use case,
+  going to the settings is triggered with the method ``UseCaseHome.settings()``
+  instead of touching the screen at ``(342, 55)``). The client's code is
+  meaningful.
+- ``Ragger`` internally keeps track of these positions on **every** :term:`SDK`
+  version. If a new SDK version moves a button to other coordinates, the
+  code written with the ``Ragger`` components will stay valid and functional.
+- the :term:`layouts <Layout>` and :term:`use cases <Use Case>` mimic the
+  :term:`NBGL` capabilities, so that the ``Ragger`` client screen architecture
+  is close to the application one.
+- the :py:class:`FullScreen <ragger.firmware.stax.screen.FullScreen>` class
+  embeds every existing :py:class:`layout <ragger.firmware.stax.layouts>` and
+  :py:class:`use case <ragger.firmware.stax.use_cases>` in a single class,
+  providing a fast way of testing an interface without any other configuration.
+- the :py:class:`MetaScreen <ragger.firmware.stax.screen.MetaScreen>` metaclass
+  allows to build custom screen classes nesting the
+  :py:class:`layouts <ragger.firmware.stax.layouts>` and the
+  :py:class:`use cases <ragger.firmware.stax.use_cases>` of your choosing,
+  creating a convenient and meaningful screen object where all UI interactions
+  are centralized.
+
+
+You can find example of these components in the :ref:`tutorial <tutorial_screen>`_.

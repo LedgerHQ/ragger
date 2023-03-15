@@ -74,7 +74,7 @@ class MetaScreen(type):
                                         # stop could raisean error
 
     (Of course the navigation depends on the current application, so this
-    example may not work in most cases).
+    example will not work in most cases).
     """
 
     def __new__(cls, name: str, parents: Tuple, namespace: Dict):

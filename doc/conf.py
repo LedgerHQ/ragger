@@ -58,14 +58,27 @@ from ragger import __version__
 version = __version__
 release = __version__
 
-# Autodoc conf
+## Autodoc conf ##
+
 # Do not skip __init__ methods by default
 def skip(app, what, name, obj, would_skip, options):
     if name == "__init__":
         return False
     return would_skip
 
+# Remove every module documentation string.
+# Prevents to integrate the Licence when using automodule.
+# It is possible to limit the impacted module by filtering with the 'name'
+# argument:
+# `if what == "module" and name in ["ragger.firmware.stax.layouts", ...]:`
+def remove_module_docstring(app, what, name, obj, options, lines):
+    if what == "module":
+        del lines[:]
+
+## Setup ##
+
 def setup(app):
+    app.connect("autodoc-process-docstring", remove_module_docstring)
     app.connect("autodoc-skip-member", skip)
 
 # -- Options for HTML output -------------------------------------------------
