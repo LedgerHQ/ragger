@@ -1,3 +1,5 @@
+.. _tutorial_screen:
+
 Complex UI management - Stax
 ============================
 
@@ -20,9 +22,9 @@ track of button positions, pages layouts and such.
 Study case
 ----------
 
-For instance let's imagine you develop an application with a welcome screen
-with the application icon in the center, a "quit" clickable button on the
-top right and a "info" clickable button on the lower center.
+For instance let's imagine you develop an application with a welcome screen with
+a "start" button in the center, a "quit" button beneath and an "info" button on
+the top right.
 
 If you click on the "quit" button, well the application shuts down.
 
@@ -38,8 +40,8 @@ previous, welcome screen.
    :group: stax_base_group
    :width: 30%
 
-This layouts has three clickable buttons. Basic interaction with them would be
-something like:
+This layouts has three clickable buttons. Low-level interaction with them would
+be something like:
 
 .. code-block:: python
    :linenos:
@@ -60,36 +62,35 @@ this code does. This is a guaranteed path to hard to maintain code.
 
 Moreover, these pixel positions are not guaranteed to last. If the SDK chooses
 to change some button position, or if higher-level graphic objects (such as
-``Pages`` or ``UseCase``) changes the position (nothing prevents them to move
-the "quit" button to the top left), all this code becomes deprecated.
+``Pages`` or ``UseCase``) changes the position - nothing prevents them to move
+the "info" button to the top left -, all this code becomes deprecated.
 
 
 That's why ``Ragger`` mimics the Stax SDK graphics library and provides
 :term:`Layout` and :term:`Use Case` (:term:`Page` will also come soon) classes
 that keep track of every interactive screen elements and expose meaningful
-method to interact with them.
+methods to interact with them.
 
 Layouts
 '''''''
 
-``Ragger``'s :py:class:`Layouts <ragger.firmware.stax.layout._Layout>` and
-:py:class:`UseCases <ragger.firmware.stax.use_case._UseCase>` allows to
-quickly describe an application screens and its attached behavior in a purely
-declarative way, thanks to the
-:py:class:`MetaScreen <ragger.firmware.stax.screen.MetaScreen>` metaclass.
-For instance, with the previously described application:
+``Ragger``'s :mod:`Layouts <ragger.firmware.stax.layouts>` and
+:mod:`UseCases <ragger.firmware.stax.use_cases>` allows to quickly describe an
+application screens and its attached behavior in a purely declarative way,
+thanks to the :class:`MetaScreen <ragger.firmware.stax.screen.MetaScreen>`
+metaclass. For instance, with the previously described application:
 
 .. code-block:: python
    :linenos:
 
 
    from ragger.firmware.stax.screen import MetaScreen
-   from ragger.firmware.stax.layouts import ExitFooter, ExitHeader, InfoFooter
+   from ragger.firmware.stax.layouts import CancelFooter, ExitFooter, InfoHeader
 
    class RecoveryAppScreen(metaclass=MetaScreen)
-       layout_quit = ExitHeader
-       layout_go_to_info_page = InfoFooter
-       layout_return_to_welcome_page = ExitFooter
+       layout_quit = ExitFooter
+       layout_go_to_info_page = InfoHeader
+       layout_return_to_welcome_page = CancelFooter
 
 The metaclass will automatically detect all variables starting with ``layout_``
 and create related attributes when the ``RecoveryAppScreen`` will be
@@ -124,7 +125,7 @@ way than if positions were still necessary:
 .. note::
 
    You may have noticed that the two centered lower buttons (the welcome page
-   "info" button and the info page "return" button) are exactly at the same
+   "quit" button and the info page "return" button) are exactly at the same
    ``(x, y)`` positions, so why bother declaring them twice?
 
    First of all, the buttons may be at the same place, but they don't carry the
@@ -132,7 +133,7 @@ way than if positions were still necessary:
 
    Second, if in a future version the Stax design changes and one of these
    button moves somewhere else on the screen's footer, **the layouts will be
-   updated accordingly** in ``Ragger``, and the ``InfoFooter`` or ``ExitFooter``
+   updated accordingly** in ``Ragger``, and the ``CancelFooter`` or ``ExitFooter``
    will still be valid, hence all code using this class remains valid too.
 
    If these arguments does not convince you, ``Ragger`` provides purely
@@ -143,7 +144,7 @@ Use cases
 '''''''''
 
 But this is not simple enough *yet*. The previously shown screens are very
-common, so common in fact that the SDK provides dedicated
+common, so common in fact that the SDK provides dedicated high-level
 :term:`Use Cases <Use Case>` to simplify their creation.
 
 In this case, there is two. In the SDK, they are named:
@@ -156,7 +157,7 @@ In this case, there is two. In the SDK, they are named:
 
 ``Ragger`` replicates these Use Cases, and provides more meaningful methods on
 top of them. Using Use Cases is very similar to Layouts; they need to be
-declared as attribute of a class using the :py:class:`MetaScreen` metaclass,
+declared as attribute of a class using the :class:`MetaScreen` metaclass,
 and start with ``use_case_``:
 
 .. code-block:: python
@@ -197,7 +198,7 @@ All-in-one solution: the ``FullScreen``
 All these classes helps you tailoring a fairly elegant and straight-forward
 client with meaningful and easy to write screen controls. However if you don't
 feel like crafting you own screen representation, ``Ragger`` comes with a
-:py:class:`FullScreen <ragger.firmware.stax.screen.FullScreen>` class
+:class:`FullScreen <ragger.firmware.stax.screen.FullScreen>` class
 which embeds every existing :term:`Layout` and :term:`Use Case`.
 
 It can be used to quickly instantiate a screen which could work with any
@@ -227,5 +228,5 @@ application screen, as declared button can be totally fictional.
    screen.letter_only_keyboard.write("hello world!")
 
 
-Building custom screens: the ``MetaScreen` metaclass
-----------------------------------------------------
+.. Building custom screens: the ``MetaScreen`` metaclass
+.. ----------------------------------------------------

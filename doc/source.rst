@@ -85,7 +85,7 @@ should expect. This is declared with this class:
 ``ragger.firmware.stax.use_cases``
 ''''''''''''''''''''''''''''''''''
 
-.. autoclass:: ragger.firmware.stax.use_cases
+.. automodule:: ragger.firmware.stax.use_cases
    :members:
    :undoc-members:
 

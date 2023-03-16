@@ -64,6 +64,8 @@ On top of abstracting the backend, ``Ragger`` provides tools and mechanisms
 allowing to ease the development of application clients and write more thorough
 tests.
 
+.. _rationale_navigation:
+
 Navigation
 ----------
 
@@ -147,4 +149,4 @@ These components bring multiple benefits:
   are centralized.
 
 
-You can find example of these components in the :ref:`tutorial <tutorial_screen>`_.
+You can find example of these components in :ref:`this tutorial <tutorial_screen>`.

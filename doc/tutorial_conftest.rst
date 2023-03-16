@@ -186,6 +186,10 @@ application UI being controlled by the test.
 
   ========================================== 1 passed in 0.80s ==========================================
 
+
+More information on the navigator mechanism can be found in the :ref:`rationale
+chapter <rationale_navigation>`.
+
 Comparing snapshots
 +++++++++++++++++++
 
