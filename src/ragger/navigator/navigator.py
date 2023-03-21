@@ -16,6 +16,7 @@
 from abc import ABC
 from enum import auto, Enum
 from pathlib import Path
+from tempfile import NamedTemporaryFile
 from time import time
 from typing import Any, Callable, Dict, List, Optional, Union
 
@@ -215,20 +216,52 @@ class Navigator(ABC):
         if instruction.id not in self._callbacks:
             raise NotImplementedError()
 
-        # Call instruction callback
-        self._callbacks[instruction.id](*instruction.args, **instruction.kwargs)
+        if instruction.id == NavInsID.USE_CASE_REVIEW_CONFIRM:
+            # Specific handling due to the fact that the screen is updated multiple
+            # time with a progress bar during this instruction callback execution.
+            # Indeed, this progress bar implies a screen change with previous screen
+            # content known by the backend.
+            # Therefore simply calling wait_for_screen_change() here will result in
+            # race issues.
+            # That's why we are first backuping the screen content in a temp file.
+            # This screen content is then used to check if the screen changed enough,
+            # e.g. with cropping the progress bar from the screen.
+            with NamedTemporaryFile(suffix='.png') as tmp:
+                tmp_file = Path(tmp.name)
+                # Backup screen content before instruction in tmp file
+                self._backend.compare_screen_with_snapshot(tmp_file,
+                                                           tmp_snap_path=tmp_file,
+                                                           golden_run=True)
 
-        # Wait for screen change unless explicitly specify otherwise
-        if wait_for_screen_change:
-            if instruction.id == NavInsID.WAIT_FOR_SCREEN_CHANGE or \
-               instruction.id == NavInsID.WAIT_FOR_HOME_SCREEN or \
-               instruction.id == NavInsID.WAIT_FOR_TEXT_ON_SCREEN or \
-               instruction.id == NavInsID.WAIT_FOR_TEXT_NOT_ON_SCREEN:
-                # Function wait_for_screen_change() is already called during
-                # instruction callback execution above.
-                pass
-            else:
-                self._backend.wait_for_screen_change(timeout)
+                # Call instruction callback
+                self._callbacks[instruction.id](*instruction.args, **instruction.kwargs)
+
+                # Wait for screen change unless explicitly specify otherwise
+                if wait_for_screen_change:
+                    # Compare to previous backup file without considering the bottom
+                    # which holds the progress bar.
+                    cropping = Crop(lower=220)
+                    endtime = time() + timeout
+                    while True:
+                        self._backend.wait_for_screen_change(endtime - time())
+                        if not self._backend.compare_screen_with_snapshot(tmp_file, cropping):
+                            break
+
+        else:
+            # Call instruction callback
+            self._callbacks[instruction.id](*instruction.args, **instruction.kwargs)
+
+            # Wait for screen change unless explicitly specify otherwise
+            if wait_for_screen_change:
+                if instruction.id == NavInsID.WAIT_FOR_SCREEN_CHANGE or \
+                   instruction.id == NavInsID.WAIT_FOR_HOME_SCREEN or \
+                   instruction.id == NavInsID.WAIT_FOR_TEXT_ON_SCREEN or \
+                   instruction.id == NavInsID.WAIT_FOR_TEXT_NOT_ON_SCREEN:
+                    # Function wait_for_screen_change() is already called during
+                    # instruction callback execution above.
+                    pass
+                else:
+                    self._backend.wait_for_screen_change(timeout)
 
         # Compare snap with golden reference
         if path and test_case_name:

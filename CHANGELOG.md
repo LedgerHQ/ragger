@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - navigator: Add a call to `wait_for_screen_change()` in `navigate()` similarly to what is done in `navigate_and_compare()`.
 
 ### Fixed
+- navigator: Sanitize the behavior of `USE_CASE_REVIEW_CONFIRM` navigation instruction.
 
 ## [1.6.0] - 2023-02-27
 
