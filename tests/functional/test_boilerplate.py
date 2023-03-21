@@ -48,7 +48,9 @@ def test_quit_app(backend, firmware, navigator):
 
         with pytest.raises(ConnectionError):
             # clicking on "Quit", Speculos then stops and raises
-            navigator.navigate([NavInsID.USE_CASE_HOME_QUIT])
+            navigator.navigate([NavInsID.USE_CASE_HOME_QUIT],
+                               screen_change_before_first_instruction=False,
+                               screen_change_after_last_instruction=False)
             time.sleep(1)
 
             # Then a new dummy touch should raise a ConnectionError

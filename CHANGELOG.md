@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
+- backend: speculos: Based `wait_for_screen_change()` on screenshot comparison where it was previously based on OCR content.
+- backend: speculos: Remove internal screen content reference update from `get_current_screen_content()`.
+- navigator: Add a call to `wait_for_screen_change()` in `navigate()` similarly to what is done in `navigate_and_compare()`.
 
 ### Fixed
 

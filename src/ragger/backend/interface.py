@@ -348,8 +348,8 @@ class BackendInterface(ABC):
     @abstractmethod
     def wait_for_screen_change(self, timeout: float = 10.0) -> None:
         """
-        Wait until the screen content (text) changes compared to the last
-        reference stored stored internally by the backend.
+        Wait until the screen content changes compared to the last
+        reference stored internally by the backend.
 
         This method may be left void on backends connecting to physical devices,
         where a physical interaction must be performed instead.
@@ -392,8 +392,6 @@ class BackendInterface(ABC):
     def get_current_screen_content(self) -> Any:
         """
         Returns the current screen content.
-        This also update the screen content reference stored stored internally
-        by the backend.
 
         This method may be left void on backends connecting to physical devices,
         where a physical interaction must be performed instead.
