@@ -13,8 +13,6 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-from time import sleep
-
 from ragger.backend import BackendInterface
 from ragger.firmware import Firmware
 from .positions import POSITIONS_BY_SDK
@@ -96,9 +94,6 @@ class UseCaseChoice(_UseCase):
 
 
 class UseCaseStatus(_UseCase):
-
-    def wait(self):
-        sleep(3)
 
     def dismiss(self):
         self.client.finger_touch(*self.positions["dismiss"])

@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - backend: speculos: Based `wait_for_screen_change()` on screenshot comparison where it was previously based on OCR content.
 - backend: speculos: Remove internal screen content reference update from `get_current_screen_content()`.
 - navigator: Add a call to `wait_for_screen_change()` in `navigate()` similarly to what is done in `navigate_and_compare()`.
+- navigator: Remove `USE_CASE_STATUS_WAIT` instruction, it should be replaced by `USE_CASE_STATUS_WAIT`.
 
 ### Fixed
 - navigator: Sanitize the behavior of `USE_CASE_REVIEW_CONFIRM` navigation instruction.
