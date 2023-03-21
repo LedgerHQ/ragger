@@ -28,6 +28,10 @@ class StaxNavigator(Navigator):
         screen = FullScreen(backend, firmware)
         callbacks: Dict[NavInsID, Callable] = {
             NavInsID.WAIT: sleep,
+            NavInsID.WAIT_FOR_SCREEN_CHANGE: backend.wait_for_screen_change,
+            NavInsID.WAIT_FOR_HOME_SCREEN: backend.wait_for_home_screen,
+            NavInsID.WAIT_FOR_TEXT_ON_SCREEN: backend.wait_for_text_on_screen,
+            NavInsID.WAIT_FOR_TEXT_NOT_ON_SCREEN: backend.wait_for_text_not_on_screen,
             NavInsID.TOUCH: backend.finger_touch,
             # possible headers
             NavInsID.RIGHT_HEADER_TAP: screen.right_header.tap,

@@ -27,6 +27,13 @@ from ragger.utils import Crop
 class NavInsID(Enum):
     WAIT = auto()
 
+    # Navigation instructions that embedded a call to
+    # wait_for_screen_change()
+    WAIT_FOR_SCREEN_CHANGE = auto()
+    WAIT_FOR_HOME_SCREEN = auto()
+    WAIT_FOR_TEXT_ON_SCREEN = auto()
+    WAIT_FOR_TEXT_NOT_ON_SCREEN = auto()
+
     # Navigation instructions for Nano devices
     RIGHT_CLICK = auto()
     LEFT_CLICK = auto()
@@ -213,7 +220,15 @@ class Navigator(ABC):
 
         # Wait for screen change unless explicitly specify otherwise
         if wait_for_screen_change:
-            self._backend.wait_for_screen_change(timeout)
+            if instruction.id == NavInsID.WAIT_FOR_SCREEN_CHANGE or \
+               instruction.id == NavInsID.WAIT_FOR_HOME_SCREEN or \
+               instruction.id == NavInsID.WAIT_FOR_TEXT_ON_SCREEN or \
+               instruction.id == NavInsID.WAIT_FOR_TEXT_NOT_ON_SCREEN:
+                # Function wait_for_screen_change() is already called during
+                # instruction callback execution above.
+                pass
+            else:
+                self._backend.wait_for_screen_change(timeout)
 
         # Compare snap with golden reference
         if path and test_case_name:

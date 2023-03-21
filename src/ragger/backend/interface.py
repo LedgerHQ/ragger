@@ -17,6 +17,7 @@ from abc import ABC, abstractmethod
 from contextlib import contextmanager
 from enum import Enum, auto
 from pathlib import Path
+from time import time
 from types import TracebackType
 from typing import Optional, Type, Generator, Any
 
@@ -367,6 +368,26 @@ class BackendInterface(ABC):
         """
         raise NotImplementedError
 
+    def wait_for_home_screen(self, timeout: float = 10.0) -> None:
+        """
+        Wait until the screen content is equal to the app home screen.
+
+        This method may be left void on backends connecting to physical devices,
+        where a physical interaction must be performed instead.
+        This will prevent the instrumentation to fail (the void method won't
+        raise `NotImplementedError`), but the instrumentation flow will probably
+        get stuck (on further call to `receive` for instance) until the expected
+        action is performed on the device.
+
+        :param timeout: Maximum time to wait for a screen change before an
+                        exception is raised.
+        :type timeout: float
+
+        :return: None
+        :rtype: NoneType
+        """
+        raise NotImplementedError
+
     @abstractmethod
     def compare_screen_with_text(self, text: str) -> bool:
         """
@@ -387,6 +408,64 @@ class BackendInterface(ABC):
         :rtype: bool
         """
         raise NotImplementedError
+
+    def wait_for_text_on_screen(self, text: str, timeout: float = 10.0) -> None:
+        """
+        Wait until the screen content contains the text string provider.
+
+        This method may be left void on backends connecting to physical devices,
+        where a physical interaction must be performed instead.
+        This will prevent the instrumentation to fail (the void method won't
+        raise `NotImplementedError`), but the instrumentation flow will probably
+        get stuck (on further call to `receive` for instance) until the expected
+        action is performed on the device.
+
+        :param text:
+        :type text: str
+        :param timeout: Maximum time to wait for a screen change before an
+                        exception is raised.
+        :type timeout: float
+
+        :return: None
+        :rtype: NoneType
+        """
+        if self.compare_screen_with_text(text):
+            return
+
+        endtime = time() + timeout
+        while True:
+            self.wait_for_screen_change(endtime - time())
+            if self.compare_screen_with_text(text):
+                return
+
+    def wait_for_text_not_on_screen(self, text: str, timeout: float = 10.0) -> None:
+        """
+        Wait until the screen content does not contains the text string provider.
+
+        This method may be left void on backends connecting to physical devices,
+        where a physical interaction must be performed instead.
+        This will prevent the instrumentation to fail (the void method won't
+        raise `NotImplementedError`), but the instrumentation flow will probably
+        get stuck (on further call to `receive` for instance) until the expected
+        action is performed on the device.
+
+        :param text:
+        :type text: str
+        :param timeout: Maximum time to wait for a screen change before an
+                        exception is raised.
+        :type timeout: float
+
+        :return: None
+        :rtype: NoneType
+        """
+        if not self.compare_screen_with_text(text):
+            return
+
+        endtime = time() + timeout
+        while True:
+            self.wait_for_screen_change(endtime - time())
+            if not self.compare_screen_with_text(text):
+                return
 
     @abstractmethod
     def get_current_screen_content(self) -> Any:

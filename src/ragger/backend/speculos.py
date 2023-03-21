@@ -75,6 +75,7 @@ class SpeculosBackend(BackendInterface):
                                                       **kwargs)
         self._pending: Optional[ApduResponse] = None
         self._last_screenshot: Optional[BytesIO] = None
+        self._home_screenshot: Optional[BytesIO] = None
 
     @property
     def url(self) -> str:
@@ -108,6 +109,9 @@ class SpeculosBackend(BackendInterface):
                     "Timeout waiting for screen content upon Ragger Speculos Instance start")
 
         self._last_screenshot = BytesIO(self._client.get_screenshot())
+
+        # Save current screenshot as _home_screenshot.
+        self._home_screenshot = self._last_screenshot
 
         return self
 
@@ -209,3 +213,13 @@ class SpeculosBackend(BackendInterface):
 
         # Update self._last_screenshot to use it as reference for next calls
         self._last_screenshot = BytesIO(self._client.get_screenshot())
+
+    def wait_for_home_screen(self, timeout: float = 10.0) -> None:
+        if screenshot_equal(self._last_screenshot, self._home_screenshot):
+            return
+
+        endtime = time() + timeout
+        while True:
+            self.wait_for_screen_change(endtime - time())
+            if screenshot_equal(self._last_screenshot, self._home_screenshot):
+                return

@@ -2,11 +2,14 @@ from requests.exceptions import ConnectionError
 
 import pytest
 import time
+from pathlib import Path
 
 from ragger.error import ExceptionRAPDU
 from ragger.utils import RAPDU
 from ragger.backend import RaisePolicy
-from ragger.navigator import NavInsID
+from ragger.navigator import NavInsID, NavIns
+
+ROOT_SCREENSHOT_PATH = Path(__file__).parent.parent.resolve()
 
 
 def test_error_returns_not_raises(backend):
@@ -55,3 +58,71 @@ def test_quit_app(backend, firmware, navigator):
 
             # Then a new dummy touch should raise a ConnectionError
             backend.finger_touch()
+
+
+@pytest.mark.use_on_backend("speculos")
+def test_waiting_screen(backend, firmware, navigator):
+    if firmware.device != "stax":
+        pytest.skip("Don't apply")
+
+    prep_tx_apdu = bytes.fromhex("e006008015058000002c800000008000"
+                                 "00000000000000000000")
+
+    sign_tx_apdu = bytes.fromhex("e0060100310000000000000001de0b29"
+                                 "5669a9fd93d5f28d9ec85e40f4cb697b"
+                                 "ae000000000000029a0c466f72207520"
+                                 "457468446576")
+
+    # Test multiple way to wait for the return for the Home screen after a review.
+
+    # Using USE_CASE_STATUS_DISMISS instruction
+    backend.exchange_raw(prep_tx_apdu)
+    with backend.exchange_async_raw(sign_tx_apdu):
+        navigator.navigate_until_text_and_compare(
+            NavInsID.USE_CASE_REVIEW_TAP,
+            [NavInsID.USE_CASE_REVIEW_CONFIRM, NavInsID.USE_CASE_STATUS_DISMISS], "Hold to sign",
+            ROOT_SCREENSHOT_PATH, "waiting_screen")
+
+    # Using WAIT_FOR_HOME_SCREEN instruction
+    backend.exchange_raw(prep_tx_apdu)
+    with backend.exchange_async_raw(sign_tx_apdu):
+        navigator.navigate_until_text_and_compare(
+            NavInsID.USE_CASE_REVIEW_TAP,
+            [NavInsID.USE_CASE_REVIEW_CONFIRM, NavInsID.WAIT_FOR_HOME_SCREEN], "Hold to sign",
+            ROOT_SCREENSHOT_PATH, "waiting_screen")
+
+    # Using WAIT_FOR_TEXT_ON_SCREEN instruction
+    backend.exchange_raw(prep_tx_apdu)
+    with backend.exchange_async_raw(sign_tx_apdu):
+        navigator.navigate_until_text_and_compare(NavInsID.USE_CASE_REVIEW_TAP, [
+            NavInsID.USE_CASE_REVIEW_CONFIRM,
+            NavIns(NavInsID.WAIT_FOR_TEXT_ON_SCREEN, ("This app confirms actions", ))
+        ], "Hold to sign", ROOT_SCREENSHOT_PATH, "waiting_screen")
+
+    # Using WAIT_FOR_TEXT_NOT_ON_SCREEN instruction
+    backend.exchange_raw(prep_tx_apdu)
+    with backend.exchange_async_raw(sign_tx_apdu):
+        navigator.navigate_until_text_and_compare(NavInsID.USE_CASE_REVIEW_TAP, [
+            NavInsID.USE_CASE_REVIEW_CONFIRM,
+            NavIns(NavInsID.WAIT_FOR_TEXT_NOT_ON_SCREEN, ("TRANSACTION", ))
+        ], "Hold to sign", ROOT_SCREENSHOT_PATH, "waiting_screen")
+
+    # Verify the error flow of WAIT_FOR_TEXT_ON_SCREEN instruction
+    backend.exchange_raw(prep_tx_apdu)
+    with backend.exchange_async_raw(sign_tx_apdu):
+        with pytest.raises(TimeoutError) as error:
+            navigator.navigate_until_text_and_compare(NavInsID.USE_CASE_REVIEW_TAP, [
+                NavInsID.USE_CASE_REVIEW_CONFIRM,
+                NavIns(NavInsID.WAIT_FOR_TEXT_ON_SCREEN, ("WILL NOT BE FOUND", ))
+            ], "Hold to sign", ROOT_SCREENSHOT_PATH, "waiting_screen")
+            assert "Timeout waiting for screen change" in str(error.exception)
+
+    # Verify the error flow of WAIT_FOR_TEXT_ON_SCREEN instruction
+    backend.exchange_raw(prep_tx_apdu)
+    with backend.exchange_async_raw(sign_tx_apdu):
+        with pytest.raises(TimeoutError) as error:
+            navigator.navigate_until_text_and_compare(NavInsID.USE_CASE_REVIEW_TAP, [
+                NavInsID.USE_CASE_REVIEW_CONFIRM,
+                NavIns(NavInsID.WAIT_FOR_TEXT_NOT_ON_SCREEN, ("T", ))
+            ], "Hold to sign", ROOT_SCREENSHOT_PATH, "waiting_screen")
+            assert "Timeout waiting for screen change" in str(error.exception)
