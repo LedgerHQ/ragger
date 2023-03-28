@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+### Changed
+
+### Fixed
+
+## [1.7.0] - 2023-03-28
+
+### Added
 - backend: Add `wait_for_home_screen()`, `wait_for_text_on_screen()` and `wait_for_text_not_on_screen()`.
 - navigator: Add `WAIT_FOR_SCREEN_CHANGE`, `WAIT_FOR_HOME_SCREEN`, `WAIT_FOR_TEXT_ON_SCREEN` and `WAIT_FOR_TEXT_NOT_ON_SCREEN` instructions.
 
