@@ -420,9 +420,7 @@ action is performed on the device.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ragger.backend.BackendInterface.get_current_screen_content">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_current_screen_content</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="headerlink" href="#ragger.backend.BackendInterface.get_current_screen_content" title="Permalink to this definition"></a></dt>
-<dd><p>Returns the current screen content.
-This also update the screen content reference stored stored internally
-by the backend.</p>
+<dd><p>Returns the current screen content.</p>
 <p>This method may be left void on backends connecting to physical devices,
 where a physical interaction must be performed instead.
 This will prevent the instrumentation to fail (the void method won’t
@@ -572,10 +570,9 @@ responsibility</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="ragger.backend.BackendInterface.wait_for_screen_change">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">wait_for_screen_change</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ragger.backend.BackendInterface.wait_for_screen_change" title="Permalink to this definition"></a></dt>
-<dd><p>Wait until the screen content (text) changes compared to the last
-reference stored stored internally by the backend.</p>
+<dt class="sig sig-object py" id="ragger.backend.BackendInterface.wait_for_home_screen">
+<span class="sig-name descname"><span class="pre">wait_for_home_screen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ragger.backend.BackendInterface.wait_for_home_screen" title="Permalink to this definition"></a></dt>
+<dd><p>Wait until the screen content is equal to the app home screen.</p>
 <p>This method may be left void on backends connecting to physical devices,
 where a physical interaction must be performed instead.
 This will prevent the instrumentation to fail (the void method won’t
@@ -586,6 +583,85 @@ action is performed on the device.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>timeout</strong> (<em>float</em>) – Maximum time to wait for a screen change before an
 exception is raised.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>NoneType</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ragger.backend.BackendInterface.wait_for_screen_change">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">wait_for_screen_change</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ragger.backend.BackendInterface.wait_for_screen_change" title="Permalink to this definition"></a></dt>
+<dd><p>Wait until the screen content changes compared to the last
+reference stored internally by the backend.</p>
+<p>This method may be left void on backends connecting to physical devices,
+where a physical interaction must be performed instead.
+This will prevent the instrumentation to fail (the void method won’t
+raise <cite>NotImplementedError</cite>), but the instrumentation flow will probably
+get stuck (on further call to <cite>receive</cite> for instance) until the expected
+action is performed on the device.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>timeout</strong> (<em>float</em>) – Maximum time to wait for a screen change before an
+exception is raised.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>NoneType</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ragger.backend.BackendInterface.wait_for_text_not_on_screen">
+<span class="sig-name descname"><span class="pre">wait_for_text_not_on_screen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ragger.backend.BackendInterface.wait_for_text_not_on_screen" title="Permalink to this definition"></a></dt>
+<dd><p>Wait until the screen content does not contains the text string provider.</p>
+<p>This method may be left void on backends connecting to physical devices,
+where a physical interaction must be performed instead.
+This will prevent the instrumentation to fail (the void method won’t
+raise <cite>NotImplementedError</cite>), but the instrumentation flow will probably
+get stuck (on further call to <cite>receive</cite> for instance) until the expected
+action is performed on the device.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<em>str</em>) – </p></li>
+<li><p><strong>timeout</strong> (<em>float</em>) – Maximum time to wait for a screen change before an
+exception is raised.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>NoneType</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ragger.backend.BackendInterface.wait_for_text_on_screen">
+<span class="sig-name descname"><span class="pre">wait_for_text_on_screen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ragger.backend.BackendInterface.wait_for_text_on_screen" title="Permalink to this definition"></a></dt>
+<dd><p>Wait until the screen content contains the text string provider.</p>
+<p>This method may be left void on backends connecting to physical devices,
+where a physical interaction must be performed instead.
+This will prevent the instrumentation to fail (the void method won’t
+raise <cite>NotImplementedError</cite>), but the instrumentation flow will probably
+get stuck (on further call to <cite>receive</cite> for instance) until the expected
+action is performed on the device.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<em>str</em>) – </p></li>
+<li><p><strong>timeout</strong> (<em>float</em>) – Maximum time to wait for a screen change before an
+exception is raised.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
