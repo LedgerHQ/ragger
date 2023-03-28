@@ -16,6 +16,7 @@
 from abc import ABC
 from enum import auto, Enum
 from pathlib import Path
+from tempfile import NamedTemporaryFile
 from time import time
 from typing import Any, Callable, Dict, List, Optional, Union
 
@@ -26,6 +27,13 @@ from ragger.utils import Crop
 
 class NavInsID(Enum):
     WAIT = auto()
+
+    # Navigation instructions that embedded a call to
+    # wait_for_screen_change()
+    WAIT_FOR_SCREEN_CHANGE = auto()
+    WAIT_FOR_HOME_SCREEN = auto()
+    WAIT_FOR_TEXT_ON_SCREEN = auto()
+    WAIT_FOR_TEXT_NOT_ON_SCREEN = auto()
 
     # Navigation instructions for Nano devices
     RIGHT_CLICK = auto()
@@ -66,7 +74,6 @@ class NavInsID(Enum):
     USE_CASE_SUB_SETTINGS_NEXT = auto()
     USE_CASE_CHOICE_CONFIRM = auto()
     USE_CASE_CHOICE_REJECT = auto()
-    USE_CASE_STATUS_WAIT = auto()
     USE_CASE_STATUS_DISMISS = auto()
     USE_CASE_REVIEW_TAP = auto()
     USE_CASE_REVIEW_PREVIOUS = auto()
@@ -196,26 +203,75 @@ class Navigator(ABC):
                            "registered callbacks")
         self._callbacks[ins_id] = callback
 
-    def navigate(self, instructions: List[Union[NavIns, NavInsID]]):
-        """
-        Navigate on the device according to a set of navigation instructions provided.
+    def _run_instruction(self,
+                         instruction: Union[NavIns, NavInsID],
+                         timeout: float = 10.0,
+                         wait_for_screen_change: bool = True,
+                         path: Optional[Path] = None,
+                         test_case_name: Optional[Path] = None,
+                         snap_idx: int = 0) -> None:
+        if isinstance(instruction, NavInsID):
+            instruction = NavIns(instruction)
+        if instruction.id not in self._callbacks:
+            raise NotImplementedError()
 
-        :param instructions: Set of navigation instructions. Navigation instruction IDs are also
-                             accepted, and will be converted into navigation instruction (without
-                             any argument)
-        :type instructions: List[Union[NavIns, NavInsID]]
+        if instruction.id == NavInsID.USE_CASE_REVIEW_CONFIRM:
+            # Specific handling due to the fact that the screen is updated multiple
+            # time with a progress bar during this instruction callback execution.
+            # Indeed, this progress bar implies a screen change with previous screen
+            # content known by the backend.
+            # Therefore simply calling wait_for_screen_change() here will result in
+            # race issues.
+            # That's why we are first backuping the screen content in a temp file.
+            # This screen content is then used to check if the screen changed enough,
+            # e.g. with cropping the progress bar from the screen.
+            with NamedTemporaryFile(suffix='.png') as tmp:
+                tmp_file = Path(tmp.name)
+                # Backup screen content before instruction in tmp file
+                self._backend.compare_screen_with_snapshot(tmp_file,
+                                                           tmp_snap_path=tmp_file,
+                                                           golden_run=True)
 
-        :raises NotImplementedError: If the navigation instruction is not implemented.
+                # Call instruction callback
+                self._callbacks[instruction.id](*instruction.args, **instruction.kwargs)
 
-        :return: None
-        :rtype: NoneType
-        """
-        for instruction in instructions:
-            if isinstance(instruction, NavInsID):
-                instruction = NavIns(instruction)
-            if instruction.id not in self._callbacks:
-                raise NotImplementedError()
+                # Wait for screen change unless explicitly specify otherwise
+                if wait_for_screen_change:
+                    # Compare to previous backup file without considering the bottom
+                    # which holds the progress bar.
+                    cropping = Crop(lower=220)
+                    endtime = time() + timeout
+                    while True:
+                        self._backend.wait_for_screen_change(endtime - time())
+                        if not self._backend.compare_screen_with_snapshot(tmp_file, cropping):
+                            break
+
+        else:
+            # Call instruction callback
             self._callbacks[instruction.id](*instruction.args, **instruction.kwargs)
+
+            # Wait for screen change unless explicitly specify otherwise
+            if wait_for_screen_change:
+                if instruction.id == NavInsID.WAIT_FOR_SCREEN_CHANGE or \
+                   instruction.id == NavInsID.WAIT_FOR_HOME_SCREEN or \
+                   instruction.id == NavInsID.WAIT_FOR_TEXT_ON_SCREEN or \
+                   instruction.id == NavInsID.WAIT_FOR_TEXT_NOT_ON_SCREEN:
+                    # Function wait_for_screen_change() is already called during
+                    # instruction callback execution above.
+                    pass
+                else:
+                    self._backend.wait_for_screen_change(timeout)
+
+        # Compare snap with golden reference
+        if path and test_case_name:
+            if snap_idx == 0:
+                snaps_tmp_path = self._init_snaps_temp_dir(path, test_case_name)
+                snaps_golden_path = self._check_snaps_dir_path(path, test_case_name, True)
+            else:
+                snaps_tmp_path = self._get_snaps_dir_path(path, test_case_name, False)
+                snaps_golden_path = self._get_snaps_dir_path(path, test_case_name, True)
+
+            self._compare_snap(snaps_tmp_path, snaps_golden_path, snap_idx)
 
     def navigate_and_compare(self,
                              path: Optional[Path],
@@ -252,32 +308,79 @@ class Navigator(ABC):
         :return: None
         :rtype: NoneType
         """
-        snaps_tmp_path = None
-        snaps_golden_path = None
-        if path and test_case_name:
-            snaps_tmp_path = self._init_snaps_temp_dir(path, test_case_name, snap_start_idx)
-            snaps_golden_path = self._check_snaps_dir_path(path, test_case_name, True)
 
-        if screen_change_before_first_instruction:
-            self._backend.wait_for_screen_change(timeout)
+        # Navigation initialization: no-op instruction to:
+        # - wait for screen change depending on screen_change_before_first_instruction.
+        #   this is necessary:
+        #   - when an APDU was just sent and we want to make sure the screen already
+        #     displays the first review page.
+        #   - when called to finish the execution of a navigate_until_text() call.
+        # - compare the initial screen content with the golden reference if path and
+        #   test_case_name are valid.
+        self._run_instruction(NavIns(NavInsID.WAIT, (0, )),
+                              timeout,
+                              wait_for_screen_change=screen_change_before_first_instruction,
+                              path=path,
+                              test_case_name=test_case_name,
+                              snap_idx=snap_start_idx)
 
-        # First navigate to the last step and take snapshots of every screen in the flow.
         for idx, instruction in enumerate(instructions):
-            if snaps_tmp_path and snaps_golden_path:
-                self._compare_snap(snaps_tmp_path, snaps_golden_path, idx + snap_start_idx)
+            if idx + 1 != len(instructions) or screen_change_after_last_instruction:
+                # Nominal case, either:
+                # - middle instruction
+                # - last instruction but with screen_change_after_last_instruction=True
+                # => wait_for_screen_change()
+                # => screenshot comparison if path and test_case_name are valid
+                self._run_instruction(instruction,
+                                      timeout,
+                                      wait_for_screen_change=True,
+                                      path=path,
+                                      test_case_name=test_case_name,
+                                      snap_idx=snap_start_idx + idx + 1)
+            else:
+                # Last instruction case with screen_change_after_last_instruction=False
+                # => no wait_for_screen_change()
+                # => no screenshot comparison
+                self._run_instruction(instruction,
+                                      timeout,
+                                      wait_for_screen_change=False,
+                                      snap_idx=snap_start_idx + idx + 1)
 
-            self.navigate([instruction])
+    def navigate(self,
+                 instructions: List[Union[NavIns, NavInsID]],
+                 timeout: float = 10.0,
+                 screen_change_before_first_instruction: bool = True,
+                 screen_change_after_last_instruction: bool = True) -> None:
+        """
+        Navigate on the device according to a set of navigation instructions provided.
 
-            if idx != len(instructions) - 1:
-                self._backend.wait_for_screen_change(timeout)
+        :param instructions: Set of navigation instructions. Navigation instruction IDs are also
+                             accepted, and will be converted into navigation instruction (without
+                             any argument)
+        :type instructions: List[Union[NavIns, NavInsID]]
+        :param timeout: Timeout for each navigation step.
+        :type timeout: int
+        :param screen_change_before_first_instruction: Wait for a screen change before first
+                                                       instruction, like a confirmation screen
+                                                       triggered through APDUs.
+        :type screen_change_before_first_instruction: bool
+        :param screen_change_after_last_instruction: Wait for a screen change after last instruction.
+        :type screen_change_after_last_instruction: bool
+        :param snap_start_idx: Index of the first snap for this navigation.
+        :type snap_start_idx: int
 
-        if screen_change_after_last_instruction:
-            self._backend.wait_for_screen_change(timeout)
+        :raises NotImplementedError: If the navigation instruction is not implemented.
 
-            # Compare last screen snapshot
-            if snaps_tmp_path and snaps_golden_path:
-                self._compare_snap(snaps_tmp_path, snaps_golden_path,
-                                   len(instructions) + snap_start_idx)
+        :return: None
+        :rtype: NoneType
+        """
+        self.navigate_and_compare(
+            path=None,
+            test_case_name=None,
+            instructions=instructions,
+            timeout=timeout,
+            screen_change_before_first_instruction=screen_change_before_first_instruction,
+            screen_change_after_last_instruction=screen_change_after_last_instruction)
 
     def navigate_until_snap(self,
                             navigate_instruction: Union[NavIns, NavInsID],
@@ -373,11 +476,11 @@ class Navigator(ABC):
                     raise TimeoutError(f"Timeout waiting for snap {last_golden_snap}")
 
                 # Go to the next screen.
-                self.navigate([navigate_instruction])
+                self._run_instruction(navigate_instruction, wait_for_screen_change=False)
                 img_idx += 1
 
             # Validation action when last snapshot is found.
-            self.navigate([validation_instruction])
+            self._run_instruction(validation_instruction, wait_for_screen_change=False)
 
             # Make sure there is a screen update after the final action.
             start = time()
@@ -437,41 +540,43 @@ class Navigator(ABC):
         :rtype: NoneType
         """
         idx = 0
-        snaps_tmp_path = None
-        snaps_golden_path = None
-
-        if path and test_case_name:
-            snaps_tmp_path = self._init_snaps_temp_dir(path, test_case_name)
-            snaps_golden_path = self._check_snaps_dir_path(path, test_case_name, True)
-
+        start = time()
         if not isinstance(self._backend, SpeculosBackend):
             # TODO remove this once the proper behavior of other backends is implemented.
             return
 
-        start = time()
-
-        if screen_change_before_first_instruction:
-            self._backend.wait_for_screen_change(timeout)
+        # Navigation initialization: no-op instruction to:
+        # - wait for screen change depending on screen_change_before_first_instruction.
+        #   this is necessary when an APDU was just sent and we want to make sure the
+        #   screen already displays the first review page.
+        # - compare the initial screen content with the golden reference if path and
+        #   test_case_name are valid.
+        self._run_instruction(NavIns(NavInsID.WAIT, (0, )),
+                              timeout,
+                              wait_for_screen_change=screen_change_before_first_instruction,
+                              path=path,
+                              test_case_name=test_case_name,
+                              snap_idx=idx)
 
         # Navigate until the text specified in argument is found.
         while True:
-            if snaps_tmp_path and snaps_golden_path:
-                self._compare_snap(snaps_tmp_path, snaps_golden_path, idx)
-
-            if not self._backend.compare_screen_with_text(text):
-                # Go to the next screen.
-                self.navigate([navigate_instruction])
-                idx += 1
-            else:
+            if self._backend.compare_screen_with_text(text):
                 # Validation screen text found, exit the loop
                 break
+            else:
+                # Global navigation loop timeout in case the text is never found.
+                remaining = timeout - (time() - start)
+                if (remaining < 0):
+                    raise TimeoutError(f"Timeout waiting for text {text}")
 
-            # Global navigation loop timeout in case the text is never found.
-            remaining = timeout - (time() - start)
-            if (remaining < 0):
-                raise TimeoutError(f"Timeout waiting for text {text}")
-
-            self._backend.wait_for_screen_change(remaining)
+                # Go to the next screen.
+                idx += 1
+                self._run_instruction(navigate_instruction,
+                                      remaining,
+                                      wait_for_screen_change=True,
+                                      path=path,
+                                      test_case_name=test_case_name,
+                                      snap_idx=idx)
 
         # Perform navigation validation instructions in an "navigate_and_compare" way.
         if validation_instructions:

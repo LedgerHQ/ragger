@@ -8,10 +8,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- backend: Add `wait_for_home_screen()`, `wait_for_text_on_screen()` and `wait_for_text_not_on_screen()`.
+- navigator: Add `WAIT_FOR_SCREEN_CHANGE`, `WAIT_FOR_HOME_SCREEN`, `WAIT_FOR_TEXT_ON_SCREEN` and `WAIT_FOR_TEXT_NOT_ON_SCREEN` instructions.
 
 ### Changed
+- backend: speculos: Based `wait_for_screen_change()` on screenshot comparison where it was previously based on OCR content.
+- backend: speculos: Remove internal screen content reference update from `get_current_screen_content()`.
+- navigator: Add a call to `wait_for_screen_change()` in `navigate()` similarly to what is done in `navigate_and_compare()`.
+- navigator: Remove `USE_CASE_STATUS_WAIT` instruction, it should be replaced by `USE_CASE_STATUS_WAIT`.
 
 ### Fixed
+- navigator: Sanitize the behavior of `USE_CASE_REVIEW_CONFIRM` navigation instruction.
 
 ## [1.6.0] - 2023-02-27
 

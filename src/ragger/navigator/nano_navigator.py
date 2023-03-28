@@ -26,6 +26,10 @@ class NanoNavigator(Navigator):
     def __init__(self, backend: BackendInterface, firmware: Firmware, golden_run: bool = False):
         callbacks: Dict[NavInsID, Callable] = {
             NavInsID.WAIT: sleep,
+            NavInsID.WAIT_FOR_SCREEN_CHANGE: backend.wait_for_screen_change,
+            NavInsID.WAIT_FOR_HOME_SCREEN: backend.wait_for_home_screen,
+            NavInsID.WAIT_FOR_TEXT_ON_SCREEN: backend.wait_for_text_on_screen,
+            NavInsID.WAIT_FOR_TEXT_NOT_ON_SCREEN: backend.wait_for_text_not_on_screen,
             NavInsID.RIGHT_CLICK: backend.right_click,
             NavInsID.LEFT_CLICK: backend.left_click,
             NavInsID.BOTH_CLICK: backend.both_click
