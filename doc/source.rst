@@ -30,6 +30,23 @@ tinker with the ``RaisePolicy``:
    :members:
    :undoc-members:
 
+Concrete backends
++++++++++++++++++
+
+Speculos backend (emulator)
+'''''''''''''''''''''''''''
+
+.. autoclass:: ragger.backend.SpeculosBackend
+   :members:
+
+Physical backends
+'''''''''''''''''
+
+.. autoclass:: ragger.backend.LedgerCommBackend
+   :members:
+
+.. autoclass:: ragger.backend.LedgerWalletBackend
+   :members:
 
 ``ragger.error``
 ----------------
@@ -40,17 +57,6 @@ tinker with the ``RaisePolicy``:
 ``ragger.firmware``
 -------------------
 
-``ragger.firmware.stax``
-++++++++++++++++++++++++
-
-``ragger.firmware.stax.screen``
-'''''''''''''''''''''''''''''''
-
-.. autoclass:: ragger.firmware.stax.screen.MetaScreen
-
-
-.. autoclass:: ragger.firmware.stax.screen.FullScreen
-
 ``ragger.firmware.firmware``
 ++++++++++++++++++++++++++++
 
@@ -59,6 +65,29 @@ should expect. This is declared with this class:
 
 .. autoclass:: ragger.firmware.Firmware
    :members:
+
+``ragger.firmware.stax``
+++++++++++++++++++++++++
+
+``ragger.firmware.stax.screen``
+'''''''''''''''''''''''''''''''
+
+.. automodule:: ragger.firmware.stax.screen
+   :members:
+
+``ragger.firmware.stax.layouts``
+'''''''''''''''''''''''''''''''''
+
+.. automodule:: ragger.firmware.stax.layouts
+   :members:
+   :undoc-members:
+
+``ragger.firmware.stax.use_cases``
+''''''''''''''''''''''''''''''''''
+
+.. automodule:: ragger.firmware.stax.use_cases
+   :members:
+   :undoc-members:
 
 ``ragger.firmware.version``
 +++++++++++++++++++++++++++
@@ -97,6 +126,15 @@ Managed SDK & versions
 
 .. autodata:: ragger.firmware.versions.SDK_VERSIONS
 
+``ragger.navigator``
+--------------------
+
+Interface and instructions
+++++++++++++++++++++++++++
+
+.. automodule:: ragger.navigator.navigator
+   :members:
+   :undoc-members:
 
 ``ragger.utils``
 ----------------
