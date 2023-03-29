@@ -2,8 +2,16 @@ Using and understanding the basis of ``Ragger`` testing capabilities
 ====================================================================
 
 ``Ragger`` is mostly used as a testing framework for Ledger application. To ease
-the integration in such scenario, it includes pre-defined ``pytest`` fixtures and
-pre-made configuration. This section shows how to use them.
+the integration in such scenario, it includes pre-defined ``pytest`` fixtures
+and pre-made configuration. This section shows how to use them.
+
+.. note::
+
+   On top of fixtures, options and other helpers brought by ``Ragger``, the
+   tests written following this page guidance inherit every ``pytest`` base
+   mechanisms, CLI arguments and so on. Refer to its
+   `documentation <https://docs.pytest.org/en/latest/>`_ for further
+   information.
 
 .. contents::
    :local:
