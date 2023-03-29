@@ -57,7 +57,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rationale.html">Rationale</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="source.html">Code documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="faq.html">Frequently Asked Questions</a></li>
@@ -92,7 +92,7 @@
 <span id="id1"></span><h1>Glossary<a class="headerlink" href="#glossary" title="Permalink to this heading"></a></h1>
 <dl class="glossary">
 <dt id="term-APDU">APDU<a class="headerlink" href="#term-APDU" title="Permalink to this term"></a></dt><dd><p><strong>APDU</strong> stands for
-<a class="reference external" href="https://en.wikipedia.org/wiki/Smart_card_application_protocol_data_unit">Application Protocol Data Unit</a>.
+“<a class="reference external" href="https://en.wikipedia.org/wiki/Smart_card_application_protocol_data_unit">Application Protocol Data Unit</a>”.
 It designate a message which is transmitted from a <a class="reference internal" href="#term-Client"><span class="xref std std-term">client</span></a> to an
 <a class="reference internal" href="#term-Application"><span class="xref std std-term">application</span></a>, or the other way around. APDUs transit through USB or
 Bluetooth.</p>
@@ -104,6 +104,15 @@ such as a NanoS, NanoS+ or NanoX.</p>
 <dt id="term-Backend">Backend<a class="headerlink" href="#term-Backend" title="Permalink to this term"></a></dt><dd><p>In <code class="docutils literal notranslate"><span class="pre">Ragger</span></code>, a <strong>backend</strong> is a library which allows to communicate with
 a Ledger cold wallet device, either a real one (like a physical
 NanoS/S+/X), or an emulated one (thanks to <code class="docutils literal notranslate"><span class="pre">Speculos</span></code>).</p>
+</dd>
+<dt id="term-BAGL">BAGL<a class="headerlink" href="#term-BAGL" title="Permalink to this term"></a></dt><dd><p><strong>BAGL</strong> stands for “BOLOS Application Graphics Library”, and is a library
+integrated into the C SDK managing the UI of the NanoS, NanoX and NanoS+
+devices. It is embedded into the <a class="reference internal" href="#term-SDK"><span class="xref std std-term">SDK</span></a></p>
+<p>Its equivalent for <a class="reference internal" href="#term-Stax"><span class="xref std std-term">Stax</span></a> device is <a class="reference internal" href="#term-NBGL"><span class="xref std std-term">NBGL</span></a>.</p>
+</dd>
+<dt id="term-BOLOS">BOLOS<a class="headerlink" href="#term-BOLOS" title="Permalink to this term"></a></dt><dd><p><strong>BOLOS</strong> is <a class="reference external" href="https://www.ledger.com/introducing-bolos-blockchain-open-ledger-operating-system">the operating system running on all Ledger hardware wallets</a>.
+Its code is not open-source. Its capabilities can be used through the
+open-source <a class="reference internal" href="#term-SDK"><span class="xref std std-term">SDK</span></a>.</p>
 </dd>
 <dt id="term-Client">Client<a class="headerlink" href="#term-Client" title="Permalink to this term"></a></dt><dd><p>A client is any piece of software accessing a service made available by a
 server; but in this documentation, a <strong>client</strong> refers to a piece of code
@@ -121,9 +130,10 @@ transaction, changing the configuration, …</p>
 </dd>
 <dt id="term-Golden-snapshot">Golden snapshot<a class="headerlink" href="#term-Golden-snapshot" title="Permalink to this term"></a></dt><dd><p>In <code class="docutils literal notranslate"><span class="pre">Ragger</span></code>, <strong>golden snapshots</strong> are <a class="reference internal" href="#term-Application"><span class="xref std std-term">application</span></a> screen’s
 snapshots which are considered as references. They are used when testing an
-application to check the application behaves as expected.</p>
+application to check the application behaves as expected, by comparing them
+if actual snapshots.</p>
 </dd>
-<dt id="term-Layout">Layout<a class="headerlink" href="#term-Layout" title="Permalink to this term"></a></dt><dd><p>In the Stax SDK, a <strong>Layout</strong> refers to an element displayed on a
+<dt id="term-Layout">Layout<a class="headerlink" href="#term-Layout" title="Permalink to this term"></a></dt><dd><p>In the <a class="reference internal" href="#term-Stax"><span class="xref std std-term">Stax</span></a> SDK, a <strong>Layout</strong> refers to an element displayed on a
 Stax screen. Examples of Layouts can be a button, on a specific
 location, a keyboard, or just a centered text. This name is used in
 <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> to designate the class allowing to interact with a displayed
@@ -139,7 +149,11 @@ with a Ledger device. It is hosted
 with a Ledger device. It is hosted
 <a class="reference external" href="https://github.com/LedgerHQ/ledgerctl/">on GitHub</a></p>
 </dd>
-<dt id="term-Page">Page<a class="headerlink" href="#term-Page" title="Permalink to this term"></a></dt><dd><p>In the Stax SDK, a <strong>Page</strong> refers to a specific displayed Stax
+<dt id="term-NBGL">NBGL<a class="headerlink" href="#term-NBGL" title="Permalink to this term"></a></dt><dd><p><strong>NBGL</strong> stands for “New BOLOS Graphic Library”, and is the successor of
+<a class="reference internal" href="#term-BAGL"><span class="xref std std-term">BAGL</span></a> for more recent devices such as <a class="reference internal" href="#term-Stax"><span class="xref std std-term">Stax</span></a>. It is embedded
+into the <a class="reference internal" href="#term-SDK"><span class="xref std std-term">SDK</span></a>.</p>
+</dd>
+<dt id="term-Page">Page<a class="headerlink" href="#term-Page" title="Permalink to this term"></a></dt><dd><p>In the <a class="reference internal" href="#term-Stax"><span class="xref std std-term">Stax</span></a> SDK, a <strong>Page</strong> refers to a specific displayed Stax
 screen.A welcome page, a setting page are example of Pages. This name is
 also  used in <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> to designate the class allowing to interact with a
 displayed page.</p>
@@ -147,13 +161,23 @@ displayed page.</p>
 <a class="reference internal" href="#term-Use-Case"><span class="xref std std-term">Use Cases</span></a></p>
 </dd>
 <dt id="term-Pytest">Pytest<a class="headerlink" href="#term-Pytest" title="Permalink to this term"></a></dt><dd><p><a class="reference external" href="https://docs.pytest.org/">Pytest</a> is a largely used, open-source Python
-testing tool. Its <code class="docutils literal notranslate"><span class="pre">fixture</span></code> mechanism works neatly with <code class="docutils literal notranslate"><span class="pre">Ragger</span></code>.</p>
+testing tool. Its <code class="docutils literal notranslate"><span class="pre">fixture</span></code> mechanism is integrated into <code class="docutils literal notranslate"><span class="pre">Ragger</span></code>.</p>
 </dd>
-<dt id="term-RAPDU">RAPDU<a class="headerlink" href="#term-RAPDU" title="Permalink to this term"></a></dt><dd><p>“Response APDU”, designates the response of an <a class="reference internal" href="#term-Application"><span class="xref std std-term">application</span></a>
-following an <a class="reference internal" href="#term-APDU"><span class="xref std std-term">APDU</span></a> from the <a class="reference internal" href="#term-Client"><span class="xref std std-term">client</span></a> to the application.</p>
+<dt id="term-RAPDU">RAPDU<a class="headerlink" href="#term-RAPDU" title="Permalink to this term"></a></dt><dd><p>“Response APDU” (<strong>RAPDU</strong>), designates the response of an
+<a class="reference internal" href="#term-Application"><span class="xref std std-term">application</span></a> following an <a class="reference internal" href="#term-APDU"><span class="xref std std-term">APDU</span></a> from the <a class="reference internal" href="#term-Client"><span class="xref std std-term">client</span></a> to
+the application.</p>
 </dd>
 <dt id="term-SDK">SDK<a class="headerlink" href="#term-SDK" title="Permalink to this term"></a></dt><dd><p>The <strong>SDK</strong> is the open-source code allowing an application to be compiled
-for a Ledger cold wallet device. It is hosted on GitHub.</p>
+for a Ledger cold wallet device. On top of an interface to exploit
+<a class="reference internal" href="#term-BOLOS"><span class="xref std std-term">BOLOS</span></a> capabilities, it provides boilerplate functions, graphic
+abstractions and other useful libraries for developing apps.</p>
+<p>It is written in C. Its code for the various devices has been unified into
+<a class="reference external" href="https://github.com/LedgerHQ/ledger-secure-sdk">this GitHub repository</a>,
+although the current NanoS SDK is still based on an older version,
+versioned on <a class="reference external" href="https://github.com/LedgerHQ/nanos-secure-sdk">here</a>.</p>
+<p>A Rust SDK also exists in
+<a class="reference external" href="https://github.com/LedgerHQ/ledger-secure-sdk">this repository</a>,
+but should not yet be taken as production ready.</p>
 </dd>
 <dt id="term-Speculos">Speculos<a class="headerlink" href="#term-Speculos" title="Permalink to this term"></a></dt><dd><p><strong>Speculos</strong> is an open-source Ledger device emulator, allowing easy and
 fast testing of an <a class="reference internal" href="#term-Application"><span class="xref std std-term">application</span></a>. It is hosted
@@ -161,11 +185,15 @@ fast testing of an <a class="reference internal" href="#term-Application"><span 
 <p>It is composed of the emulator itself, and a HTTP client-server module
 allowing to easily control and communicate with said emulator.</p>
 </dd>
-<dt id="term-Use-Case">Use Case<a class="headerlink" href="#term-Use-Case" title="Permalink to this term"></a></dt><dd><p>In the Stax SDK, a <strong>Use Case</strong> refers to a pre-designed :term”<cite>Page</cite>
-or group of Pages. For instance, the settings Use Case manages one or
-several <a class="reference internal" href="#term-Page"><span class="xref std std-term">Pages</span></a> in order to display and change the settings.
-This name is used in <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> to designate the class allowing to interact
-with a Use Case.</p>
+<dt id="term-Stax">Stax<a class="headerlink" href="#term-Stax" title="Permalink to this term"></a></dt><dd><p><strong>Stax</strong> is the latest Ledger device which, in a programmatic point of
+view, mostly differs from previous devices by its richer UI and a touch
+screen, justifying the usage of the new graphic library, <a class="reference internal" href="#term-NBGL"><span class="xref std std-term">NBGL</span></a>.</p>
+</dd>
+<dt id="term-Use-Case">Use Case<a class="headerlink" href="#term-Use-Case" title="Permalink to this term"></a></dt><dd><p>In the <a class="reference internal" href="#term-Stax"><span class="xref std std-term">Stax</span></a> SDK, a <strong>Use Case</strong> refers to a pre-designed
+<a class="reference internal" href="#term-Page"><span class="xref std std-term">Page</span></a> or group of Pages. For instance, the settings Use Case manages
+one or several <a class="reference internal" href="#term-Page"><span class="xref std std-term">Pages</span></a> in order to display and change the
+settings. This name is used in <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> to designate the class allowing
+to interact with a Use Case.</p>
 <p>Use Cases are created from <a class="reference internal" href="#term-Page"><span class="xref std std-term">Pages</span></a> and sometimes
 <a class="reference internal" href="#term-Layout"><span class="xref std std-term">Layouts</span></a></p>
 </dd>

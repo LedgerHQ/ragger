@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Installation &mdash; Ragger 1.6.0 documentation</title>
+  <title>Ragger installation &mdash; Ragger 1.6.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
@@ -26,8 +26,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Rationale" href="rationale.html" />
-    <link rel="prev" title="The Ragger framework" href="index.html" />
+    <link rel="next" title="Using and understanding the basis of Ragger testing capabilities" href="tutorial_conftest.html" />
+    <link rel="prev" title="Tutorials" href="tutorial.html" />
     <link href="_static/layout.css" rel="stylesheet" type="text/css">
 
 </head>
@@ -56,9 +56,14 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">How is this doc structured:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rationale.html">Rationale</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="tutorial.html">Tutorials</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">Ragger</span></code> installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_conftest.html">Using and understanding the basis of <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> testing capabilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_screen.html">Complex UI management - Stax</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="source.html">Code documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="faq.html">Frequently Asked Questions</a></li>
@@ -79,9 +84,10 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Installation</li>
+          <li class="breadcrumb-item"><a href="tutorial.html">Tutorials</a></li>
+      <li class="breadcrumb-item active"><code class="docutils literal notranslate"><span class="pre">Ragger</span></code> installation</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/installation.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/tutorial_installation.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -89,35 +95,34 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="installation">
-<span id="id1"></span><h1>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h1>
-<p><code class="docutils literal notranslate"><span class="pre">Ragger</span></code> is currently available in the test <code class="docutils literal notranslate"><span class="pre">pypi</span></code> repository. It can be
-installed with <code class="docutils literal notranslate"><span class="pre">pip</span></code>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>--extra-index-url<span class="w"> </span>https://test.pypi.org/simple/<span class="w"> </span>ragger
+  <div class="section" id="ragger-installation">
+<h1><code class="docutils literal notranslate"><span class="pre">Ragger</span></code> installation<a class="headerlink" href="#ragger-installation" title="Permalink to this heading"></a></h1>
+<p>First step of all is the installation of <code class="docutils literal notranslate"><span class="pre">Ragger</span></code>. At first, we are going to
+test it with <a class="reference internal" href="glossary.html#term-Speculos"><span class="xref std std-term">Speculos</span></a>, so we are going to install <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> with Speculos
+dependencies:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--extra-index-url<span class="w"> </span>https://test.pypi.org/simple/<span class="w"> </span>ragger<span class="o">[</span>speculos<span class="o">]</span>
 </pre></div>
 </div>
-<p>By default - to avoid wasting useless time and space - the <code class="docutils literal notranslate"><span class="pre">ragger</span></code> package
-comes with no <a class="reference internal" href="glossary.html#term-Backend"><span class="xref std std-term">backend</span></a>. Specific backend can be installed with extras:
-<code class="docutils literal notranslate"><span class="pre">ragger[speculos]</span></code>, <code class="docutils literal notranslate"><span class="pre">ragger[ledgercomm]</span></code>, <code class="docutils literal notranslate"><span class="pre">ragger[ledgerwallet]</span></code>.
-All backends can be installed with <code class="docutils literal notranslate"><span class="pre">ragger[all_backends]</span></code>.</p>
-<div class="admonition note" id="installation-apt">
-<p class="admonition-title">Note</p>
-<p><code class="docutils literal notranslate"><span class="pre">Speculos</span></code> uses the <code class="docutils literal notranslate"><span class="pre">qemu-arm-static</span></code> executable under the hood, so
-you will need to install a system package for this. On Debian-based system,
-this executable lies in the <code class="docutils literal notranslate"><span class="pre">qemu-user-static</span></code> package, which can be
-installed it with:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>qemu-user-static
-</pre></div>
-</div>
-</div>
+<p>Some explanation on arguments:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--extra-index-url</span> <span class="pre">https://test.pypi.org/simple/</span></code> is necessary to get the
+latest version of <code class="docutils literal notranslate"><span class="pre">Ragger</span></code>, as it is currently not deployed on the
+stable <code class="docutils literal notranslate"><span class="pre">pypi</span></code> repositories.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ragger[speculos]</span></code> means than Speculos and its dependencies will also
+be installed. <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> tries to uncouple its dependencies so that only
+what is needed is installed.
+All the extras can be seen
+<a class="reference external" href="https://github.com/LedgerHQ/ragger/blob/develop/setup.cfg#L36-L100">in the setup.cfg</a>
+file.</p></li>
+</ul>
 </div>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="index.html" class="btn btn-neutral float-left" title="The Ragger framework" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="rationale.html" class="btn btn-neutral float-right" title="Rationale" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="tutorial.html" class="btn btn-neutral float-left" title="Tutorials" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tutorial_conftest.html" class="btn btn-neutral float-right" title="Using and understanding the basis of Ragger testing capabilities" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

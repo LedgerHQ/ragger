@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Using and understanding the basis of Ragger testing capabilities &mdash; Ragger 1.6.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" type="text/css" />
+    <link rel="shortcut icon" href="_static/ragger.png"/>
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/clipboard.min.js"></script>
+        <script src="_static/copybutton.js"></script>
+        <script src="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+        <script src="_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Complex UI management - Stax" href="tutorial_screen.html" />
+    <link rel="prev" title="Ragger installation" href="tutorial_installation.html" />
+    <link href="_static/layout.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Ragger
+          </a>
+              <div class="version">
+                1.6.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">How is this doc structured:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rationale.html">Rationale</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="tutorial.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="tutorial_installation.html"><code class="docutils literal notranslate"><span class="pre">Ragger</span></code> installation</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Using and understanding the basis of <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> testing capabilities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#fast-testing-using-the-embedded-ragger-conftest-module">Fast testing: using the embedded <code class="docutils literal notranslate"><span class="pre">ragger.conftest</span></code> module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#what-happened">What happened?</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#a-step-forward-navigating-into-nano-applications">A step forward: navigating into Nano applications</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#basic-navigation-example">Basic navigation example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#comparing-snapshots">Comparing snapshots</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#out-of-the-box-pytest-ragger-tools">Out-of-the-box <code class="docutils literal notranslate"><span class="pre">pytest</span></code> <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> tools</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cli-parameters">CLI parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fixtures-and-decorators">Fixtures and decorators</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_screen.html">Complex UI management - Stax</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source.html">Code documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">Frequently Asked Questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ragger</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="tutorial.html">Tutorials</a></li>
+      <li class="breadcrumb-item active">Using and understanding the basis of <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> testing capabilities</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/tutorial_conftest.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="using-and-understanding-the-basis-of-ragger-testing-capabilities">
+<h1>Using and understanding the basis of <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> testing capabilities<a class="headerlink" href="#using-and-understanding-the-basis-of-ragger-testing-capabilities" title="Permalink to this heading"></a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">Ragger</span></code> is mostly used as a testing framework for Ledger application. To ease
+the integration in such scenario, it includes pre-defined <code class="docutils literal notranslate"><span class="pre">pytest</span></code> fixtures and
+pre-made configuration. This section shows how to use them.</p>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#fast-testing-using-the-embedded-ragger-conftest-module" id="id6">Fast testing: using the embedded <code class="docutils literal notranslate"><span class="pre">ragger.conftest</span></code> module</a></p>
+<ul>
+<li><p><a class="reference internal" href="#what-happened" id="id7">What happened?</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#a-step-forward-navigating-into-nano-applications" id="id8">A step forward: navigating into Nano applications</a></p>
+<ul>
+<li><p><a class="reference internal" href="#basic-navigation-example" id="id9">Basic navigation example</a></p></li>
+<li><p><a class="reference internal" href="#comparing-snapshots" id="id10">Comparing snapshots</a></p>
+<ul>
+<li><p><a class="reference internal" href="#writing-the-test" id="id11">Writing the test</a></p></li>
+<li><p><a class="reference internal" href="#generating-the-golden-snapshots" id="id12">Generating the golden snapshots</a></p></li>
+<li><p><a class="reference internal" href="#assessing-that-the-test-is-right" id="id13">Assessing that the test is right</a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#out-of-the-box-pytest-ragger-tools" id="id14">Out-of-the-box <code class="docutils literal notranslate"><span class="pre">pytest</span></code> <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> tools</a></p>
+<ul>
+<li><p><a class="reference internal" href="#cli-parameters" id="id15">CLI parameters</a></p>
+<ul>
+<li><p><a class="reference internal" href="#controlling-the-backend-backend" id="id16">Controlling the backend (<code class="docutils literal notranslate"><span class="pre">--backend</span></code>)</a></p></li>
+<li><p><a class="reference internal" href="#controlling-the-devices-device" id="id17">Controlling the devices (<code class="docutils literal notranslate"><span class="pre">--device</span></code>)</a></p></li>
+<li><p><a class="reference internal" href="#showing-the-device-interface-during-test-execution-display" id="id18">Showing the device interface during test execution (<code class="docutils literal notranslate"><span class="pre">--display</span></code>)</a></p></li>
+<li><p><a class="reference internal" href="#controlling-the-seed-seed" id="id19">Controlling the seed (<code class="docutils literal notranslate"><span class="pre">--seed</span></code>)</a></p></li>
+<li><p><a class="reference internal" href="#recording-the-screens-golden-run" id="id20">Recording the screens (<code class="docutils literal notranslate"><span class="pre">--golden_run</span></code>)</a></p></li>
+<li><p><a class="reference internal" href="#recording-the-apdus-log-apdu-file" id="id21">Recording the APDUs (<code class="docutils literal notranslate"><span class="pre">--log_apdu_file</span></code>)</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#fixtures-and-decorators" id="id22">Fixtures and decorators</a></p>
+<ul>
+<li><p><a class="reference internal" href="#running-a-test-only-on-a-specific-backend" id="id23">Running a test only on a specific backend</a></p></li>
+<li><p><a class="reference internal" href="#getting-the-value-of-any-cli-argument" id="id24">Getting the value of any CLI argument</a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="fast-testing-using-the-embedded-ragger-conftest-module">
+<h2>Fast testing: using the embedded <code class="docutils literal notranslate"><span class="pre">ragger.conftest</span></code> module<a class="headerlink" href="#fast-testing-using-the-embedded-ragger-conftest-module" title="Permalink to this heading"></a></h2>
+<p>Before creating any file, let’s first create a directory dedicated to the tests.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>tests
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Ragger</span></code> package contains a <code class="docutils literal notranslate"><span class="pre">ragger.conftest</span></code> module, including:</p>
+<ul class="simple">
+<li><p>a <cite>base_conftest.py</cite> module, defining <code class="docutils literal notranslate"><span class="pre">pytest</span></code> fixtures and CLI arguments,</p></li>
+<li><p>a <cite>configuration.py</cite> module, allowing to parametrize the previous fixtures.</p></li>
+</ul>
+<p>As implied, <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> relies on <code class="docutils literal notranslate"><span class="pre">pytest</span></code> to implement its testing
+capabilities. Using these <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> features hence requires a <code class="docutils literal notranslate"><span class="pre">pytest</span></code> setup.</p>
+<p>In particular, <code class="docutils literal notranslate"><span class="pre">pytest</span></code> will fetch its configuration from a <code class="docutils literal notranslate"><span class="pre">conftest.py</span></code>
+file, so in this case one needs to create such a file, and import <code class="docutils literal notranslate"><span class="pre">Ragger</span></code>
+capabilities in it. A minimal <code class="docutils literal notranslate"><span class="pre">conftest.py</span></code> file would be:</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">tests/conftest.py</span><a class="headerlink" href="#id1" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="c1"># This line includes the default `Ragger` configuration.</span>
+<span class="linenos">2</span><span class="c1"># It can be modified to suit local needs</span>
+<span class="linenos">3</span><span class="kn">from</span> <span class="nn">ragger.conftest</span> <span class="kn">import</span> <span class="n">configuration</span>
+<span class="linenos">4</span>
+<span class="linenos">5</span><span class="c1"># This line will be interpreted by `pytest` which will load the code from the</span>
+<span class="linenos">6</span><span class="c1"># given modules, in this case `ragger.conftest.base_conftest`.</span>
+<span class="linenos">7</span><span class="c1"># This module will define several fixtures, parametrized will the fields of</span>
+<span class="linenos">8</span><span class="c1"># `configuration.OPTIONAL` variable.</span>
+<span class="linenos">9</span><span class="n">pytest_plugins</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;ragger.conftest.base_conftest&quot;</span><span class="p">,</span> <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Now let’s write a very basic test which does not do much, but will at least
+allow to use our newly generated fixtures:</p>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">tests/test_first.py</span><a class="headerlink" href="#id2" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="c1"># define the CLA of your application here</span>
+<span class="linenos">2</span><span class="n">CLA</span> <span class="o">=</span> <span class="mh">0xB0</span>
+<span class="linenos">3</span><span class="c1"># define an instruction of your application here</span>
+<span class="linenos">4</span><span class="n">INS</span> <span class="o">=</span> <span class="mh">0x01</span>
+<span class="linenos">5</span>
+<span class="linenos">6</span><span class="k">def</span> <span class="nf">test_communicate</span><span class="p">(</span><span class="n">backend</span><span class="p">):</span>
+<span class="linenos">7</span>    <span class="nb">print</span><span class="p">(</span><span class="n">backend</span><span class="o">.</span><span class="n">exchange</span><span class="p">(</span><span class="n">cla</span><span class="o">=</span><span class="n">CLA</span><span class="p">,</span> <span class="n">ins</span><span class="o">=</span><span class="n">INS</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<p>This test will use the <a class="reference internal" href="source.html#ragger.backend.BackendInterface" title="ragger.backend.BackendInterface"><code class="xref py py-class docutils literal notranslate"><span class="pre">backend</span></code></a>
+fixture in order to run the application into <a class="reference internal" href="glossary.html#term-Speculos"><span class="xref std std-term">Speculos</span></a>. For that, we need
+to access the application ELF file, which is expected to be stored in a specific
+path. This path is in fact exactly where the default Ledger compilation
+environment generates the ELF files, which is
+<code class="docutils literal notranslate"><span class="pre">&lt;git</span> <span class="pre">root</span> <span class="pre">directory&gt;/build/&lt;device</span> <span class="pre">name&gt;/bin/app.elf</span></code>.</p>
+<p>Let’s say we are going to run the test on <code class="docutils literal notranslate"><span class="pre">nanos</span></code> only. The file system should
+at least be like:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>tree<span class="w"> </span>.
+.
+├──<span class="w"> </span>build
+│<span class="w">   </span>└──<span class="w"> </span>nanos
+│<span class="w">       </span>└──<span class="w"> </span>bin
+│<span class="w">           </span>└──<span class="w"> </span>app.elf
+└──<span class="w"> </span>tests
+<span class="w">    </span>├──<span class="w"> </span>conftest.py
+<span class="w">    </span>└──<span class="w"> </span>test_first.py
+</pre></div>
+</div>
+<p>And now to run the tests:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pytest<span class="w"> </span>--device<span class="w"> </span>nanos<span class="w"> </span>tests/<span class="w"> </span>-v
+<span class="o">=========================================</span><span class="w"> </span><span class="nb">test</span><span class="w"> </span>session<span class="w"> </span><span class="nv">starts</span><span class="w"> </span><span class="o">===========================================</span>
+collected<span class="w"> </span><span class="m">1</span><span class="w"> </span>item
+
+tests/test_first.py::test_communicate<span class="o">[</span>nanos<span class="w"> </span><span class="m">2</span>.1<span class="o">]</span><span class="w"> </span>PASSED<span class="w">                                            </span><span class="o">[</span><span class="m">100</span>%<span class="o">]</span>
+
+<span class="o">===========================================</span><span class="w"> </span><span class="m">1</span><span class="w"> </span>passed<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">0</span>.80s<span class="w"> </span><span class="o">===========================================</span>
+</pre></div>
+</div>
+<div class="section" id="what-happened">
+<h3>What happened?<a class="headerlink" href="#what-happened" title="Permalink to this heading"></a></h3>
+<p>This very simple setup actually triggered some interesting events:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">pytest</span></code> automatically loaded the <code class="docutils literal notranslate"><span class="pre">ragger.conftest.base_conftest</span></code> module,
+and generated several fixtures to be used in following tests.</p></li>
+<li><p>one of these fixtures, <code class="docutils literal notranslate"><span class="pre">backend</span></code> is configured with several parameters. We
+did not specified it in the command line, but its type here is
+<a class="reference internal" href="source.html#ragger.backend.SpeculosBackend" title="ragger.backend.SpeculosBackend"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpeculosBackend</span></code></a> (the default
+type).</p>
+<p>This backend exchanges with an application running into the
+<a class="reference internal" href="glossary.html#term-Speculos"><span class="xref std std-term">Speculos</span></a> emulator. For the fixture to automatically start this
+emulator, it needs to know what device it should emulates. That is where comes
+the <code class="docutils literal notranslate"><span class="pre">--device</span> <span class="pre">nanos</span></code> parameter.</p>
+<p>The fixture also needs to access the application ELF. That’s why we have we
+stored it in <code class="docutils literal notranslate"><span class="pre">build/nanos/bin/app.elf</span></code>.</p>
+<p>So when the <code class="docutils literal notranslate"><span class="pre">backend</span></code> fixture is created, it knows it needs to start a NanoS
+simulator in which the <code class="docutils literal notranslate"><span class="pre">app.elf</span></code> application file will be loaded.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pytest</span></code> finally discovers and runs the <code class="docutils literal notranslate"><span class="pre">test_communicate</span></code> test.</p>
+<p>The test receives the <code class="docutils literal notranslate"><span class="pre">backend</span></code> fixture, and uses it to exchange with the
+application running into the emulator. By default, the <code class="docutils literal notranslate"><span class="pre">backend</span></code> is
+configured to raise if the application replies with an error. In our case, the
+test passed, so the emulated application responded with a success status.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="a-step-forward-navigating-into-nano-applications">
+<span id="tutorial-conftest-navigation"></span><h2>A step forward: navigating into Nano applications<a class="headerlink" href="#a-step-forward-navigating-into-nano-applications" title="Permalink to this heading"></a></h2>
+<p>Now let’s imagine we would like to test something with a bit of UI, for instance
+going to the settings and coming back.</p>
+<p id="tutorial-conftest-scenario">The scenario could be something like:</p>
+<ul class="simple">
+<li><p>the application start and displays a message (image <code class="docutils literal notranslate"><span class="pre">00000.png</span></code>),</p></li>
+<li><p>a click on the right button brings the user to a screen with “settings”
+(image <code class="docutils literal notranslate"><span class="pre">00001.png</span></code>),</p></li>
+<li><p>by clicking both buttons, the user enters the settings menu which displays
+some information (image <code class="docutils literal notranslate"><span class="pre">00002.png</span></code>),</p></li>
+<li><p>by clicking the right button again, the screen now displays a cross - a way to
+go back to the home screen (image <code class="docutils literal notranslate"><span class="pre">00003.png</span></code>),</p></li>
+<li><p>by clicking both buttons, the user goes back to the home screen (image
+<code class="docutils literal notranslate"><span class="pre">00004.png</span></code>)</p></li>
+</ul>
+<p>Although this scenario is very simple, we want to test it. How can it be done
+with <code class="docutils literal notranslate"><span class="pre">Ragger</span></code>?</p>
+<p>That’s where the <a class="reference internal" href="source.html#ragger.navigator.navigator.Navigator" title="ragger.navigator.navigator.Navigator"><code class="xref py py-class docutils literal notranslate"><span class="pre">navigator</span></code></a>
+fixture comes into play.</p>
+<div class="section" id="basic-navigation-example">
+<h3>Basic navigation example<a class="headerlink" href="#basic-navigation-example" title="Permalink to this heading"></a></h3>
+<p>All the interactions described before can be implemented with this code:</p>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">tests/test_interface.py</span><a class="headerlink" href="#id3" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span> <span class="nn">ragger.navigator</span> <span class="kn">import</span> <span class="n">NavInsID</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="k">def</span> <span class="nf">test_settings</span><span class="p">(</span><span class="n">navigator</span><span class="p">):</span>
+<span class="linenos"> 4</span>    <span class="n">instructions</span> <span class="o">=</span> <span class="p">[</span>
+<span class="linenos"> 5</span>        <span class="n">NavInsID</span><span class="o">.</span><span class="n">RIGHT_CLICK</span><span class="p">,</span>
+<span class="linenos"> 6</span>        <span class="n">NavInsID</span><span class="o">.</span><span class="n">BOTH_CLICK</span><span class="p">,</span>
+<span class="linenos"> 7</span>        <span class="n">NavInsID</span><span class="o">.</span><span class="n">RIGHT_CLICK</span><span class="p">,</span>
+<span class="linenos"> 8</span>        <span class="n">NavInsID</span><span class="o">.</span><span class="n">BOTH_CLICK</span>
+<span class="linenos"> 9</span>    <span class="p">]</span>
+<span class="linenos">10</span>    <span class="n">navigator</span><span class="o">.</span><span class="n">navigate</span><span class="p">(</span><span class="n">instructions</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>If you run this code with the <code class="docutils literal notranslate"><span class="pre">--display</span></code> CLI argument, you will see the
+application UI being controlled by the test.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pytest<span class="w"> </span>--device<span class="w"> </span>nanos<span class="w"> </span>--display<span class="w"> </span>tests/test_interface.py<span class="w"> </span>-v
+<span class="o">========================================</span><span class="w"> </span><span class="nb">test</span><span class="w"> </span>session<span class="w"> </span><span class="nv">starts</span><span class="w"> </span><span class="o">==========================================</span>
+collected<span class="w"> </span><span class="m">1</span><span class="w"> </span>item
+
+tests/test_first.py::test_settings<span class="o">[</span>nanos<span class="w"> </span><span class="m">2</span>.1<span class="o">]</span><span class="w"> </span>PASSED<span class="w">                                             </span><span class="o">[</span><span class="m">100</span>%<span class="o">]</span>
+
+<span class="o">==========================================</span><span class="w"> </span><span class="m">1</span><span class="w"> </span>passed<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">0</span>.80s<span class="w"> </span><span class="o">==========================================</span>
+</pre></div>
+</div>
+<p>More information on the navigator mechanism can be found in the <a class="reference internal" href="rationale.html#rationale-navigation"><span class="std std-ref">rationale
+chapter</span></a>.</p>
+</div>
+<div class="section" id="comparing-snapshots">
+<h3>Comparing snapshots<a class="headerlink" href="#comparing-snapshots" title="Permalink to this heading"></a></h3>
+<div class="section" id="writing-the-test">
+<h4>Writing the test<a class="headerlink" href="#writing-the-test" title="Permalink to this heading"></a></h4>
+<p>However nothing is tested yet. In order for the test to actually check that the
+crossed screens are the expected ones, we need:</p>
+<ul>
+<li><p>to provide these expected snapshots (the <a class="reference internal" href="glossary.html#term-Golden-snapshot"><span class="xref std std-term">golden snapshots</span></a>)</p></li>
+<li><p>to use the method <a class="reference internal" href="source.html#ragger.navigator.navigator.Navigator.navigate_and_compare" title="ragger.navigator.navigator.Navigator.navigate_and_compare"><code class="xref py py-meth docutils literal notranslate"><span class="pre">navigator.navigate_and_compare</span></code></a>.</p>
+<p>This method requires 3 mandatory arguments:</p>
+<ul class="simple">
+<li><p>the <code class="docutils literal notranslate"><span class="pre">path</span></code> where the directory containing all the snapshot sets is
+located,</p></li>
+<li><p>the <code class="docutils literal notranslate"><span class="pre">test_case_name</span></code>, name of the snapshots test directory</p></li>
+<li><p>the instruction list (just like with <a class="reference internal" href="source.html#ragger.navigator.navigator.Navigator.navigate" title="ragger.navigator.navigator.Navigator.navigate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">navigator.navigate</span></code></a></p></li>
+</ul>
+</li>
+</ul>
+<p>One nice thing with this method and <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> <code class="docutils literal notranslate"><span class="pre">conftest</span></code> module is that these
+snapshots can be automatically generated.</p>
+<p>First, we have to modify our test file to use this method:</p>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">tests/test_interface.py</span><a class="headerlink" href="#id4" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="linenos"> 2</span><span class="kn">from</span> <span class="nn">ragger.navigator</span> <span class="kn">import</span> <span class="n">NavInsID</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="c1"># this will point to the `tests/` directory</span>
+<span class="linenos"> 5</span><span class="n">TEST_DIRECTORY</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span><span class="k">def</span> <span class="nf">test_settings</span><span class="p">(</span><span class="n">navigator</span><span class="p">):</span>
+<span class="linenos"> 8</span>    <span class="n">instructions</span> <span class="o">=</span> <span class="p">[</span>
+<span class="linenos"> 9</span>        <span class="n">NavInsID</span><span class="o">.</span><span class="n">RIGHT_CLICK</span><span class="p">,</span>
+<span class="linenos">10</span>        <span class="n">NavInsID</span><span class="o">.</span><span class="n">BOTH_CLICK</span><span class="p">,</span>
+<span class="linenos">11</span>        <span class="n">NavInsID</span><span class="o">.</span><span class="n">RIGHT_CLICK</span><span class="p">,</span>
+<span class="linenos">12</span>        <span class="n">NavInsID</span><span class="o">.</span><span class="n">BOTH_CLICK</span>
+<span class="linenos">13</span>    <span class="p">]</span>
+<span class="linenos">14</span>    <span class="c1"># navigator.navigate(instructions)</span>
+<span class="linenos">15</span>    <span class="n">navigator</span><span class="o">.</span><span class="n">navigate_and_compare</span><span class="p">(</span>
+<span class="linenos">16</span>        <span class="n">TEST_DIRECTORY</span><span class="p">,</span>
+<span class="linenos">17</span>        <span class="s2">&quot;settings&quot;</span><span class="p">,</span>
+<span class="linenos">18</span>        <span class="n">instructions</span><span class="p">,</span>
+<span class="linenos">19</span>        <span class="n">screen_change_before_first_instruction</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos">20</span>    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">screen_change_before_first_instruction</span></code> set to <code class="docutils literal notranslate"><span class="pre">False</span></code> means we are not
+expecting the application to change by itself, other than through our
+explicit inputs.</p>
+<p>The other way around can be the case, for example when testing the approval
+of a transaction: the test will first wait for a screen change (from the home
+screen to the transaction screen).</p>
+<p>Note that the <code class="docutils literal notranslate"><span class="pre">screen_change_after_last_instruction</span></code> argument also exists.
+We keep it to <code class="docutils literal notranslate"><span class="pre">True</span></code> in our case: we want to test that the last
+<code class="docutils literal notranslate"><span class="pre">BOTH_CLICK</span></code> instruction will bring us back to the home screen.</p>
+</div>
+<p>We can try and run this test, however, it will not work:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pytest<span class="w"> </span>--device<span class="w"> </span>nanos<span class="w"> </span>tests/test_interface.py<span class="w"> </span>-v
+<span class="o">============================================</span><span class="w"> </span><span class="nb">test</span><span class="w"> </span>session<span class="w"> </span><span class="nv">starts</span><span class="w"> </span><span class="o">=============================================</span>
+collected<span class="w"> </span><span class="m">1</span><span class="w"> </span>item
+
+tests/test_interface.py::test_settings<span class="o">[</span>nanos<span class="w"> </span><span class="m">2</span>.1<span class="o">]</span><span class="w"> </span>FAILED<span class="w">                                                </span><span class="o">[</span><span class="m">100</span>%<span class="o">]</span>
+
+<span class="o">==================================================</span><span class="w"> </span><span class="nv">FAILURES</span><span class="w"> </span><span class="o">==================================================</span>
+__________________________________________<span class="w"> </span>test_settings<span class="o">[</span>nanos<span class="w"> </span><span class="m">2</span>.1<span class="o">]</span><span class="w"> </span>__________________________________________
+
+
+<span class="w">                     </span><span class="o">[</span><span class="w"> </span>STACK<span class="w"> </span>TRACE,<span class="w"> </span>STDOUT,<span class="w"> </span>STDERR<span class="w"> </span>AND<span class="w"> </span>OTHER<span class="w"> </span>CLASSIC<span class="w"> </span>PYTEST<span class="w"> </span>FAILURE<span class="w"> </span>INFO<span class="w"> </span><span class="o">]</span>
+
+
+<span class="o">==========================================</span><span class="w"> </span>short<span class="w"> </span><span class="nb">test</span><span class="w"> </span>summary<span class="w"> </span><span class="nv">info</span><span class="w"> </span><span class="o">===========================================</span>
+FAILED<span class="w"> </span>tests/test_interface.py::test_settings<span class="o">[</span>nanos<span class="w"> </span><span class="m">2</span>.1<span class="o">]</span><span class="w"> </span>-<span class="w"> </span>ValueError:<span class="w"> </span>Golden<span class="w"> </span>snapshots<span class="w"> </span>directory
+<span class="o">(</span>/tmp/lol/tests/snapshots/nanos/settings<span class="o">)</span><span class="w"> </span>does<span class="w"> </span>not<span class="w"> </span>exist.
+<span class="o">=============================================</span><span class="w"> </span><span class="m">1</span><span class="w"> </span>failed<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">0</span>.79s<span class="w"> </span><span class="o">==============================================</span>
+</pre></div>
+</div>
+<p>The interesting bit is the last message: <code class="docutils literal notranslate"><span class="pre">Golden</span> <span class="pre">snapshots</span> <span class="pre">directory</span>
+<span class="pre">(/absolute/path/tests/snapshots/nanos/settings)</span> <span class="pre">does</span> <span class="pre">not</span> <span class="pre">exist.</span></code>. Indeed we
+wrote a test which will compare runtime snapshots with some reference ones, but
+did not provided the latter.</p>
+</div>
+<div class="section" id="generating-the-golden-snapshots">
+<h4>Generating the golden snapshots<a class="headerlink" href="#generating-the-golden-snapshots" title="Permalink to this heading"></a></h4>
+<p>So for this test to work, we need to have snapshots to compare to. These are not
+always easy to produce, so <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> provides a convenient way to produce
+them automatically: the <code class="docutils literal notranslate"><span class="pre">--golden_run</span></code> CLI argument.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pytest<span class="w"> </span>--device<span class="w"> </span>nanos<span class="w"> </span>tests/test_interface.py<span class="w"> </span>--golden_run<span class="w"> </span>-v
+<span class="o">========================================</span><span class="w"> </span><span class="nb">test</span><span class="w"> </span>session<span class="w"> </span><span class="nv">starts</span><span class="w"> </span><span class="o">==========================================</span>
+collected<span class="w"> </span><span class="m">1</span><span class="w"> </span>item
+
+tests/test_first.py::test_settings<span class="o">[</span>nanos<span class="w"> </span><span class="m">2</span>.1<span class="o">]</span><span class="w"> </span>PASSED<span class="w">                                             </span><span class="o">[</span><span class="m">100</span>%<span class="o">]</span>
+
+<span class="o">==========================================</span><span class="w"> </span><span class="m">1</span><span class="w"> </span>passed<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">0</span>.80s<span class="w"> </span><span class="o">==========================================</span>
+</pre></div>
+</div>
+<p>The test passed, without any snapshot provided? That’s because this option
+assumes you want to <cite>register</cite> snapshots rather than actually running the test.
+So if we look at the file system now:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>tree<span class="w"> </span>.
+.
+├──<span class="w"> </span>build
+│<span class="w">   </span>└──<span class="w"> </span>nanos
+│<span class="w">       </span>└──<span class="w"> </span>bin
+│<span class="w">           </span>└──<span class="w"> </span>app.elf
+└──<span class="w"> </span>tests
+<span class="w">    </span>├──<span class="w"> </span>conftest.py
+<span class="w">    </span>├──<span class="w"> </span>snapshots
+<span class="w">    </span>│<span class="w">   </span>└──<span class="w"> </span>nanos
+<span class="w">    </span>│<span class="w">       </span>└──<span class="w"> </span>settings
+<span class="w">    </span>│<span class="w">           </span>├──<span class="w"> </span><span class="m">00000</span>.png
+<span class="w">    </span>│<span class="w">           </span>├──<span class="w"> </span><span class="m">00001</span>.png
+<span class="w">    </span>│<span class="w">           </span>├──<span class="w"> </span><span class="m">00002</span>.png
+<span class="w">    </span>│<span class="w">           </span>├──<span class="w"> </span><span class="m">00003</span>.png
+<span class="w">    </span>│<span class="w">           </span>└──<span class="w"> </span><span class="m">00004</span>.png
+<span class="w">    </span>├──<span class="w"> </span>snapshots-tmp
+<span class="w">    </span>│<span class="w">   </span>└──<span class="w"> </span>nanos
+<span class="w">    </span>│<span class="w">       </span>└──<span class="w"> </span>settings
+<span class="w">    </span>│<span class="w">           </span>├──<span class="w"> </span><span class="m">00000</span>.png
+<span class="w">    </span>│<span class="w">           </span>├──<span class="w"> </span><span class="m">00001</span>.png
+<span class="w">    </span>│<span class="w">           </span>├──<span class="w"> </span><span class="m">00002</span>.png
+<span class="w">    </span>│<span class="w">           </span>├──<span class="w"> </span><span class="m">00003</span>.png
+<span class="w">    </span>│<span class="w">           </span>└──<span class="w"> </span><span class="m">00004</span>.png
+<span class="w">    </span>└──<span class="w"> </span>test_interface.py
+</pre></div>
+</div>
+<p>You will notice two new repositories:</p>
+<ul>
+<li><p>a <code class="docutils literal notranslate"><span class="pre">tests/snapshots</span></code> directory has been created. This is due to the
+<code class="docutils literal notranslate"><span class="pre">--golden_run</span></code> argument, which registers all encountered screens into a
+dedicated test suite. As we used <code class="docutils literal notranslate"><span class="pre">TEST_DIRECTORY</span></code> (which is <code class="docutils literal notranslate"><span class="pre">tests/</span></code>) as
+the snapshot root directory, it created a <code class="docutils literal notranslate"><span class="pre">tests/snapshots</span></code> directory.</p>
+<p>The tested device is a <code class="docutils literal notranslate"><span class="pre">nanos</span></code> here, so the test created a
+<code class="docutils literal notranslate"><span class="pre">tests/snapshots/nanos</span></code> directory.</p>
+<p>Finally, we named the test suite <code class="docutils literal notranslate"><span class="pre">&quot;settings&quot;</span></code>, so the snapshots were stored
+into the <code class="docutils literal notranslate"><span class="pre">tests/snapshots/nanos/settings</span></code> directory.</p>
+</li>
+<li><p>a <code class="docutils literal notranslate"><span class="pre">tests/snapshots-tmp</span></code> directory containing the same directories and files than
+the <code class="docutils literal notranslate"><span class="pre">tests/snapshots</span></code> directory. This is a directory which will always be created
+during a test run. <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> will store the captured snapshot here, so that
+you will be able to compare them to the expected ones if a test were to fail.</p>
+<p>In our case, as the snapshots are captured in both time, the comparison always
+succeed.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>As this directory is created by <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> during tests, it is advised to
+not version it, and rather to add <code class="docutils literal notranslate"><span class="pre">snapshots-tmp</span></code> into your <code class="docutils literal notranslate"><span class="pre">.gitignore</span></code>
+file.</p>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="assessing-that-the-test-is-right">
+<h4>Assessing that the test is right<a class="headerlink" href="#assessing-that-the-test-is-right" title="Permalink to this heading"></a></h4>
+<p>At this point, you will need to check the snapshot images into the
+<code class="docutils literal notranslate"><span class="pre">tests/snapshots/nanos/settings/</span></code> directory. If they are what you were
+expecting, then your test is good to go! You can now run it without the
+<code class="docutils literal notranslate"><span class="pre">--golden_run</span></code> argument, and version the tests and the snapshots so that you
+will remain certain that further development modifying this behavior will not go
+unnoticed.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pytest<span class="w"> </span>--device<span class="w"> </span>nanos<span class="w"> </span>tests/test_interface.py<span class="w"> </span>-v
+<span class="o">========================================</span><span class="w"> </span><span class="nb">test</span><span class="w"> </span>session<span class="w"> </span><span class="nv">starts</span><span class="w"> </span><span class="o">==========================================</span>
+collected<span class="w"> </span><span class="m">1</span><span class="w"> </span>item
+
+tests/test_first.py::test_settings<span class="o">[</span>nanos<span class="w"> </span><span class="m">2</span>.1<span class="o">]</span><span class="w"> </span>PASSED<span class="w">                                             </span><span class="o">[</span><span class="m">100</span>%<span class="o">]</span>
+
+<span class="o">==========================================</span><span class="w"> </span><span class="m">1</span><span class="w"> </span>passed<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">0</span>.80s<span class="w"> </span><span class="o">==========================================</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="out-of-the-box-pytest-ragger-tools">
+<h2>Out-of-the-box <code class="docutils literal notranslate"><span class="pre">pytest</span></code> <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> tools<a class="headerlink" href="#out-of-the-box-pytest-ragger-tools" title="Permalink to this heading"></a></h2>
+<p>The previous tutorial explained some feature <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> brings for application
+testing. But there is more!</p>
+<div class="section" id="cli-parameters">
+<h3>CLI parameters<a class="headerlink" href="#cli-parameters" title="Permalink to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">Ragger</span></code> defines several parameters usable from the <code class="docutils literal notranslate"><span class="pre">pytest</span></code> CLI:</p>
+<div class="section" id="controlling-the-backend-backend">
+<h4>Controlling the backend (<code class="docutils literal notranslate"><span class="pre">--backend</span></code>)<a class="headerlink" href="#controlling-the-backend-backend" title="Permalink to this heading"></a></h4>
+<p>It is possible to change the backend on which the tests should run through a CLI
+argument <code class="docutils literal notranslate"><span class="pre">--backend</span></code>. Available backends are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--backend</span> <span class="pre">speculos</span></code>, using the <a class="reference internal" href="source.html#ragger.backend.SpeculosBackend" title="ragger.backend.SpeculosBackend"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpeculosBackend</span></code></a> (the default behavior),</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--backend</span> <span class="pre">ledgercomm</span></code>, using the <a class="reference internal" href="source.html#ragger.backend.LedgerCommBackend" title="ragger.backend.LedgerCommBackend"><code class="xref py py-class docutils literal notranslate"><span class="pre">LedgerCommBackend</span></code></a>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--backend</span> <span class="pre">ledgerwallet</span></code>, using the <a class="reference internal" href="source.html#ragger.backend.LedgerWalletBackend" title="ragger.backend.LedgerWalletBackend"><code class="xref py py-class docutils literal notranslate"><span class="pre">ledgerWalletBackend</span></code></a>.</p></li>
+</ul>
+<p>The two later options are physical backends, meaning they will try to connect to
+the application through the USB ports. So the application should be installed on
+a physical device, connected on the test computer through USB, and the
+application being started on the device, else the tests will not run.</p>
+</div>
+<div class="section" id="controlling-the-devices-device">
+<h4>Controlling the devices (<code class="docutils literal notranslate"><span class="pre">--device</span></code>)<a class="headerlink" href="#controlling-the-devices-device" title="Permalink to this heading"></a></h4>
+<p>Running the tests on specific device is automatically integrated with the
+<code class="docutils literal notranslate"><span class="pre">--device</span></code> argument. Available devices are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--device</span> <span class="pre">nanos</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--device</span> <span class="pre">nanox</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--device</span> <span class="pre">nanosp</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--device</span> <span class="pre">stax</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--device</span> <span class="pre">all</span></code>.</p></li>
+</ul>
+<p>This last option can only work with the <a class="reference internal" href="source.html#ragger.backend.SpeculosBackend" title="ragger.backend.SpeculosBackend"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpeculosBackend</span></code></a> (as other backends rely on a physical device,
+they can only run on the connected one), but is very convenient in a CI to
+perform test campaign on all the devices.</p>
+</div>
+<div class="section" id="showing-the-device-interface-during-test-execution-display">
+<h4>Showing the device interface during test execution (<code class="docutils literal notranslate"><span class="pre">--display</span></code>)<a class="headerlink" href="#showing-the-device-interface-during-test-execution-display" title="Permalink to this heading"></a></h4>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Capability limited to the <a class="reference internal" href="source.html#ragger.backend.SpeculosBackend" title="ragger.backend.SpeculosBackend"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpeculosBackend</span></code></a></p>
+</div>
+<p>With the <a class="reference internal" href="source.html#ragger.backend.SpeculosBackend" title="ragger.backend.SpeculosBackend"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpeculosBackend</span></code></a>, it is
+possible to display the Qt graphical interface of the device, and so to follow
+the actions and displayed screen during the test is executed.</p>
+<p>This can be enabled with the <code class="docutils literal notranslate"><span class="pre">--display</span></code> CLI argument.</p>
+</div>
+<div class="section" id="controlling-the-seed-seed">
+<h4>Controlling the seed (<code class="docutils literal notranslate"><span class="pre">--seed</span></code>)<a class="headerlink" href="#controlling-the-seed-seed" title="Permalink to this heading"></a></h4>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Capability limited to the <a class="reference internal" href="source.html#ragger.backend.SpeculosBackend" title="ragger.backend.SpeculosBackend"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpeculosBackend</span></code></a></p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Remember not to share your production seed. This option should be used only
+with testing, disposable seeds.</p>
+</div>
+<p>By default, the <a class="reference internal" href="source.html#ragger.backend.SpeculosBackend" title="ragger.backend.SpeculosBackend"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpeculosBackend</span></code></a> has
+a fixed seed. It is possible to change its value with the <code class="docutils literal notranslate"><span class="pre">--seed</span></code> CLI argument.</p>
+</div>
+<div class="section" id="recording-the-screens-golden-run">
+<h4>Recording the screens (<code class="docutils literal notranslate"><span class="pre">--golden_run</span></code>)<a class="headerlink" href="#recording-the-screens-golden-run" title="Permalink to this heading"></a></h4>
+<p>Some tests using high-level <a class="reference internal" href="source.html#ragger.navigator.navigator.Navigator" title="ragger.navigator.navigator.Navigator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Navigator</span></code></a> methods comparing snapshots can also
+turn these methods into a “record mode”: instead of comparing snapshots, they
+will store the captured snapshots, with the <code class="docutils literal notranslate"><span class="pre">--golden_run</span></code> CLI argument.
+This is convenient to automatically generate stock of <a class="reference internal" href="glossary.html#term-Golden-snapshot"><span class="xref std std-term">golden snapshots</span></a>.</p>
+</div>
+<div class="section" id="recording-the-apdus-log-apdu-file">
+<h4>Recording the APDUs (<code class="docutils literal notranslate"><span class="pre">--log_apdu_file</span></code>)<a class="headerlink" href="#recording-the-apdus-log-apdu-file" title="Permalink to this heading"></a></h4>
+<p>It can be useful to record all the APDU transmitted between the client and the
+application during a test. the <code class="docutils literal notranslate"><span class="pre">--log_apdu_file</span></code> allows to specify a file
+path in which every <a class="reference internal" href="glossary.html#term-APDU"><span class="xref std std-term">APDU</span></a> and <a class="reference internal" href="glossary.html#term-RAPDU"><span class="xref std std-term">RAPDU</span></a> will be recorded.</p>
+</div>
+</div>
+<div class="section" id="fixtures-and-decorators">
+<h3>Fixtures and decorators<a class="headerlink" href="#fixtures-and-decorators" title="Permalink to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">Ragger</span></code> defines several fixtures and decorators to customize how the tests runs
+or access runtime information:</p>
+<div class="section" id="running-a-test-only-on-a-specific-backend">
+<h4>Running a test only on a specific backend<a class="headerlink" href="#running-a-test-only-on-a-specific-backend" title="Permalink to this heading"></a></h4>
+<p>Some tests should only run on a specific backend. <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> defines a
+<code class="docutils literal notranslate"><span class="pre">pytest</span></code> marker allowing to execute test only on the specified backend:</p>
+<div class="literal-block-wrapper docutils container" id="id5">
+<div class="code-block-caption"><span class="caption-text">tests/test_first.py</span><a class="headerlink" href="#id5" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">pytest</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="n">CLA</span> <span class="o">=</span> <span class="mh">0xB0</span>
+<span class="linenos"> 4</span><span class="n">INS</span> <span class="o">=</span> <span class="mh">0x01</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="c1"># this will prevent this test from running,</span>
+<span class="linenos"> 7</span><span class="c1"># except with the ``--backend ledgercomm`` argument</span>
+<span class="linenos"> 8</span><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">use_on_backend</span><span class="p">(</span><span class="s2">&quot;ledgercomm&quot;</span><span class="p">)</span>
+<span class="linenos"> 9</span><span class="k">def</span> <span class="nf">test_communicate</span><span class="p">(</span><span class="n">backend</span><span class="p">):</span>
+<span class="linenos">10</span>  <span class="nb">print</span><span class="p">(</span><span class="n">backend</span><span class="o">.</span><span class="n">exchange</span><span class="p">(</span><span class="n">cla</span><span class="o">=</span><span class="n">CLA</span><span class="p">,</span> <span class="n">ins</span><span class="o">=</span><span class="n">INS</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pytest<span class="w"> </span>--device<span class="w"> </span>nanos<span class="w"> </span>--backend<span class="w"> </span>speculos<span class="w"> </span>tests/<span class="w"> </span>-v
+
+<span class="o">============================================</span><span class="w"> </span><span class="nb">test</span><span class="w"> </span>session<span class="w"> </span><span class="nv">starts</span><span class="w"> </span><span class="o">=============================================</span>
+collected<span class="w"> </span><span class="m">1</span><span class="w"> </span>item
+
+tests/test_first.py::test_communication<span class="o">[</span>nanos<span class="w"> </span><span class="m">2</span>.1<span class="o">]</span><span class="w"> </span>SKIPPED<span class="w"> </span><span class="o">(</span>skipped<span class="w"> </span>on<span class="w"> </span>this<span class="w"> </span>backend:<span class="w"> </span><span class="s2">&quot;ledgercomm&quot;</span><span class="o">)</span><span class="w">      </span><span class="o">[</span><span class="m">100</span>%<span class="o">]</span>
+
+<span class="o">=============================================</span><span class="w"> </span><span class="m">1</span><span class="w"> </span>skipped<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">0</span>.81s<span class="w"> </span><span class="o">=============================================</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="getting-the-value-of-any-cli-argument">
+<h4>Getting the value of any CLI argument<a class="headerlink" href="#getting-the-value-of-any-cli-argument" title="Permalink to this heading"></a></h4>
+<p>Most argument defined by  <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> into <code class="docutils literal notranslate"><span class="pre">pytest</span></code> can be reached through a
+fixture, and used into any test:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--backend</span></code> is reachable with the <code class="docutils literal notranslate"><span class="pre">backend_name</span></code> fixture,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--display</span></code> is reachable with the <code class="docutils literal notranslate"><span class="pre">display</span></code> fixture,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--golden_run</span></code> is reachable with the <code class="docutils literal notranslate"><span class="pre">golden_run</span></code> fixture,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--log_apdu_file</span></code> is reachable with the <code class="docutils literal notranslate"><span class="pre">log_apdu_file</span></code> fixture,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--seed</span></code> is reachable with the <code class="docutils literal notranslate"><span class="pre">backend_cli_user_seed</span></code> fixture,</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">--device</span></code> is not immediately reachable through a fixture, but it can be found
+with the <code class="docutils literal notranslate"><span class="pre">backend</span></code> fixture: <code class="docutils literal notranslate"><span class="pre">backend.firmware.device</span></code>.</p>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="tutorial_installation.html" class="btn btn-neutral float-left" title="Ragger installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tutorial_screen.html" class="btn btn-neutral float-right" title="Complex UI management - Stax" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, bow.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
