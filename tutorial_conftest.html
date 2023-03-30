@@ -114,8 +114,16 @@
   <div class="section" id="using-and-understanding-the-basis-of-ragger-testing-capabilities">
 <h1>Using and understanding the basis of <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> testing capabilities<a class="headerlink" href="#using-and-understanding-the-basis-of-ragger-testing-capabilities" title="Permalink to this heading"></a></h1>
 <p><code class="docutils literal notranslate"><span class="pre">Ragger</span></code> is mostly used as a testing framework for Ledger application. To ease
-the integration in such scenario, it includes pre-defined <code class="docutils literal notranslate"><span class="pre">pytest</span></code> fixtures and
-pre-made configuration. This section shows how to use them.</p>
+the integration in such scenario, it includes pre-defined <code class="docutils literal notranslate"><span class="pre">pytest</span></code> fixtures
+and pre-made configuration. This section shows how to use them.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>On top of fixtures, options and other helpers brought by <code class="docutils literal notranslate"><span class="pre">Ragger</span></code>, the
+tests written following this page guidance inherit every <code class="docutils literal notranslate"><span class="pre">pytest</span></code> base
+mechanisms, CLI arguments and so on. Refer to its
+<a class="reference external" href="https://docs.pytest.org/en/latest/">documentation</a> for further
+information.</p>
+</div>
 <div class="contents local topic" id="contents">
 <ul class="simple">
 <li><p><a class="reference internal" href="#fast-testing-using-the-embedded-ragger-conftest-module" id="id6">Fast testing: using the embedded <code class="docutils literal notranslate"><span class="pre">ragger.conftest</span></code> module</a></p>
