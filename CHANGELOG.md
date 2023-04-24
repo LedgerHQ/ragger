@@ -10,9 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
-- conftest: Set navigator fixture scope to backend one
 
 ### Fixed
+
+## [1.7.1] - 2023-04-24
+
+### Changed
+- conftest: Set navigator fixture scope to backend one
 
 ## [1.7.0] - 2023-03-28
 
