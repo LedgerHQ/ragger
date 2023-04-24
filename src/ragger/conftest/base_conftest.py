@@ -173,7 +173,7 @@ def backend(root_pytest_dir, backend_name, firmware, display, log_apdu_file, cli
         yield b
 
 
-@pytest.fixture
+@pytest.fixture(scope=conf.OPTIONAL.BACKEND_SCOPE)
 def navigator(backend, firmware, golden_run):
     if firmware.device.startswith("nano"):
         return NanoNavigator(backend, firmware, golden_run)
