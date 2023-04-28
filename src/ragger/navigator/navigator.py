@@ -216,7 +216,7 @@ class Navigator(ABC):
         if isinstance(instruction, NavInsID):
             instruction = NavIns(instruction)
         if instruction.id not in self._callbacks:
-            raise NotImplementedError()
+            raise NotImplementedError(f"No callback registered for instruction ID {instruction.id}")
 
         if instruction.id == NavInsID.USE_CASE_REVIEW_CONFIRM:
             # Specific handling due to the fact that the screen is updated multiple

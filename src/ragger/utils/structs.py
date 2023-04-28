@@ -42,3 +42,7 @@ class RAPDU:
 
     def __str__(self):
         return f'[0x{self.status:02x}] {self.data.hex() if self.data else "<Nothing>"}'
+
+    @property
+    def raw(self):
+        return self.data + self.status.to_bytes(2, 'big')
