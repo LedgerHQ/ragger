@@ -5,6 +5,7 @@ from ragger.firmware import Firmware
 from ragger.backend import SpeculosBackend, LedgerCommBackend, LedgerWalletBackend
 from ragger.navigator import NanoNavigator, StaxNavigator
 from ragger.utils import find_project_root_dir, app_path_from_app_name
+from ragger.utils.misc import get_current_app_name_and_version, exit_current_app, open_app_from_dashboard
 from ragger.logger import get_default_logger
 from dataclasses import fields
 
@@ -170,6 +171,17 @@ def create_backend(root_pytest_dir: Path, backend_name: str, firmware: Firmware,
 def backend(root_pytest_dir, backend_name, firmware, display, log_apdu_file, cli_user_seed):
     with create_backend(root_pytest_dir, backend_name, firmware, display, log_apdu_file,
                         cli_user_seed) as b:
+        if backend_name.lower() != "speculos" and conf.OPTIONAL.APP_NAME:
+            # Make sure the app is restarted as this is what is requested by the fixture scope
+            app_name, version = get_current_app_name_and_version(b)
+            requested_app = conf.OPTIONAL.APP_NAME
+            if app_name == requested_app:
+                exit_current_app(b)
+                b.handle_usb_reset()
+            elif app_name != "BOLOS":
+                raise ValueError(f"Unexpected app opened: {app_name}")
+            open_app_from_dashboard(b, requested_app)
+            b.handle_usb_reset()
         yield b
 
 

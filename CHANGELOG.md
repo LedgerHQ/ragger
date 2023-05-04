@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - backend: StubBackend
 - backend: Add a mechanism to survive USB stack reboot (`handle_usb_reset()`)
+- backend: ledgerwallet/ledgercomm: Add a mechanism to check appname and open app at backend instantiation
 
 ### Changed
 
