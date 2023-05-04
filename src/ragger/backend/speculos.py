@@ -118,6 +118,9 @@ class SpeculosBackend(BackendInterface):
     def __exit__(self, *args, **kwargs):
         self._client.__exit__(*args, **kwargs)
 
+    def handle_usb_reset(self) -> None:
+        pass
+
     def send_raw(self, data: bytes = b"") -> None:
         self.apdu_logger.info("=> %s", data.hex())
         self._pending = ApduResponse(self._client._apdu_exchange_nowait(data))

@@ -38,6 +38,9 @@ class StubBackend(BackendInterface):
                  exc_tb: Optional[TracebackType]):
         pass
 
+    def handle_usb_reset(self) -> None:
+        pass
+
     def send_raw(self, data: bytes = b""):
         pass
 

@@ -77,6 +77,16 @@ class BackendInterface(ABC):
                  exc_tb: Optional[TracebackType]):
         raise NotImplementedError
 
+    def handle_usb_reset(self) -> None:
+        """
+        Inform the backend that it should handle an USB reset.
+        This happen when an app is called as a lib and have to reinit the USB stack.
+
+        :return: None
+        :rtype: NoneType
+        """
+        raise NotImplementedError
+
     def is_raise_required(self, rapdu: RAPDU) -> bool:
         """
         :return: If the given status is considered valid or not

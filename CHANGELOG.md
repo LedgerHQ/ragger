@@ -8,8 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-
 - backend: StubBackend
+- backend: Add a mechanism to survive USB stack reboot (`handle_usb_reset()`)
 
 ### Changed
 
