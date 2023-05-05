@@ -8,12 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-
 - backend: StubBackend
+- backend: Add a mechanism to survive USB stack reboot (`handle_usb_reset()`)
+- backend: ledgerwallet/ledgercomm: Add a mechanism to check appname and open app at backend instantiation
 
 ### Changed
 
 ### Fixed
+- backend: Drop double logging of RAPDU on LedgerCommBackend and LedgerWalletBackend
 
 ## [1.7.1] - 2023-04-24
 

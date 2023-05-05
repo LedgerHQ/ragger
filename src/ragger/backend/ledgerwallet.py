@@ -16,6 +16,7 @@
 from contextlib import contextmanager
 from pathlib import Path
 from typing import Generator, Optional, Any
+from time import sleep
 
 from ledgerwallet.client import LedgerClient, CommException
 from ledgerwallet.transport import HidDevice
@@ -52,12 +53,23 @@ class LedgerWalletBackend(BackendInterface):
 
     def __enter__(self) -> "LedgerWalletBackend":
         self.logger.info(f"Starting {self.__class__.__name__} stream")
-        self._client = LedgerClient()
+        try:
+            self._client = LedgerClient()
+        except Exception:
+            # Give some time for the USB stack to power up and to be enumerated
+            # Might be needed in successive tests where app is exited at the end of the test
+            sleep(1)
+            self._client = LedgerClient()
         return self
 
     def __exit__(self, *args, **kwargs):
         assert self._client is not None
         self._client.close()
+
+    def handle_usb_reset(self) -> None:
+        self.logger.info(f"Re-starting {self.__class__.__name__} stream")
+        self.__exit__()
+        self.__enter__()
 
     def send_raw(self, data: bytes = b"") -> None:
         self.apdu_logger.debug("=> %s", data.hex())
@@ -74,7 +86,6 @@ class LedgerWalletBackend(BackendInterface):
             raw_result = self._client.device.read()
         status, payload = int.from_bytes(raw_result[-2:], "big"), raw_result[:-2] or b""
         result = RAPDU(status, payload)
-        self.apdu_logger.debug("<= %s%4x", result.data.hex(), result.status)
         return result
 
     @raise_policy_enforcer
@@ -83,7 +94,6 @@ class LedgerWalletBackend(BackendInterface):
         assert self._client is not None
         raw_result = self._client.raw_exchange(data)
         result = RAPDU(int.from_bytes(raw_result[-2:], "big"), raw_result[:-2] or b"")
-        self.apdu_logger.debug("<= %s%4x", result.data.hex(), result.status)
         return result
 
     @contextmanager

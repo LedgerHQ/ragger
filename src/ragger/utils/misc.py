@@ -15,6 +15,7 @@
 """
 from typing import Optional, Tuple, List
 from pathlib import Path
+from ragger.error import ExceptionRAPDU
 
 
 def app_path_from_app_name(app_dir: Path, app_name: str, device: str) -> Path:
@@ -70,3 +71,65 @@ def create_currency_config(main_ticker: str,
 
 def split_message(message: bytes, max_size: int) -> List[bytes]:
     return [message[x:x + max_size] for x in range(0, len(message), max_size)]
+
+
+def get_current_app_name_and_version(backend):
+    try:
+        response = backend.exchange(
+            cla=0xB0,  # specific CLA for BOLOS
+            ins=0x01,  # specific INS for get_app_and_version
+            p1=0,
+            p2=0).data
+        offset = 0
+
+        format_id = response[offset]
+        offset += 1
+        assert format_id == 1
+
+        app_name_len = response[offset]
+        offset += 1
+        app_name = response[offset:offset + app_name_len].decode("ascii")
+        offset += app_name_len
+
+        version_len = response[offset]
+        offset += 1
+        version = response[offset:offset + version_len].decode("ascii")
+        offset += version_len
+
+        if app_name != "BOLOS":
+            flags_len = response[offset]
+            offset += 1
+            _ = response[offset:offset + flags_len]
+            offset += flags_len
+
+        assert offset == len(response)
+
+        return app_name, version
+    except ExceptionRAPDU as e:
+        if e.status == 0x5515:
+            raise ValueError("Your device is locked")
+        raise e
+
+
+def exit_current_app(backend):
+    backend.exchange(
+        cla=0xB0,  # specific CLA for BOLOS
+        ins=0xA7,  # specific INS for INS_APP_EXIT
+        p1=0,
+        p2=0)
+
+
+def open_app_from_dashboard(backend, app_name: str):
+    try:
+        backend.exchange(
+            cla=0xE0,  # specific CLA for Dashboard
+            ins=0xD8,  # specific INS for INS_OPEN_APP
+            p1=0,
+            p2=0,
+            data=app_name.encode())
+    except ExceptionRAPDU as e:
+        if e.status == 0x5501:
+            raise ValueError("Open app consent denied by the user")
+        elif e.status == 0x6807:
+            raise ValueError(f"App '{app_name} is not present")
+        raise e

@@ -16,6 +16,7 @@
 from contextlib import contextmanager
 from pathlib import Path
 from typing import Optional, Generator, Any
+from time import sleep
 
 from ledgercomm import Transport
 
@@ -59,15 +60,30 @@ class LedgerCommBackend(BackendInterface):
 
     def __enter__(self) -> "LedgerCommBackend":
         self.logger.info(f"Starting {self.__class__.__name__} stream")
-        self._client = Transport(server=self._host,
-                                 port=self._port,
-                                 *self._args[0],
-                                 **self._args[1])
+
+        try:
+            self._client = Transport(server=self._host,
+                                     port=self._port,
+                                     *self._args[0],
+                                     **self._args[1])
+        except Exception:
+            # Give some time for the USB stack to power up and to be enumerated
+            # Might be needed in successive tests where app is exited at the end of the test
+            sleep(1)
+            self._client = Transport(server=self._host,
+                                     port=self._port,
+                                     *self._args[0],
+                                     **self._args[1])
         return self
 
     def __exit__(self, *args, **kwargs):
         assert self._client is not None
         self._client.close()
+
+    def handle_usb_reset(self) -> None:
+        self.logger.info(f"Re-starting {self.__class__.__name__} stream")
+        self.__exit__()
+        self.__enter__()
 
     def send_raw(self, data: bytes = b"") -> None:
         self.apdu_logger.debug("=> %s", data.hex())
@@ -78,7 +94,6 @@ class LedgerCommBackend(BackendInterface):
     def receive(self) -> RAPDU:
         assert self._client is not None
         result = RAPDU(*self._client.recv())
-        self.apdu_logger.debug("<= %s%4x", result.data.hex(), result.status)
         return result
 
     @raise_policy_enforcer
@@ -86,7 +101,6 @@ class LedgerCommBackend(BackendInterface):
         self.apdu_logger.debug("=> %s", data.hex())
         assert self._client is not None
         result = RAPDU(*self._client.exchange_raw(data))
-        self.apdu_logger.debug("<= %s%4x", result.data.hex(), result.status)
         return result
 
     @contextmanager

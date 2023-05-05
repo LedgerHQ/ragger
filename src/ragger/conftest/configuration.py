@@ -3,6 +3,7 @@ from dataclasses import dataclass
 
 @dataclass
 class OptionalOptions:
+    APP_NAME: str
     SIDELOADED_APPS: dict
     SIDELOADED_APPS_DIR: str
     BACKEND_SCOPE: str
@@ -10,6 +11,10 @@ class OptionalOptions:
 
 
 OPTIONAL = OptionalOptions(
+    # Use this parameter if you want to make sure the right app is started upon backend instantiation.
+    # This is only used for LedgerWallet and LedgerComm backend.
+    APP_NAME=str(),
+
     # use this parameter if you want Speculos to emulate other applications being installed on the device
     # example: {"bitcoin": "Bitcoin", "ethereum": "Ethereum"}
     # this would result in Speculos being launched with -lbitcoin:/path/to/bitcoin_device.elf
