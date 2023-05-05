@@ -468,6 +468,21 @@ implem.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="ragger.backend.BackendInterface.handle_usb_reset">
+<span class="sig-name descname"><span class="pre">handle_usb_reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ragger.backend.BackendInterface.handle_usb_reset" title="Permalink to this definition"></a></dt>
+<dd><p>Inform the backend that it should handle an USB reset.
+This happen when an app is called as a lib and have to reinit the USB stack.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>NoneType</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="ragger.backend.BackendInterface.is_raise_required">
 <span class="sig-name descname"><span class="pre">is_raise_required</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rapdu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#ragger.utils.structs.RAPDU" title="ragger.utils.structs.RAPDU"><span class="pre">RAPDU</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#ragger.backend.BackendInterface.is_raise_required" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
