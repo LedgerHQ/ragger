@@ -15,11 +15,11 @@
 <polygon fill="antiquewhite" stroke="antiquewhite" points="8294.49,-498.5 8294.49,-892.5 9267.49,-892.5 9267.49,-498.5 8294.49,-498.5"/>
 <text text-anchor="start" x="8717.99" y="-877.3" font-family="Times,serif" font-size="14.00">BackendInterface</text>
 <polyline fill="none" stroke="antiquewhite" points="8294.49,-869.5 9267.49,-869.5 "/>
-<text text-anchor="start" x="8618.99" y="-854.3" font-family="Times,serif" font-size="14.00">apdu_logger : Logger, NoneType, RootLogger</text>
-<text text-anchor="start" x="8618.99" y="-839.3" font-family="Times,serif" font-size="14.00">firmware</text>
-<text text-anchor="start" x="8618.99" y="-824.3" font-family="Times,serif" font-size="14.00">last_async_response</text>
-<text text-anchor="start" x="8618.99" y="-809.3" font-family="Times,serif" font-size="14.00">logger : Logger, NoneType, RootLogger</text>
-<text text-anchor="start" x="8618.99" y="-794.3" font-family="Times,serif" font-size="14.00">raise_policy : RAISE_ALL_BUT_0x9000</text>
+<text text-anchor="start" x="8619.99" y="-854.3" font-family="Times,serif" font-size="14.00">apdu_logger : RootLogger, Logger, NoneType</text>
+<text text-anchor="start" x="8619.99" y="-839.3" font-family="Times,serif" font-size="14.00">firmware</text>
+<text text-anchor="start" x="8619.99" y="-824.3" font-family="Times,serif" font-size="14.00">last_async_response</text>
+<text text-anchor="start" x="8619.99" y="-809.3" font-family="Times,serif" font-size="14.00">logger : Logger, NoneType, RootLogger</text>
+<text text-anchor="start" x="8619.99" y="-794.3" font-family="Times,serif" font-size="14.00">raise_policy : RAISE_ALL_BUT_0x9000</text>
 <polyline fill="none" stroke="antiquewhite" points="8294.49,-786.5 9267.49,-786.5 "/>
 <text text-anchor="start" x="8302.49" y="-772.3" font-family="Times,serif" font-style="italic" font-size="14.00">both_click</text>
 <text text-anchor="start" x="8374.49" y="-772.3" font-family="Times,serif" font-size="14.00">(): None</text>
