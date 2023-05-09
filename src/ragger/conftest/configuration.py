@@ -4,6 +4,7 @@ from dataclasses import dataclass
 @dataclass
 class OptionalOptions:
     APP_NAME: str
+    APP_DIR: str
     SIDELOADED_APPS: dict
     SIDELOADED_APPS_DIR: str
     BACKEND_SCOPE: str
@@ -14,6 +15,11 @@ OPTIONAL = OptionalOptions(
     # Use this parameter if you want to make sure the right app is started upon backend instantiation.
     # This is only used for LedgerWallet and LedgerComm backend.
     APP_NAME=str(),
+
+    # Use this parameter if the app is not compiled at the project root directory.
+    # This parameter will indicate the subdirectory where Speculos will search the "build/" directory
+    # example: "." or "app/"
+    APP_DIR=".",
 
     # use this parameter if you want Speculos to emulate other applications being installed on the device
     # example: {"bitcoin": "Bitcoin", "ethereum": "Ethereum"}

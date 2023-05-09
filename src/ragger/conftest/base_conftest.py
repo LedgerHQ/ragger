@@ -116,7 +116,8 @@ def prepare_speculos_args(root_pytest_dir: Path, firmware: Firmware, display: bo
     # Find the compiled application for the requested device
     project_root_dir = find_project_root_dir(root_pytest_dir)
 
-    app_path = Path(project_root_dir / "build" / device / "bin" / "app.elf").resolve()
+    base_path = Path(project_root_dir / conf.OPTIONAL.APP_DIR).resolve()
+    app_path = Path(base_path / "build" / device / "bin" / "app.elf").resolve()
     if not app_path.is_file():
         raise ValueError(f"File '{app_path}' missing. Did you compile for this target?")
 
