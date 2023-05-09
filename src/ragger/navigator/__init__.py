@@ -14,7 +14,7 @@
    limitations under the License.
 """
 from .instruction import NavInsID, NavIns
-from .navigator import  Navigator
+from .navigator import Navigator
 from .stax_navigator import StaxNavigator
 from .nano_navigator import NanoNavigator
 

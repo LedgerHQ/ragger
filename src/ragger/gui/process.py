@@ -64,11 +64,14 @@ class ProcessCommunicationWorker(QObject):
                 self._main_window.display_action(NAVIGATION_ACTIONS[argument])
             if command == "touch_action":
                 self.logger.debug("Touch action required")
-                self._main_window.display_action("touch",*argument)
-            
+                self._main_window.display_action("touch", *argument)
             if command == "action_done":
                 self.logger.debug("Action done")
                 self._main_window.action_done()
+            if command == "kill":
+                self.logger.debug("Kill object")
+                self._main_window.close()
+
             self.logger.debug("Interface updated")
 
     def __del__(self):
@@ -78,9 +81,11 @@ class ProcessCommunicationWorker(QObject):
 class RaggerGUI(Process):
 
     def __init__(self, device: str, args=None):
-        super().__init__()
+        super().__init__(name="RaggerGUI")
+        self.thread: QThread
+        self.worker: ProcessCommunicationWorker
         self.logger = get_gui_logger().getChild("RaggerGUI")
-        self._queues = (Queue(), Queue())
+        self._queues: Tuple[Queue, Queue] = (Queue(), Queue())
         self._device = device
         self.logger.info("Initiated")
 
@@ -93,22 +98,26 @@ class RaggerGUI(Process):
         self.logger.debug("Receiving '%s'", result)
         return result
 
+    def kill(self):
+        self.logger.info("Killing the interface and myself")
+        self._send(("kill", None))
+        super().kill()
+
     def check_screenshot(self, image: Path):
         self._send(("screenshot", image))
         return self._receive()
 
     def check_text(self, text: str):
-        self._send(("text_search", text))    
+        self._send(("text_search", text))
         return self._receive()
 
     def ask_for_click_action(self, ins_id: NavInsID):
         self._send(("click_action", ins_id))
         return self._receive()
 
-    def ask_for_touch_action(self, x:int = 0, y:int = 0):
+    def ask_for_touch_action(self, x: int = 0, y: int = 0):
         self._send(("touch_action", (x, y)))
         return self._receive()
-
 
     def _configure_worker(self):
         self.thread = QThread()
@@ -118,11 +127,11 @@ class RaggerGUI(Process):
         self.worker.finished.connect(self.thread.quit)
         self.thread.start()
         self.logger.info("Worker started")
-    
-    def _button_cb(self,obj: Any):
+
+    def _button_cb(self, obj: Any):
         self._queues[1].put(obj)
-        self._send(("action_done", "")) 
-        
+        self._send(("action_done", ""))
+
     def run(self):
         self._app = QApplication([])
         self._app.setStyle("Fusion")

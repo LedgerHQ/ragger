@@ -14,9 +14,10 @@
    limitations under the License.
 """
 from pathlib import Path
-from typing import Any, Optional
-from pytesseract import image_to_data, Output
 from PIL import Image, ImageOps
+from pytesseract import image_to_data, Output
+from types import TracebackType
+from typing import Any, Optional, Type
 
 from ragger.firmware import Firmware
 from ragger.gui import RaggerGUI
@@ -28,10 +29,15 @@ from .interface import BackendInterface
 class PhysicalBackend(BackendInterface):
 
     def __init__(self, firmware: Firmware, *args, with_gui: bool = False, **kwargs):
-        super().__init__(firmware=firmware, *args, **kwargs)
+        super().__init__(firmware, *args, **kwargs)
         self._ui: Optional[RaggerGUI] = RaggerGUI(device=firmware.device) if with_gui else None
         self._device = firmware.device
-        self._last_valid_snap_path = None
+        self._last_valid_snap_path: Optional[Path] = None
+
+    def __exit__(self, exc_type: Optional[Type[BaseException]], exc_val: Optional[BaseException],
+                 exc_tb: Optional[TracebackType]):
+        if self._ui is not None:
+            self._ui.kill()
 
     def init_gui(self):
         """
@@ -71,10 +77,10 @@ class PhysicalBackend(BackendInterface):
 
         # If for some reason we ask twice to compare the
         # the same snapshot, just return True.
-        if(self._last_valid_snap_path == golden_snap_path):
+        if self._last_valid_snap_path == golden_snap_path:
             return True
 
-        if(self._ui.check_screenshot(golden_snap_path)):
+        if self._ui.check_screenshot(golden_snap_path):
             self._last_valid_snap_path = golden_snap_path
             return True
         else:
@@ -85,7 +91,7 @@ class PhysicalBackend(BackendInterface):
         if self._ui is None:
             return
         self.init_gui()
-        self._ui.ask_for_touch_action(x,y)
+        self._ui.ask_for_touch_action(x, y)
 
     def wait_for_screen_change(self, timeout: float = 10.0) -> None:
         return
@@ -94,14 +100,14 @@ class PhysicalBackend(BackendInterface):
         if self._ui is None:
             return True
         self.init_gui()
-        if self._last_valid_snap_path :
+        if self._last_valid_snap_path:
             image = Image.open(self._last_valid_snap_path)
-            # Nano (s,sp,x) snapshots are white/blue text on black backgound,
+            # Nano (s,sp,x) snapshots are white/blue text on black background,
             # tesseract cannot do OCR on these. Invert image so it has
             # dark text on white background.
             if self._device.startswith("nan"):
                 image = ImageOps.invert(image)
-            data = image_to_data(image,output_type=Output.DICT)
+            data = image_to_data(image, output_type=Output.DICT)
             for item in range(len(data["text"])):
                 if text in data["text"][item]:
                     return True
@@ -111,7 +117,3 @@ class PhysicalBackend(BackendInterface):
 
     def get_current_screen_content(self) -> Any:
         return []
-
-    def __del__(self):
-        if self._ui is not None:
-            self._ui.kill()

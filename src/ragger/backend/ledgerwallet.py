@@ -48,7 +48,7 @@ def raise_policy_enforcer(function):
 class LedgerWalletBackend(PhysicalBackend):
 
     def __init__(self, firmware: Firmware, *args, with_gui: bool = False, **kwargs):
-        super().__init__(firmware=firmware, *args, with_gui=with_gui, **kwargs)
+        super().__init__(firmware, *args, with_gui=with_gui, **kwargs)
         self._client: Optional[LedgerClient] = None
 
     def __enter__(self) -> "LedgerWalletBackend":
@@ -62,7 +62,8 @@ class LedgerWalletBackend(PhysicalBackend):
             self._client = LedgerClient()
         return self
 
-    def __exit__(self, *args, **kwargs):
+    def __exit__(self, *args):
+        super().__exit__(*args)
         assert self._client is not None
         self._client.close()
 

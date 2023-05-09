@@ -14,11 +14,10 @@
    limitations under the License.
 """
 from abc import ABC
-from enum import auto, Enum
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from time import time
-from typing import Any, Callable, Dict, List, Optional, Union
+from typing import Callable, Dict, List, Optional, Union
 
 from ragger.backend import BackendInterface, SpeculosBackend
 from ragger.firmware import Firmware

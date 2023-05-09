@@ -77,7 +77,8 @@ class LedgerCommBackend(PhysicalBackend):
                                      **self._args[1])
         return self
 
-    def __exit__(self, *args, **kwargs):
+    def __exit__(self, *args):
+        super().__exit__(*args)
         assert self._client is not None
         self._client.close()
 

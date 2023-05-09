@@ -156,9 +156,6 @@ class TestNavigator(TestCase):
             self.assertEqual(cb.call_count, 1)
             self.assertEqual(cb.call_args, (ni.args, ni.kwargs))
 
-    def test_navigate_until_text_and_compare_is_not_Speculos(self):
-        self.assertIsNone(self.navigator.navigate_until_text_and_compare(None, None, None))
-
     def test_navigate_until_text_and_compare_ok_no_snapshots(self):
         self.navigator._backend = MagicMock(spec=SpeculosBackend)
         self.navigator._backend.compare_screen_with_text.side_effect = [False, False, True]

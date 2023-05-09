@@ -1,6 +1,7 @@
 from enum import auto, Enum
 from typing import Any, Dict
 
+
 class NavInsID(Enum):
     """
     Pre-defined instruction ID to navigate into a device UI.
