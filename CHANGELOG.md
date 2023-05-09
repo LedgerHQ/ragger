@@ -8,11 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- configuration: Add a mechanism to specify the app dir where Speculos should search for the directory that holds the application compilation artifacts.
 
 ### Changed
 
 ### Fixed
+
+## [1.7.3] - 2023-05-09
+
+### Added
+- configuration: Add a mechanism to specify the app dir where Speculos should search for the directory that holds the application compilation artifacts.
 
 ## [1.7.2] - 2023-05-05
 
