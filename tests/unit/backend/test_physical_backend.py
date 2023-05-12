@@ -1,14 +1,14 @@
 from contextlib import contextmanager
 from typing import Generator
 from unittest import TestCase
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 from ragger.backend import BackendInterface
 from ragger.backend.physical_backend import PhysicalBackend
 from ragger.gui import RaggerGUI
 from ragger.firmware import Firmware
 from ragger.navigator.instruction import NavInsID
-from ragger.utils.structs import Crop, RAPDU
+from ragger.utils.structs import RAPDU
 
 
 class StubPhysicalBackend(PhysicalBackend):
