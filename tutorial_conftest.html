@@ -209,7 +209,7 @@ allow to use our newly generated fixtures:</p>
 </pre></div>
 </div>
 </div>
-<p>This test will use the <a class="reference internal" href="source.html#ragger.backend.BackendInterface" title="ragger.backend.BackendInterface"><code class="xref py py-class docutils literal notranslate"><span class="pre">backend</span></code></a>
+<p>This test will use the <code class="xref py py-class docutils literal notranslate"><span class="pre">backend</span></code>
 fixture in order to run the application into <a class="reference internal" href="glossary.html#term-Speculos"><span class="xref std std-term">Speculos</span></a>. For that, we need
 to access the application ELF file, which is expected to be stored in a specific
 path. This path is in fact exactly where the default Ledger compilation
@@ -246,7 +246,7 @@ tests/test_first.py::test_communicate<span class="o">[</span>nanos<span class="w
 and generated several fixtures to be used in following tests.</p></li>
 <li><p>one of these fixtures, <code class="docutils literal notranslate"><span class="pre">backend</span></code> is configured with several parameters. We
 did not specified it in the command line, but its type here is
-<a class="reference internal" href="source.html#ragger.backend.SpeculosBackend" title="ragger.backend.SpeculosBackend"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpeculosBackend</span></code></a> (the default
+<code class="xref py py-class docutils literal notranslate"><span class="pre">SpeculosBackend</span></code> (the default
 type).</p>
 <p>This backend exchanges with an application running into the
 <a class="reference internal" href="glossary.html#term-Speculos"><span class="xref std std-term">Speculos</span></a> emulator. For the fixture to automatically start this
@@ -284,7 +284,7 @@ go back to the home screen (image <code class="docutils literal notranslate"><sp
 </ul>
 <p>Although this scenario is very simple, we want to test it. How can it be done
 with <code class="docutils literal notranslate"><span class="pre">Ragger</span></code>?</p>
-<p>That’s where the <a class="reference internal" href="source.html#ragger.navigator.navigator.Navigator" title="ragger.navigator.navigator.Navigator"><code class="xref py py-class docutils literal notranslate"><span class="pre">navigator</span></code></a>
+<p>That’s where the <code class="xref py py-class docutils literal notranslate"><span class="pre">navigator</span></code>
 fixture comes into play.</p>
 <div class="section" id="basic-navigation-example">
 <h3>Basic navigation example<a class="headerlink" href="#basic-navigation-example" title="Permalink to this heading"></a></h3>
@@ -326,13 +326,13 @@ chapter</span></a>.</p>
 crossed screens are the expected ones, we need:</p>
 <ul>
 <li><p>to provide these expected snapshots (the <a class="reference internal" href="glossary.html#term-Golden-snapshot"><span class="xref std std-term">golden snapshots</span></a>)</p></li>
-<li><p>to use the method <a class="reference internal" href="source.html#ragger.navigator.navigator.Navigator.navigate_and_compare" title="ragger.navigator.navigator.Navigator.navigate_and_compare"><code class="xref py py-meth docutils literal notranslate"><span class="pre">navigator.navigate_and_compare</span></code></a>.</p>
+<li><p>to use the method <code class="xref py py-meth docutils literal notranslate"><span class="pre">navigator.navigate_and_compare</span></code>.</p>
 <p>This method requires 3 mandatory arguments:</p>
 <ul class="simple">
 <li><p>the <code class="docutils literal notranslate"><span class="pre">path</span></code> where the directory containing all the snapshot sets is
 located,</p></li>
 <li><p>the <code class="docutils literal notranslate"><span class="pre">test_case_name</span></code>, name of the snapshots test directory</p></li>
-<li><p>the instruction list (just like with <a class="reference internal" href="source.html#ragger.navigator.navigator.Navigator.navigate" title="ragger.navigator.navigator.Navigator.navigate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">navigator.navigate</span></code></a></p></li>
+<li><p>the instruction list (just like with <code class="xref py py-meth docutils literal notranslate"><span class="pre">navigator.navigate</span></code></p></li>
 </ul>
 </li>
 </ul>
@@ -503,9 +503,9 @@ testing. But there is more!</p>
 <p>It is possible to change the backend on which the tests should run through a CLI
 argument <code class="docutils literal notranslate"><span class="pre">--backend</span></code>. Available backends are:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">--backend</span> <span class="pre">speculos</span></code>, using the <a class="reference internal" href="source.html#ragger.backend.SpeculosBackend" title="ragger.backend.SpeculosBackend"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpeculosBackend</span></code></a> (the default behavior),</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--backend</span> <span class="pre">ledgercomm</span></code>, using the <a class="reference internal" href="source.html#ragger.backend.LedgerCommBackend" title="ragger.backend.LedgerCommBackend"><code class="xref py py-class docutils literal notranslate"><span class="pre">LedgerCommBackend</span></code></a>,</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--backend</span> <span class="pre">ledgerwallet</span></code>, using the <a class="reference internal" href="source.html#ragger.backend.LedgerWalletBackend" title="ragger.backend.LedgerWalletBackend"><code class="xref py py-class docutils literal notranslate"><span class="pre">ledgerWalletBackend</span></code></a>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--backend</span> <span class="pre">speculos</span></code>, using the <code class="xref py py-class docutils literal notranslate"><span class="pre">SpeculosBackend</span></code> (the default behavior),</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--backend</span> <span class="pre">ledgercomm</span></code>, using the <code class="xref py py-class docutils literal notranslate"><span class="pre">LedgerCommBackend</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--backend</span> <span class="pre">ledgerwallet</span></code>, using the <code class="xref py py-class docutils literal notranslate"><span class="pre">ledgerWalletBackend</span></code>.</p></li>
 </ul>
 <p>The two later options are physical backends, meaning they will try to connect to
 the application through the USB ports. So the application should be installed on
@@ -523,7 +523,7 @@ application being started on the device, else the tests will not run.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">--device</span> <span class="pre">stax</span></code>,</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--device</span> <span class="pre">all</span></code>.</p></li>
 </ul>
-<p>This last option can only work with the <a class="reference internal" href="source.html#ragger.backend.SpeculosBackend" title="ragger.backend.SpeculosBackend"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpeculosBackend</span></code></a> (as other backends rely on a physical device,
+<p>This last option can only work with the <code class="xref py py-class docutils literal notranslate"><span class="pre">SpeculosBackend</span></code> (as other backends rely on a physical device,
 they can only run on the connected one), but is very convenient in a CI to
 perform test campaign on all the devices.</p>
 </div>
@@ -531,9 +531,9 @@ perform test campaign on all the devices.</p>
 <h4>Showing the device interface during test execution (<code class="docutils literal notranslate"><span class="pre">--display</span></code>)<a class="headerlink" href="#showing-the-device-interface-during-test-execution-display" title="Permalink to this heading"></a></h4>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>Capability limited to the <a class="reference internal" href="source.html#ragger.backend.SpeculosBackend" title="ragger.backend.SpeculosBackend"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpeculosBackend</span></code></a></p>
+<p>Capability limited to the <code class="xref py py-class docutils literal notranslate"><span class="pre">SpeculosBackend</span></code></p>
 </div>
-<p>With the <a class="reference internal" href="source.html#ragger.backend.SpeculosBackend" title="ragger.backend.SpeculosBackend"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpeculosBackend</span></code></a>, it is
+<p>With the <code class="xref py py-class docutils literal notranslate"><span class="pre">SpeculosBackend</span></code>, it is
 possible to display the Qt graphical interface of the device, and so to follow
 the actions and displayed screen during the test is executed.</p>
 <p>This can be enabled with the <code class="docutils literal notranslate"><span class="pre">--display</span></code> CLI argument.</p>
@@ -542,19 +542,19 @@ the actions and displayed screen during the test is executed.</p>
 <h4>Controlling the seed (<code class="docutils literal notranslate"><span class="pre">--seed</span></code>)<a class="headerlink" href="#controlling-the-seed-seed" title="Permalink to this heading"></a></h4>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>Capability limited to the <a class="reference internal" href="source.html#ragger.backend.SpeculosBackend" title="ragger.backend.SpeculosBackend"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpeculosBackend</span></code></a></p>
+<p>Capability limited to the <code class="xref py py-class docutils literal notranslate"><span class="pre">SpeculosBackend</span></code></p>
 </div>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>Remember not to share your production seed. This option should be used only
 with testing, disposable seeds.</p>
 </div>
-<p>By default, the <a class="reference internal" href="source.html#ragger.backend.SpeculosBackend" title="ragger.backend.SpeculosBackend"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpeculosBackend</span></code></a> has
+<p>By default, the <code class="xref py py-class docutils literal notranslate"><span class="pre">SpeculosBackend</span></code> has
 a fixed seed. It is possible to change its value with the <code class="docutils literal notranslate"><span class="pre">--seed</span></code> CLI argument.</p>
 </div>
 <div class="section" id="recording-the-screens-golden-run">
 <h4>Recording the screens (<code class="docutils literal notranslate"><span class="pre">--golden_run</span></code>)<a class="headerlink" href="#recording-the-screens-golden-run" title="Permalink to this heading"></a></h4>
-<p>Some tests using high-level <a class="reference internal" href="source.html#ragger.navigator.navigator.Navigator" title="ragger.navigator.navigator.Navigator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Navigator</span></code></a> methods comparing snapshots can also
+<p>Some tests using high-level <code class="xref py py-class docutils literal notranslate"><span class="pre">Navigator</span></code> methods comparing snapshots can also
 turn these methods into a “record mode”: instead of comparing snapshots, they
 will store the captured snapshots, with the <code class="docutils literal notranslate"><span class="pre">--golden_run</span></code> CLI argument.
 This is convenient to automatically generate stock of <a class="reference internal" href="glossary.html#term-Golden-snapshot"><span class="xref std std-term">golden snapshots</span></a>.</p>

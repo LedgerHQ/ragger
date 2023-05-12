@@ -173,10 +173,10 @@ that keep track of every interactive screen elements and expose meaningful
 methods to interact with them.</p>
 <div class="section" id="layouts">
 <h3>Layouts<a class="headerlink" href="#layouts" title="Permalink to this heading"></a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">Ragger</span></code>’s <a class="reference internal" href="source.html#module-ragger.firmware.stax.layouts" title="ragger.firmware.stax.layouts"><code class="xref py py-mod docutils literal notranslate"><span class="pre">Layouts</span></code></a> and
-<a class="reference internal" href="source.html#module-ragger.firmware.stax.use_cases" title="ragger.firmware.stax.use_cases"><code class="xref py py-mod docutils literal notranslate"><span class="pre">UseCases</span></code></a> allows to quickly describe an
+<p><code class="docutils literal notranslate"><span class="pre">Ragger</span></code>’s <code class="xref py py-mod docutils literal notranslate"><span class="pre">Layouts</span></code> and
+<code class="xref py py-mod docutils literal notranslate"><span class="pre">UseCases</span></code> allows to quickly describe an
 application screens and its attached behavior in a purely declarative way,
-thanks to the <a class="reference internal" href="source.html#ragger.firmware.stax.screen.MetaScreen" title="ragger.firmware.stax.screen.MetaScreen"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetaScreen</span></code></a>
+thanks to the <code class="xref py py-class docutils literal notranslate"><span class="pre">MetaScreen</span></code>
 metaclass. For instance, with the previously described application:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="kn">from</span> <span class="nn">ragger.firmware.stax.screen</span> <span class="kn">import</span> <span class="n">MetaScreen</span>
 <span class="linenos">2</span><span class="kn">from</span> <span class="nn">ragger.firmware.stax.layouts</span> <span class="kn">import</span> <span class="n">CancelFooter</span><span class="p">,</span> <span class="n">ExitFooter</span><span class="p">,</span> <span class="n">InfoHeader</span>
@@ -282,7 +282,7 @@ and start with <code class="docutils literal notranslate"><span class="pre">use_
 <p>All these classes helps you tailoring a fairly elegant and straight-forward
 client with meaningful and easy to write screen controls. However if you don’t
 feel like crafting you own screen representation, <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> comes with a
-<a class="reference internal" href="source.html#ragger.firmware.stax.screen.FullScreen" title="ragger.firmware.stax.screen.FullScreen"><code class="xref py py-class docutils literal notranslate"><span class="pre">FullScreen</span></code></a> class
+<code class="xref py py-class docutils literal notranslate"><span class="pre">FullScreen</span></code> class
 which embeds every existing <a class="reference internal" href="glossary.html#term-Layout"><span class="xref std std-term">Layout</span></a> and <a class="reference internal" href="glossary.html#term-Use-Case"><span class="xref std std-term">Use Case</span></a>.</p>
 <p>It can be used to quickly instantiate a screen which could work with any
 application screen, however of course, all action on this class are not

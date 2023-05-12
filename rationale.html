@@ -127,10 +127,10 @@ or an emulated one:</p>
 </ul>
 <p>In <code class="docutils literal notranslate"><span class="pre">Ragger</span></code>, the classes embedding these libraries are called
 <a class="reference internal" href="glossary.html#term-Backend"><span class="xref std std-term">backends</span></a>. Any other backend can be added, given it respects the
-<a class="reference internal" href="source.html#ragger.backend.BackendInterface" title="ragger.backend.BackendInterface"><code class="xref py py-class docutils literal notranslate"><span class="pre">BackendInterface</span></code></a> interface.</p>
+<code class="xref py py-class docutils literal notranslate"><span class="pre">BackendInterface</span></code> interface.</p>
 <figure class="">
             <a 
-               data-lightbox="group-f332608d-96b7-4bab-994c-7bf81de9bd44"
+               data-lightbox="group-ce8ec5da-f16f-4111-999d-3e213c18b2c5"
                href="_images/usage.svg"
                title="Software / communication layers between an application and its client"
                data-title="Software / communication layers between an application and its client"
@@ -170,7 +170,7 @@ callbacks, allows to abstract the expected behavior of an application.</p>
 a list of instructions.</p>
 <figure class="">
             <a 
-               data-lightbox="group-8e6c60d0-0d3c-4a14-a076-6bae266c5635"
+               data-lightbox="group-b4ba06ac-0c8d-490c-a48c-8f78f392c8db"
                href="_images/navigate.svg"
                title="Software / communication layers between an application and its client"
                data-title="Software / communication layers between an application and its client"
@@ -201,11 +201,11 @@ drastically increases.</p>
 <p><code class="docutils literal notranslate"><span class="pre">Ragger</span></code> embeds tools allowing to ease the development and the maintenance of
 UI clients. this tools mainly consist of 3 components:</p>
 <ul class="simple">
-<li><p>the <a class="reference internal" href="source.html#module-ragger.firmware.stax.layouts" title="ragger.firmware.stax.layouts"><code class="xref py py-class docutils literal notranslate"><span class="pre">layout</span> <span class="pre">classes</span></code></a>, representing
+<li><p>the <code class="xref py py-class docutils literal notranslate"><span class="pre">layout</span> <span class="pre">classes</span></code>, representing
 the layouts proposed in the NBGL section of the C SDK,</p></li>
-<li><p>the <a class="reference internal" href="source.html#module-ragger.firmware.stax.use_cases" title="ragger.firmware.stax.use_cases"><code class="xref py py-class docutils literal notranslate"><span class="pre">use</span> <span class="pre">cases</span> <span class="pre">classes</span></code></a>,
+<li><p>the <code class="xref py py-class docutils literal notranslate"><span class="pre">use</span> <span class="pre">cases</span> <span class="pre">classes</span></code>,
 representing the use cases proposed in the NBGL section of the C SDK,</p></li>
-<li><p>the <a class="reference internal" href="source.html#module-ragger.firmware.stax.screen" title="ragger.firmware.stax.screen"><code class="xref py py-mod docutils literal notranslate"><span class="pre">screen</span> <span class="pre">module</span></code></a>, allowing to nest
+<li><p>the <code class="xref py py-mod docutils literal notranslate"><span class="pre">screen</span> <span class="pre">module</span></code>, allowing to nest
 the previous components in a single, centralized object.</p></li>
 </ul>
 <div class="admonition note">
@@ -218,7 +218,7 @@ integrated eventually.</p>
 <ul class="simple">
 <li><p>these abstractions prevent to directly use <code class="docutils literal notranslate"><span class="pre">(X,</span> <span class="pre">Y)</span></code> coordinates to interact
 with the screen and propose higher-level methods (for instance, when using the
-<a class="reference internal" href="source.html#ragger.firmware.stax.use_cases.UseCaseHome" title="ragger.firmware.stax.use_cases.UseCaseHome"><code class="xref py py-class docutils literal notranslate"><span class="pre">UseCaseHome</span></code></a> use case,
+<code class="xref py py-class docutils literal notranslate"><span class="pre">UseCaseHome</span></code> use case,
 going to the settings is triggered with the method <code class="docutils literal notranslate"><span class="pre">UseCaseHome.settings()</span></code>
 instead of touching the screen at <code class="docutils literal notranslate"><span class="pre">(342,</span> <span class="pre">55)</span></code>). The client’s code is
 meaningful.</p></li>
@@ -228,14 +228,14 @@ code written with the <code class="docutils literal notranslate"><span class="pr
 <li><p>the <a class="reference internal" href="glossary.html#term-Layout"><span class="xref std std-term">layouts</span></a> and <a class="reference internal" href="glossary.html#term-Use-Case"><span class="xref std std-term">use cases</span></a> mimic the
 <a class="reference internal" href="glossary.html#term-NBGL"><span class="xref std std-term">NBGL</span></a> capabilities, so that the <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> client screen architecture
 is close to the application one.</p></li>
-<li><p>the <a class="reference internal" href="source.html#ragger.firmware.stax.screen.FullScreen" title="ragger.firmware.stax.screen.FullScreen"><code class="xref py py-class docutils literal notranslate"><span class="pre">FullScreen</span></code></a> class
-embeds every existing <a class="reference internal" href="source.html#module-ragger.firmware.stax.layouts" title="ragger.firmware.stax.layouts"><code class="xref py py-class docutils literal notranslate"><span class="pre">layout</span></code></a> and
-<a class="reference internal" href="source.html#module-ragger.firmware.stax.use_cases" title="ragger.firmware.stax.use_cases"><code class="xref py py-class docutils literal notranslate"><span class="pre">use</span> <span class="pre">case</span></code></a> in a single class,
+<li><p>the <code class="xref py py-class docutils literal notranslate"><span class="pre">FullScreen</span></code> class
+embeds every existing <code class="xref py py-class docutils literal notranslate"><span class="pre">layout</span></code> and
+<code class="xref py py-class docutils literal notranslate"><span class="pre">use</span> <span class="pre">case</span></code> in a single class,
 providing a fast way of testing an interface without any other configuration.</p></li>
-<li><p>the <a class="reference internal" href="source.html#ragger.firmware.stax.screen.MetaScreen" title="ragger.firmware.stax.screen.MetaScreen"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetaScreen</span></code></a> metaclass
+<li><p>the <code class="xref py py-class docutils literal notranslate"><span class="pre">MetaScreen</span></code> metaclass
 allows to build custom screen classes nesting the
-<a class="reference internal" href="source.html#module-ragger.firmware.stax.layouts" title="ragger.firmware.stax.layouts"><code class="xref py py-class docutils literal notranslate"><span class="pre">layouts</span></code></a> and the
-<a class="reference internal" href="source.html#module-ragger.firmware.stax.use_cases" title="ragger.firmware.stax.use_cases"><code class="xref py py-class docutils literal notranslate"><span class="pre">use</span> <span class="pre">cases</span></code></a> of your choosing,
+<code class="xref py py-class docutils literal notranslate"><span class="pre">layouts</span></code> and the
+<code class="xref py py-class docutils literal notranslate"><span class="pre">use</span> <span class="pre">cases</span></code> of your choosing,
 creating a convenient and meaningful screen object where all UI interactions
 are centralized.</p></li>
 </ul>
