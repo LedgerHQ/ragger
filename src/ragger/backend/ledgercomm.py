@@ -15,15 +15,15 @@
 """
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Optional, Generator, Any
 from time import sleep
+from typing import Optional, Generator
 
 from ledgercomm import Transport
 
 from ragger.firmware import Firmware
-from ragger.utils import RAPDU, Crop
+from ragger.utils import RAPDU
 from ragger.error import ExceptionRAPDU
-from .interface import BackendInterface
+from .physical_backend import PhysicalBackend
 
 
 def raise_policy_enforcer(function):
@@ -41,17 +41,18 @@ def raise_policy_enforcer(function):
     return decoration
 
 
-class LedgerCommBackend(BackendInterface):
+class LedgerCommBackend(PhysicalBackend):
 
     def __init__(self,
                  firmware: Firmware,
+                 *args,
                  host: str = "127.0.0.1",
                  port: int = 9999,
                  interface: str = 'hid',
                  log_apdu_file: Optional[Path] = None,
-                 *args,
+                 with_gui: bool = False,
                  **kwargs):
-        super().__init__(firmware=firmware, log_apdu_file=log_apdu_file)
+        super().__init__(firmware, *args, log_apdu_file=log_apdu_file, with_gui=with_gui, **kwargs)
         self._host = host
         self._port = port
         self._client: Optional[Transport] = None
@@ -76,7 +77,8 @@ class LedgerCommBackend(BackendInterface):
                                      **self._args[1])
         return self
 
-    def __exit__(self, *args, **kwargs):
+    def __exit__(self, *args):
+        super().__exit__(*args)
         assert self._client is not None
         self._client.close()
 
@@ -108,31 +110,3 @@ class LedgerCommBackend(BackendInterface):
         self.send_raw(data)
         yield
         self._last_async_response = self.receive()
-
-    def right_click(self) -> None:
-        pass
-
-    def left_click(self) -> None:
-        pass
-
-    def both_click(self) -> None:
-        pass
-
-    def compare_screen_with_snapshot(self,
-                                     golden_snap_path: Path,
-                                     crop: Optional[Crop] = None,
-                                     tmp_snap_path: Optional[Path] = None,
-                                     golden_run: bool = False) -> bool:
-        return True
-
-    def finger_touch(self, x: int = 0, y: int = 0, delay: float = 0.5) -> None:
-        pass
-
-    def wait_for_screen_change(self, timeout: float = 10.0) -> None:
-        return
-
-    def compare_screen_with_text(self, text: str) -> bool:
-        return True
-
-    def get_current_screen_content(self) -> Any:
-        return []

@@ -14,16 +14,16 @@
    limitations under the License.
 """
 from contextlib import contextmanager
-from pathlib import Path
-from typing import Generator, Optional, Any
 from time import sleep
+from typing import Generator, Optional
 
 from ledgerwallet.client import LedgerClient, CommException
 from ledgerwallet.transport import HidDevice
 
-from ragger.utils import RAPDU, Crop
+from ragger.firmware import Firmware
+from ragger.utils import RAPDU
 from ragger.error import ExceptionRAPDU
-from .interface import BackendInterface
+from .physical_backend import PhysicalBackend
 
 
 def raise_policy_enforcer(function):
@@ -45,10 +45,10 @@ def raise_policy_enforcer(function):
     return decoration
 
 
-class LedgerWalletBackend(BackendInterface):
+class LedgerWalletBackend(PhysicalBackend):
 
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
+    def __init__(self, firmware: Firmware, *args, with_gui: bool = False, **kwargs):
+        super().__init__(firmware, *args, with_gui=with_gui, **kwargs)
         self._client: Optional[LedgerClient] = None
 
     def __enter__(self) -> "LedgerWalletBackend":
@@ -62,7 +62,8 @@ class LedgerWalletBackend(BackendInterface):
             self._client = LedgerClient()
         return self
 
-    def __exit__(self, *args, **kwargs):
+    def __exit__(self, *args):
+        super().__exit__(*args)
         assert self._client is not None
         self._client.close()
 
@@ -101,31 +102,3 @@ class LedgerWalletBackend(BackendInterface):
         self.send_raw(data)
         yield
         self._last_async_response = self.receive()
-
-    def right_click(self) -> None:
-        pass
-
-    def left_click(self) -> None:
-        pass
-
-    def both_click(self) -> None:
-        pass
-
-    def compare_screen_with_snapshot(self,
-                                     golden_snap_path: Path,
-                                     crop: Optional[Crop] = None,
-                                     tmp_snap_path: Optional[Path] = None,
-                                     golden_run: bool = False) -> bool:
-        return True
-
-    def finger_touch(self, x: int = 0, y: int = 0, delay: float = 0.5) -> None:
-        pass
-
-    def wait_for_screen_change(self, timeout: float = 10.0) -> None:
-        return
-
-    def compare_screen_with_text(self, text: str) -> bool:
-        return True
-
-    def get_current_screen_content(self) -> Any:
-        return []

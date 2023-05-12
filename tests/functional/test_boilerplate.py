@@ -96,7 +96,7 @@ def test_waiting_screen(backend, firmware, navigator):
     with backend.exchange_async_raw(sign_tx_apdu):
         navigator.navigate_until_text_and_compare(NavInsID.USE_CASE_REVIEW_TAP, [
             NavInsID.USE_CASE_REVIEW_CONFIRM,
-            NavIns(NavInsID.WAIT_FOR_TEXT_ON_SCREEN, ("This app confirms actions", ))
+            NavIns(NavInsID.WAIT_FOR_TEXT_ON_SCREEN, ("This app enables signing", ))
         ], "Hold to sign", ROOT_SCREENSHOT_PATH, "waiting_screen")
 
     # Using WAIT_FOR_TEXT_NOT_ON_SCREEN instruction

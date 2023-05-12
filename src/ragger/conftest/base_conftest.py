@@ -26,10 +26,18 @@ FIRMWARES = [
 def pytest_addoption(parser):
     parser.addoption("--device", choices=DEVICES, required=True)
     parser.addoption("--backend", choices=BACKENDS, default="speculos")
-    parser.addoption("--display", action="store_true", default=False)
-    parser.addoption("--golden_run", action="store_true", default=False)
-    parser.addoption("--log_apdu_file", action="store", default=None)
-    parser.addoption("--seed", action="store", default=None)
+    parser.addoption("--display",
+                     action="store_true",
+                     default=False,
+                     help="Pops up a Qt interface displaying either the emulated device (Speculos "
+                     "backend) or the expected screens and actions (physical backend)")
+    parser.addoption("--golden_run",
+                     action="store_true",
+                     default=False,
+                     help="Do not compare the snapshots during testing, but instead save the live "
+                     "ones. Will only work with 'speculos' as the backend")
+    parser.addoption("--log_apdu_file", action="store", default=None, help="Log the APDU in a file")
+    parser.addoption("--seed", action="store", default=None, help="Set a custom seed")
 
 
 @pytest.fixture(scope="session")
@@ -153,9 +161,12 @@ def prepare_speculos_args(root_pytest_dir: Path, firmware: Firmware, display: bo
 def create_backend(root_pytest_dir: Path, backend_name: str, firmware: Firmware, display: bool,
                    log_apdu_file: Optional[Path], cli_user_seed: str):
     if backend_name.lower() == "ledgercomm":
-        return LedgerCommBackend(firmware=firmware, interface="hid", log_apdu_file=log_apdu_file)
+        return LedgerCommBackend(firmware=firmware,
+                                 interface="hid",
+                                 log_apdu_file=log_apdu_file,
+                                 with_gui=display)
     elif backend_name.lower() == "ledgerwallet":
-        return LedgerWalletBackend(firmware=firmware, log_apdu_file=log_apdu_file)
+        return LedgerWalletBackend(firmware=firmware, log_apdu_file=log_apdu_file, with_gui=display)
     elif backend_name.lower() == "speculos":
         app_path, speculos_args = prepare_speculos_args(root_pytest_dir, firmware, display,
                                                         cli_user_seed)

@@ -30,6 +30,10 @@ def get_apdu_logger():
     return logging.getLogger("ragger.apdu_logger")
 
 
+def get_gui_logger():
+    return logging.getLogger("ragger.gui")
+
+
 def _init_logger(logger: logging.Logger, format: Optional[str]):
     format = format or DEFAULT_FORMAT
     logger.handlers.clear()
@@ -40,10 +44,8 @@ def _init_logger(logger: logging.Logger, format: Optional[str]):
 
 
 def init_loggers(format: Optional[str] = None):
-    # Regular logger
-    _init_logger(get_default_logger(), format)
-    # APDU logger
-    _init_logger(get_apdu_logger(), format)
+    for logger in [get_default_logger(), get_apdu_logger(), get_gui_logger()]:
+        _init_logger(logger, format)
 
 
 def set_apdu_logger_file(log_apdu_file: Path):

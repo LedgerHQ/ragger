@@ -115,8 +115,8 @@ class SpeculosBackend(BackendInterface):
 
         return self
 
-    def __exit__(self, *args, **kwargs):
-        self._client.__exit__(*args, **kwargs)
+    def __exit__(self, *args):
+        self._client.__exit__(*args)
 
     def handle_usb_reset(self) -> None:
         pass

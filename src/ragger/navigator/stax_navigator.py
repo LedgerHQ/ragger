@@ -19,7 +19,8 @@ from typing import Callable, Dict
 from ragger.backend import BackendInterface
 from ragger.firmware import Firmware
 from ragger.firmware.stax import FullScreen
-from ragger.navigator import NavInsID, Navigator
+from .navigator import Navigator
+from .instruction import NavInsID
 
 
 class StaxNavigator(Navigator):
