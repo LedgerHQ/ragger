@@ -1,0 +1,79 @@
+name: Deploy Ragger
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  package_and_deploy:
+    name: Build and deploy Ragger Python Package
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Clone
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Build Ragger Python package
+      run: |
+        pip install --upgrade pip build twine
+        PIP_EXTRA_INDEX_URL=https://test.pypi.org/simple/ python -m build
+        python -m twine check dist/*
+
+    - name: Get tag version
+      id: tag
+      run: |
+        echo "TAG_VERSION=${GITHUB_REF#refs/tags/}" >> "$GITHUB_ENV"
+        echo "Tag version: '${{ env.TAG_VERSION }}'"
+
+    - name: Check version against CHANGELOG
+      run: |
+        CHANGELOG_VERSION=$(grep -Po '(?<=## \[)(\d\.)+[^\]]' CHANGELOG.md | head -n 1)
+        if [ "${{ env.TAG_VERSION }}" == "${CHANGELOG_VERSION}" ]; \
+        then \
+            exit 0; \
+        else \
+            echo "Tag '${{ env.TAG_VERSION }}' and CHANGELOG '${CHANGELOG_VERSION}' versions mismatch!"; \
+            exit 1; \
+        fi
+
+    - name: Get current branch
+      id: branch
+      run: |
+        echo "BRANCH_NAME=$(git branch -r --contains ${{ github.ref }})" >> "$GITHUB_ENV"
+        echo "Current branch: ${{ env.BRANCH_NAME }}"
+
+    - name: Display current status
+      run: |
+        echo "Current status is:"
+        echo "- Tag version: '${{ env.TAG_VERSION }}'"
+        echo "- Current branch: '${{ env.CURRENT_BRANCH }}'"
+
+    - name: Publish Python package on test.pypi.org
+      if: env.BRANCH_NAME == 'origin/develop'
+      run: python -m twine upload --repository testpypi dist/*
+      env:
+        TWINE_USERNAME: __token__
+        # TWINE_PASSWORD: ${{ secrets.TEST_PYPI_PUBLIC_API_TOKEN  }}
+        TWINE_NON_INTERACTIVE: 1
+
+    - name: Publish Python package on pypi.org
+      if: env.BRANCH_NAME == 'origin/master'
+      run: python -m twine upload dist/*
+      env:
+        TWINE_USERNAME: __token__
+        # TWINE_PASSWORD: ${{ secrets.PYPI_PUBLIC_API_TOKEN  }}
+        TWINE_NON_INTERACTIVE: 1
+
+    - name: Publish a release on the repo
+      if: contains(fromJSON('["origin/develop", "origin/master"]'), env.BRANCH_NAME)
+      uses: "marvinpinto/action-automatic-releases@latest"
+      with:
+        automatic_release_tag: "v${{ env.TAG_VERSION }}"
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        prerelease: true
+        files: |
+          LICENSE
+          dist/
