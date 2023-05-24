@@ -50,13 +50,15 @@ jobs:
         echo "Current status is:"
         echo "- Tag version: '${{ env.TAG_VERSION }}'"
         echo "- Current branch: '${{ env.CURRENT_BRANCH }}'"
+        echo "- Content of the ragger/__version__.py file:"
+        cat src/ragger/__version__.py
 
     - name: Publish Python package on test.pypi.org
       if: env.BRANCH_NAME == 'origin/develop'
       run: python -m twine upload --repository testpypi dist/*
       env:
         TWINE_USERNAME: __token__
-        # TWINE_PASSWORD: ${{ secrets.TEST_PYPI_PUBLIC_API_TOKEN  }}
+        TWINE_PASSWORD: ${{ secrets.TEST_PYPI_PUBLIC_API_TOKEN  }}
         TWINE_NON_INTERACTIVE: 1
 
     - name: Publish Python package on pypi.org
@@ -64,7 +66,7 @@ jobs:
       run: python -m twine upload dist/*
       env:
         TWINE_USERNAME: __token__
-        # TWINE_PASSWORD: ${{ secrets.PYPI_PUBLIC_API_TOKEN  }}
+        TWINE_PASSWORD: ${{ secrets.PYPI_PUBLIC_API_TOKEN  }}
         TWINE_NON_INTERACTIVE: 1
 
     - name: Publish a release on the repo

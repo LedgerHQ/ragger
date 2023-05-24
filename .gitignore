@@ -5,6 +5,7 @@
 coverage.xml
 build/
 dist/
+__version__.py
 
 tests/elfs/
 snapshots-tmp/
