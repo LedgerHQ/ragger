@@ -17,6 +17,8 @@ jobs:
     steps:
       - name: Clone
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: Install APT dependencies
         run: |
           sudo apt-get update

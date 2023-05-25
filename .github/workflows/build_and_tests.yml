@@ -1,11 +1,10 @@
-name: Build, test and deploy Ragger
+name: Build and test Ragger
 
 on:
   workflow_dispatch:
   push:
     branches:
       - master
-      - main
       - develop
   pull_request:
 
@@ -26,6 +25,8 @@ jobs:
     steps:
     - name: Clone
       uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
 
     - name: Speculos dependencies
       run: sudo apt-get update && sudo apt-get install -y qemu-user-static tesseract-ocr libtesseract-dev
@@ -51,53 +52,3 @@ jobs:
       uses: codecov/codecov-action@v1
       with:
         name: codecov-ragger
-
-  package_and_deploy:
-    name: Build and deploy Ragger Python Package
-    needs: [build_install_test]
-    runs-on: ubuntu-latest
-    steps:
-
-    - name: Clone
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
-
-    - name: Get Ragger version
-      id: version
-      run: |
-        echo "##[set-output name=version;]$(cat src/ragger/__init__.py  | grep __version__ | cut -d ' ' -f 3 | sed s/\"//g)";
-        echo "Version registered: ${{ steps.version.outputs.version }}"
-
-    - name: Build Ragger python package
-      run: |
-        pip install --upgrade pip build twine
-        PIP_EXTRA_INDEX_URL=https://test.pypi.org/simple/ python -m build
-        python -m twine check dist/*
-
-    - name: Publish Python package on test.pypi.org
-      if: success() && github.event_name == 'push' && github.ref == 'refs/heads/develop' && contains(github.event.head_commit.message, 'release')
-      run: python -m twine upload --repository testpypi dist/*
-      env:
-        TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.TEST_PYPI_PUBLIC_API_TOKEN  }}
-        TWINE_NON_INTERACTIVE: 1
-
-    - name: Publish Python package on pypi.org
-      if: success() && github.event_name == 'push' && github.ref == 'refs/heads/master' && contains(github.event.head_commit.message, 'release')
-      run: python -m twine upload dist/*
-      env:
-        TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.PYPI_PUBLIC_API_TOKEN  }}
-        TWINE_NON_INTERACTIVE: 1
-
-    - name: Publish a release on the repo
-      if: success() && github.event_name == 'push' && contains(fromJSON('["refs/heads/develop", "refs/heads/master"]'), github.ref) && contains(github.event.head_commit.message, 'release')
-      uses: "marvinpinto/action-automatic-releases@latest"
-      with:
-        automatic_release_tag: "v${{ steps.version.outputs.version }}"
-        repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        prerelease: true
-        files: |
-          LICENSE
-          dist/

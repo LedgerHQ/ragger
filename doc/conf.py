@@ -54,9 +54,9 @@ import sys
 
 sys.path.insert(0, os.path.abspath('../src/'))
 
-from ragger import __version__
-version = __version__
-release = __version__
+from importlib.metadata import version as get_version
+release = get_version('ragger')
+version = '.'.join(release.split('.')[:2])
 
 ## Autodoc conf ##
 
