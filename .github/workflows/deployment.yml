@@ -33,19 +33,17 @@ jobs:
       id: tag
       run: |
         echo "TAG_VERSION=${GITHUB_REF#refs/tags/}" >> "$GITHUB_ENV"
-        echo "Tag version: '${{ env.TAG_VERSION }}'"
 
-    - name: Get current branch
-      id: branch
+    - name: Get destination repository
+      id: destination
       run: |
-        echo "BRANCH_NAME=$(git branch -r --contains ${{ github.ref }})" >> "$GITHUB_ENV"
-        echo "Current branch: ${{ env.BRANCH_NAME }}"
+        echo "DESTINATION=$(python tools/info_extractor.py --destination ${GITHUB_REF#refs/*/})" >> "$GITHUB_ENV"
 
     - name: Display current status
       run: |
         echo "Current status is:"
         echo "- Tag version: '${{ env.TAG_VERSION }}'"
-        echo "- Current branch: '${{ env.CURRENT_BRANCH }}'"
+        echo "- Pypi repository destination: '${{ env.DESTINATION }}'"
         echo "- Content of the ragger/__version__.py file:"
         cat src/ragger/__version__.py
 
@@ -62,7 +60,7 @@ jobs:
         fi
 
     - name: Publish Python package on test.pypi.org
-      if: startsWith(github.ref, 'refs/tags/') && env.BRANCH_NAME == 'origin/develop'
+      if: startsWith(github.ref, 'refs/tags/') && env.DESTINATION == 'test.pypi.org'
       run: python -m twine upload --repository testpypi dist/*
       env:
         TWINE_USERNAME: __token__
@@ -70,7 +68,7 @@ jobs:
         TWINE_NON_INTERACTIVE: 1
 
     - name: Publish Python package on pypi.org
-      if: startsWith(github.ref, 'refs/tags/') && env.BRANCH_NAME == 'origin/master'
+      if: startsWith(github.ref, 'refs/tags/') && env.DESTINATION == 'pypi.org'
       run: python -m twine upload dist/*
       env:
         TWINE_USERNAME: __token__
@@ -78,7 +76,7 @@ jobs:
         TWINE_NON_INTERACTIVE: 1
 
     - name: Publish a release on the repo
-      if: startsWith(github.ref, 'refs/tags/') && contains(fromJSON('["origin/develop", "origin/master"]'), env.BRANCH_NAME)
+      if: startsWith(github.ref, 'refs/tags/')
       uses: "marvinpinto/action-automatic-releases@latest"
       with:
         automatic_release_tag: "v${{ env.TAG_VERSION }}"

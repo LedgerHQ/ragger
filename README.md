@@ -60,7 +60,8 @@ If the Speculos extra is installed (to use the `SpeculosBackend`), system depend
 
 ## Features
 
-The `src/ragger/backend/interface.py` file describes the methods that can be implemented by the different backends and that allow to interact with a device (either a real device or emulated):
+The `src/ragger/backend/interface.py` file describes the methods that can be implemented by the
+different backends and that allow to interact with a device (either a real device or emulated):
 
 * `send`: send a formatted APDU.
 * `send_raw`: send a raw APDU.
@@ -75,12 +76,16 @@ The `src/ragger/backend/interface.py` file describes the methods that can be imp
 * `finger_touch`: performs a finger touch on the device screen.
 * `compare_screen_with_snapshot`: compare the current device screen with the provided snapshot.
 
-The `src/ragger/navigator/navigator.py` file describes the methods that can be implemented by the different device navigators and that allow to interact with an emulated device:
+The `src/ragger/navigator/navigator.py` file describes the methods that can be implemented by the
+different device navigators and that allow to interact with an emulated device:
 * `navigate`: navigate on the device according to a set of navigation instructions provided.
-* `navigate_and_compare`: navigate on the device according to a set of navigation instructions provided then compare each step screenshot with "golden images".
+* `navigate_and_compare`: navigate on the device according to a set of navigation instructions
+  provided then compare each step screenshot with "golden images".
 * `navigate_until_snap`: navigate on the device until a snapshot is found and then validate.
-* `navigate_until_text`: navigate on the device until a text string is found on screen and then validate.
-* `navigate_until_text_and_compare`: same as `navigate_until_text` but compare screenshots taken at each step with "golden images".
+* `navigate_until_text`: navigate on the device until a text string is found on screen and then
+  validate.
+* `navigate_until_text_and_compare`: same as `navigate_until_text` but compare screenshots taken at
+  each step with "golden images".
 
 ## Examples
 ### With `pytest`
@@ -166,3 +171,21 @@ Once done, you can generate the documentation:
 ```bash
 (cd doc && make gen_resources && make html)
 ```
+
+## Repository deployment, versions & tags
+
+Versions and changes are documented into the [CHANGELOG.md](CHANGELOG.MD) file.
+
+Pushing a tag on the central GitHub repository triggers a deployment. Python packages are deployed
+onto `pypi.org` or `test.pypi.org` depending on the tag, which must follow the following scheme:
+
+- if the tag starts with `test-v`, for instance `test-v2.9.23`, the package is deployed on
+  `test.pypi.org` with version `2.9.23`.
+- if the tag directly is composed of the `v` + the version, for instance `v2.9.23`, the package is
+  deployed on `pypi.org` with version `2.9.23`.
+
+The version substring itself must respect the basic form of semantic versioning, i.e `(\d\.){2}\d`.
+`-alpha`, `.dev22+ff35` or whatever other format will not be accepted, and the CI will fail.
+
+The version embedded into the tag must also fit with the latest version documented into the
+[CHANGELOG.md](CHANGELOG.MD) file. If not, the CI will fail.

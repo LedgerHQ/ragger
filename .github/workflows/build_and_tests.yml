@@ -25,6 +25,8 @@ jobs:
     steps:
     - name: Clone
       uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
 
     - name: Speculos dependencies
       run: sudo apt-get update && sudo apt-get install -y qemu-user-static tesseract-ocr libtesseract-dev
