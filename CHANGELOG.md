@@ -8,9 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-
 - backend: Physical backends (`LedgerComm`, `LedgerWallet`) can now pop a GUI in order to guide a
            user performing tests on a physical device.
+
+### Changed
+- package: Version is not longer hardcoded in sources, but inferred from tag then bundled into the
+           package thanks to `setuptools_scm`
 
 ### Changed
 
