@@ -8,8 +8,7 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools_scm]
 write_to = "src/ragger/__version__.py"
-tag_regex = "((?P<destination>test)-)?v(?P<version>(\\d\\.){2}\\d)"
-fallback_version = "0.0.0"
+local_scheme = "no-local-version"
 
 [tool.mypy]
 ignore_missing_imports = true
