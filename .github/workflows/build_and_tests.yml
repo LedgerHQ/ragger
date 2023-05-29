@@ -69,29 +69,32 @@ jobs:
       with:
         fetch-depth: 0
 
+    # Fetching dependencies from test.pypi,org or pypi.org depending on the package destination:
+    # tag -> pypi.org, not tag -> test.pypi.org
     - name: Build Ragger Python package
       run: |
         pip install --upgrade pip build twine
-        PIP_EXTRA_INDEX_URL=https://test.pypi.org/simple/ python -m build
+        if [[ ${{ github.ref }} == "refs/tags/"* ]]; \
+        then \
+            python -m build; \
+            pip install .
+        else \
+            PIP_EXTRA_INDEX_URL=https://test.pypi.org/simple/ python -m build; \
+            pip install --extra-index-url https://test.pypi.org/simple/ .
+        fi
         python -m twine check dist/*
-
-    - name: Get tag version
-      id: tag
-      run: |
-        echo "TAG_VERSION=${GITHUB_REF#refs/tags/}" >> "$GITHUB_ENV"
-
-    - name: Get destination repository
-      id: destination
-      run: |
-        echo "DESTINATION=$(python tools/info_extractor.py --destination ${GITHUB_REF#refs/*/})" >> "$GITHUB_ENV"
+        echo "TAG_VERSION=$(python -c 'from ragger import __version__; print(__version__)')" >> "$GITHUB_ENV"
 
     - name: Display current status
       run: |
         echo "Current status is:"
-        echo "- Tag version: '${{ env.TAG_VERSION }}'"
-        echo "- Pypi repository destination: '${{ env.DESTINATION }}'"
-        echo "- Content of the ragger/__version__.py file:"
-        cat src/ragger/__version__.py
+        if [[ ${{ github.ref }} == "refs/tags/"* ]]; \
+        then \
+            echo "- Triggered from tag, will be deployed on pypi.org"; \
+        else \
+            echo "- Not triggered from tag, will be deployed on test.pypi.org"; \
+        fi
+        echo "- Tag version: ${{ env.TAG_VERSION }}"
 
     - name: Check version against CHANGELOG
       if: startsWith(github.ref, 'refs/tags/')
@@ -106,7 +109,7 @@ jobs:
         fi
 
     - name: Publish Python package on test.pypi.org
-      if: startsWith(github.ref, 'refs/tags/') && env.DESTINATION == 'test.pypi.org'
+      if: success() && github.event_name == 'push' && !startsWith(github.ref, 'refs/tags/')
       run: python -m twine upload --repository testpypi dist/*
       env:
         TWINE_USERNAME: __token__
@@ -114,7 +117,7 @@ jobs:
         TWINE_NON_INTERACTIVE: 1
 
     - name: Publish Python package on pypi.org
-      if: startsWith(github.ref, 'refs/tags/') && env.DESTINATION == 'pypi.org'
+      if: success() && github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
       run: python -m twine upload dist/*
       env:
         TWINE_USERNAME: __token__
