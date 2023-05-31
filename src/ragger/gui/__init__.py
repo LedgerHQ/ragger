@@ -16,7 +16,8 @@
 try:
     from .process import RaggerGUI
 except ImportError as e:
-    if e.name != "QtCore":
+    # Can be 'QtCore' or 'QtWidgets'
+    if e.name is None or not e.name.startswith("Qt"):
         raise e
 
     def RaggerGUI(*args, **kwatgs):  # type: ignore

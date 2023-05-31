@@ -6,9 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## [1.8.1] - 2023-05-30
+## [1.8.2] - 2023-05-31
 
-### Fix
+### Fixed
+- import: Fix from 1.8.1 was not wide enough. Exception was filtered on 'QtCore', but they could
+          also throw as 'QtWidgets'.
+
+## [1.8.1] - 2023-05-31
+
+### Fixed
 - import: Feature developed in [this branch](https://github.com/LedgerHQ/ragger/pull/76) forced all
           Ragger installation to have PyQt5 and its dependencies installed. This is no longer the
           case.
