@@ -13,12 +13,15 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-from struct import pack
+try:
+    from .process import RaggerGUI
+except ImportError as e:
+    if e.name != "QtCore":
+        raise e
+
+    def RaggerGUI(*args, **kwatgs):  # type: ignore
+        raise ImportError(
+            "This feature needs PyQt5. Please install this package (run `pip install pyqt5`)")
 
 
-def pack_APDU(cla: int,
-              ins: int,
-              p1: int = 0,
-              p2: int = 0,
-              data: bytes = b"") -> bytes:
-    return pack(">BBBBB", cla, ins, p1, p2, len(data)) + data
+__all__ = ["RaggerGUI"]

@@ -13,91 +13,143 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-from pathlib import Path
 from contextlib import contextmanager
-from typing import Optional, Iterable, Generator
+from io import BytesIO
+from pathlib import Path
+from PIL import Image
+from typing import Optional, Generator
+from time import time, sleep
+from json import dumps
 
-from speculos.client import SpeculosClient, ApduResponse, ApduException
+from speculos.client import SpeculosClient, screenshot_equal, ApduResponse, ApduException
 
-from ragger import logger
-from .interface import BackendInterface, RAPDU
+from ragger.error import ExceptionRAPDU
+from ragger.firmware import Firmware
+from ragger.utils import RAPDU, Crop
+from .interface import BackendInterface
 
 
-def manage_error(function):
+def raise_policy_enforcer(function):
 
     def decoration(self: 'SpeculosBackend', *args, **kwargs) -> RAPDU:
+        # Catch backend raise
         try:
-            rapdu = function(self, *args, **kwargs)
+            rapdu: RAPDU = function(self, *args, **kwargs)
         except ApduException as error:
-            if self.raises and not self.is_valid(error.sw):
-                raise error
             rapdu = RAPDU(error.sw, error.data)
-        logger.debug("Receiving '%s'", rapdu)
-        return rapdu
+
+        self.apdu_logger.info("<= %s%4x", rapdu.data.hex(), rapdu.status)
+
+        if self.is_raise_required(rapdu):
+            raise ExceptionRAPDU(rapdu.status, rapdu.data)
+        else:
+            return rapdu
 
     return decoration
 
 
 class SpeculosBackend(BackendInterface):
 
+    _ARGS_KEY = 'args'
+
     def __init__(self,
                  application: Path,
+                 firmware: Firmware,
                  host: str = "127.0.0.1",
                  port: int = 5000,
-                 raises: bool = False,
-                 valid_statuses: Iterable[int] = (0x9000, ),
+                 log_apdu_file: Optional[Path] = None,
                  **kwargs):
-        super().__init__(raises=raises, valid_statuses=valid_statuses)
+        super().__init__(firmware=firmware, log_apdu_file=log_apdu_file)
         self._host = host
         self._port = port
+        args = ["--model", firmware.device]
+        if self._ARGS_KEY in kwargs:
+            assert isinstance(kwargs[self._ARGS_KEY], list), \
+                f"'{self._ARGS_KEY}' ({kwargs[self._ARGS_KEY]}) keyword " \
+                "argument  must be a list of arguments"
+            kwargs[self._ARGS_KEY].extend(args)
+        else:
+            kwargs[self._ARGS_KEY] = args
         self._client: SpeculosClient = SpeculosClient(app=str(application),
                                                       api_url=self.url,
                                                       **kwargs)
         self._pending: Optional[ApduResponse] = None
+        self._last_screenshot: Optional[BytesIO] = None
+        self._home_screenshot: Optional[BytesIO] = None
 
     @property
     def url(self) -> str:
         return f"http://{self._host}:{self._port}"
 
+    def _retrieve_client_screen_content(self) -> dict:
+        raw_content = self._client.get_current_screen_content()
+        # Keep only text events
+        # This removes events such as: {'text': ' ', 'x': 0, 'y': 464}
+        # They probably comes from long press progress bar on Stax
+        # and if not removed they falsely make wait_for_screen_change
+        # consider screen as changed when screen text didn't and that's
+        # what we want here.
+        events = []
+        for event in raw_content.get("events", []):
+            if event.get("text", "").strip():
+                events.append(event)
+        return {"events": events}
+
     def __enter__(self) -> "SpeculosBackend":
-        logger.info(f"Starting {self.__class__.__name__} stream")
+        self.logger.info(f"Starting {self.__class__.__name__} stream")
         self._client.__enter__()
+
+        # Wait until some text is displayed on the screen.
+        start = time()
+        while not self._retrieve_client_screen_content()["events"]:
+            # Give some time to other threads, and mostly Speculos one
+            sleep(0.25)
+            if (time() - start > 20.0):
+                raise TimeoutError(
+                    "Timeout waiting for screen content upon Ragger Speculos Instance start")
+
+        self._last_screenshot = BytesIO(self._client.get_screenshot())
+
+        # Save current screenshot as _home_screenshot.
+        self._home_screenshot = self._last_screenshot
+
         return self
 
-    def __exit__(self, *args, **kwargs):
-        self._client.__exit__(*args, **kwargs)
+    def __exit__(self, *args):
+        self._client.__exit__(*args)
+
+    def handle_usb_reset(self) -> None:
+        pass
 
     def send_raw(self, data: bytes = b"") -> None:
-        logger.debug("Sending '%s'", data)
+        self.apdu_logger.info("=> %s", data.hex())
         self._pending = ApduResponse(self._client._apdu_exchange_nowait(data))
 
-    @manage_error
+    @raise_policy_enforcer
     def receive(self) -> RAPDU:
         assert self._pending is not None
         result = RAPDU(0x9000, self._pending.receive())
-        logger.debug("Receiving '%s'", result)
         return result
 
-    @manage_error
+    @raise_policy_enforcer
     def exchange_raw(self, data: bytes = b"") -> RAPDU:
-        logger.debug("Sending '%s'", data)
+        self.apdu_logger.info("=> %s", data.hex())
         return RAPDU(0x9000, self._client._apdu_exchange(data))
 
+    @raise_policy_enforcer
+    def _get_last_async_response(self, response) -> RAPDU:
+        return RAPDU(0x9000, response.receive())
+
     @contextmanager
-    def exchange_async_raw(self,
-                           data: bytes = b"") -> Generator[None, None, None]:
+    def exchange_async_raw(self, data: bytes = b"") -> Generator[None, None, None]:
+        self.apdu_logger.info("=> %s", data.hex())
         with self._client.apdu_exchange_nowait(cla=data[0],
                                                ins=data[1],
                                                p1=data[2],
                                                p2=data[3],
                                                data=data[5:]) as response:
             yield
-            try:
-                self._last_async_response = response.receive()
-            except ApduException as error:
-                if self.raises and not self.is_valid(error.sw):
-                    raise error
-                self._last_async_response = RAPDU(error.sw, error.data)
+            self._last_async_response = self._get_last_async_response(response)
 
     def right_click(self) -> None:
         self._client.press_and_release("right")
@@ -107,3 +159,70 @@ class SpeculosBackend(BackendInterface):
 
     def both_click(self) -> None:
         self._client.press_and_release("both")
+
+    def finger_touch(self, x: int = 0, y: int = 0, delay: float = 0.5) -> None:
+        self._client.finger_touch(x, y, delay)
+
+    def _save_screen_snapshot(self, snap: BytesIO, path: Path) -> None:
+        self.logger.info(f"Saving screenshot to image '{path}'")
+        img = Image.open(snap)
+        img.save(path)
+
+    def compare_screen_with_snapshot(self,
+                                     golden_snap_path: Path,
+                                     crop: Optional[Crop] = None,
+                                     tmp_snap_path: Optional[Path] = None,
+                                     golden_run: bool = False) -> bool:
+        snap = BytesIO(self._client.get_screenshot())
+
+        # Save snap in tmp folder.
+        # It allows the user to access the screenshots in case of comparison failure
+        if tmp_snap_path:
+            self._save_screen_snapshot(snap, tmp_snap_path)
+
+        # Allow to generate golden snapshots
+        if golden_run:
+            self._save_screen_snapshot(snap, golden_snap_path)
+
+        if crop is not None:
+            return screenshot_equal(f"{golden_snap_path}",
+                                    snap,
+                                    left=crop.left,
+                                    upper=crop.upper,
+                                    right=crop.right,
+                                    lower=crop.lower)
+        else:
+            return screenshot_equal(f"{golden_snap_path}", snap)
+
+    def get_current_screen_content(self) -> dict:
+        return self._retrieve_client_screen_content()
+
+    def compare_screen_with_text(self, text: str) -> bool:
+        return text in dumps(self._retrieve_client_screen_content())
+
+    def wait_for_screen_change(self, timeout: float = 10.0) -> None:
+        start = time()
+        screenshot = BytesIO(self._client.get_screenshot())
+        while screenshot_equal(screenshot, self._last_screenshot):
+            # Give some time to other threads, and mostly Speculos one
+            sleep(0.2)
+            if (time() - start > timeout):
+                raise TimeoutError("Timeout waiting for screen change")
+            screenshot = BytesIO(self._client.get_screenshot())
+
+        # Speculos has received at least one new event to redisplay the screen
+        # Wait a bit to ensure the event batch is received and processed by Speculos before returning
+        sleep(0.2)
+
+        # Update self._last_screenshot to use it as reference for next calls
+        self._last_screenshot = BytesIO(self._client.get_screenshot())
+
+    def wait_for_home_screen(self, timeout: float = 10.0) -> None:
+        if screenshot_equal(self._last_screenshot, self._home_screenshot):
+            return
+
+        endtime = time() + timeout
+        while True:
+            self.wait_for_screen_change(endtime - time())
+            if screenshot_equal(self._last_screenshot, self._home_screenshot):
+                return

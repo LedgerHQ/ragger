@@ -1,7 +1,14 @@
 *pyc
 *egg-info/
 *~
-.coverage
+.coverage*
+coverage.xml
 build/
+dist/
+__version__.py
 
 tests/elfs/
+snapshots-tmp/
+
+# doc
+doc/images/*generated*

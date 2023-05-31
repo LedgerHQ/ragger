@@ -1,11 +1,12 @@
 name: Fast checks
 
 on:
+  workflow_dispatch:
   push:
-  pull_request:
     branches:
       - develop
       - master
+  pull_request:
 
 jobs:
   lint:
@@ -13,30 +14,52 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Clone
-      uses: actions/checkout@v2
-    - name: Lint Python code
-      run: |
-        pip install flake8
-        find src/ -type f -name '*.py' -exec flake8 --max-line-length=120 '{}' '+' || echo 1
+      uses: actions/checkout@v3
+    - run: pip install flake8
+    - name: Flake8 lint Python code
+      run: find src/ -type f -name '*.py' -exec flake8 --max-line-length=120 '{}' '+'
 
   yapf:
     name: Formatting
     runs-on: ubuntu-latest
     steps:
     - name: Clone
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
+    - run: pip install yapf toml
     - name: Yapf source formatting
       run: |
-        pip install yapf toml
         yapf src/ --recursive -d
+        yapf tests/ --recursive -d
+        yapf template/ --recursive -d
 
   mypy:
     name: Type checking
     runs-on: ubuntu-latest
     steps:
     - name: Clone
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
+    - run: pip install mypy
     - name: Mypy type checking
-      run: |
-        pip install mypy
-        mypy src
+      run: mypy src
+
+  bandit:
+    name: Security checking
+    runs-on: ubuntu-latest
+    steps:
+    - name: Clone
+      uses: actions/checkout@v3
+    - run: pip install bandit
+    - name: Bandit security checking
+      run: bandit -r src -ll
+
+  misspell:
+    name: Check misspellings
+    runs-on: ubuntu-latest
+    steps:
+    - name: Clone
+      uses: actions/checkout@v3
+    - name: Check misspellings
+      uses: codespell-project/actions-codespell@v1
+      with:
+        builtin: clear,rare
+        check_filenames: true

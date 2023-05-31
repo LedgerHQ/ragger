@@ -14,39 +14,45 @@
    limitations under the License.
 """
 from contextlib import contextmanager
-from typing import Optional, Iterable, Generator
+from pathlib import Path
+from time import sleep
+from typing import Optional, Generator
 
 from ledgercomm import Transport
-from speculos.client import ApduException
 
-from ragger import logger
-from .interface import BackendInterface, RAPDU
+from ragger.firmware import Firmware
+from ragger.utils import RAPDU
+from ragger.error import ExceptionRAPDU
+from .physical_backend import PhysicalBackend
 
 
-def manage_error(function):
+def raise_policy_enforcer(function):
 
     def decoration(self: 'LedgerCommBackend', *args, **kwargs) -> RAPDU:
         rapdu: RAPDU = function(self, *args, **kwargs)
-        logger.debug("Receiving '%s'", rapdu)
-        if not self.raises or self.is_valid(rapdu.status):
+
+        self.apdu_logger.debug("<= %s%4x", rapdu.data.hex(), rapdu.status)
+
+        if self.is_raise_required(rapdu):
+            raise ExceptionRAPDU(rapdu.status, rapdu.data)
+        else:
             return rapdu
-        # else should raise
-        raise ApduException(rapdu.status, rapdu.data)
 
     return decoration
 
 
-class LedgerCommBackend(BackendInterface):
+class LedgerCommBackend(PhysicalBackend):
 
     def __init__(self,
+                 firmware: Firmware,
+                 *args,
                  host: str = "127.0.0.1",
                  port: int = 9999,
-                 raises: bool = False,
                  interface: str = 'hid',
-                 valid_statuses: Iterable[int] = (0x9000, ),
-                 *args,
+                 log_apdu_file: Optional[Path] = None,
+                 with_gui: bool = False,
                  **kwargs):
-        super().__init__(raises=raises, valid_statuses=valid_statuses)
+        super().__init__(firmware, *args, log_apdu_file=log_apdu_file, with_gui=with_gui, **kwargs)
         self._host = host
         self._port = port
         self._client: Optional[Transport] = None
@@ -54,49 +60,53 @@ class LedgerCommBackend(BackendInterface):
         self._args = (args, kwargs)
 
     def __enter__(self) -> "LedgerCommBackend":
-        logger.info(f"Starting {self.__class__.__name__} stream")
-        self._client = Transport(server=self._host,
-                                 port=self._port,
-                                 *self._args[0],
-                                 **self._args[1])
+        self.logger.info(f"Starting {self.__class__.__name__} stream")
+
+        try:
+            self._client = Transport(server=self._host,
+                                     port=self._port,
+                                     *self._args[0],
+                                     **self._args[1])
+        except Exception:
+            # Give some time for the USB stack to power up and to be enumerated
+            # Might be needed in successive tests where app is exited at the end of the test
+            sleep(1)
+            self._client = Transport(server=self._host,
+                                     port=self._port,
+                                     *self._args[0],
+                                     **self._args[1])
         return self
 
-    def __exit__(self, *args, **kwargs):
+    def __exit__(self, *args):
+        super().__exit__(*args)
         assert self._client is not None
         self._client.close()
 
+    def handle_usb_reset(self) -> None:
+        self.logger.info(f"Re-starting {self.__class__.__name__} stream")
+        self.__exit__()
+        self.__enter__()
+
     def send_raw(self, data: bytes = b"") -> None:
-        logger.debug("Sending '%s'", data)
+        self.apdu_logger.debug("=> %s", data.hex())
         assert self._client is not None
         self._client.send_raw(data)
 
-    @manage_error
+    @raise_policy_enforcer
     def receive(self) -> RAPDU:
         assert self._client is not None
         result = RAPDU(*self._client.recv())
-        logger.debug("Receiving '%s'", result)
         return result
 
-    @manage_error
+    @raise_policy_enforcer
     def exchange_raw(self, data: bytes = b"") -> RAPDU:
-        logger.debug("Exchange: sending   > '%s'", data)
+        self.apdu_logger.debug("=> %s", data.hex())
         assert self._client is not None
         result = RAPDU(*self._client.exchange_raw(data))
-        logger.debug("Exchange: receiving < '%s'", result)
         return result
 
     @contextmanager
-    def exchange_async_raw(self,
-                           data: bytes = b"") -> Generator[None, None, None]:
+    def exchange_async_raw(self, data: bytes = b"") -> Generator[None, None, None]:
         self.send_raw(data)
         yield
         self._last_async_response = self.receive()
-
-    def right_click(self) -> None:
-        pass
-
-    def left_click(self) -> None:
-        pass
-
-    def both_click(self) -> None:
-        pass

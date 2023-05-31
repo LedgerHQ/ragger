@@ -15,39 +15,48 @@
 """
 from abc import ABC, abstractmethod
 from contextlib import contextmanager
-from dataclasses import dataclass
+from enum import Enum, auto
+from pathlib import Path
+from time import time
 from types import TracebackType
-from typing import Optional, Type, Iterable, Generator
+from typing import Optional, Type, Generator, Any
 
-from ragger.utils import pack_APDU
+from ragger.firmware import Firmware
+from ragger.utils import pack_APDU, RAPDU, Crop
+from ragger.logger import get_default_logger, get_apdu_logger, set_apdu_logger_file
 
 
-@dataclass(frozen=True)
-class RAPDU:
-    status: int
-    data: bytes
-
-    def __str__(self):
-        return f'[0x{self.status:02x}] {self.data.hex() if self.data else "<Nothing>"}'
+class RaisePolicy(Enum):
+    RAISE_NOTHING = auto()
+    RAISE_ALL_BUT_0x9000 = auto()
+    RAISE_ALL = auto()
 
 
 class BackendInterface(ABC):
 
-    def __init__(self,
-                 raises: bool = False,
-                 valid_statuses: Iterable[int] = (0x9000, )):
+    def __init__(self, firmware: Firmware, log_apdu_file: Optional[Path] = None):
         """Initializes the Backend
 
-        :param raises: Weither the instance should raises on non-valid response
-                       statuses, or not.
-        :type raises: bool
-        :param valid_statuses: a list of RAPDU statuses considered successfull
-                               (default: [0x9000])
-        :type valid_statuses: any iterable
+        :param firmware: Which Firmware will be managed
+        :type firmware: Firmware
         """
-        self._raises = raises
-        self._valid_statuses = valid_statuses
+        self._firmware = firmware
         self._last_async_response: Optional[RAPDU] = None
+        self.raise_policy = RaisePolicy.RAISE_ALL_BUT_0x9000
+
+        if log_apdu_file:
+            set_apdu_logger_file(log_apdu_file=log_apdu_file)
+
+        self.logger = get_default_logger()
+        self.apdu_logger = get_apdu_logger()
+
+    @property
+    def firmware(self) -> Firmware:
+        """
+        :return: The currently managed Firmware.
+        :rtype: Firmware
+        """
+        return self._firmware
 
     @property
     def last_async_response(self) -> Optional[RAPDU]:
@@ -59,41 +68,35 @@ class BackendInterface(ABC):
         """
         return self._last_async_response
 
-    @property
-    def raises(self) -> bool:
-        """
-        :return: Weither the instance raises on non-0x9000 response statuses or
-                 not.
-        :rtype: bool
-        """
-        return self._raises
-
-    def is_valid(self, status: int) -> bool:
-        """
-        :param status: A status to check
-        :type status: int
-
-        :return: If the given status is considered valid or not
-        :rtype: bool
-        """
-        return status in self._valid_statuses
-
     @abstractmethod
     def __enter__(self) -> "BackendInterface":
         raise NotImplementedError
 
     @abstractmethod
-    def __exit__(self, exc_type: Optional[Type[BaseException]],
-                 exc_val: Optional[BaseException],
+    def __exit__(self, exc_type: Optional[Type[BaseException]], exc_val: Optional[BaseException],
                  exc_tb: Optional[TracebackType]):
         raise NotImplementedError
 
-    def send(self,
-             cla: int,
-             ins: int,
-             p1: int = 0,
-             p2: int = 0,
-             data: bytes = b"") -> None:
+    def handle_usb_reset(self) -> None:
+        """
+        Inform the backend that it should handle an USB reset.
+        This happen when an app is called as a lib and have to reinit the USB stack.
+
+        :return: None
+        :rtype: NoneType
+        """
+        raise NotImplementedError
+
+    def is_raise_required(self, rapdu: RAPDU) -> bool:
+        """
+        :return: If the given status is considered valid or not
+        :rtype: bool
+        """
+        return ((self.raise_policy == RaisePolicy.RAISE_ALL)
+                or ((self.raise_policy == RaisePolicy.RAISE_ALL_BUT_0x9000) and
+                    (rapdu.status != 0x9000)))
+
+    def send(self, cla: int, ins: int, p1: int = 0, p2: int = 0, data: bytes = b"") -> None:
         """
         Formats then sends an APDU to the backend.
 
@@ -137,25 +140,20 @@ class BackendInterface(ABC):
         Calling this method implies a command APDU has been previously sent
         to the backend, and a response is expected.
 
-        :raises ApduException: If the `raises` attribute is True, this method
-                               will raise if the backend returns a status code
-                               not registered a a `valid_statuses`
+        :raises ExceptionRAPDU: If the `raises` attribute is True, this method
+                                  will raise if the backend returns a status code
+                                  not registered as a `valid_statuses`
 
         :return: The APDU response
         :rtype: RAPDU
         """
         raise NotImplementedError
 
-    def exchange(self,
-                 cla: int,
-                 ins: int,
-                 p1: int = 0,
-                 p2: int = 0,
-                 data: bytes = b"") -> RAPDU:
+    def exchange(self, cla: int, ins: int, p1: int = 0, p2: int = 0, data: bytes = b"") -> RAPDU:
         """
         Formats and sends an APDU to the backend, then receives its response.
 
-        The length is automaticaly added to the APDU message.
+        The length is automatically added to the APDU message.
 
         :param cla: The application ID
         :type cla: int
@@ -168,9 +166,9 @@ class BackendInterface(ABC):
         :param data: Command data
         :type data: bytes
 
-        :raises ApduException: If the `raises` attribute is True, this method
-                               will raise if the backend returns a status code
-                               different from 0x9000
+        :raises ExceptionRAPDU: If the `raises` attribute is True, this method
+                                  will raise if the backend returns a status code
+                                  not registered as a `valid_statuses`
 
         :return: The APDU response
         :rtype: RAPDU
@@ -188,9 +186,9 @@ class BackendInterface(ABC):
         :param data: The APDU message
         :type data: bytes
 
-        :raises ApduException: If the `raises` attribute is True, this method
-                               will raise if the backend returns a status code
-                               not registered a a `valid_statuses`
+        :raises ExceptionRAPDU: If the `raises` attribute is True, this method
+                                  will raise if the backend returns a status code
+                                  not registered as a `valid_statuses`
 
         :return: The APDU response
         :rtype: RAPDU
@@ -225,9 +223,9 @@ class BackendInterface(ABC):
         :param data: Command data
         :type data: bytes
 
-        :raises ApduException: If the `raises` attribute is True, this method
-                               will raise if the backend returns a status code
-                               not registered a a `valid_statuses`
+        :raises ExceptionRAPDU: If the `raises` attribute is True, this method
+                                  will raise if the backend returns a status code
+                                  not registered as a `valid_statuses`
 
         :return: None
         :rtype: NoneType
@@ -237,8 +235,7 @@ class BackendInterface(ABC):
 
     @contextmanager
     @abstractmethod
-    def exchange_async_raw(self,
-                           data: bytes = b"") -> Generator[None, None, None]:
+    def exchange_async_raw(self, data: bytes = b"") -> Generator[None, None, None]:
         """
         Sends the given APDU to the backend, then gives the control back to the
         caller.
@@ -249,9 +246,9 @@ class BackendInterface(ABC):
         :param data: The APDU message
         :type data: bytes
 
-        :raises ApduException: If the `raises` attribute is True, this method
-                               will raise if the backend returns a status code
-                               not registered a a `valid_statuses`
+        :raises ExceptionRAPDU: If the `raises` attribute is True, this method
+                                  will raise if the backend returns a status code
+                                  not registered a a `valid_statuses`
 
         :return: None
         :rtype: NoneType
@@ -306,5 +303,194 @@ class BackendInterface(ABC):
 
         :return: None
         :rtype: NoneType
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def finger_touch(self, x: int = 0, y: int = 0, delay: float = 0.5) -> None:
+        """
+        Performs a finger touch on the device screen.
+
+        This method may be left void on backends connecting to physical devices,
+        where a physical interaction must be performed instead.
+        This will prevent the instrumentation to fail (the void method won't
+        raise `NotImplementedError`), but the instrumentation flow will probably
+        get stuck (on further call to `receive` for instance) until the expected
+        action is performed on the device.
+
+        :param x: The x coordinate of the finger touch.
+        :type x: int
+        :param y: The y coordinate of the finger touch.
+        :type y: int
+        :param delay: Delay between finger touch press and release actions.
+        :type delay: float
+
+        :return: None
+        :rtype: NoneType
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def compare_screen_with_snapshot(self,
+                                     golden_snap_path: Path,
+                                     crop: Optional[Crop] = None,
+                                     tmp_snap_path: Optional[Path] = None,
+                                     golden_run: bool = False) -> bool:
+        """
+        Compare the current device screen with the provided snapshot.
+
+        :param golden_snap_path: The path to the snap to compare the screen
+                                 device with
+        :type golden_snap_path: Path
+        :param crop: Optional crop options to use for the comparison
+        :type crop: Crop
+        :param tmp_snap_path: Optional path where to store the screen snap used
+                              for the comparison
+        :type tmp_snap_path: Path
+        :param golden_run: Optional option to save the current screen as golden
+                           instead of comparing it.
+        :type golden_run: bool
+
+        :return: True if matches else False
+        :rtype: bool
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def wait_for_screen_change(self, timeout: float = 10.0) -> None:
+        """
+        Wait until the screen content changes compared to the last
+        reference stored internally by the backend.
+
+        This method may be left void on backends connecting to physical devices,
+        where a physical interaction must be performed instead.
+        This will prevent the instrumentation to fail (the void method won't
+        raise `NotImplementedError`), but the instrumentation flow will probably
+        get stuck (on further call to `receive` for instance) until the expected
+        action is performed on the device.
+
+        :param timeout: Maximum time to wait for a screen change before an
+                        exception is raised.
+        :type timeout: float
+
+        :return: None
+        :rtype: NoneType
+        """
+        raise NotImplementedError
+
+    def wait_for_home_screen(self, timeout: float = 10.0) -> None:
+        """
+        Wait until the screen content is equal to the app home screen.
+
+        This method may be left void on backends connecting to physical devices,
+        where a physical interaction must be performed instead.
+        This will prevent the instrumentation to fail (the void method won't
+        raise `NotImplementedError`), but the instrumentation flow will probably
+        get stuck (on further call to `receive` for instance) until the expected
+        action is performed on the device.
+
+        :param timeout: Maximum time to wait for a screen change before an
+                        exception is raised.
+        :type timeout: float
+
+        :return: None
+        :rtype: NoneType
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def compare_screen_with_text(self, text: str) -> bool:
+        """
+        Checks if the current screen content contains the text
+        string provided.
+
+        This method may be left void on backends connecting to physical devices,
+        where a physical interaction must be performed instead.
+        This will prevent the instrumentation to fail (the void method won't
+        raise `NotImplementedError`), but the instrumentation flow will probably
+        get stuck (on further call to `receive` for instance) until the expected
+        action is performed on the device.
+
+        :param text:
+        :type text: str
+        :return: True if the content contains the string, False
+                 otherwise.
+        :rtype: bool
+        """
+        raise NotImplementedError
+
+    def wait_for_text_on_screen(self, text: str, timeout: float = 10.0) -> None:
+        """
+        Wait until the screen content contains the text string provider.
+
+        This method may be left void on backends connecting to physical devices,
+        where a physical interaction must be performed instead.
+        This will prevent the instrumentation to fail (the void method won't
+        raise `NotImplementedError`), but the instrumentation flow will probably
+        get stuck (on further call to `receive` for instance) until the expected
+        action is performed on the device.
+
+        :param text:
+        :type text: str
+        :param timeout: Maximum time to wait for a screen change before an
+                        exception is raised.
+        :type timeout: float
+
+        :return: None
+        :rtype: NoneType
+        """
+        if self.compare_screen_with_text(text):
+            return
+
+        endtime = time() + timeout
+        while True:
+            self.wait_for_screen_change(endtime - time())
+            if self.compare_screen_with_text(text):
+                return
+
+    def wait_for_text_not_on_screen(self, text: str, timeout: float = 10.0) -> None:
+        """
+        Wait until the screen content does not contains the text string provider.
+
+        This method may be left void on backends connecting to physical devices,
+        where a physical interaction must be performed instead.
+        This will prevent the instrumentation to fail (the void method won't
+        raise `NotImplementedError`), but the instrumentation flow will probably
+        get stuck (on further call to `receive` for instance) until the expected
+        action is performed on the device.
+
+        :param text:
+        :type text: str
+        :param timeout: Maximum time to wait for a screen change before an
+                        exception is raised.
+        :type timeout: float
+
+        :return: None
+        :rtype: NoneType
+        """
+        if not self.compare_screen_with_text(text):
+            return
+
+        endtime = time() + timeout
+        while True:
+            self.wait_for_screen_change(endtime - time())
+            if not self.compare_screen_with_text(text):
+                return
+
+    @abstractmethod
+    def get_current_screen_content(self) -> Any:
+        """
+        Returns the current screen content.
+
+        This method may be left void on backends connecting to physical devices,
+        where a physical interaction must be performed instead.
+        This will prevent the instrumentation to fail (the void method won't
+        raise `NotImplementedError`), but the instrumentation flow will probably
+        get stuck (on further call to `receive` for instance) until the expected
+        action is performed on the device.
+
+        :return: Current screen content as an opaque type depending on backend
+                 implem.
+        :rtype: Any
         """
         raise NotImplementedError

@@ -13,13 +13,11 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-import logging
+try:
+    from ragger.__version__ import __version__  # noqa
+except ImportError:
+    __version__ = "unknown version"  # noqa
 
-logger = logging.getLogger(__package__)
-logger.setLevel(level=logging.DEBUG)
+from ragger.logger import init_loggers
 
-handler = logging.StreamHandler()
-handler.setFormatter(
-    logging.Formatter('[%(asctime)s][%(levelname)s] %(name)s - %(message)s'))
-
-logger.addHandler(handler)
+init_loggers()

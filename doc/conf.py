@@ -24,15 +24,25 @@ author = 'bow'
 
 # -- General configuration ---------------------------------------------------
 
+html_favicon = "images/ragger.png"
+
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
+    'sphinx_copybutton',
+    'sphinxcontrib.images',
 ]
+
+images_config = {
+    "default_image_width": "90%",
+}
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
+
+html_sidebars = { '**': ['globaltoc.html', 'relations.html', 'sourcelink.html', 'searchbox.html'] }
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -44,14 +54,31 @@ import sys
 
 sys.path.insert(0, os.path.abspath('../src/'))
 
-# Autodoc conf
+from importlib.metadata import version as get_version
+release = get_version('ragger')
+version = '.'.join(release.split('.')[:2])
+
+## Autodoc conf ##
+
 # Do not skip __init__ methods by default
 def skip(app, what, name, obj, would_skip, options):
     if name == "__init__":
         return False
     return would_skip
 
+# Remove every module documentation string.
+# Prevents to integrate the Licence when using automodule.
+# It is possible to limit the impacted module by filtering with the 'name'
+# argument:
+# `if what == "module" and name in ["ragger.firmware.stax.layouts", ...]:`
+def remove_module_docstring(app, what, name, obj, options, lines):
+    if what == "module":
+        del lines[:]
+
+## Setup ##
+
 def setup(app):
+    app.connect("autodoc-process-docstring", remove_module_docstring)
     app.connect("autodoc-skip-member", skip)
 
 # -- Options for HTML output -------------------------------------------------
@@ -59,7 +86,7 @@ def setup(app):
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'python_docs_theme'
+html_theme = 'sphinx_rtd_theme'
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,

@@ -13,14 +13,48 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-from speculos.client import ApduException
+from .interface import BackendInterface, RaisePolicy
+from .stub import StubBackend
 
-from .interface import RAPDU
-from .speculos import SpeculosBackend
-from .ledgercomm import LedgerCommBackend
-from .ledgerwallet import LedgerWalletBackend
+
+ERROR_MSG = "This backend needs {}. Please install this package (run `pip install " \
+    "--extra-index-url https://test.pypi.org/simple/ ragger[{}]` or check this address: '{}')"
+
+try:
+    from .speculos import SpeculosBackend
+except ImportError as e:
+    if "speculos" not in str(e):
+        raise e
+
+    def SpeculosBackend(*args, **kwargs):  # type: ignore
+        raise ImportError(
+            ERROR_MSG.format("Speculos", "speculos", "https://github.com/LedgerHQ/speculos/"))
+
+
+try:
+    from .ledgercomm import LedgerCommBackend
+except ImportError as e:
+    if "ledgercomm" not in str(e):
+        raise e
+
+    def LedgerCommBackend(*args, **kwargs):  # type: ignore
+        raise ImportError(
+            ERROR_MSG.format("LedgerComm", "ledgercomm", "https://github.com/LedgerHQ/ledgercomm/"))
+
+
+try:
+    from .ledgerwallet import LedgerWalletBackend
+except ImportError as e:
+    if "ledgerwallet" not in str(e):
+        raise e
+
+    def LedgerWalletBackend(*args, **kwargs):  # type: ignore
+        raise ImportError(
+            ERROR_MSG.format("LedgerWallet", "ledgerwallet",
+                             "https://github.com/LedgerHQ/ledgerctl/"))
+
 
 __all__ = [
-    "SpeculosBackend", "LedgerCommBackend", "LedgerWalletBackend",
-    "ApduException", "RAPDU"
+    "SpeculosBackend", "LedgerCommBackend", "LedgerWalletBackend", "BackendInterface",
+    "RaisePolicy", "StubBackend"
 ]
