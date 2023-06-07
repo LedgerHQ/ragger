@@ -82,7 +82,12 @@ class SpeculosBackend(BackendInterface):
         return f"http://{self._host}:{self._port}"
 
     def _retrieve_client_screen_content(self) -> dict:
-        raw_content = self._client.get_current_screen_content()
+        raw_events = self._client.get_current_screen_content().get("events", [])
+        while raw_events == []:
+            print(f"raw_events = '{raw_events}'")
+            sleep(0.2)
+            raw_events = self._client.get_current_screen_content().get("events", [])
+
         # Keep only text events
         # This removes events such as: {'text': ' ', 'x': 0, 'y': 464}
         # They probably comes from long press progress bar on Stax
@@ -90,9 +95,10 @@ class SpeculosBackend(BackendInterface):
         # consider screen as changed when screen text didn't and that's
         # what we want here.
         events = []
-        for event in raw_content.get("events", []):
+        for event in raw_events:
             if event.get("text", "").strip():
                 events.append(event)
+        self.logger.info(f"Received '{events}'")
         return {"events": events}
 
     def __enter__(self) -> "SpeculosBackend":
@@ -161,6 +167,7 @@ class SpeculosBackend(BackendInterface):
         self._client.press_and_release("both")
 
     def finger_touch(self, x: int = 0, y: int = 0, delay: float = 0.5) -> None:
+        self.logger.info(f"Sending finger_touch x={x}, y={y}, delay={delay}")
         self._client.finger_touch(x, y, delay)
 
     def _save_screen_snapshot(self, snap: BytesIO, path: Path) -> None:
@@ -212,7 +219,7 @@ class SpeculosBackend(BackendInterface):
 
         # Speculos has received at least one new event to redisplay the screen
         # Wait a bit to ensure the event batch is received and processed by Speculos before returning
-        sleep(0.2)
+        sleep(0.1)
 
         # Update self._last_screenshot to use it as reference for next calls
         self._last_screenshot = BytesIO(self._client.get_screenshot())
