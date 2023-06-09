@@ -38,6 +38,7 @@ def pytest_addoption(parser):
                      "ones. Will only work with 'speculos' as the backend")
     parser.addoption("--log_apdu_file", action="store", default=None, help="Log the APDU in a file")
     parser.addoption("--seed", action="store", default=None, help="Set a custom seed")
+    parser.addoption("--api_level", action="store", default=None, help="Set the API_LEVEL")
 
 
 @pytest.fixture(scope="session")
@@ -64,6 +65,11 @@ def log_apdu_file(pytestconfig):
 @pytest.fixture(scope="session")
 def cli_user_seed(pytestconfig):
     return pytestconfig.getoption("seed")
+
+
+@pytest.fixture(scope="session")
+def cli_api_level(pytestconfig):
+    return pytestconfig.getoption("api_level")
 
 
 @pytest.fixture(scope="session")
@@ -111,7 +117,7 @@ def pytest_generate_tests(metafunc):
 
 
 def prepare_speculos_args(root_pytest_dir: Path, firmware: Firmware, display: bool,
-                          cli_user_seed: str):
+                          cli_user_seed: str, cli_api_level: str):
     speculos_args = []
 
     if display:
@@ -152,6 +158,10 @@ def prepare_speculos_args(root_pytest_dir: Path, firmware: Firmware, display: bo
     elif not len(conf.OPTIONAL.CUSTOM_SEED) == 0:
         speculos_args += ["--seed", conf.OPTIONAL.CUSTOM_SEED]
 
+    # Check if custom user API_LEVEL has been provided through CLI
+    if cli_api_level:
+        speculos_args += ["--apiLevel", cli_api_level]
+
     return (app_path, {"args": speculos_args})
 
 
@@ -159,7 +169,7 @@ def prepare_speculos_args(root_pytest_dir: Path, firmware: Firmware, display: bo
 # instantiated, and the tests will either run on Speculos or on a physical
 # device depending on the backend
 def create_backend(root_pytest_dir: Path, backend_name: str, firmware: Firmware, display: bool,
-                   log_apdu_file: Optional[Path], cli_user_seed: str):
+                   log_apdu_file: Optional[Path], cli_user_seed: str, cli_api_level: str):
     if backend_name.lower() == "ledgercomm":
         return LedgerCommBackend(firmware=firmware,
                                  interface="hid",
@@ -169,7 +179,7 @@ def create_backend(root_pytest_dir: Path, backend_name: str, firmware: Firmware,
         return LedgerWalletBackend(firmware=firmware, log_apdu_file=log_apdu_file, with_gui=display)
     elif backend_name.lower() == "speculos":
         app_path, speculos_args = prepare_speculos_args(root_pytest_dir, firmware, display,
-                                                        cli_user_seed)
+                                                        cli_user_seed, cli_api_level)
         return SpeculosBackend(app_path,
                                firmware=firmware,
                                log_apdu_file=log_apdu_file,
@@ -180,9 +190,10 @@ def create_backend(root_pytest_dir: Path, backend_name: str, firmware: Firmware,
 
 # Backend scope can be configured by the user
 @pytest.fixture(scope=conf.OPTIONAL.BACKEND_SCOPE)
-def backend(root_pytest_dir, backend_name, firmware, display, log_apdu_file, cli_user_seed):
+def backend(root_pytest_dir, backend_name, firmware, display, log_apdu_file, cli_user_seed,
+            cli_api_level):
     with create_backend(root_pytest_dir, backend_name, firmware, display, log_apdu_file,
-                        cli_user_seed) as b:
+                        cli_user_seed, cli_api_level) as b:
         if backend_name.lower() != "speculos" and conf.OPTIONAL.APP_NAME:
             # Make sure the app is restarted as this is what is requested by the fixture scope
             app_name, version = get_current_app_name_and_version(b)

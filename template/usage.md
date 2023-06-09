@@ -71,5 +71,6 @@ Custom pytest options
     --golden_run                on Speculos, screen comparison functions will save the current screen instead of comparing
     --log_apdu_file <filepath>  log all apdu exchanges to the file in parameter. The previous file content is erased
     --seed                      on Speculos, use the seed (mnemonic) provided.
+    --api_level                 on Speculos, use the API level provided.
 ```
 

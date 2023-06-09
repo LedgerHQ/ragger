@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - backend: Physical backends (`LedgerComm`, `LedgerWallet`) can now pop a GUI in order to guide a
            user performing tests on a physical device.
+- conftest: Add option to pass a custom apiLevel to Speculos Backend
 
 ### Changed
 

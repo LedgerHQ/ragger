@@ -467,6 +467,17 @@ Controlling the seed (``--seed``)
 By default, the :class:`SpeculosBackend <ragger.backend.SpeculosBackend>` has
 a fixed seed. It is possible to change its value with the ``--seed`` CLI argument.
 
+Controlling the api level (``--api_level``)
+'''''''''''''''''''''''''''''''''
+
+.. warning::
+
+   Capability limited to the :class:`SpeculosBackend
+   <ragger.backend.SpeculosBackend>`
+
+It is possible to run speculos with a specific api level value with the 
+``--api_level`` CLI argument.
+
 Recording the screens (``--golden_run``)
 ''''''''''''''''''''''''''''''''''''''''
 
@@ -535,6 +546,7 @@ fixture, and used into any test:
 - ``--golden_run`` is reachable with the ``golden_run`` fixture,
 - ``--log_apdu_file`` is reachable with the ``log_apdu_file`` fixture,
 - ``--seed`` is reachable with the ``backend_cli_user_seed`` fixture,
+- ``--api_level`` is reachable with the ``cli_api_level`` fixture,
 
 ``--device`` is not immediately reachable through a fixture, but it can be found
 with the ``backend`` fixture: ``backend.firmware.device``.
