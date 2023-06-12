@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - speculos: Default touch duration changed from 0.5sec to 0.1sec
-
+- speculos: Control the ticker allowing to avoid any race issue when comparing screen and accessing OCR result
+- speculos: Bump minimal speculos version to 0.2.5
 
 ## [1.8.2] - 2023-05-31
 
