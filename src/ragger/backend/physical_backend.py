@@ -33,8 +33,10 @@ class PhysicalBackend(BackendInterface):
         self._ui: Optional[RaggerGUI] = RaggerGUI(device=firmware.device) if with_gui else None
         self._last_valid_snap_path: Optional[Path] = None
 
-    def __exit__(self, exc_type: Optional[Type[BaseException]], exc_val: Optional[BaseException],
-                 exc_tb: Optional[TracebackType]):
+    def __exit__(self,
+                 exc_type: Optional[Type[BaseException]] = None,
+                 exc_val: Optional[BaseException] = None,
+                 exc_tb: Optional[TracebackType] = None):
         if self._ui is not None:
             self._ui.kill()
 
