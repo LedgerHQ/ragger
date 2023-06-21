@@ -91,6 +91,9 @@ class Actions:
         img_temp.save(iobytes, format="PNG")
         return iobytes.getvalue(), 200
 
+    def ticker(self, *args):
+        return {}
+
 
 class SpeculosServerStub:
 
@@ -104,6 +107,7 @@ class SpeculosServerStub:
         self.app.add_url_rule("/button/both", methods=["GET", "POST"], view_func=actions.button)
         self.app.add_url_rule("/events", view_func=actions.events)
         self.app.add_url_rule("/screenshot", methods=["GET"], view_func=actions.screenshot)
+        self.app.add_url_rule("/ticker", methods=["GET", "POST"], view_func=actions.ticker)
         self.process = None
 
     def __enter__(self):

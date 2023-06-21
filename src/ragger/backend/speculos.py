@@ -18,10 +18,11 @@ from io import BytesIO
 from pathlib import Path
 from PIL import Image
 from typing import Optional, Generator
-from time import time, sleep
+from time import time
 from json import dumps
 
 from speculos.client import SpeculosClient, screenshot_equal, ApduResponse, ApduException
+from speculos.mcu.seproxyhal import TICKER_DELAY
 
 from ragger.error import ExceptionRAPDU
 from ragger.firmware import Firmware
@@ -99,11 +100,18 @@ class SpeculosBackend(BackendInterface):
         self.logger.info(f"Starting {self.__class__.__name__} stream")
         self._client.__enter__()
 
+        # Disable Speculos autonomous ticker thread.
+        # This avoid timing issue with OCR or screenshot comparison.
+        self._client.ticker_ctl("pause")
+
+        # Send a ticker event and let the app process it
+        self._client.ticker_ctl("single-step")
+
         # Wait until some text is displayed on the screen.
         start = time()
         while not self._retrieve_client_screen_content()["events"]:
-            # Give some time to other threads, and mostly Speculos one
-            sleep(0.25)
+            # Send a ticker event and let the app process it
+            self._client.ticker_ctl("single-step")
             if (time() - start > 20.0):
                 raise TimeoutError(
                     "Timeout waiting for screen content upon Ragger Speculos Instance start")
@@ -160,7 +168,7 @@ class SpeculosBackend(BackendInterface):
     def both_click(self) -> None:
         self._client.press_and_release("both")
 
-    def finger_touch(self, x: int = 0, y: int = 0, delay: float = 0.5) -> None:
+    def finger_touch(self, x: int = 0, y: int = 0, delay: float = 0.1) -> None:
         self._client.finger_touch(x, y, delay)
 
     def _save_screen_snapshot(self, snap: BytesIO, path: Path) -> None:
@@ -201,21 +209,19 @@ class SpeculosBackend(BackendInterface):
         return text in dumps(self._retrieve_client_screen_content())
 
     def wait_for_screen_change(self, timeout: float = 10.0) -> None:
-        start = time()
         screenshot = BytesIO(self._client.get_screenshot())
-        while screenshot_equal(screenshot, self._last_screenshot):
-            # Give some time to other threads, and mostly Speculos one
-            sleep(0.2)
-            if (time() - start > timeout):
-                raise TimeoutError("Timeout waiting for screen change")
-            screenshot = BytesIO(self._client.get_screenshot())
+        for _ in range(int(timeout / TICKER_DELAY)):
+            if not screenshot_equal(screenshot, self._last_screenshot):
+                break
 
-        # Speculos has received at least one new event to redisplay the screen
-        # Wait a bit to ensure the event batch is received and processed by Speculos before returning
-        sleep(0.2)
+            # Send a ticker event and let the app process it
+            self._client.ticker_ctl("single-step")
+            screenshot = BytesIO(self._client.get_screenshot())
+        else:
+            raise TimeoutError("Timeout waiting for screen change")
 
         # Update self._last_screenshot to use it as reference for next calls
-        self._last_screenshot = BytesIO(self._client.get_screenshot())
+        self._last_screenshot = screenshot
 
     def wait_for_home_screen(self, timeout: float = 10.0) -> None:
         if screenshot_equal(self._last_screenshot, self._home_screenshot):
