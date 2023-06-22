@@ -206,6 +206,8 @@ class Navigator(ABC):
         :rtype: NoneType
         """
 
+        self._backend.pause_ticker()
+
         # Navigation initialization: no-op instruction to:
         # - wait for screen change depending on screen_change_before_first_instruction.
         #   this is necessary:
@@ -242,6 +244,8 @@ class Navigator(ABC):
                                       timeout,
                                       wait_for_screen_change=False,
                                       snap_idx=snap_start_idx + idx + 1)
+
+        self._backend.resume_ticker()
 
     def navigate(self,
                  instructions: List[Union[NavIns, NavInsID]],
@@ -444,6 +448,8 @@ class Navigator(ABC):
             if timeout == 30:
                 timeout = 200
 
+        self._backend.pause_ticker()
+
         # Navigation initialization: no-op instruction to:
         # - wait for screen change depending on screen_change_before_first_instruction.
         #   this is necessary when an APDU was just sent and we want to make sure the
@@ -488,6 +494,8 @@ class Navigator(ABC):
                 screen_change_before_first_instruction=False,
                 screen_change_after_last_instruction=screen_change_after_last_instruction,
                 snap_start_idx=idx)
+
+        self._backend.resume_ticker()
 
     def navigate_until_text(self,
                             navigate_instruction: Union[NavIns, NavInsID],

@@ -494,3 +494,48 @@ class BackendInterface(ABC):
         :rtype: Any
         """
         raise NotImplementedError
+
+    @abstractmethod
+    def pause_ticker(self) -> None:
+        """
+        Pause the backend time.
+
+        This method may be left void on backends connecting to physical devices,
+        where a physical interaction must be performed instead.
+        This will prevent the instrumentation to fail (the void method won't
+        raise `NotImplementedError`).
+
+        :return: None
+        :rtype: NoneType
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def resume_ticker(self) -> None:
+        """
+        Resume the backend time.
+
+        This method may be left void on backends connecting to physical devices,
+        where a physical interaction must be performed instead.
+        This will prevent the instrumentation to fail (the void method won't
+        raise `NotImplementedError`).
+
+        :return: None
+        :rtype: NoneType
+        """
+        pass
+
+    @abstractmethod
+    def send_tick(self) -> None:
+        """
+        Request the backend to increase time by a single step.
+
+        This method may be left void on backends connecting to physical devices,
+        where a physical interaction must be performed instead.
+        This will prevent the instrumentation to fail (the void method won't
+        raise `NotImplementedError`).
+
+        :return: None
+        :rtype: NoneType
+        """
+        pass

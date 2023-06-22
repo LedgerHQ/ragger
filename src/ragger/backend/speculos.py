@@ -18,7 +18,7 @@ from io import BytesIO
 from pathlib import Path
 from PIL import Image
 from typing import Optional, Generator
-from time import time
+from time import time, sleep
 from json import dumps
 
 from speculos.client import SpeculosClient, screenshot_equal, ApduResponse, ApduException
@@ -77,6 +77,7 @@ class SpeculosBackend(BackendInterface):
         self._pending: Optional[ApduResponse] = None
         self._last_screenshot: Optional[BytesIO] = None
         self._home_screenshot: Optional[BytesIO] = None
+        self._ticker_paused_count = 0
 
     @property
     def url(self) -> str:
@@ -96,22 +97,29 @@ class SpeculosBackend(BackendInterface):
                 events.append(event)
         return {"events": events}
 
+    def pause_ticker(self) -> None:
+        if self._ticker_paused_count == 0:
+            self._client.ticker_ctl("pause")
+        self._ticker_paused_count += 1
+
+    def resume_ticker(self) -> None:
+        self._ticker_paused_count -= 1
+        if self._ticker_paused_count == 0:
+            self._client.ticker_ctl("resume")
+        assert self._ticker_paused_count >= 0
+
+    def send_tick(self) -> None:
+        self._client.ticker_ctl("single-step")
+
     def __enter__(self) -> "SpeculosBackend":
         self.logger.info(f"Starting {self.__class__.__name__} stream")
         self._client.__enter__()
-
-        # Disable Speculos autonomous ticker thread.
-        # This avoid timing issue with OCR or screenshot comparison.
-        self._client.ticker_ctl("pause")
-
-        # Send a ticker event and let the app process it
-        self._client.ticker_ctl("single-step")
 
         # Wait until some text is displayed on the screen.
         start = time()
         while not self._retrieve_client_screen_content()["events"]:
             # Send a ticker event and let the app process it
-            self._client.ticker_ctl("single-step")
+            sleep(0.1)
             if (time() - start > 20.0):
                 raise TimeoutError(
                     "Timeout waiting for screen content upon Ragger Speculos Instance start")
@@ -215,7 +223,7 @@ class SpeculosBackend(BackendInterface):
                 break
 
             # Send a ticker event and let the app process it
-            self._client.ticker_ctl("single-step")
+            self.send_tick()
             screenshot = BytesIO(self._client.get_screenshot())
         else:
             raise TimeoutError("Timeout waiting for screen change")

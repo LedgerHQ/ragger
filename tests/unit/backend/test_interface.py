@@ -61,6 +61,15 @@ class DummyBackend(BackendInterface):
     def get_current_screen_content(self):
         return self.mock.get_current_screen_content()
 
+    def pause_ticker(self) -> None:
+        pass
+
+    def resume_ticker(self) -> None:
+        pass
+
+    def send_tick(self) -> None:
+        pass
+
 
 class TestBackendInterface(TestCase):
 
