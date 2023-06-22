@@ -81,3 +81,12 @@ class StubBackend(BackendInterface):
 
     def get_current_screen_content(self) -> Any:
         pass
+
+    def pause_ticker(self) -> None:
+        pass
+
+    def resume_ticker(self) -> None:
+        pass
+
+    def send_tick(self) -> None:
+        pass

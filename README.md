@@ -75,6 +75,9 @@ different backends and that allow to interact with a device (either a real devic
 * `both_click`: perform a click on both buttons (left + right) of a device.
 * `finger_touch`: performs a finger touch on the device screen.
 * `compare_screen_with_snapshot`: compare the current device screen with the provided snapshot.
+* `pause_ticker`: pause the backend time.
+* `resume_ticker`: resume the backend time.
+* `send_tick`: request the backend to increase time by a single step.
 
 The `src/ragger/navigator/navigator.py` file describes the methods that can be implemented by the
 different device navigators and that allow to interact with an emulated device:
