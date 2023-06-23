@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.2] - 2023-06-23
+
+### Fixed
+- navigator: Restore `NavInsID.USE_CASE_REVIEW_CONFIRM` custom wait for screen change for cases where the app call `io_seproxyhal_io_heartbeat()` before next screen is displayed.
+
 ## [1.9.1] - 2023-06-22
 
 ### Fixed
