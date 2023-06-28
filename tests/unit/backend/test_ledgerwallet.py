@@ -13,7 +13,7 @@ class TestLedgerWalletBackend(TestCase):
 
     def setUp(self):
         self.device = MagicMock()
-        self.firmware = Firmware("nanos", "2.1")
+        self.firmware = Firmware.NANOS
         self.backend = LedgerWalletBackend(self.firmware)
 
     def check_rapdu(self, rapdu: RAPDU, status: int = 0x9000, payload: Optional[bytes] = None):

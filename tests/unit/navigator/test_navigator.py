@@ -13,7 +13,7 @@ class TestNavigator(TestCase):
     def setUp(self):
         self.directory = TemporaryDirectory()
         self.backend = MagicMock()
-        self.firmware = Firmware("nanos", "2.1")
+        self.firmware = Firmware.NANOS
         self.callbacks = dict()
         self.navigator = Navigator(self.backend, self.firmware, self.callbacks)
 
@@ -26,17 +26,17 @@ class TestNavigator(TestCase):
 
     def test__get_snaps_dir_path(self):
         name = "some_name"
-        expected = self.pathdir / "snapshots-tmp" / self.firmware.device / name
+        expected = self.pathdir / "snapshots-tmp" / self.firmware.name / name
         result = self.navigator._get_snaps_dir_path(self.pathdir, name, False)
         self.assertEqual(result, expected)
 
-        expected = self.pathdir / "snapshots" / self.firmware.device / name
+        expected = self.pathdir / "snapshots" / self.firmware.name / name
         result = self.navigator._get_snaps_dir_path(self.pathdir, name, True)
         self.assertEqual(result, expected)
 
     def test__checks_snaps_dir_path_ok_creates_dir(self):
         name = "some_name"
-        expected = self.pathdir / "snapshots" / self.firmware.device / name
+        expected = self.pathdir / "snapshots" / self.firmware.name / name
         navigator = Navigator(self.backend, self.firmware, self.callbacks, golden_run=True)
         self.assertFalse(expected.exists())
         result = navigator._check_snaps_dir_path(self.pathdir, name, True)
@@ -45,7 +45,7 @@ class TestNavigator(TestCase):
 
     def test__checks_snaps_dir_path_ok_dir_exists(self):
         name = "some_name"
-        expected = self.pathdir / "snapshots" / self.firmware.device / name
+        expected = self.pathdir / "snapshots" / self.firmware.name / name
         navigator = Navigator(self.backend, self.firmware, self.callbacks, golden_run=True)
         expected.mkdir(parents=True)
         self.assertTrue(expected.exists())
@@ -55,7 +55,7 @@ class TestNavigator(TestCase):
 
     def test__checks_snaps_dir_path_nok_raises(self):
         name = "some_name"
-        expected = self.pathdir / "snapshots" / self.firmware.device / name
+        expected = self.pathdir / "snapshots" / self.firmware.name / name
         self.assertFalse(expected.exists())
         with self.assertRaises(ValueError):
             self.navigator._check_snaps_dir_path(self.pathdir, name, True)
@@ -63,7 +63,7 @@ class TestNavigator(TestCase):
 
     def test___init_snaps_temp_dir_ok_creates_dir(self):
         name = "some_name"
-        expected = self.pathdir / "snapshots-tmp" / self.firmware.device / name
+        expected = self.pathdir / "snapshots-tmp" / self.firmware.name / name
         self.assertFalse(expected.exists())
         result = self.navigator._init_snaps_temp_dir(self.pathdir, name)
         self.assertEqual(result, expected)
@@ -73,7 +73,7 @@ class TestNavigator(TestCase):
         for start_idx in [0, 1]:
             existing_files = ["00000.png", "00001.png", "00002.png"]
             name = "some_name"
-            expected = self.pathdir / "snapshots-tmp" / self.firmware.device / name
+            expected = self.pathdir / "snapshots-tmp" / self.firmware.name / name
             expected.mkdir(parents=True, exist_ok=True)
             for filename in existing_files:
                 (expected / filename).touch()

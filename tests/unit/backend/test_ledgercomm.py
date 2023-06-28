@@ -24,7 +24,7 @@ class TestLedgerCommbackend(TestCase):
     """
 
     def setUp(self):
-        self.firmware = Firmware('nanos', '2.1')
+        self.firmware = Firmware.NANOS
         self.backend = LedgerCommBackend(self.firmware)
 
     def check_rapdu(self, rapdu: RAPDU, status: int = 0x9000, payload: bytes = None):

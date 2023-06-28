@@ -7,7 +7,7 @@ from unittest.mock import MagicMock
 from ragger.error import ExceptionRAPDU
 from ragger.backend import BackendInterface
 from ragger.backend import RaisePolicy
-from ragger.firmware.structs import _Firmware
+from ragger.firmware.structs import Firmware
 
 
 class DummyBackend(BackendInterface):
@@ -74,7 +74,7 @@ class DummyBackend(BackendInterface):
 class TestBackendInterface(TestCase):
 
     def setUp(self):
-        self.firmware = _Firmware("nanos", "2.0.1", "other")
+        self.firmware = Firmware.NANOS
         self.errors = (ExceptionRAPDU(0x8888, "ERROR1"), ExceptionRAPDU(0x7777, "ERROR2"))
         self.valid_statuses = (0x9000, 0x9001, 0x9002)
         self.backend = DummyBackend(firmware=self.firmware)
@@ -116,7 +116,7 @@ class TestBackendInterface(TestCase):
 class TestBackendInterfaceLogging(TestCase):
 
     def test_log_apdu(self):
-        self.firmware = _Firmware("nanos", "2.0.1", "other")
+        self.firmware = Firmware.NANOS
         with tempfile.TemporaryDirectory() as td:
             test_file = (Path(td) / "test_log_file.log").resolve()
             self.backend = DummyBackend(firmware=self.firmware, log_apdu_file=test_file)

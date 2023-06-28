@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.10.0] - 2023-07-03
+
+### Changed
+- firmware: Removing the firmware version mechanism: as the device / version is embedded into each
+            application ELF, Speculos alone can figure out how to emulate a device. Besides this,
+            the version mechanism was only useful for the Stax graphical multi-version
+            retrocompatibility, which is a niche usage not worth the complexity of the whole
+            mechanism.
+            Firmware is now an enum listing the currently supported devices (NanoS, NanoS+, NanoX
+            and Stax).
+
 ## [1.9.2] - 2023-06-23
 
 ### Fixed

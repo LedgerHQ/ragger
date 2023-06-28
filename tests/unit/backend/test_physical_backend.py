@@ -33,7 +33,7 @@ class StubPhysicalBackend(PhysicalBackend):
 class TestPhysicalBackend(TestCase):
 
     def setUp(self):
-        self.firmware = Firmware('nanos', '2.1')
+        self.firmware = Firmware.NANOS
         self.backend = StubPhysicalBackend(self.firmware, with_gui=True)
         # patching the `start` function to avoid triggering a real interface
         self.backend._ui.start = MagicMock()

@@ -63,7 +63,7 @@ class SpeculosBackend(BackendInterface):
         super().__init__(firmware=firmware, log_apdu_file=log_apdu_file)
         self._host = host
         self._port = port
-        args = ["--model", firmware.device]
+        args = ["--model", firmware.name]
         if self._ARGS_KEY in kwargs:
             assert isinstance(kwargs[self._ARGS_KEY], list), \
                 f"'{self._ARGS_KEY}' ({kwargs[self._ARGS_KEY]}) keyword " \

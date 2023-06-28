@@ -33,7 +33,7 @@ class TestNavigator(TestCase):
     """
 
     def setUp(self):
-        self.firmware = Firmware('nanos', '2.1')
+        self.firmware = Firmware.NANOS
         self.backend = SpeculosBackend("some app", self.firmware)
         self.navigator = NanoNavigator(self.backend, self.firmware)
 
