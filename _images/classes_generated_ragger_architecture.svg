@@ -18,7 +18,7 @@
 <text text-anchor="start" x="7456.52" y="-1416.9" font-family="Times,serif" font-size="14.00">apdu_logger : Logger, RootLogger, NoneType</text>
 <text text-anchor="start" x="7456.52" y="-1401.9" font-family="Times,serif" font-size="14.00">firmware</text>
 <text text-anchor="start" x="7456.52" y="-1386.9" font-family="Times,serif" font-size="14.00">last_async_response</text>
-<text text-anchor="start" x="7456.52" y="-1371.9" font-family="Times,serif" font-size="14.00">logger : Logger, NoneType, RootLogger</text>
+<text text-anchor="start" x="7456.52" y="-1371.9" font-family="Times,serif" font-size="14.00">logger : Logger, RootLogger, NoneType</text>
 <text text-anchor="start" x="7456.52" y="-1356.9" font-family="Times,serif" font-size="14.00">raise_policy : RAISE_ALL_BUT_0x9000</text>
 <polyline fill="none" stroke="antiquewhite" points="7131.02,-1349.1 8104.02,-1349.1 "/>
 <text text-anchor="start" x="7139.02" y="-1334.9" font-family="Times,serif" font-style="italic" font-size="14.00">both_click</text>
