@@ -23,17 +23,39 @@ class Firmware(IntEnum):
     STAX = auto()
 
     @property
+    def device(self) -> str:
+        """
+        A proxy property for :attr:`.Firmware.name`.
+        This property is deprecated. It is advise to not use it.
+        """
+        return self.name
+
+    @property
     def name(self) -> str:
+        """
+        Returns the name of the current firmware's device
+        """
         return super().name.lower()
 
     @property
     def is_nano(self):
+        """
+        States if the firmware's name starts with 'nano' or not.
+        """
         return self.name.startswith("nano")
 
     @property
     def has_bagl(self):
+        """
+        States if the firmware uses BAGL or not.
+        Currently, this is a proxy to :attr:`.Firmware.is_nano`
+        """
         return self.is_nano
 
     @property
     def has_nbgl(self):
+        """
+        States if the firmware uses NBGL or not.
+        Currently only Stax device uses NBGL.
+        """
         return self.name.startswith("stax")
