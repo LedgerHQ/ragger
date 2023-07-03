@@ -57,14 +57,21 @@ Physical backends
 ``ragger.firmware``
 -------------------
 
-``ragger.firmware.firmware``
-++++++++++++++++++++++++++++
-
 Most ``Ragger`` high-level class needs to know which :term:`Firmware` they
 should expect. This is declared with this class:
 
 .. autoclass:: ragger.firmware.Firmware
    :members:
+   :show-inheritance:
+
+   .. autoattribute:: NANOS
+
+   .. autoattribute:: NANOSP
+
+   .. autoattribute:: NANOX
+
+   .. autoattribute:: STAX
+
 
 ``ragger.firmware.stax``
 ++++++++++++++++++++++++
@@ -88,43 +95,6 @@ should expect. This is declared with this class:
 .. automodule:: ragger.firmware.stax.use_cases
    :members:
    :undoc-members:
-
-``ragger.firmware.version``
-+++++++++++++++++++++++++++
-
-VersionManager
-''''''''''''''
-
-Versions are managed through the ``VersionManager``
-
-.. autoclass:: ragger.firmware.versions.VersionManager
-   :members:
-
-
-Nano S
-''''''
-.. autoclass:: ragger.firmware.versions.NanoSVersions
-   :members:
-   :undoc-members:
-
-Nano S+
-'''''''
-
-.. autoclass:: ragger.firmware.versions.NanoSPVersions
-   :members:
-   :undoc-members:
-
-Nano X
-''''''
-
-.. autoclass:: ragger.firmware.versions.NanoXVersions
-   :members:
-   :undoc-members:
-
-Managed SDK & versions
-''''''''''''''''''''''
-
-.. autodata:: ragger.firmware.versions.SDK_VERSIONS
 
 ``ragger.navigator``
 --------------------
