@@ -30,7 +30,7 @@ class PhysicalBackend(BackendInterface):
 
     def __init__(self, firmware: Firmware, *args, with_gui: bool = False, **kwargs):
         super().__init__(firmware, *args, **kwargs)
-        self._ui: Optional[RaggerGUI] = RaggerGUI(device=firmware.device) if with_gui else None
+        self._ui: Optional[RaggerGUI] = RaggerGUI(device=firmware.name) if with_gui else None
         self._last_valid_snap_path: Optional[Path] = None
 
     def __exit__(self,
@@ -102,7 +102,7 @@ class PhysicalBackend(BackendInterface):
             # Nano (s,sp,x) snapshots are white/blue text on black background,
             # tesseract cannot do OCR on these. Invert image so it has
             # dark text on white background.
-            if self.firmware.device.startswith("nan"):
+            if self.firmware.is_nano:
                 image = ImageOps.invert(image)
             data = image_to_data(image, output_type=Output.DICT)
             for item in range(len(data["text"])):

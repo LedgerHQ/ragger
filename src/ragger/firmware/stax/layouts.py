@@ -17,15 +17,13 @@ import logging
 
 from ragger.backend import BackendInterface
 from ragger.firmware import Firmware
-from .positions import POSITIONS_BY_SDK
+from .positions import POSITIONS
 
 
 class _Layout:
 
     def __init__(self, client: BackendInterface, firmware: Firmware):
         self._client = client
-        assert firmware.semantic_version in POSITIONS_BY_SDK, \
-            f"This firmware {firmware} is not compatible with layouts"
         self._firmware = firmware
 
     @property
@@ -38,7 +36,7 @@ class _Layout:
 
     @property
     def positions(self):
-        return POSITIONS_BY_SDK[self._firmware.semantic_version][str(self.__class__.__name__)]
+        return POSITIONS[str(self.__class__.__name__)]
 
 
 # Center

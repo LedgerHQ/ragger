@@ -41,7 +41,7 @@ class TestbackendSpeculos(TestCase):
         self.assertEqual(rapdu.data, expected)
 
     def setUp(self):
-        self.firmware = Firmware('nanos', '2.1')
+        self.firmware = Firmware.NANOS
         self.backend = SpeculosBackend("some app", self.firmware)
 
     def test_exchange_raw(self):

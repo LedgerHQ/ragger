@@ -14,6 +14,5 @@
    limitations under the License.
 """
 from .structs import Firmware
-from .versions import SDK_VERSIONS
 
-__all__ = ["Firmware", "SDK_VERSIONS"]
+__all__ = ["Firmware"]

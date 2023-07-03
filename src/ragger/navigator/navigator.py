@@ -58,7 +58,7 @@ class Navigator(ABC):
             subdir = "snapshots"
         else:
             subdir = "snapshots-tmp"
-        return path / subdir / self._firmware.device / test_case_name
+        return path / subdir / self._firmware.name / test_case_name
 
     def _check_snaps_dir_path(self, path: Path, test_case_name: Path, is_golden: bool) -> Path:
         dir_path = self._get_snaps_dir_path(path, test_case_name, is_golden)
