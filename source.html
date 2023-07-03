@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Code documentation &mdash; Ragger 1.10.0 documentation</title>
+  <title>Code documentation &mdash; Ragger 1.10.1.dev2 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
@@ -79,22 +79,22 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#ragger-firmware"><code class="docutils literal notranslate"><span class="pre">ragger.firmware</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#ragger-firmware-firmware"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.firmware</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#ragger.firmware.Firmware"><code class="docutils literal notranslate"><span class="pre">Firmware</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ragger.firmware.Firmware"><code class="docutils literal notranslate"><span class="pre">Firmware</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ragger.firmware.Firmware.NANOS"><code class="docutils literal notranslate"><span class="pre">Firmware.NANOS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragger.firmware.Firmware.NANOSP"><code class="docutils literal notranslate"><span class="pre">Firmware.NANOSP</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragger.firmware.Firmware.NANOX"><code class="docutils literal notranslate"><span class="pre">Firmware.NANOX</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragger.firmware.Firmware.STAX"><code class="docutils literal notranslate"><span class="pre">Firmware.STAX</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragger.firmware.Firmware.device"><code class="docutils literal notranslate"><span class="pre">Firmware.device</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragger.firmware.Firmware.has_bagl"><code class="docutils literal notranslate"><span class="pre">Firmware.has_bagl</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragger.firmware.Firmware.has_nbgl"><code class="docutils literal notranslate"><span class="pre">Firmware.has_nbgl</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragger.firmware.Firmware.is_nano"><code class="docutils literal notranslate"><span class="pre">Firmware.is_nano</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragger.firmware.Firmware.name"><code class="docutils literal notranslate"><span class="pre">Firmware.name</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#ragger-firmware-stax"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.stax</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#ragger-firmware-stax-screen"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.stax.screen</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ragger-firmware-stax-layouts"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.stax.layouts</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ragger-firmware-stax-use-cases"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.stax.use_cases</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#ragger-firmware-version"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.version</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#versionmanager">VersionManager</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#nano-s">Nano S</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id1">Nano S+</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#nano-x">Nano X</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#managed-sdk-versions">Managed SDK &amp; versions</a></li>
 </ul>
 </li>
 </ul>
@@ -148,53 +148,43 @@
 <h1>Code documentation<a class="headerlink" href="#code-documentation" title="Permalink to this heading"></a></h1>
 <div class="contents local topic" id="contents">
 <ul class="simple">
-<li><p><a class="reference internal" href="#ragger-backend" id="id2"><code class="docutils literal notranslate"><span class="pre">ragger.backend</span></code></a></p>
+<li><p><a class="reference internal" href="#ragger-backend" id="id1"><code class="docutils literal notranslate"><span class="pre">ragger.backend</span></code></a></p>
 <ul>
-<li><p><a class="reference internal" href="#ragger-backend-interface" id="id3"><code class="docutils literal notranslate"><span class="pre">ragger.backend.interface</span></code></a></p>
+<li><p><a class="reference internal" href="#ragger-backend-interface" id="id2"><code class="docutils literal notranslate"><span class="pre">ragger.backend.interface</span></code></a></p>
 <ul>
-<li><p><a class="reference internal" href="#interface-contract" id="id4">Interface contract</a></p></li>
-<li><p><a class="reference internal" href="#response-management-policy" id="id5">Response management policy</a></p></li>
+<li><p><a class="reference internal" href="#interface-contract" id="id3">Interface contract</a></p></li>
+<li><p><a class="reference internal" href="#response-management-policy" id="id4">Response management policy</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#concrete-backends" id="id6">Concrete backends</a></p>
+<li><p><a class="reference internal" href="#concrete-backends" id="id5">Concrete backends</a></p>
 <ul>
-<li><p><a class="reference internal" href="#speculos-backend-emulator" id="id7">Speculos backend (emulator)</a></p></li>
-<li><p><a class="reference internal" href="#physical-backends" id="id8">Physical backends</a></p></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p><a class="reference internal" href="#ragger-error" id="id9"><code class="docutils literal notranslate"><span class="pre">ragger.error</span></code></a></p></li>
-<li><p><a class="reference internal" href="#ragger-firmware" id="id10"><code class="docutils literal notranslate"><span class="pre">ragger.firmware</span></code></a></p>
-<ul>
-<li><p><a class="reference internal" href="#ragger-firmware-firmware" id="id11"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.firmware</span></code></a></p></li>
-<li><p><a class="reference internal" href="#ragger-firmware-stax" id="id12"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.stax</span></code></a></p>
-<ul>
-<li><p><a class="reference internal" href="#ragger-firmware-stax-screen" id="id13"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.stax.screen</span></code></a></p></li>
-<li><p><a class="reference internal" href="#ragger-firmware-stax-layouts" id="id14"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.stax.layouts</span></code></a></p></li>
-<li><p><a class="reference internal" href="#ragger-firmware-stax-use-cases" id="id15"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.stax.use_cases</span></code></a></p></li>
-</ul>
-</li>
-<li><p><a class="reference internal" href="#ragger-firmware-version" id="id16"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.version</span></code></a></p>
-<ul>
-<li><p><a class="reference internal" href="#versionmanager" id="id17">VersionManager</a></p></li>
-<li><p><a class="reference internal" href="#nano-s" id="id18">Nano S</a></p></li>
-<li><p><a class="reference internal" href="#id1" id="id19">Nano S+</a></p></li>
-<li><p><a class="reference internal" href="#nano-x" id="id20">Nano X</a></p></li>
-<li><p><a class="reference internal" href="#managed-sdk-versions" id="id21">Managed SDK &amp; versions</a></p></li>
+<li><p><a class="reference internal" href="#speculos-backend-emulator" id="id6">Speculos backend (emulator)</a></p></li>
+<li><p><a class="reference internal" href="#physical-backends" id="id7">Physical backends</a></p></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#ragger-navigator" id="id22"><code class="docutils literal notranslate"><span class="pre">ragger.navigator</span></code></a></p>
+<li><p><a class="reference internal" href="#ragger-error" id="id8"><code class="docutils literal notranslate"><span class="pre">ragger.error</span></code></a></p></li>
+<li><p><a class="reference internal" href="#ragger-firmware" id="id9"><code class="docutils literal notranslate"><span class="pre">ragger.firmware</span></code></a></p>
 <ul>
-<li><p><a class="reference internal" href="#interface-and-instructions" id="id23">Interface and instructions</a></p></li>
+<li><p><a class="reference internal" href="#ragger-firmware-stax" id="id10"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.stax</span></code></a></p>
+<ul>
+<li><p><a class="reference internal" href="#ragger-firmware-stax-screen" id="id11"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.stax.screen</span></code></a></p></li>
+<li><p><a class="reference internal" href="#ragger-firmware-stax-layouts" id="id12"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.stax.layouts</span></code></a></p></li>
+<li><p><a class="reference internal" href="#ragger-firmware-stax-use-cases" id="id13"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.stax.use_cases</span></code></a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#ragger-utils" id="id24"><code class="docutils literal notranslate"><span class="pre">ragger.utils</span></code></a></p>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#ragger-navigator" id="id14"><code class="docutils literal notranslate"><span class="pre">ragger.navigator</span></code></a></p>
 <ul>
-<li><p><a class="reference internal" href="#ragger-utils-structs" id="id25"><code class="docutils literal notranslate"><span class="pre">ragger.utils.structs</span></code></a></p></li>
-<li><p><a class="reference internal" href="#ragger-utils-misc" id="id26"><code class="docutils literal notranslate"><span class="pre">ragger.utils.misc</span></code></a></p></li>
+<li><p><a class="reference internal" href="#interface-and-instructions" id="id15">Interface and instructions</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#ragger-utils" id="id16"><code class="docutils literal notranslate"><span class="pre">ragger.utils</span></code></a></p>
+<ul>
+<li><p><a class="reference internal" href="#ragger-utils-structs" id="id17"><code class="docutils literal notranslate"><span class="pre">ragger.utils.structs</span></code></a></p></li>
+<li><p><a class="reference internal" href="#ragger-utils-misc" id="id18"><code class="docutils literal notranslate"><span class="pre">ragger.utils.misc</span></code></a></p></li>
 </ul>
 </li>
 </ul>
@@ -264,17 +254,68 @@ last bytes.</p></li>
 </div>
 <div class="section" id="ragger-firmware">
 <h2><code class="docutils literal notranslate"><span class="pre">ragger.firmware</span></code><a class="headerlink" href="#ragger-firmware" title="Permalink to this heading"></a></h2>
-<div class="section" id="ragger-firmware-firmware">
-<h3><code class="docutils literal notranslate"><span class="pre">ragger.firmware.firmware</span></code><a class="headerlink" href="#ragger-firmware-firmware" title="Permalink to this heading"></a></h3>
 <p>Most <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> high-level class needs to know which <a class="reference internal" href="glossary.html#term-Firmware"><span class="xref std std-term">Firmware</span></a> they
 should expect. This is declared with this class:</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="ragger.firmware.Firmware">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ragger.firmware.</span></span><span class="sig-name descname"><span class="pre">Firmware</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ragger.firmware.Firmware" title="Permalink to this definition"></a></dt>
-<dd><p>An enumeration.</p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">IntEnum</span></code></p>
+<p>An enumeration.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ragger.firmware.Firmware.NANOS">
+<span class="sig-name descname"><span class="pre">NANOS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#ragger.firmware.Firmware.NANOS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ragger.firmware.Firmware.NANOSP">
+<span class="sig-name descname"><span class="pre">NANOSP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#ragger.firmware.Firmware.NANOSP" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ragger.firmware.Firmware.NANOX">
+<span class="sig-name descname"><span class="pre">NANOX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#ragger.firmware.Firmware.NANOX" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ragger.firmware.Firmware.STAX">
+<span class="sig-name descname"><span class="pre">STAX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#ragger.firmware.Firmware.STAX" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="ragger.firmware.Firmware.device">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">device</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#ragger.firmware.Firmware.device" title="Permalink to this definition"></a></dt>
+<dd><p>A proxy property for <a class="reference internal" href="#ragger.firmware.Firmware.name" title="ragger.firmware.Firmware.name"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Firmware.name</span></code></a>.
+This property is deprecated. It is advise to not use it.</p>
 </dd></dl>
 
-</div>
+<dl class="py property">
+<dt class="sig sig-object py" id="ragger.firmware.Firmware.has_bagl">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">has_bagl</span></span><a class="headerlink" href="#ragger.firmware.Firmware.has_bagl" title="Permalink to this definition"></a></dt>
+<dd><p>States if the firmware uses BAGL or not.
+Currently, this is a proxy to <a class="reference internal" href="#ragger.firmware.Firmware.is_nano" title="ragger.firmware.Firmware.is_nano"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Firmware.is_nano</span></code></a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="ragger.firmware.Firmware.has_nbgl">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">has_nbgl</span></span><a class="headerlink" href="#ragger.firmware.Firmware.has_nbgl" title="Permalink to this definition"></a></dt>
+<dd><p>States if the firmware uses NBGL or not.
+Currently only Stax device uses NBGL.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="ragger.firmware.Firmware.is_nano">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_nano</span></span><a class="headerlink" href="#ragger.firmware.Firmware.is_nano" title="Permalink to this definition"></a></dt>
+<dd><p>States if the firmware’s name starts with ‘nano’ or not.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="ragger.firmware.Firmware.name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#ragger.firmware.Firmware.name" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the name of the current firmware’s device</p>
+</dd></dl>
+
+</dd></dl>
+
 <div class="section" id="ragger-firmware-stax">
 <h3><code class="docutils literal notranslate"><span class="pre">ragger.firmware.stax</span></code><a class="headerlink" href="#ragger-firmware-stax" title="Permalink to this heading"></a></h3>
 <div class="section" id="ragger-firmware-stax-screen">
@@ -285,25 +326,6 @@ should expect. This is declared with this class:</p>
 </div>
 <div class="section" id="ragger-firmware-stax-use-cases">
 <h4><code class="docutils literal notranslate"><span class="pre">ragger.firmware.stax.use_cases</span></code><a class="headerlink" href="#ragger-firmware-stax-use-cases" title="Permalink to this heading"></a></h4>
-</div>
-</div>
-<div class="section" id="ragger-firmware-version">
-<h3><code class="docutils literal notranslate"><span class="pre">ragger.firmware.version</span></code><a class="headerlink" href="#ragger-firmware-version" title="Permalink to this heading"></a></h3>
-<div class="section" id="versionmanager">
-<h4>VersionManager<a class="headerlink" href="#versionmanager" title="Permalink to this heading"></a></h4>
-<p>Versions are managed through the <code class="docutils literal notranslate"><span class="pre">VersionManager</span></code></p>
-</div>
-<div class="section" id="nano-s">
-<h4>Nano S<a class="headerlink" href="#nano-s" title="Permalink to this heading"></a></h4>
-</div>
-<div class="section" id="id1">
-<h4>Nano S+<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h4>
-</div>
-<div class="section" id="nano-x">
-<h4>Nano X<a class="headerlink" href="#nano-x" title="Permalink to this heading"></a></h4>
-</div>
-<div class="section" id="managed-sdk-versions">
-<h4>Managed SDK &amp; versions<a class="headerlink" href="#managed-sdk-versions" title="Permalink to this heading"></a></h4>
 </div>
 </div>
 </div>

@@ -18,7 +18,7 @@
 <text text-anchor="start" x="7456.52" y="-1416.9" font-family="Times,serif" font-size="14.00">apdu_logger : Logger, RootLogger, NoneType</text>
 <text text-anchor="start" x="7456.52" y="-1401.9" font-family="Times,serif" font-size="14.00">firmware</text>
 <text text-anchor="start" x="7456.52" y="-1386.9" font-family="Times,serif" font-size="14.00">last_async_response</text>
-<text text-anchor="start" x="7456.52" y="-1371.9" font-family="Times,serif" font-size="14.00">logger : RootLogger, NoneType, Logger</text>
+<text text-anchor="start" x="7456.52" y="-1371.9" font-family="Times,serif" font-size="14.00">logger : NoneType, Logger, RootLogger</text>
 <text text-anchor="start" x="7456.52" y="-1356.9" font-family="Times,serif" font-size="14.00">raise_policy : RAISE_ALL_BUT_0x9000</text>
 <polyline fill="none" stroke="antiquewhite" points="7131.02,-1349.1 8104.02,-1349.1 "/>
 <text text-anchor="start" x="7139.02" y="-1334.9" font-family="Times,serif" font-style="italic" font-size="14.00">both_click</text>
@@ -344,20 +344,21 @@
 <!-- ragger.firmware.structs.Firmware -->
 <g id="node8" class="node">
 <title>ragger.firmware.structs.Firmware</title>
-<polygon fill="cadetblue" stroke="cadetblue" points="9237.52,-770.2 9237.52,-884.2 9323.52,-884.2 9323.52,-770.2 9237.52,-770.2"/>
-<text text-anchor="start" x="9245.52" y="-869" font-family="Times,serif" font-size="14.00">Firmware</text>
-<polyline fill="none" stroke="cadetblue" points="9237.52,-861.2 9323.52,-861.2 "/>
-<text text-anchor="start" x="9248.52" y="-846" font-family="Times,serif" font-size="14.00">has_bagl</text>
-<text text-anchor="start" x="9248.52" y="-831" font-family="Times,serif" font-size="14.00">has_nbgl</text>
-<text text-anchor="start" x="9248.52" y="-816" font-family="Times,serif" font-size="14.00">is_nano</text>
-<text text-anchor="start" x="9248.52" y="-801" font-family="Times,serif" font-size="14.00">name</text>
-<polyline fill="none" stroke="cadetblue" points="9237.52,-793.2 9323.52,-793.2 "/>
-<text text-anchor="start" x="9278.02" y="-778" font-family="Times,serif" font-size="14.00"> </text>
+<polygon fill="cadetblue" stroke="cadetblue" points="9237.52,-762.7 9237.52,-891.7 9323.52,-891.7 9323.52,-762.7 9237.52,-762.7"/>
+<text text-anchor="start" x="9245.52" y="-876.5" font-family="Times,serif" font-size="14.00">Firmware</text>
+<polyline fill="none" stroke="cadetblue" points="9237.52,-868.7 9323.52,-868.7 "/>
+<text text-anchor="start" x="9248.52" y="-853.5" font-family="Times,serif" font-size="14.00">device</text>
+<text text-anchor="start" x="9248.52" y="-838.5" font-family="Times,serif" font-size="14.00">has_bagl</text>
+<text text-anchor="start" x="9248.52" y="-823.5" font-family="Times,serif" font-size="14.00">has_nbgl</text>
+<text text-anchor="start" x="9248.52" y="-808.5" font-family="Times,serif" font-size="14.00">is_nano</text>
+<text text-anchor="start" x="9248.52" y="-793.5" font-family="Times,serif" font-size="14.00">name</text>
+<polyline fill="none" stroke="cadetblue" points="9237.52,-785.7 9323.52,-785.7 "/>
+<text text-anchor="start" x="9278.02" y="-770.5" font-family="Times,serif" font-size="14.00"> </text>
 </g>
 <!-- ragger.firmware.structs.Firmware&#45;&gt;ragger.backend.interface.BackendInterface -->
 <g id="edge89" class="edge">
 <title>ragger.firmware.structs.Firmware&#45;&gt;ragger.backend.interface.BackendInterface</title>
-<path fill="none" stroke="black" d="M9274.64,-884.31C9268.33,-914.23 9255.33,-948.69 9228.52,-967.6 9175.23,-1005.21 8117.43,-968.33 8054.52,-985.6 8026.82,-993.2 7999.04,-1002.98 7971.64,-1014.25"/>
+<path fill="none" stroke="black" d="M9272.93,-891.81C9266.09,-919.82 9253.11,-950.25 9228.52,-967.6 9175.23,-1005.21 8117.43,-968.33 8054.52,-985.6 8026.82,-993.2 7999.04,-1002.98 7971.64,-1014.25"/>
 <polygon fill="none" stroke="black" points="7971.41,-1014.35 7967.42,-1020.36 7960.34,-1018.99 7964.33,-1012.98 7971.41,-1014.35"/>
 <text text-anchor="middle" x="8090.52" y="-989.4" font-family="Times,serif" font-size="14.00" fill="green">_firmware</text>
 </g>
@@ -371,14 +372,14 @@
 <!-- ragger.firmware.structs.Firmware&#45;&gt;ragger.firmware.stax.layouts._Layout -->
 <g id="edge90" class="edge">
 <title>ragger.firmware.structs.Firmware&#45;&gt;ragger.firmware.stax.layouts._Layout</title>
-<path fill="none" stroke="black" d="M9270.01,-884.38C9262.41,-912.15 9249.63,-944.55 9228.52,-967.6 9192.94,-1006.45 9168.25,-994.27 9121.52,-1018.6 8731.02,-1221.88 8614.05,-1245.59 8259.52,-1506.6 7838.7,-1816.42 7885.94,-2113.13 7402.52,-2311.6 7239.27,-2378.62 4441.43,-2395.23 4021.18,-2397.35"/>
+<path fill="none" stroke="black" d="M9267.91,-891.71C9260.13,-917.7 9247.8,-946.55 9228.52,-967.6 9192.94,-1006.45 9168.25,-994.27 9121.52,-1018.6 8731.02,-1221.88 8614.05,-1245.59 8259.52,-1506.6 7838.7,-1816.42 7885.94,-2113.13 7402.52,-2311.6 7239.27,-2378.62 4441.43,-2395.23 4021.18,-2397.35"/>
 <polygon fill="none" stroke="black" points="4021.17,-2397.35 4015.19,-2401.38 4009.17,-2397.41 4015.15,-2393.38 4021.17,-2397.35"/>
 <text text-anchor="middle" x="8335.52" y="-1477.4" font-family="Times,serif" font-size="14.00" fill="green">_firmware</text>
 </g>
 <!-- ragger.firmware.structs.Firmware&#45;&gt;ragger.firmware.stax.use_cases._UseCase -->
 <g id="edge91" class="edge">
 <title>ragger.firmware.structs.Firmware&#45;&gt;ragger.firmware.stax.use_cases._UseCase</title>
-<path fill="none" stroke="black" d="M9274.62,-884.28C9268.31,-914.19 9255.3,-948.65 9228.52,-967.6 9183.08,-999.76 8280.81,-973.24 8226.52,-985.6 8192.2,-993.41 8174.41,-989.55 8154.52,-1018.6 8124.97,-1061.77 8164.45,-1452.56 8126.52,-1488.6 8083.53,-1529.45 6040.4,-1473.01 5991.52,-1506.6 5878.8,-1584.08 5846.5,-1755.31 5837.24,-1847.13"/>
+<path fill="none" stroke="black" d="M9272.91,-891.78C9266.06,-919.79 9253.09,-950.22 9228.52,-967.6 9183.08,-999.76 8280.81,-973.24 8226.52,-985.6 8192.2,-993.41 8174.41,-989.55 8154.52,-1018.6 8124.97,-1061.77 8164.45,-1452.56 8126.52,-1488.6 8083.53,-1529.45 6040.4,-1473.01 5991.52,-1506.6 5878.8,-1584.08 5846.5,-1755.31 5837.24,-1847.13"/>
 <polygon fill="none" stroke="black" points="5837.22,-1847.32 5840.65,-1853.66 5836.11,-1859.27 5832.68,-1852.92 5837.22,-1847.32"/>
 <text text-anchor="middle" x="8190.52" y="-1233.4" font-family="Times,serif" font-size="14.00" fill="green">_firmware</text>
 </g>
