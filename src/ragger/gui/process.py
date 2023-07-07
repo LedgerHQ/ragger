@@ -101,7 +101,8 @@ class RaggerGUI(Process):
     def kill(self):
         self.logger.info("Killing the interface and myself")
         self._send(("kill", None))
-        super().kill()
+        if self.is_alive():
+            super().kill()
 
     def check_screenshot(self, image: Path):
         self._send(("screenshot", image))
