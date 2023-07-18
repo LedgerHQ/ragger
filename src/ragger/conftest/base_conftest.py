@@ -76,10 +76,23 @@ def test_name(request):
     # Get the name of current pytest test
     test_name = request.node.name
 
-    # Remove firmware suffix:
-    # -  test_xxx_transaction_ok[nanox 2.0.2]
+    # Remove firmware parameter:
+    # -  test_xxx_transaction_ok[nanox]
     # => test_xxx_transaction_ok
-    return test_name.split("[")[0]
+    # -  test_xxx_transaction_ok[nanox-cool_parameter]
+    # => test_xxx_transaction_ok-cool_parameter
+    # -  test_xxx_transaction_ok[nanox-cool_parameter-nice_parameter]
+    # => test_xxx_transaction_ok-cool_parameter-nice_parameter
+    # Firmware parameter is guaranteed to be first due to metafunc.parametrize behavior
+
+    s1 = test_name.split('[')
+    s2 = s1[1].split('-', maxsplit=1)
+    if len(s2) != 1:
+        # Keep parameters other than "firmware" and append them after a -
+        return s1[0] + '-' + s2[1].split(']')[0]
+    else:
+        # No parameter except the filtered "firmware"
+        return s1[0]
 
 
 # Glue to call every test that depends on the firmware once for each required firmware
