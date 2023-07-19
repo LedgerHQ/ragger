@@ -13,7 +13,7 @@ from . import configuration as conf
 
 BACKENDS = ["speculos", "ledgercomm", "ledgerwallet"]
 
-DEVICES = ["nanos", "nanox", "nanosp", "stax", "all"]
+DEVICES = ["nanos", "nanox", "nanosp", "stax", "all", "all_nano"]
 
 FIRMWARES = [
     Firmware.NANOS,
@@ -77,7 +77,7 @@ def test_name(request):
     test_name = request.node.name
 
     # Remove firmware suffix:
-    # -  test_xxx_transaction_ok[nanox 2.0.2]
+    # -  test_xxx_transaction_ok[nanox]
     # => test_xxx_transaction_ok
     return test_name.split("[")[0]
 
@@ -91,21 +91,14 @@ def pytest_generate_tests(metafunc):
         device = metafunc.config.getoption("device")
         backend_name = metafunc.config.getoption("backend")
 
-        if device == "all":
-            if backend_name != "speculos":
-                raise ValueError("Invalid device parameter on this backend")
-
-            # Add all supported firmwares
-            for fw in FIRMWARES:
+        # Enable firmware for requested devices
+        for fw in FIRMWARES:
+            if device == fw.name or device == "all" or (device == "all_nano" and fw.name.is_nano()):
                 fw_list.append(fw)
                 ids.append(fw.name)
 
-        else:
-            # Enable firmware for demanded device
-            for fw in FIRMWARES:
-                if device == fw.name:
-                    fw_list.append(fw)
-                    ids.append(fw.name)
+        if len(fw_list) > 1 and backend_name != "speculos":
+            raise ValueError("Invalid device parameter on this backend")
 
         metafunc.parametrize("firmware", fw_list, ids=ids, scope="session")
 
