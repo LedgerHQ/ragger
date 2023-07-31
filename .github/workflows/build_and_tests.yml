@@ -61,7 +61,6 @@ jobs:
   package_and_deploy:
     name: Build and deploy Ragger Python Package
     runs-on: ubuntu-latest
-    needs: [build_install_test]
     steps:
 
     - name: Clone
