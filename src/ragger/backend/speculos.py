@@ -19,7 +19,7 @@ from pathlib import Path
 from PIL import Image
 from typing import Optional, Generator
 from time import time, sleep
-from json import dumps
+from re import match
 
 from speculos.client import SpeculosClient, screenshot_equal, ApduResponse, ApduException
 from speculos.mcu.seproxyhal import TICKER_DELAY
@@ -214,7 +214,10 @@ class SpeculosBackend(BackendInterface):
         return self._retrieve_client_screen_content()
 
     def compare_screen_with_text(self, text: str) -> bool:
-        return text in dumps(self._retrieve_client_screen_content())
+        for event in self._retrieve_client_screen_content()["events"]:
+            if match(text, event.get("text", "")):
+                return True
+        return False
 
     def wait_for_screen_change(self, timeout: float = 10.0) -> None:
         screenshot = BytesIO(self._client.get_screenshot())
