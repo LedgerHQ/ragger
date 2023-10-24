@@ -12,15 +12,15 @@
 <!-- ragger.backend.interface.BackendInterface -->
 <g id="node1" class="node">
 <title>ragger.backend.interface.BackendInterface</title>
-<polygon fill="antiquewhite" stroke="antiquewhite" points="7131.02,-1019.1 7131.02,-1455.1 8104.02,-1455.1 8104.02,-1019.1 7131.02,-1019.1"/>
+<polygon fill="#99ddff" stroke="#99ddff" points="7131.02,-1019.1 7131.02,-1455.1 8104.02,-1455.1 8104.02,-1019.1 7131.02,-1019.1"/>
 <text text-anchor="start" x="7554.52" y="-1439.9" font-family="Times,serif" font-size="14.00">BackendInterface</text>
-<polyline fill="none" stroke="antiquewhite" points="7131.02,-1432.1 8104.02,-1432.1 "/>
+<polyline fill="none" stroke="#99ddff" points="7131.02,-1432.1 8104.02,-1432.1 "/>
 <text text-anchor="start" x="7479.02" y="-1416.9" font-family="Times,serif" font-size="14.00">apdu_logger : NoneType, RootLogger</text>
 <text text-anchor="start" x="7479.02" y="-1401.9" font-family="Times,serif" font-size="14.00">firmware</text>
 <text text-anchor="start" x="7479.02" y="-1386.9" font-family="Times,serif" font-size="14.00">last_async_response</text>
 <text text-anchor="start" x="7479.02" y="-1371.9" font-family="Times,serif" font-size="14.00">logger : NoneType, RootLogger</text>
 <text text-anchor="start" x="7479.02" y="-1356.9" font-family="Times,serif" font-size="14.00">raise_policy : RAISE_ALL_BUT_0x9000</text>
-<polyline fill="none" stroke="antiquewhite" points="7131.02,-1349.1 8104.02,-1349.1 "/>
+<polyline fill="none" stroke="#99ddff" points="7131.02,-1349.1 8104.02,-1349.1 "/>
 <text text-anchor="start" x="7139.02" y="-1334.9" font-family="Times,serif" font-style="italic" font-size="14.00">both_click</text>
 <text text-anchor="start" x="7211.02" y="-1334.9" font-family="Times,serif" font-size="14.00">(): None</text>
 <text text-anchor="start" x="7139.02" y="-1320.9" font-family="Times,serif" font-style="italic" font-size="14.00">compare_screen_with_snapshot</text>
@@ -65,13 +65,13 @@
 <!-- ragger.navigator.navigator.Navigator -->
 <g id="node21" class="node">
 <title>ragger.navigator.navigator.Navigator</title>
-<polygon fill="chocolate" stroke="chocolate" points="8269.02,-1822.1 8269.02,-1996.1 10496.02,-1996.1 10496.02,-1822.1 8269.02,-1822.1"/>
+<polygon fill="#ee8866" stroke="#ee8866" points="8269.02,-1822.1 8269.02,-1996.1 10496.02,-1996.1 10496.02,-1822.1 8269.02,-1822.1"/>
 <text text-anchor="start" x="9346.52" y="-1980.9" font-family="Times,serif" font-size="14.00">Navigator</text>
-<polyline fill="none" stroke="chocolate" points="8269.02,-1973.1 10496.02,-1973.1 "/>
+<polyline fill="none" stroke="#ee8866" points="8269.02,-1973.1 10496.02,-1973.1 "/>
 <text text-anchor="start" x="9164.02" y="-1957.9" font-family="Times,serif" font-size="14.00">GOLDEN_INSTRUCTION_SLEEP_MULTIPLIER_FIRST : int</text>
 <text text-anchor="start" x="9164.02" y="-1942.9" font-family="Times,serif" font-size="14.00">GOLDEN_INSTRUCTION_SLEEP_MULTIPLIER_LAST : int</text>
 <text text-anchor="start" x="9164.02" y="-1927.9" font-family="Times,serif" font-size="14.00">GOLDEN_INSTRUCTION_SLEEP_MULTIPLIER_MIDDLE : int</text>
-<polyline fill="none" stroke="chocolate" points="8269.02,-1920.1 10496.02,-1920.1 "/>
+<polyline fill="none" stroke="#ee8866" points="8269.02,-1920.1 10496.02,-1920.1 "/>
 <text text-anchor="start" x="8277.02" y="-1904.9" font-family="Times,serif" font-size="14.00">add_callback(ins_id: NavInsID, callback: Callable, override: bool): None</text>
 <text text-anchor="start" x="8277.02" y="-1889.9" font-family="Times,serif" font-size="14.00">navigate(instructions: List[Union[NavIns, NavInsID]], timeout: float, screen_change_before_first_instruction: bool, screen_change_after_last_instruction: bool): None</text>
 <text text-anchor="start" x="8277.02" y="-1874.9" font-family="Times,serif" font-size="14.00">navigate_and_compare(path: Optional[Path], test_case_name: Optional[Path], instructions: List[Union[Union[NavIns, NavInsID]]], timeout: float, screen_change_before_first_instruction: bool, screen_change_after_last_instruction: bool, snap_start_idx: int): None</text>
@@ -89,13 +89,13 @@
 <!-- ragger.firmware.stax.layouts._Layout -->
 <g id="node48" class="node">
 <title>ragger.firmware.stax.layouts._Layout</title>
-<polygon fill="cadetblue" stroke="cadetblue" points="3928.02,-2349.1 3928.02,-2448.1 4009.02,-2448.1 4009.02,-2349.1 3928.02,-2349.1"/>
+<polygon fill="#aaaa00" stroke="#aaaa00" points="3928.02,-2349.1 3928.02,-2448.1 4009.02,-2448.1 4009.02,-2349.1 3928.02,-2349.1"/>
 <text text-anchor="start" x="3940.52" y="-2432.9" font-family="Times,serif" font-size="14.00">_Layout</text>
-<polyline fill="none" stroke="cadetblue" points="3928.02,-2425.1 4009.02,-2425.1 "/>
+<polyline fill="none" stroke="#aaaa00" points="3928.02,-2425.1 4009.02,-2425.1 "/>
 <text text-anchor="start" x="3936.02" y="-2409.9" font-family="Times,serif" font-size="14.00">client</text>
 <text text-anchor="start" x="3936.02" y="-2394.9" font-family="Times,serif" font-size="14.00">firmware</text>
 <text text-anchor="start" x="3936.02" y="-2379.9" font-family="Times,serif" font-size="14.00">positions</text>
-<polyline fill="none" stroke="cadetblue" points="3928.02,-2372.1 4009.02,-2372.1 "/>
+<polyline fill="none" stroke="#aaaa00" points="3928.02,-2372.1 4009.02,-2372.1 "/>
 <text text-anchor="start" x="3966.02" y="-2356.9" font-family="Times,serif" font-size="14.00"> </text>
 </g>
 <!-- ragger.backend.interface.BackendInterface&#45;&gt;ragger.firmware.stax.layouts._Layout -->
@@ -108,13 +108,13 @@
 <!-- ragger.firmware.stax.use_cases._UseCase -->
 <g id="node49" class="node">
 <title>ragger.firmware.stax.use_cases._UseCase</title>
-<polygon fill="cadetblue" stroke="cadetblue" points="5790.52,-1859.6 5790.52,-1958.6 5876.52,-1958.6 5876.52,-1859.6 5790.52,-1859.6"/>
+<polygon fill="#aaaa00" stroke="#aaaa00" points="5790.52,-1859.6 5790.52,-1958.6 5876.52,-1958.6 5876.52,-1859.6 5790.52,-1859.6"/>
 <text text-anchor="start" x="5798.52" y="-1943.4" font-family="Times,serif" font-size="14.00">_UseCase</text>
-<polyline fill="none" stroke="cadetblue" points="5790.52,-1935.6 5876.52,-1935.6 "/>
+<polyline fill="none" stroke="#aaaa00" points="5790.52,-1935.6 5876.52,-1935.6 "/>
 <text text-anchor="start" x="5801.02" y="-1920.4" font-family="Times,serif" font-size="14.00">client</text>
 <text text-anchor="start" x="5801.02" y="-1905.4" font-family="Times,serif" font-size="14.00">firmware</text>
 <text text-anchor="start" x="5801.02" y="-1890.4" font-family="Times,serif" font-size="14.00">positions</text>
-<polyline fill="none" stroke="cadetblue" points="5790.52,-1882.6 5876.52,-1882.6 "/>
+<polyline fill="none" stroke="#aaaa00" points="5790.52,-1882.6 5876.52,-1882.6 "/>
 <text text-anchor="start" x="5831.02" y="-1867.4" font-family="Times,serif" font-size="14.00"> </text>
 </g>
 <!-- ragger.backend.interface.BackendInterface&#45;&gt;ragger.firmware.stax.use_cases._UseCase -->
@@ -127,28 +127,28 @@
 <!-- ragger.bip.path.BtcDerivationPathFormat -->
 <g id="node2" class="node">
 <title>ragger.bip.path.BtcDerivationPathFormat</title>
-<polygon fill="aquamarine" stroke="aquamarine" points="8306.52,-53 8306.52,-122 8506.52,-122 8506.52,-53 8306.52,-53"/>
+<polygon fill="#44bb99" stroke="#44bb99" points="8306.52,-53 8306.52,-122 8506.52,-122 8506.52,-53 8306.52,-53"/>
 <text text-anchor="start" x="8314.52" y="-106.8" font-family="Times,serif" font-size="14.00">BtcDerivationPathFormat</text>
-<polyline fill="none" stroke="aquamarine" points="8306.52,-99 8506.52,-99 "/>
+<polyline fill="none" stroke="#44bb99" points="8306.52,-99 8506.52,-99 "/>
 <text text-anchor="start" x="8386.52" y="-83.8" font-family="Times,serif" font-size="14.00">name</text>
-<polyline fill="none" stroke="aquamarine" points="8306.52,-76 8506.52,-76 "/>
+<polyline fill="none" stroke="#44bb99" points="8306.52,-76 8506.52,-76 "/>
 <text text-anchor="start" x="8404.02" y="-60.8" font-family="Times,serif" font-size="14.00"> </text>
 </g>
 <!-- ragger.firmware.stax.layouts.CenteredFooter -->
 <g id="node3" class="node">
 <title>ragger.firmware.stax.layouts.CenteredFooter</title>
-<polygon fill="cadetblue" stroke="cadetblue" points="2694.02,-1201.7 2694.02,-1272.5 2823.02,-1272.5 2823.02,-1201.7 2694.02,-1201.7"/>
+<polygon fill="#aaaa00" stroke="#aaaa00" points="2694.02,-1201.7 2694.02,-1272.5 2823.02,-1272.5 2823.02,-1201.7 2694.02,-1201.7"/>
 <text text-anchor="start" x="2702.02" y="-1257.3" font-family="Times,serif" font-size="14.00">CenteredFooter</text>
-<polyline fill="none" stroke="cadetblue" points="2694.02,-1249.5 2823.02,-1249.5 "/>
-<polyline fill="none" stroke="cadetblue" points="2694.02,-1224.7 2823.02,-1224.7 "/>
+<polyline fill="none" stroke="#aaaa00" points="2694.02,-1249.5 2823.02,-1249.5 "/>
+<polyline fill="none" stroke="#aaaa00" points="2694.02,-1224.7 2823.02,-1224.7 "/>
 <text text-anchor="start" x="2741.52" y="-1209.5" font-family="Times,serif" font-size="14.00">tap()</text>
 </g>
 <!-- ragger.firmware.stax.screen.FullScreen -->
 <g id="node12" class="node">
 <title>ragger.firmware.stax.screen.FullScreen</title>
-<polygon fill="cadetblue" stroke="cadetblue" points="3479.52,-1507.1 3479.52,-2311.1 3797.52,-2311.1 3797.52,-1507.1 3479.52,-1507.1"/>
+<polygon fill="#aaaa00" stroke="#aaaa00" points="3479.52,-1507.1 3479.52,-2311.1 3797.52,-2311.1 3797.52,-1507.1 3479.52,-1507.1"/>
 <text text-anchor="start" x="3599.52" y="-2295.9" font-family="Times,serif" font-size="14.00">FullScreen</text>
-<polyline fill="none" stroke="cadetblue" points="3479.52,-2288.1 3797.52,-2288.1 "/>
+<polyline fill="none" stroke="#aaaa00" points="3479.52,-2288.1 3797.52,-2288.1 "/>
 <text text-anchor="start" x="3487.52" y="-2272.9" font-family="Times,serif" font-size="14.00">address_confirmation</text>
 <text text-anchor="start" x="3487.52" y="-2257.9" font-family="Times,serif" font-size="14.00">cancel_footer</text>
 <text text-anchor="start" x="3487.52" y="-2242.9" font-family="Times,serif" font-size="14.00">centered_footer</text>
@@ -199,7 +199,7 @@
 <text text-anchor="start" x="3487.52" y="-1567.9" font-family="Times,serif" font-size="14.00">use_case_sub_settings</text>
 <text text-anchor="start" x="3487.52" y="-1552.9" font-family="Times,serif" font-size="14.00">use_case_view_details</text>
 <text text-anchor="start" x="3487.52" y="-1537.9" font-family="Times,serif" font-size="14.00">view_details</text>
-<polyline fill="none" stroke="cadetblue" points="3479.52,-1530.1 3797.52,-1530.1 "/>
+<polyline fill="none" stroke="#aaaa00" points="3479.52,-1530.1 3797.52,-1530.1 "/>
 <text text-anchor="start" x="3636.02" y="-1514.9" font-family="Times,serif" font-size="14.00"> </text>
 </g>
 <!-- ragger.firmware.stax.layouts.CenteredFooter&#45;&gt;ragger.firmware.stax.screen.FullScreen -->
@@ -281,10 +281,10 @@
 <!-- ragger.firmware.stax.layouts.ChoiceList -->
 <g id="node4" class="node">
 <title>ragger.firmware.stax.layouts.ChoiceList</title>
-<polygon fill="cadetblue" stroke="cadetblue" points="3807.02,-1201.7 3807.02,-1272.5 3950.02,-1272.5 3950.02,-1201.7 3807.02,-1201.7"/>
+<polygon fill="#aaaa00" stroke="#aaaa00" points="3807.02,-1201.7 3807.02,-1272.5 3950.02,-1272.5 3950.02,-1201.7 3807.02,-1201.7"/>
 <text text-anchor="start" x="3840.52" y="-1257.3" font-family="Times,serif" font-size="14.00">ChoiceList</text>
-<polyline fill="none" stroke="cadetblue" points="3807.02,-1249.5 3950.02,-1249.5 "/>
-<polyline fill="none" stroke="cadetblue" points="3807.02,-1224.7 3950.02,-1224.7 "/>
+<polyline fill="none" stroke="#aaaa00" points="3807.02,-1249.5 3950.02,-1249.5 "/>
+<polyline fill="none" stroke="#aaaa00" points="3807.02,-1224.7 3950.02,-1224.7 "/>
 <text text-anchor="start" x="3815.02" y="-1209.5" font-family="Times,serif" font-size="14.00">choose(index: int)</text>
 </g>
 <!-- ragger.firmware.stax.layouts.ChoiceList&#45;&gt;ragger.firmware.stax.screen.FullScreen -->
@@ -310,49 +310,49 @@
 <!-- ragger.utils.structs.Crop -->
 <g id="node5" class="node">
 <title>ragger.utils.structs.Crop</title>
-<polygon fill="coral" stroke="coral" points="8524.52,-30.5 8524.52,-144.5 8616.52,-144.5 8616.52,-30.5 8524.52,-30.5"/>
+<polygon fill="#ffaabb" stroke="#ffaabb" points="8524.52,-30.5 8524.52,-144.5 8616.52,-144.5 8616.52,-30.5 8524.52,-30.5"/>
 <text text-anchor="start" x="8553.02" y="-129.3" font-family="Times,serif" font-size="14.00">Crop</text>
-<polyline fill="none" stroke="coral" points="8524.52,-121.5 8616.52,-121.5 "/>
+<polyline fill="none" stroke="#ffaabb" points="8524.52,-121.5 8616.52,-121.5 "/>
 <text text-anchor="start" x="8532.52" y="-106.3" font-family="Times,serif" font-size="14.00">left : int</text>
 <text text-anchor="start" x="8532.52" y="-91.3" font-family="Times,serif" font-size="14.00">lower : int</text>
 <text text-anchor="start" x="8532.52" y="-76.3" font-family="Times,serif" font-size="14.00">right : int</text>
 <text text-anchor="start" x="8532.52" y="-61.3" font-family="Times,serif" font-size="14.00">upper : int</text>
-<polyline fill="none" stroke="coral" points="8524.52,-53.5 8616.52,-53.5 "/>
+<polyline fill="none" stroke="#ffaabb" points="8524.52,-53.5 8616.52,-53.5 "/>
 <text text-anchor="start" x="8568.02" y="-38.3" font-family="Times,serif" font-size="14.00"> </text>
 </g>
 <!-- ragger.bip.seed.CurveChoice -->
 <g id="node6" class="node">
 <title>ragger.bip.seed.CurveChoice</title>
-<polygon fill="aquamarine" stroke="aquamarine" points="8635.02,-53 8635.02,-122 8742.02,-122 8742.02,-53 8635.02,-53"/>
+<polygon fill="#44bb99" stroke="#44bb99" points="8635.02,-53 8635.02,-122 8742.02,-122 8742.02,-53 8635.02,-53"/>
 <text text-anchor="start" x="8643.02" y="-106.8" font-family="Times,serif" font-size="14.00">CurveChoice</text>
-<polyline fill="none" stroke="aquamarine" points="8635.02,-99 8742.02,-99 "/>
+<polyline fill="none" stroke="#44bb99" points="8635.02,-99 8742.02,-99 "/>
 <text text-anchor="start" x="8668.52" y="-83.8" font-family="Times,serif" font-size="14.00">name</text>
-<polyline fill="none" stroke="aquamarine" points="8635.02,-76 8742.02,-76 "/>
+<polyline fill="none" stroke="#44bb99" points="8635.02,-76 8742.02,-76 "/>
 <text text-anchor="start" x="8686.02" y="-60.8" font-family="Times,serif" font-size="14.00"> </text>
 </g>
 <!-- ragger.error.ExceptionRAPDU -->
 <g id="node7" class="node">
 <title>ragger.error.ExceptionRAPDU</title>
-<polygon fill="aliceblue" stroke="aliceblue" points="8760.02,-45.5 8760.02,-129.5 8901.02,-129.5 8901.02,-45.5 8760.02,-45.5"/>
+<polygon fill="#77aadd" stroke="#77aadd" points="8760.02,-45.5 8760.02,-129.5 8901.02,-129.5 8901.02,-45.5 8760.02,-45.5"/>
 <text text-anchor="start" x="8768.02" y="-114.3" font-family="Times,serif" font-size="14.00" fill="red">ExceptionRAPDU</text>
-<polyline fill="none" stroke="aliceblue" points="8760.02,-106.5 8901.02,-106.5 "/>
+<polyline fill="none" stroke="#77aadd" points="8760.02,-106.5 8901.02,-106.5 "/>
 <text text-anchor="start" x="8788.02" y="-91.3" font-family="Times,serif" font-size="14.00" fill="red">data : bytes</text>
 <text text-anchor="start" x="8788.02" y="-76.3" font-family="Times,serif" font-size="14.00" fill="red">status : int</text>
-<polyline fill="none" stroke="aliceblue" points="8760.02,-68.5 8901.02,-68.5 "/>
+<polyline fill="none" stroke="#77aadd" points="8760.02,-68.5 8901.02,-68.5 "/>
 <text text-anchor="start" x="8828.02" y="-53.3" font-family="Times,serif" font-size="14.00" fill="red"> </text>
 </g>
 <!-- ragger.firmware.structs.Firmware -->
 <g id="node8" class="node">
 <title>ragger.firmware.structs.Firmware</title>
-<polygon fill="cadetblue" stroke="cadetblue" points="9237.52,-762.7 9237.52,-891.7 9323.52,-891.7 9323.52,-762.7 9237.52,-762.7"/>
+<polygon fill="#aaaa00" stroke="#aaaa00" points="9237.52,-762.7 9237.52,-891.7 9323.52,-891.7 9323.52,-762.7 9237.52,-762.7"/>
 <text text-anchor="start" x="9245.52" y="-876.5" font-family="Times,serif" font-size="14.00">Firmware</text>
-<polyline fill="none" stroke="cadetblue" points="9237.52,-868.7 9323.52,-868.7 "/>
+<polyline fill="none" stroke="#aaaa00" points="9237.52,-868.7 9323.52,-868.7 "/>
 <text text-anchor="start" x="9248.52" y="-853.5" font-family="Times,serif" font-size="14.00">device</text>
 <text text-anchor="start" x="9248.52" y="-838.5" font-family="Times,serif" font-size="14.00">has_bagl</text>
 <text text-anchor="start" x="9248.52" y="-823.5" font-family="Times,serif" font-size="14.00">has_nbgl</text>
 <text text-anchor="start" x="9248.52" y="-808.5" font-family="Times,serif" font-size="14.00">is_nano</text>
 <text text-anchor="start" x="9248.52" y="-793.5" font-family="Times,serif" font-size="14.00">name</text>
-<polyline fill="none" stroke="cadetblue" points="9237.52,-785.7 9323.52,-785.7 "/>
+<polyline fill="none" stroke="#aaaa00" points="9237.52,-785.7 9323.52,-785.7 "/>
 <text text-anchor="start" x="9278.02" y="-770.5" font-family="Times,serif" font-size="14.00"> </text>
 </g>
 <!-- ragger.firmware.structs.Firmware&#45;&gt;ragger.backend.interface.BackendInterface -->
@@ -386,10 +386,10 @@
 <!-- ragger.firmware.stax.layouts.FullKeyboardLetters -->
 <g id="node9" class="node">
 <title>ragger.firmware.stax.layouts.FullKeyboardLetters</title>
-<polygon fill="cadetblue" stroke="cadetblue" points="5991.52,-791.8 5991.52,-862.6 6155.52,-862.6 6155.52,-791.8 5991.52,-791.8"/>
+<polygon fill="#aaaa00" stroke="#aaaa00" points="5991.52,-791.8 5991.52,-862.6 6155.52,-862.6 6155.52,-791.8 5991.52,-791.8"/>
 <text text-anchor="start" x="5999.52" y="-847.4" font-family="Times,serif" font-size="14.00">FullKeyboardLetters</text>
-<polyline fill="none" stroke="cadetblue" points="5991.52,-839.6 6155.52,-839.6 "/>
-<polyline fill="none" stroke="cadetblue" points="5991.52,-814.8 6155.52,-814.8 "/>
+<polyline fill="none" stroke="#aaaa00" points="5991.52,-839.6 6155.52,-839.6 "/>
+<polyline fill="none" stroke="#aaaa00" points="5991.52,-814.8 6155.52,-814.8 "/>
 <text text-anchor="start" x="6023.52" y="-799.6" font-family="Times,serif" font-size="14.00">change_case()</text>
 </g>
 <!-- ragger.firmware.stax.layouts.FullKeyboardLetters&#45;&gt;ragger.firmware.stax.screen.FullScreen -->
@@ -409,10 +409,10 @@
 <!-- ragger.firmware.stax.layouts._FullKeyboard -->
 <g id="node45" class="node">
 <title>ragger.firmware.stax.layouts._FullKeyboard</title>
-<polygon fill="cadetblue" stroke="cadetblue" points="6009.02,-1201.7 6009.02,-1272.5 6138.02,-1272.5 6138.02,-1201.7 6009.02,-1201.7"/>
+<polygon fill="#aaaa00" stroke="#aaaa00" points="6009.02,-1201.7 6009.02,-1272.5 6138.02,-1272.5 6138.02,-1201.7 6009.02,-1201.7"/>
 <text text-anchor="start" x="6022.02" y="-1257.3" font-family="Times,serif" font-size="14.00">_FullKeyboard</text>
-<polyline fill="none" stroke="cadetblue" points="6009.02,-1249.5 6138.02,-1249.5 "/>
-<polyline fill="none" stroke="cadetblue" points="6009.02,-1224.7 6138.02,-1224.7 "/>
+<polyline fill="none" stroke="#aaaa00" points="6009.02,-1249.5 6138.02,-1249.5 "/>
+<polyline fill="none" stroke="#aaaa00" points="6009.02,-1224.7 6138.02,-1224.7 "/>
 <text text-anchor="start" x="6017.02" y="-1209.5" font-family="Times,serif" font-size="14.00">change_layout()</text>
 </g>
 <!-- ragger.firmware.stax.layouts.FullKeyboardLetters&#45;&gt;ragger.firmware.stax.layouts._FullKeyboard -->
@@ -424,10 +424,10 @@
 <!-- ragger.firmware.stax.layouts.FullKeyboardSpecialCharacters1 -->
 <g id="node10" class="node">
 <title>ragger.firmware.stax.layouts.FullKeyboardSpecialCharacters1</title>
-<polygon fill="cadetblue" stroke="cadetblue" points="190.02,-256.5 190.02,-327.3 441.02,-327.3 441.02,-256.5 190.02,-256.5"/>
+<polygon fill="#aaaa00" stroke="#aaaa00" points="190.02,-256.5 190.02,-327.3 441.02,-327.3 441.02,-256.5 190.02,-256.5"/>
 <text text-anchor="start" x="198.02" y="-312.1" font-family="Times,serif" font-size="14.00">FullKeyboardSpecialCharacters1</text>
-<polyline fill="none" stroke="cadetblue" points="190.02,-304.3 441.02,-304.3 "/>
-<polyline fill="none" stroke="cadetblue" points="190.02,-279.5 441.02,-279.5 "/>
+<polyline fill="none" stroke="#aaaa00" points="190.02,-304.3 441.02,-304.3 "/>
+<polyline fill="none" stroke="#aaaa00" points="190.02,-279.5 441.02,-279.5 "/>
 <text text-anchor="start" x="313.02" y="-264.3" font-family="Times,serif" font-size="14.00"> </text>
 </g>
 <!-- ragger.firmware.stax.layouts.FullKeyboardSpecialCharacters1&#45;&gt;ragger.firmware.stax.screen.FullScreen -->
@@ -447,10 +447,10 @@
 <!-- ragger.firmware.stax.layouts._FullKeyboardSpecialCharacters -->
 <g id="node46" class="node">
 <title>ragger.firmware.stax.layouts._FullKeyboardSpecialCharacters</title>
-<polygon fill="cadetblue" stroke="cadetblue" points="6316.02,-791.8 6316.02,-862.6 6565.02,-862.6 6565.02,-791.8 6316.02,-791.8"/>
+<polygon fill="#aaaa00" stroke="#aaaa00" points="6316.02,-791.8 6316.02,-862.6 6565.02,-862.6 6565.02,-791.8 6316.02,-791.8"/>
 <text text-anchor="start" x="6324.02" y="-847.4" font-family="Times,serif" font-size="14.00">_FullKeyboardSpecialCharacters</text>
-<polyline fill="none" stroke="cadetblue" points="6316.02,-839.6 6565.02,-839.6 "/>
-<polyline fill="none" stroke="cadetblue" points="6316.02,-814.8 6565.02,-814.8 "/>
+<polyline fill="none" stroke="#aaaa00" points="6316.02,-839.6 6565.02,-839.6 "/>
+<polyline fill="none" stroke="#aaaa00" points="6316.02,-814.8 6565.02,-814.8 "/>
 <text text-anchor="start" x="6384.52" y="-799.6" font-family="Times,serif" font-size="14.00">more_specials()</text>
 </g>
 <!-- ragger.firmware.stax.layouts.FullKeyboardSpecialCharacters1&#45;&gt;ragger.firmware.stax.layouts._FullKeyboardSpecialCharacters -->
@@ -462,10 +462,10 @@
 <!-- ragger.firmware.stax.layouts.FullKeyboardSpecialCharacters2 -->
 <g id="node11" class="node">
 <title>ragger.firmware.stax.layouts.FullKeyboardSpecialCharacters2</title>
-<polygon fill="cadetblue" stroke="cadetblue" points="6488.02,-256.5 6488.02,-327.3 6739.02,-327.3 6739.02,-256.5 6488.02,-256.5"/>
+<polygon fill="#aaaa00" stroke="#aaaa00" points="6488.02,-256.5 6488.02,-327.3 6739.02,-327.3 6739.02,-256.5 6488.02,-256.5"/>
 <text text-anchor="start" x="6496.02" y="-312.1" font-family="Times,serif" font-size="14.00">FullKeyboardSpecialCharacters2</text>
-<polyline fill="none" stroke="cadetblue" points="6488.02,-304.3 6739.02,-304.3 "/>
-<polyline fill="none" stroke="cadetblue" points="6488.02,-279.5 6739.02,-279.5 "/>
+<polyline fill="none" stroke="#aaaa00" points="6488.02,-304.3 6739.02,-304.3 "/>
+<polyline fill="none" stroke="#aaaa00" points="6488.02,-279.5 6739.02,-279.5 "/>
 <text text-anchor="start" x="6611.02" y="-264.3" font-family="Times,serif" font-size="14.00"> </text>
 </g>
 <!-- ragger.firmware.stax.layouts.FullKeyboardSpecialCharacters2&#45;&gt;ragger.firmware.stax.screen.FullScreen -->
@@ -491,10 +491,10 @@
 <!-- ragger.backend.ledgercomm.LedgerCommBackend -->
 <g id="node13" class="node">
 <title>ragger.backend.ledgercomm.LedgerCommBackend</title>
-<polygon fill="antiquewhite" stroke="antiquewhite" points="8494.52,-226.5 8494.52,-357.3 8972.52,-357.3 8972.52,-226.5 8494.52,-226.5"/>
+<polygon fill="#99ddff" stroke="#99ddff" points="8494.52,-226.5 8494.52,-357.3 8972.52,-357.3 8972.52,-226.5 8494.52,-226.5"/>
 <text text-anchor="start" x="8655.02" y="-342.1" font-family="Times,serif" font-size="14.00">LedgerCommBackend</text>
-<polyline fill="none" stroke="antiquewhite" points="8494.52,-334.3 8972.52,-334.3 "/>
-<polyline fill="none" stroke="antiquewhite" points="8494.52,-309.5 8972.52,-309.5 "/>
+<polyline fill="none" stroke="#99ddff" points="8494.52,-334.3 8972.52,-334.3 "/>
+<polyline fill="none" stroke="#99ddff" points="8494.52,-309.5 8972.52,-309.5 "/>
 <text text-anchor="start" x="8502.52" y="-294.3" font-family="Times,serif" font-size="14.00">exchange_async_raw(data: bytes): Generator[None, None, None]</text>
 <text text-anchor="start" x="8502.52" y="-279.3" font-family="Times,serif" font-size="14.00">exchange_raw(data: bytes): RAPDU</text>
 <text text-anchor="start" x="8502.52" y="-264.3" font-family="Times,serif" font-size="14.00">handle_usb_reset(): None</text>
@@ -504,10 +504,10 @@
 <!-- ragger.backend.physical_backend.PhysicalBackend -->
 <g id="node23" class="node">
 <title>ragger.backend.physical_backend.PhysicalBackend</title>
-<polygon fill="antiquewhite" stroke="antiquewhite" points="8247.52,-715.3 8247.52,-939.1 9219.52,-939.1 9219.52,-715.3 8247.52,-715.3"/>
+<polygon fill="#99ddff" stroke="#99ddff" points="8247.52,-715.3 8247.52,-939.1 9219.52,-939.1 9219.52,-715.3 8247.52,-715.3"/>
 <text text-anchor="start" x="8673.02" y="-923.9" font-family="Times,serif" font-size="14.00">PhysicalBackend</text>
-<polyline fill="none" stroke="antiquewhite" points="8247.52,-916.1 9219.52,-916.1 "/>
-<polyline fill="none" stroke="antiquewhite" points="8247.52,-891.3 9219.52,-891.3 "/>
+<polyline fill="none" stroke="#99ddff" points="8247.52,-916.1 9219.52,-916.1 "/>
+<polyline fill="none" stroke="#99ddff" points="8247.52,-891.3 9219.52,-891.3 "/>
 <text text-anchor="start" x="8255.52" y="-877.1" font-family="Times,serif" font-size="14.00">both_click(): None</text>
 <text text-anchor="start" x="8255.52" y="-863.1" font-family="Times,serif" font-size="14.00">compare_screen_with_snapshot(golden_snap_path: Path, crop: Optional[Crop], tmp_snap_path: Optional[Path], golden_run: bool): bool</text>
 <text text-anchor="start" x="8255.52" y="-849.1" font-family="Times,serif" font-size="14.00">compare_screen_with_text(text: str): bool</text>
@@ -533,10 +533,10 @@
 <!-- ragger.backend.ledgerwallet.LedgerWalletBackend -->
 <g id="node14" class="node">
 <title>ragger.backend.ledgerwallet.LedgerWalletBackend</title>
-<polygon fill="antiquewhite" stroke="antiquewhite" points="7998.52,-226.5 7998.52,-357.3 8476.52,-357.3 8476.52,-226.5 7998.52,-226.5"/>
+<polygon fill="#99ddff" stroke="#99ddff" points="7998.52,-226.5 7998.52,-357.3 8476.52,-357.3 8476.52,-226.5 7998.52,-226.5"/>
 <text text-anchor="start" x="8159.02" y="-342.1" font-family="Times,serif" font-size="14.00">LedgerWalletBackend</text>
-<polyline fill="none" stroke="antiquewhite" points="7998.52,-334.3 8476.52,-334.3 "/>
-<polyline fill="none" stroke="antiquewhite" points="7998.52,-309.5 8476.52,-309.5 "/>
+<polyline fill="none" stroke="#99ddff" points="7998.52,-334.3 8476.52,-334.3 "/>
+<polyline fill="none" stroke="#99ddff" points="7998.52,-309.5 8476.52,-309.5 "/>
 <text text-anchor="start" x="8006.52" y="-294.3" font-family="Times,serif" font-size="14.00">exchange_async_raw(data: bytes): Generator[None, None, None]</text>
 <text text-anchor="start" x="8006.52" y="-279.3" font-family="Times,serif" font-size="14.00">exchange_raw(data: bytes): RAPDU</text>
 <text text-anchor="start" x="8006.52" y="-264.3" font-family="Times,serif" font-size="14.00">handle_usb_reset(): None</text>
@@ -552,10 +552,10 @@
 <!-- ragger.firmware.stax.layouts.LeftHeader -->
 <g id="node15" class="node">
 <title>ragger.firmware.stax.layouts.LeftHeader</title>
-<polygon fill="cadetblue" stroke="cadetblue" points="691.52,-1201.7 691.52,-1272.5 789.52,-1272.5 789.52,-1201.7 691.52,-1201.7"/>
+<polygon fill="#aaaa00" stroke="#aaaa00" points="691.52,-1201.7 691.52,-1272.5 789.52,-1272.5 789.52,-1201.7 691.52,-1201.7"/>
 <text text-anchor="start" x="699.52" y="-1257.3" font-family="Times,serif" font-size="14.00">LeftHeader</text>
-<polyline fill="none" stroke="cadetblue" points="691.52,-1249.5 789.52,-1249.5 "/>
-<polyline fill="none" stroke="cadetblue" points="691.52,-1224.7 789.52,-1224.7 "/>
+<polyline fill="none" stroke="#aaaa00" points="691.52,-1249.5 789.52,-1249.5 "/>
+<polyline fill="none" stroke="#aaaa00" points="691.52,-1224.7 789.52,-1224.7 "/>
 <text text-anchor="start" x="723.52" y="-1209.5" font-family="Times,serif" font-size="14.00">tap()</text>
 </g>
 <!-- ragger.firmware.stax.layouts.LeftHeader&#45;&gt;ragger.firmware.stax.screen.FullScreen -->
@@ -595,10 +595,10 @@
 <!-- ragger.firmware.stax.layouts.LetterOnlyKeyboard -->
 <g id="node16" class="node">
 <title>ragger.firmware.stax.layouts.LetterOnlyKeyboard</title>
-<polygon fill="cadetblue" stroke="cadetblue" points="6585.02,-1201.7 6585.02,-1272.5 6746.02,-1272.5 6746.02,-1201.7 6585.02,-1201.7"/>
+<polygon fill="#aaaa00" stroke="#aaaa00" points="6585.02,-1201.7 6585.02,-1272.5 6746.02,-1272.5 6746.02,-1201.7 6585.02,-1201.7"/>
 <text text-anchor="start" x="6593.02" y="-1257.3" font-family="Times,serif" font-size="14.00">LetterOnlyKeyboard</text>
-<polyline fill="none" stroke="cadetblue" points="6585.02,-1249.5 6746.02,-1249.5 "/>
-<polyline fill="none" stroke="cadetblue" points="6585.02,-1224.7 6746.02,-1224.7 "/>
+<polyline fill="none" stroke="#aaaa00" points="6585.02,-1249.5 6746.02,-1249.5 "/>
+<polyline fill="none" stroke="#aaaa00" points="6585.02,-1224.7 6746.02,-1224.7 "/>
 <text text-anchor="start" x="6663.02" y="-1209.5" font-family="Times,serif" font-size="14.00"> </text>
 </g>
 <!-- ragger.firmware.stax.layouts.LetterOnlyKeyboard&#45;&gt;ragger.firmware.stax.screen.FullScreen -->
@@ -618,10 +618,10 @@
 <!-- ragger.firmware.stax.layouts._GenericKeyboard -->
 <g id="node47" class="node">
 <title>ragger.firmware.stax.layouts._GenericKeyboard</title>
-<polygon fill="cadetblue" stroke="cadetblue" points="6000.52,-1866.2 6000.52,-1952 6146.52,-1952 6146.52,-1866.2 6000.52,-1866.2"/>
+<polygon fill="#aaaa00" stroke="#aaaa00" points="6000.52,-1866.2 6000.52,-1952 6146.52,-1952 6146.52,-1866.2 6000.52,-1866.2"/>
 <text text-anchor="start" x="6008.52" y="-1936.8" font-family="Times,serif" font-size="14.00">_GenericKeyboard</text>
-<polyline fill="none" stroke="cadetblue" points="6000.52,-1929 6146.52,-1929 "/>
-<polyline fill="none" stroke="cadetblue" points="6000.52,-1904.2 6146.52,-1904.2 "/>
+<polyline fill="none" stroke="#aaaa00" points="6000.52,-1929 6146.52,-1929 "/>
+<polyline fill="none" stroke="#aaaa00" points="6000.52,-1904.2 6146.52,-1904.2 "/>
 <text text-anchor="start" x="6016.52" y="-1889" font-family="Times,serif" font-size="14.00">back()</text>
 <text text-anchor="start" x="6016.52" y="-1874" font-family="Times,serif" font-size="14.00">write(word: str)</text>
 </g>
@@ -634,19 +634,19 @@
 <!-- ragger.firmware.stax.screen.MetaScreen -->
 <g id="node17" class="node">
 <title>ragger.firmware.stax.screen.MetaScreen</title>
-<polygon fill="cadetblue" stroke="cadetblue" points="8919.02,-52.1 8919.02,-122.9 9022.02,-122.9 9022.02,-52.1 8919.02,-52.1"/>
+<polygon fill="#aaaa00" stroke="#aaaa00" points="8919.02,-52.1 8919.02,-122.9 9022.02,-122.9 9022.02,-52.1 8919.02,-52.1"/>
 <text text-anchor="start" x="8927.02" y="-107.7" font-family="Times,serif" font-size="14.00">MetaScreen</text>
-<polyline fill="none" stroke="cadetblue" points="8919.02,-99.9 9022.02,-99.9 "/>
-<polyline fill="none" stroke="cadetblue" points="8919.02,-75.1 9022.02,-75.1 "/>
+<polyline fill="none" stroke="#aaaa00" points="8919.02,-99.9 9022.02,-99.9 "/>
+<polyline fill="none" stroke="#aaaa00" points="8919.02,-75.1 9022.02,-75.1 "/>
 <text text-anchor="start" x="8968.02" y="-59.9" font-family="Times,serif" font-size="14.00"> </text>
 </g>
 <!-- ragger.navigator.nano_navigator.NanoNavigator -->
 <g id="node18" class="node">
 <title>ragger.navigator.nano_navigator.NanoNavigator</title>
-<polygon fill="chocolate" stroke="chocolate" points="9131.02,-1201.7 9131.02,-1272.5 9256.02,-1272.5 9256.02,-1201.7 9131.02,-1201.7"/>
+<polygon fill="#ee8866" stroke="#ee8866" points="9131.02,-1201.7 9131.02,-1272.5 9256.02,-1272.5 9256.02,-1201.7 9131.02,-1201.7"/>
 <text text-anchor="start" x="9139.02" y="-1257.3" font-family="Times,serif" font-size="14.00">NanoNavigator</text>
-<polyline fill="none" stroke="chocolate" points="9131.02,-1249.5 9256.02,-1249.5 "/>
-<polyline fill="none" stroke="chocolate" points="9131.02,-1224.7 9256.02,-1224.7 "/>
+<polyline fill="none" stroke="#ee8866" points="9131.02,-1249.5 9256.02,-1249.5 "/>
+<polyline fill="none" stroke="#ee8866" points="9131.02,-1224.7 9256.02,-1224.7 "/>
 <text text-anchor="start" x="9191.02" y="-1209.5" font-family="Times,serif" font-size="14.00"> </text>
 </g>
 <!-- ragger.navigator.nano_navigator.NanoNavigator&#45;&gt;ragger.navigator.navigator.Navigator -->
@@ -658,23 +658,23 @@
 <!-- ragger.navigator.instruction.NavIns -->
 <g id="node19" class="node">
 <title>ragger.navigator.instruction.NavIns</title>
-<polygon fill="chocolate" stroke="chocolate" points="8993.52,-242.4 8993.52,-341.4 9169.52,-341.4 9169.52,-242.4 8993.52,-242.4"/>
+<polygon fill="#ee8866" stroke="#ee8866" points="8993.52,-242.4 8993.52,-341.4 9169.52,-341.4 9169.52,-242.4 8993.52,-242.4"/>
 <text text-anchor="start" x="9056.02" y="-326.2" font-family="Times,serif" font-size="14.00">NavIns</text>
-<polyline fill="none" stroke="chocolate" points="8993.52,-318.4 9169.52,-318.4 "/>
+<polyline fill="none" stroke="#ee8866" points="8993.52,-318.4 9169.52,-318.4 "/>
 <text text-anchor="start" x="9001.52" y="-303.2" font-family="Times,serif" font-size="14.00">args : tuple</text>
 <text text-anchor="start" x="9001.52" y="-288.2" font-family="Times,serif" font-size="14.00">id</text>
 <text text-anchor="start" x="9001.52" y="-273.2" font-family="Times,serif" font-size="14.00">kwargs : Dict[str, Any]</text>
-<polyline fill="none" stroke="chocolate" points="8993.52,-265.4 9169.52,-265.4 "/>
+<polyline fill="none" stroke="#ee8866" points="8993.52,-265.4 9169.52,-265.4 "/>
 <text text-anchor="start" x="9079.02" y="-250.2" font-family="Times,serif" font-size="14.00"> </text>
 </g>
 <!-- ragger.navigator.instruction.NavInsID -->
 <g id="node20" class="node">
 <title>ragger.navigator.instruction.NavInsID</title>
-<polygon fill="chocolate" stroke="chocolate" points="9040.02,-53 9040.02,-122 9123.02,-122 9123.02,-53 9040.02,-53"/>
+<polygon fill="#ee8866" stroke="#ee8866" points="9040.02,-53 9040.02,-122 9123.02,-122 9123.02,-53 9040.02,-53"/>
 <text text-anchor="start" x="9048.02" y="-106.8" font-family="Times,serif" font-size="14.00">NavInsID</text>
-<polyline fill="none" stroke="chocolate" points="9040.02,-99 9123.02,-99 "/>
+<polyline fill="none" stroke="#ee8866" points="9040.02,-99 9123.02,-99 "/>
 <text text-anchor="start" x="9061.52" y="-83.8" font-family="Times,serif" font-size="14.00">name</text>
-<polyline fill="none" stroke="chocolate" points="9040.02,-76 9123.02,-76 "/>
+<polyline fill="none" stroke="#ee8866" points="9040.02,-76 9123.02,-76 "/>
 <text text-anchor="start" x="9079.02" y="-60.8" font-family="Times,serif" font-size="14.00"> </text>
 </g>
 <!-- ragger.navigator.instruction.NavInsID&#45;&gt;ragger.navigator.instruction.NavIns -->
@@ -687,16 +687,16 @@
 <!-- ragger.conftest.configuration.OptionalOptions -->
 <g id="node22" class="node">
 <title>ragger.conftest.configuration.OptionalOptions</title>
-<polygon fill="burlywood" stroke="burlywood" points="9141.52,-15.5 9141.52,-159.5 9371.52,-159.5 9371.52,-15.5 9141.52,-15.5"/>
+<polygon fill="#bbcc33" stroke="#bbcc33" points="9141.52,-15.5 9141.52,-159.5 9371.52,-159.5 9371.52,-15.5 9141.52,-15.5"/>
 <text text-anchor="start" x="9198.02" y="-144.3" font-family="Times,serif" font-size="14.00">OptionalOptions</text>
-<polyline fill="none" stroke="burlywood" points="9141.52,-136.5 9371.52,-136.5 "/>
+<polyline fill="none" stroke="#bbcc33" points="9141.52,-136.5 9371.52,-136.5 "/>
 <text text-anchor="start" x="9149.52" y="-121.3" font-family="Times,serif" font-size="14.00">APP_DIR : str</text>
 <text text-anchor="start" x="9149.52" y="-106.3" font-family="Times,serif" font-size="14.00">APP_NAME : str</text>
 <text text-anchor="start" x="9149.52" y="-91.3" font-family="Times,serif" font-size="14.00">BACKEND_SCOPE : str</text>
 <text text-anchor="start" x="9149.52" y="-76.3" font-family="Times,serif" font-size="14.00">CUSTOM_SEED : str</text>
 <text text-anchor="start" x="9149.52" y="-61.3" font-family="Times,serif" font-size="14.00">SIDELOADED_APPS : dict</text>
 <text text-anchor="start" x="9149.52" y="-46.3" font-family="Times,serif" font-size="14.00">SIDELOADED_APPS_DIR : str</text>
-<polyline fill="none" stroke="burlywood" points="9141.52,-38.5 9371.52,-38.5 "/>
+<polyline fill="none" stroke="#bbcc33" points="9141.52,-38.5 9371.52,-38.5 "/>
 <text text-anchor="start" x="9254.02" y="-23.3" font-family="Times,serif" font-size="14.00"> </text>
 </g>
 <!-- ragger.backend.physical_backend.PhysicalBackend&#45;&gt;ragger.backend.interface.BackendInterface -->
@@ -708,36 +708,36 @@
 <!-- ragger.firmware.stax.positions.Position -->
 <g id="node24" class="node">
 <title>ragger.firmware.stax.positions.Position</title>
-<polygon fill="cadetblue" stroke="cadetblue" points="9389.52,-45.5 9389.52,-129.5 9463.52,-129.5 9463.52,-45.5 9389.52,-45.5"/>
+<polygon fill="#aaaa00" stroke="#aaaa00" points="9389.52,-45.5 9389.52,-129.5 9463.52,-129.5 9463.52,-45.5 9389.52,-45.5"/>
 <text text-anchor="start" x="9397.52" y="-114.3" font-family="Times,serif" font-size="14.00">Position</text>
-<polyline fill="none" stroke="cadetblue" points="9389.52,-106.5 9463.52,-106.5 "/>
+<polyline fill="none" stroke="#aaaa00" points="9389.52,-106.5 9463.52,-106.5 "/>
 <text text-anchor="start" x="9405.52" y="-91.3" font-family="Times,serif" font-size="14.00">x : int</text>
 <text text-anchor="start" x="9405.52" y="-76.3" font-family="Times,serif" font-size="14.00">y : int</text>
-<polyline fill="none" stroke="cadetblue" points="9389.52,-68.5 9463.52,-68.5 "/>
+<polyline fill="none" stroke="#aaaa00" points="9389.52,-68.5 9463.52,-68.5 "/>
 <text text-anchor="start" x="9424.02" y="-53.3" font-family="Times,serif" font-size="14.00"> </text>
 </g>
 <!-- ragger.gui.process.ProcessCommunicationWorker -->
 <g id="node25" class="node">
 <title>ragger.gui.process.ProcessCommunicationWorker</title>
-<polygon fill="chartreuse" stroke="chartreuse" points="9475.52,-242.4 9475.52,-341.4 9711.52,-341.4 9711.52,-242.4 9475.52,-242.4"/>
+<polygon fill="#eedd88" stroke="#eedd88" points="9475.52,-242.4 9475.52,-341.4 9711.52,-341.4 9711.52,-242.4 9475.52,-242.4"/>
 <text text-anchor="start" x="9483.52" y="-326.2" font-family="Times,serif" font-size="14.00">ProcessCommunicationWorker</text>
-<polyline fill="none" stroke="chartreuse" points="9475.52,-318.4 9711.52,-318.4 "/>
+<polyline fill="none" stroke="#eedd88" points="9475.52,-318.4 9711.52,-318.4 "/>
 <text text-anchor="start" x="9561.52" y="-303.2" font-family="Times,serif" font-size="14.00">finished</text>
 <text text-anchor="start" x="9561.52" y="-288.2" font-family="Times,serif" font-size="14.00">logger</text>
 <text text-anchor="start" x="9561.52" y="-273.2" font-family="Times,serif" font-size="14.00">progress</text>
-<polyline fill="none" stroke="chartreuse" points="9475.52,-265.4 9711.52,-265.4 "/>
+<polyline fill="none" stroke="#eedd88" points="9475.52,-265.4 9711.52,-265.4 "/>
 <text text-anchor="start" x="9575.52" y="-250.2" font-family="Times,serif" font-size="14.00">run()</text>
 </g>
 <!-- ragger.gui.process.RaggerGUI -->
 <g id="node27" class="node">
 <title>ragger.gui.process.RaggerGUI</title>
-<polygon fill="chartreuse" stroke="chartreuse" points="9525.52,-740.2 9525.52,-914.2 9809.52,-914.2 9809.52,-740.2 9525.52,-740.2"/>
+<polygon fill="#eedd88" stroke="#eedd88" points="9525.52,-740.2 9525.52,-914.2 9809.52,-914.2 9809.52,-740.2 9525.52,-740.2"/>
 <text text-anchor="start" x="9627.02" y="-899" font-family="Times,serif" font-size="14.00">RaggerGUI</text>
-<polyline fill="none" stroke="chartreuse" points="9525.52,-891.2 9809.52,-891.2 "/>
+<polyline fill="none" stroke="#eedd88" points="9525.52,-891.2 9809.52,-891.2 "/>
 <text text-anchor="start" x="9642.02" y="-876" font-family="Times,serif" font-size="14.00">logger</text>
 <text text-anchor="start" x="9642.02" y="-861" font-family="Times,serif" font-size="14.00">thread</text>
 <text text-anchor="start" x="9642.02" y="-846" font-family="Times,serif" font-size="14.00">worker</text>
-<polyline fill="none" stroke="chartreuse" points="9525.52,-838.2 9809.52,-838.2 "/>
+<polyline fill="none" stroke="#eedd88" points="9525.52,-838.2 9809.52,-838.2 "/>
 <text text-anchor="start" x="9533.52" y="-823" font-family="Times,serif" font-size="14.00">ask_for_click_action(ins_id: NavInsID)</text>
 <text text-anchor="start" x="9533.52" y="-808" font-family="Times,serif" font-size="14.00">ask_for_touch_action(x: int, y: int)</text>
 <text text-anchor="start" x="9533.52" y="-793" font-family="Times,serif" font-size="14.00">check_screenshot(image: Path)</text>
@@ -762,13 +762,13 @@
 <!-- ragger.utils.structs.RAPDU -->
 <g id="node26" class="node">
 <title>ragger.utils.structs.RAPDU</title>
-<polygon fill="coral" stroke="coral" points="8187.02,-38 8187.02,-137 8288.02,-137 8288.02,-38 8187.02,-38"/>
+<polygon fill="#ffaabb" stroke="#ffaabb" points="8187.02,-38 8187.02,-137 8288.02,-137 8288.02,-38 8187.02,-38"/>
 <text text-anchor="start" x="8210.52" y="-121.8" font-family="Times,serif" font-size="14.00">RAPDU</text>
-<polyline fill="none" stroke="coral" points="8187.02,-114 8288.02,-114 "/>
+<polyline fill="none" stroke="#ffaabb" points="8187.02,-114 8288.02,-114 "/>
 <text text-anchor="start" x="8195.02" y="-98.8" font-family="Times,serif" font-size="14.00">data : bytes</text>
 <text text-anchor="start" x="8195.02" y="-83.8" font-family="Times,serif" font-size="14.00">raw</text>
 <text text-anchor="start" x="8195.02" y="-68.8" font-family="Times,serif" font-size="14.00">status : int</text>
-<polyline fill="none" stroke="coral" points="8187.02,-61 8288.02,-61 "/>
+<polyline fill="none" stroke="#ffaabb" points="8187.02,-61 8288.02,-61 "/>
 <text text-anchor="start" x="8235.02" y="-45.8" font-family="Times,serif" font-size="14.00"> </text>
 </g>
 <!-- ragger.utils.structs.RAPDU&#45;&gt;ragger.backend.ledgercomm.LedgerCommBackend -->
@@ -788,11 +788,11 @@
 <!-- ragger.backend.speculos.SpeculosBackend -->
 <g id="node31" class="node">
 <title>ragger.backend.speculos.SpeculosBackend</title>
-<polygon fill="antiquewhite" stroke="antiquewhite" points="7193.52,-376.3 7193.52,-668.3 8165.52,-668.3 8165.52,-376.3 7193.52,-376.3"/>
+<polygon fill="#99ddff" stroke="#99ddff" points="7193.52,-376.3 7193.52,-668.3 8165.52,-668.3 8165.52,-376.3 7193.52,-376.3"/>
 <text text-anchor="start" x="7617.02" y="-653.1" font-family="Times,serif" font-size="14.00">SpeculosBackend</text>
-<polyline fill="none" stroke="antiquewhite" points="7193.52,-645.3 8165.52,-645.3 "/>
+<polyline fill="none" stroke="#99ddff" points="7193.52,-645.3 8165.52,-645.3 "/>
 <text text-anchor="start" x="7669.02" y="-630.1" font-family="Times,serif" font-size="14.00">url</text>
-<polyline fill="none" stroke="antiquewhite" points="7193.52,-622.3 8165.52,-622.3 "/>
+<polyline fill="none" stroke="#99ddff" points="7193.52,-622.3 8165.52,-622.3 "/>
 <text text-anchor="start" x="7201.52" y="-608.1" font-family="Times,serif" font-size="14.00">both_click(): None</text>
 <text text-anchor="start" x="7201.52" y="-594.1" font-family="Times,serif" font-size="14.00">compare_screen_with_snapshot(golden_snap_path: Path, crop: Optional[Crop], tmp_snap_path: Optional[Path], golden_run: bool): bool</text>
 <text text-anchor="start" x="7201.52" y="-580.1" font-family="Times,serif" font-size="14.00">compare_screen_with_text(text: str): bool</text>
@@ -822,13 +822,13 @@
 <!-- ragger.gui.interface.RaggerMainWindow -->
 <g id="node28" class="node">
 <title>ragger.gui.interface.RaggerMainWindow</title>
-<polygon fill="chartreuse" stroke="chartreuse" points="9482.02,-0.5 9482.02,-174.5 9877.02,-174.5 9877.02,-0.5 9482.02,-0.5"/>
+<polygon fill="#eedd88" stroke="#eedd88" points="9482.02,-0.5 9482.02,-174.5 9877.02,-174.5 9877.02,-0.5 9482.02,-0.5"/>
 <text text-anchor="start" x="9607.02" y="-159.3" font-family="Times,serif" font-size="14.00">RaggerMainWindow</text>
-<polyline fill="none" stroke="chartreuse" points="9482.02,-151.5 9877.02,-151.5 "/>
+<polyline fill="none" stroke="#eedd88" points="9482.02,-151.5 9877.02,-151.5 "/>
 <text text-anchor="start" x="9637.52" y="-136.3" font-family="Times,serif" font-size="14.00">animation</text>
 <text text-anchor="start" x="9637.52" y="-121.3" font-family="Times,serif" font-size="14.00">effects : list</text>
 <text text-anchor="start" x="9637.52" y="-106.3" font-family="Times,serif" font-size="14.00">logger</text>
-<polyline fill="none" stroke="chartreuse" points="9482.02,-98.5 9877.02,-98.5 "/>
+<polyline fill="none" stroke="#eedd88" points="9482.02,-98.5 9877.02,-98.5 "/>
 <text text-anchor="start" x="9490.02" y="-83.3" font-family="Times,serif" font-size="14.00">action_done(): None</text>
 <text text-anchor="start" x="9490.02" y="-68.3" font-family="Times,serif" font-size="14.00">close(): bool</text>
 <text text-anchor="start" x="9490.02" y="-53.3" font-family="Times,serif" font-size="14.00">display_action(action: str, x: int, y: int): None</text>
@@ -853,20 +853,20 @@
 <!-- ragger.backend.interface.RaisePolicy -->
 <g id="node29" class="node">
 <title>ragger.backend.interface.RaisePolicy</title>
-<polygon fill="antiquewhite" stroke="antiquewhite" points="9895.52,-53 9895.52,-122 9993.52,-122 9993.52,-53 9895.52,-53"/>
+<polygon fill="#99ddff" stroke="#99ddff" points="9895.52,-53 9895.52,-122 9993.52,-122 9993.52,-53 9895.52,-53"/>
 <text text-anchor="start" x="9903.52" y="-106.8" font-family="Times,serif" font-size="14.00">RaisePolicy</text>
-<polyline fill="none" stroke="antiquewhite" points="9895.52,-99 9993.52,-99 "/>
+<polyline fill="none" stroke="#99ddff" points="9895.52,-99 9993.52,-99 "/>
 <text text-anchor="start" x="9924.52" y="-83.8" font-family="Times,serif" font-size="14.00">name</text>
-<polyline fill="none" stroke="antiquewhite" points="9895.52,-76 9993.52,-76 "/>
+<polyline fill="none" stroke="#99ddff" points="9895.52,-76 9993.52,-76 "/>
 <text text-anchor="start" x="9942.02" y="-60.8" font-family="Times,serif" font-size="14.00"> </text>
 </g>
 <!-- ragger.firmware.stax.layouts.RightHeader -->
 <g id="node30" class="node">
 <title>ragger.firmware.stax.layouts.RightHeader</title>
-<polygon fill="cadetblue" stroke="cadetblue" points="1393.52,-1201.7 1393.52,-1272.5 1501.52,-1272.5 1501.52,-1201.7 1393.52,-1201.7"/>
+<polygon fill="#aaaa00" stroke="#aaaa00" points="1393.52,-1201.7 1393.52,-1272.5 1501.52,-1272.5 1501.52,-1201.7 1393.52,-1201.7"/>
 <text text-anchor="start" x="1401.52" y="-1257.3" font-family="Times,serif" font-size="14.00">RightHeader</text>
-<polyline fill="none" stroke="cadetblue" points="1393.52,-1249.5 1501.52,-1249.5 "/>
-<polyline fill="none" stroke="cadetblue" points="1393.52,-1224.7 1501.52,-1224.7 "/>
+<polyline fill="none" stroke="#aaaa00" points="1393.52,-1249.5 1501.52,-1249.5 "/>
+<polyline fill="none" stroke="#aaaa00" points="1393.52,-1224.7 1501.52,-1224.7 "/>
 <text text-anchor="start" x="1430.52" y="-1209.5" font-family="Times,serif" font-size="14.00">tap()</text>
 </g>
 <!-- ragger.firmware.stax.layouts.RightHeader&#45;&gt;ragger.firmware.stax.screen.FullScreen -->
@@ -926,10 +926,10 @@
 <!-- ragger.navigator.stax_navigator.StaxNavigator -->
 <g id="node32" class="node">
 <title>ragger.navigator.stax_navigator.StaxNavigator</title>
-<polygon fill="chocolate" stroke="chocolate" points="9274.52,-1201.7 9274.52,-1272.5 9394.52,-1272.5 9394.52,-1201.7 9274.52,-1201.7"/>
+<polygon fill="#ee8866" stroke="#ee8866" points="9274.52,-1201.7 9274.52,-1272.5 9394.52,-1272.5 9394.52,-1201.7 9274.52,-1201.7"/>
 <text text-anchor="start" x="9282.52" y="-1257.3" font-family="Times,serif" font-size="14.00">StaxNavigator</text>
-<polyline fill="none" stroke="chocolate" points="9274.52,-1249.5 9394.52,-1249.5 "/>
-<polyline fill="none" stroke="chocolate" points="9274.52,-1224.7 9394.52,-1224.7 "/>
+<polyline fill="none" stroke="#ee8866" points="9274.52,-1249.5 9394.52,-1249.5 "/>
+<polyline fill="none" stroke="#ee8866" points="9274.52,-1224.7 9394.52,-1224.7 "/>
 <text text-anchor="start" x="9332.02" y="-1209.5" font-family="Times,serif" font-size="14.00"> </text>
 </g>
 <!-- ragger.navigator.stax_navigator.StaxNavigator&#45;&gt;ragger.navigator.navigator.Navigator -->
@@ -941,10 +941,10 @@
 <!-- ragger.backend.stub.StubBackend -->
 <g id="node33" class="node">
 <title>ragger.backend.stub.StubBackend</title>
-<polygon fill="antiquewhite" stroke="antiquewhite" points="7257.52,-687.3 7257.52,-967.1 8229.52,-967.1 8229.52,-687.3 7257.52,-687.3"/>
+<polygon fill="#99ddff" stroke="#99ddff" points="7257.52,-687.3 7257.52,-967.1 8229.52,-967.1 8229.52,-687.3 7257.52,-687.3"/>
 <text text-anchor="start" x="7696.02" y="-951.9" font-family="Times,serif" font-size="14.00">StubBackend</text>
-<polyline fill="none" stroke="antiquewhite" points="7257.52,-944.1 8229.52,-944.1 "/>
-<polyline fill="none" stroke="antiquewhite" points="7257.52,-919.3 8229.52,-919.3 "/>
+<polyline fill="none" stroke="#99ddff" points="7257.52,-944.1 8229.52,-944.1 "/>
+<polyline fill="none" stroke="#99ddff" points="7257.52,-919.3 8229.52,-919.3 "/>
 <text text-anchor="start" x="7265.52" y="-905.1" font-family="Times,serif" font-style="italic" font-size="14.00">both_click</text>
 <text text-anchor="start" x="7337.52" y="-905.1" font-family="Times,serif" font-size="14.00">(): None</text>
 <text text-anchor="start" x="7265.52" y="-891.1" font-family="Times,serif" font-size="14.00">compare_screen_with_snapshot(golden_snap_path: Path, crop: Optional[Crop], tmp_snap_path: Optional[Path], golden_run: bool): bool</text>
@@ -982,10 +982,10 @@
 <!-- ragger.firmware.stax.layouts.Suggestions -->
 <g id="node34" class="node">
 <title>ragger.firmware.stax.layouts.Suggestions</title>
-<polygon fill="cadetblue" stroke="cadetblue" points="1939.02,-1201.7 1939.02,-1272.5 2082.02,-1272.5 2082.02,-1201.7 1939.02,-1201.7"/>
+<polygon fill="#aaaa00" stroke="#aaaa00" points="1939.02,-1201.7 1939.02,-1272.5 2082.02,-1272.5 2082.02,-1201.7 1939.02,-1201.7"/>
 <text text-anchor="start" x="1966.52" y="-1257.3" font-family="Times,serif" font-size="14.00">Suggestions</text>
-<polyline fill="none" stroke="cadetblue" points="1939.02,-1249.5 2082.02,-1249.5 "/>
-<polyline fill="none" stroke="cadetblue" points="1939.02,-1224.7 2082.02,-1224.7 "/>
+<polyline fill="none" stroke="#aaaa00" points="1939.02,-1249.5 2082.02,-1249.5 "/>
+<polyline fill="none" stroke="#aaaa00" points="1939.02,-1224.7 2082.02,-1224.7 "/>
 <text text-anchor="start" x="1947.02" y="-1209.5" font-family="Times,serif" font-size="14.00">choose(index: int)</text>
 </g>
 <!-- ragger.firmware.stax.layouts.Suggestions&#45;&gt;ragger.firmware.stax.screen.FullScreen -->
@@ -1011,10 +1011,10 @@
 <!-- ragger.firmware.stax.layouts.TappableCenter -->
 <g id="node35" class="node">
 <title>ragger.firmware.stax.layouts.TappableCenter</title>
-<polygon fill="cadetblue" stroke="cadetblue" points="4125.52,-1201.7 4125.52,-1272.5 4255.52,-1272.5 4255.52,-1201.7 4125.52,-1201.7"/>
+<polygon fill="#aaaa00" stroke="#aaaa00" points="4125.52,-1201.7 4125.52,-1272.5 4255.52,-1272.5 4255.52,-1201.7 4125.52,-1201.7"/>
 <text text-anchor="start" x="4133.52" y="-1257.3" font-family="Times,serif" font-size="14.00">TappableCenter</text>
-<polyline fill="none" stroke="cadetblue" points="4125.52,-1249.5 4255.52,-1249.5 "/>
-<polyline fill="none" stroke="cadetblue" points="4125.52,-1224.7 4255.52,-1224.7 "/>
+<polyline fill="none" stroke="#aaaa00" points="4125.52,-1249.5 4255.52,-1249.5 "/>
+<polyline fill="none" stroke="#aaaa00" points="4125.52,-1224.7 4255.52,-1224.7 "/>
 <text text-anchor="start" x="4173.52" y="-1209.5" font-family="Times,serif" font-size="14.00">tap()</text>
 </g>
 <!-- ragger.firmware.stax.layouts.TappableCenter&#45;&gt;ragger.firmware.stax.screen.FullScreen -->
@@ -1040,10 +1040,10 @@
 <!-- ragger.firmware.stax.use_cases.UseCaseAddressConfirmation -->
 <g id="node36" class="node">
 <title>ragger.firmware.stax.use_cases.UseCaseAddressConfirmation</title>
-<polygon fill="cadetblue" stroke="cadetblue" points="4415.52,-1179.2 4415.52,-1295 4645.52,-1295 4645.52,-1179.2 4415.52,-1179.2"/>
+<polygon fill="#aaaa00" stroke="#aaaa00" points="4415.52,-1179.2 4415.52,-1295 4645.52,-1295 4645.52,-1179.2 4415.52,-1179.2"/>
 <text text-anchor="start" x="4423.52" y="-1279.8" font-family="Times,serif" font-size="14.00">UseCaseAddressConfirmation</text>
-<polyline fill="none" stroke="cadetblue" points="4415.52,-1272 4645.52,-1272 "/>
-<polyline fill="none" stroke="cadetblue" points="4415.52,-1247.2 4645.52,-1247.2 "/>
+<polyline fill="none" stroke="#aaaa00" points="4415.52,-1272 4645.52,-1272 "/>
+<polyline fill="none" stroke="#aaaa00" points="4415.52,-1247.2 4645.52,-1247.2 "/>
 <text text-anchor="start" x="4498.02" y="-1232" font-family="Times,serif" font-size="14.00">cancel()</text>
 <text text-anchor="start" x="4498.02" y="-1217" font-family="Times,serif" font-size="14.00">confirm()</text>
 <text text-anchor="start" x="4498.02" y="-1202" font-family="Times,serif" font-size="14.00">exit_qr()</text>
@@ -1072,10 +1072,10 @@
 <!-- ragger.firmware.stax.use_cases.UseCaseChoice -->
 <g id="node37" class="node">
 <title>ragger.firmware.stax.use_cases.UseCaseChoice</title>
-<polygon fill="cadetblue" stroke="cadetblue" points="4876.02,-1194.2 4876.02,-1280 5003.02,-1280 5003.02,-1194.2 4876.02,-1194.2"/>
+<polygon fill="#aaaa00" stroke="#aaaa00" points="4876.02,-1194.2 4876.02,-1280 5003.02,-1280 5003.02,-1194.2 4876.02,-1194.2"/>
 <text text-anchor="start" x="4884.02" y="-1264.8" font-family="Times,serif" font-size="14.00">UseCaseChoice</text>
-<polyline fill="none" stroke="cadetblue" points="4876.02,-1257 5003.02,-1257 "/>
-<polyline fill="none" stroke="cadetblue" points="4876.02,-1232.2 5003.02,-1232.2 "/>
+<polyline fill="none" stroke="#aaaa00" points="4876.02,-1257 5003.02,-1257 "/>
+<polyline fill="none" stroke="#aaaa00" points="4876.02,-1232.2 5003.02,-1232.2 "/>
 <text text-anchor="start" x="4907.02" y="-1217" font-family="Times,serif" font-size="14.00">confirm()</text>
 <text text-anchor="start" x="4907.02" y="-1202" font-family="Times,serif" font-size="14.00">reject()</text>
 </g>
@@ -1102,10 +1102,10 @@
 <!-- ragger.firmware.stax.use_cases.UseCaseHome -->
 <g id="node38" class="node">
 <title>ragger.firmware.stax.use_cases.UseCaseHome</title>
-<polygon fill="cadetblue" stroke="cadetblue" points="6992.02,-1186.7 6992.02,-1287.5 7113.02,-1287.5 7113.02,-1186.7 6992.02,-1186.7"/>
+<polygon fill="#aaaa00" stroke="#aaaa00" points="6992.02,-1186.7 6992.02,-1287.5 7113.02,-1287.5 7113.02,-1186.7 6992.02,-1186.7"/>
 <text text-anchor="start" x="7000.02" y="-1272.3" font-family="Times,serif" font-size="14.00">UseCaseHome</text>
-<polyline fill="none" stroke="cadetblue" points="6992.02,-1264.5 7113.02,-1264.5 "/>
-<polyline fill="none" stroke="cadetblue" points="6992.02,-1239.7 7113.02,-1239.7 "/>
+<polyline fill="none" stroke="#aaaa00" points="6992.02,-1264.5 7113.02,-1264.5 "/>
+<polyline fill="none" stroke="#aaaa00" points="6992.02,-1239.7 7113.02,-1239.7 "/>
 <text text-anchor="start" x="7018.02" y="-1224.5" font-family="Times,serif" font-size="14.00">info()</text>
 <text text-anchor="start" x="7018.02" y="-1209.5" font-family="Times,serif" font-size="14.00">quit()</text>
 <text text-anchor="start" x="7018.02" y="-1194.5" font-family="Times,serif" font-size="14.00">settings()</text>
@@ -1133,10 +1133,10 @@
 <!-- ragger.firmware.stax.use_cases.UseCaseHomeExt -->
 <g id="node39" class="node">
 <title>ragger.firmware.stax.use_cases.UseCaseHomeExt</title>
-<polygon fill="cadetblue" stroke="cadetblue" points="7055.52,-791.8 7055.52,-862.6 7201.52,-862.6 7201.52,-791.8 7055.52,-791.8"/>
+<polygon fill="#aaaa00" stroke="#aaaa00" points="7055.52,-791.8 7055.52,-862.6 7201.52,-862.6 7201.52,-791.8 7055.52,-791.8"/>
 <text text-anchor="start" x="7063.52" y="-847.4" font-family="Times,serif" font-size="14.00">UseCaseHomeExt</text>
-<polyline fill="none" stroke="cadetblue" points="7055.52,-839.6 7201.52,-839.6 "/>
-<polyline fill="none" stroke="cadetblue" points="7055.52,-814.8 7201.52,-814.8 "/>
+<polyline fill="none" stroke="#aaaa00" points="7055.52,-839.6 7201.52,-839.6 "/>
+<polyline fill="none" stroke="#aaaa00" points="7055.52,-814.8 7201.52,-814.8 "/>
 <text text-anchor="start" x="7101.02" y="-799.6" font-family="Times,serif" font-size="14.00">action()</text>
 </g>
 <!-- ragger.firmware.stax.use_cases.UseCaseHomeExt&#45;&gt;ragger.firmware.stax.use_cases.UseCaseHome -->
@@ -1148,10 +1148,10 @@
 <!-- ragger.firmware.stax.use_cases.UseCaseReview -->
 <g id="node40" class="node">
 <title>ragger.firmware.stax.use_cases.UseCaseReview</title>
-<polygon fill="cadetblue" stroke="cadetblue" points="5040.02,-1179.2 5040.02,-1295 5171.02,-1295 5171.02,-1179.2 5040.02,-1179.2"/>
+<polygon fill="#aaaa00" stroke="#aaaa00" points="5040.02,-1179.2 5040.02,-1295 5171.02,-1295 5171.02,-1179.2 5040.02,-1179.2"/>
 <text text-anchor="start" x="5048.02" y="-1279.8" font-family="Times,serif" font-size="14.00">UseCaseReview</text>
-<polyline fill="none" stroke="cadetblue" points="5040.02,-1272 5171.02,-1272 "/>
-<polyline fill="none" stroke="cadetblue" points="5040.02,-1247.2 5171.02,-1247.2 "/>
+<polyline fill="none" stroke="#aaaa00" points="5040.02,-1272 5171.02,-1272 "/>
+<polyline fill="none" stroke="#aaaa00" points="5040.02,-1247.2 5171.02,-1247.2 "/>
 <text text-anchor="start" x="5069.02" y="-1232" font-family="Times,serif" font-size="14.00">confirm()</text>
 <text text-anchor="start" x="5069.02" y="-1217" font-family="Times,serif" font-size="14.00">previous()</text>
 <text text-anchor="start" x="5069.02" y="-1202" font-family="Times,serif" font-size="14.00">reject()</text>
@@ -1180,10 +1180,10 @@
 <!-- ragger.firmware.stax.use_cases.UseCaseSettings -->
 <g id="node41" class="node">
 <title>ragger.firmware.stax.use_cases.UseCaseSettings</title>
-<polygon fill="cadetblue" stroke="cadetblue" points="5280.02,-1179.2 5280.02,-1295 5425.02,-1295 5425.02,-1179.2 5280.02,-1179.2"/>
+<polygon fill="#aaaa00" stroke="#aaaa00" points="5280.02,-1179.2 5280.02,-1295 5425.02,-1295 5425.02,-1179.2 5280.02,-1179.2"/>
 <text text-anchor="start" x="5291.02" y="-1279.8" font-family="Times,serif" font-size="14.00">UseCaseSettings</text>
-<polyline fill="none" stroke="cadetblue" points="5280.02,-1272 5425.02,-1272 "/>
-<polyline fill="none" stroke="cadetblue" points="5280.02,-1247.2 5425.02,-1247.2 "/>
+<polyline fill="none" stroke="#aaaa00" points="5280.02,-1272 5425.02,-1272 "/>
+<polyline fill="none" stroke="#aaaa00" points="5280.02,-1247.2 5425.02,-1247.2 "/>
 <text text-anchor="start" x="5288.02" y="-1232" font-family="Times,serif" font-size="14.00">multi_page_exit()</text>
 <text text-anchor="start" x="5288.02" y="-1217" font-family="Times,serif" font-size="14.00">next()</text>
 <text text-anchor="start" x="5288.02" y="-1202" font-family="Times,serif" font-size="14.00">previous()</text>
@@ -1212,10 +1212,10 @@
 <!-- ragger.firmware.stax.use_cases.UseCaseStatus -->
 <g id="node42" class="node">
 <title>ragger.firmware.stax.use_cases.UseCaseStatus</title>
-<polygon fill="cadetblue" stroke="cadetblue" points="5604.02,-1201.7 5604.02,-1272.5 5729.02,-1272.5 5729.02,-1201.7 5604.02,-1201.7"/>
+<polygon fill="#aaaa00" stroke="#aaaa00" points="5604.02,-1201.7 5604.02,-1272.5 5729.02,-1272.5 5729.02,-1201.7 5604.02,-1201.7"/>
 <text text-anchor="start" x="5612.02" y="-1257.3" font-family="Times,serif" font-size="14.00">UseCaseStatus</text>
-<polyline fill="none" stroke="cadetblue" points="5604.02,-1249.5 5729.02,-1249.5 "/>
-<polyline fill="none" stroke="cadetblue" points="5604.02,-1224.7 5729.02,-1224.7 "/>
+<polyline fill="none" stroke="#aaaa00" points="5604.02,-1249.5 5729.02,-1249.5 "/>
+<polyline fill="none" stroke="#aaaa00" points="5604.02,-1224.7 5729.02,-1224.7 "/>
 <text text-anchor="start" x="5634.02" y="-1209.5" font-family="Times,serif" font-size="14.00">dismiss()</text>
 </g>
 <!-- ragger.firmware.stax.use_cases.UseCaseStatus&#45;&gt;ragger.firmware.stax.screen.FullScreen -->
@@ -1241,10 +1241,10 @@
 <!-- ragger.firmware.stax.use_cases.UseCaseSubSettings -->
 <g id="node43" class="node">
 <title>ragger.firmware.stax.use_cases.UseCaseSubSettings</title>
-<polygon fill="cadetblue" stroke="cadetblue" points="5790.02,-1186.7 5790.02,-1287.5 5957.02,-1287.5 5957.02,-1186.7 5790.02,-1186.7"/>
+<polygon fill="#aaaa00" stroke="#aaaa00" points="5790.02,-1186.7 5790.02,-1287.5 5957.02,-1287.5 5957.02,-1186.7 5790.02,-1186.7"/>
 <text text-anchor="start" x="5798.02" y="-1272.3" font-family="Times,serif" font-size="14.00">UseCaseSubSettings</text>
-<polyline fill="none" stroke="cadetblue" points="5790.02,-1264.5 5957.02,-1264.5 "/>
-<polyline fill="none" stroke="cadetblue" points="5790.02,-1239.7 5957.02,-1239.7 "/>
+<polyline fill="none" stroke="#aaaa00" points="5790.02,-1264.5 5957.02,-1264.5 "/>
+<polyline fill="none" stroke="#aaaa00" points="5790.02,-1239.7 5957.02,-1239.7 "/>
 <text text-anchor="start" x="5837.02" y="-1224.5" font-family="Times,serif" font-size="14.00">exit()</text>
 <text text-anchor="start" x="5837.02" y="-1209.5" font-family="Times,serif" font-size="14.00">next()</text>
 <text text-anchor="start" x="5837.02" y="-1194.5" font-family="Times,serif" font-size="14.00">previous()</text>
@@ -1272,10 +1272,10 @@
 <!-- ragger.firmware.stax.use_cases.UseCaseViewDetails -->
 <g id="node44" class="node">
 <title>ragger.firmware.stax.use_cases.UseCaseViewDetails</title>
-<polygon fill="cadetblue" stroke="cadetblue" points="6156.52,-1186.7 6156.52,-1287.5 6320.52,-1287.5 6320.52,-1186.7 6156.52,-1186.7"/>
+<polygon fill="#aaaa00" stroke="#aaaa00" points="6156.52,-1186.7 6156.52,-1287.5 6320.52,-1287.5 6320.52,-1186.7 6156.52,-1186.7"/>
 <text text-anchor="start" x="6164.52" y="-1272.3" font-family="Times,serif" font-size="14.00">UseCaseViewDetails</text>
-<polyline fill="none" stroke="cadetblue" points="6156.52,-1264.5 6320.52,-1264.5 "/>
-<polyline fill="none" stroke="cadetblue" points="6156.52,-1239.7 6320.52,-1239.7 "/>
+<polyline fill="none" stroke="#aaaa00" points="6156.52,-1264.5 6320.52,-1264.5 "/>
+<polyline fill="none" stroke="#aaaa00" points="6156.52,-1239.7 6320.52,-1239.7 "/>
 <text text-anchor="start" x="6202.02" y="-1224.5" font-family="Times,serif" font-size="14.00">exit()</text>
 <text text-anchor="start" x="6202.02" y="-1209.5" font-family="Times,serif" font-size="14.00">next()</text>
 <text text-anchor="start" x="6202.02" y="-1194.5" font-family="Times,serif" font-size="14.00">previous()</text>
