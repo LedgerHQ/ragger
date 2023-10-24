@@ -15,10 +15,10 @@
 """
 from .structs import RAPDU, Crop
 from .packing import pack_APDU
-from .misc import app_path_from_app_name, prefix_with_len, find_project_root_dir
-from .misc import create_currency_config, split_message
+from .misc import find_library_application, prefix_with_len, find_project_root_dir
+from .misc import create_currency_config, split_message, find_main_application
 
 __all__ = [
-    "app_path_from_app_name", "create_currency_config", "Crop", "pack_APDU", "prefix_with_len",
-    "RAPDU", "split_message", "find_project_root_dir"
+    "find_library_application", "create_currency_config", "Crop", "pack_APDU", "prefix_with_len",
+    "RAPDU", "split_message", "find_project_root_dir", "find_main_application"
 ]
