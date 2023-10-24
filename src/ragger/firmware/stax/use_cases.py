@@ -110,7 +110,7 @@ class UseCaseReview(_UseCase):
 
     def confirm(self):
         # SDK needs at least 2.4s for long press.
-        self.client.finger_touch(*self.positions["confirm"], 2.4)
+        self.client.finger_touch(*self.positions["confirm"], 3.0)
 
 
 class UseCaseViewDetails(_UseCase):
