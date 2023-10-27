@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Code documentation &mdash; Ragger 1.11.6.dev2 documentation</title>
+  <title>Code documentation &mdash; Ragger 1.11.6.dev4 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
@@ -108,10 +108,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#ragger.utils.structs.RAPDU"><code class="docutils literal notranslate"><span class="pre">RAPDU</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#ragger-utils-misc"><code class="docutils literal notranslate"><span class="pre">ragger.utils.misc</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#ragger.utils.misc.app_path_from_app_name"><code class="docutils literal notranslate"><span class="pre">app_path_from_app_name()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="#ragger-utils-misc"><code class="docutils literal notranslate"><span class="pre">ragger.utils.misc</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -356,23 +353,6 @@ the two last bytes)</p></li>
 </div>
 <div class="section" id="ragger-utils-misc">
 <h3><code class="docutils literal notranslate"><span class="pre">ragger.utils.misc</span></code><a class="headerlink" href="#ragger-utils-misc" title="Permalink to this heading"></a></h3>
-<dl class="py function">
-<dt class="sig sig-object py" id="ragger.utils.misc.app_path_from_app_name">
-<span class="sig-prename descclassname"><span class="pre">ragger.utils.misc.</span></span><span class="sig-name descname"><span class="pre">app_path_from_app_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">app_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span></span></span><a class="headerlink" href="#ragger.utils.misc.app_path_from_app_name" title="Permalink to this definition"></a></dt>
-<dd><p>Builds an application ELF path according to a directory, an application name
-and a device name.
-The resulting path will be formatted like:
-<code class="docutils literal notranslate"><span class="pre">&lt;directory&gt;/&lt;application</span> <span class="pre">name&gt;_&lt;device</span> <span class="pre">name&gt;.elf</span></code>
-Example: <code class="docutils literal notranslate"><span class="pre">tests/elfs/exchange_nanox.elf</span></code>
-The directory and resulting path existence are checked.
-:param app_dir: The directory where the application ELF is
-:type app_dir: Path
-:param app_name: The name of the application
-:type app_name: str
-:param device: The device type name (ex: ‘nanos’, ‘nanosp’, …)
-:type device: str</p>
-</dd></dl>
-
 </div>
 </div>
 </div>
