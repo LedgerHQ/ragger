@@ -5,6 +5,7 @@ from dataclasses import dataclass
 class OptionalOptions:
     APP_NAME: str
     APP_DIR: str
+    LOAD_MAIN_APP_AS_LIBRARY: bool
     SIDELOADED_APPS: dict
     SIDELOADED_APPS_DIR: str
     BACKEND_SCOPE: str
@@ -16,14 +17,22 @@ OPTIONAL = OptionalOptions(
     # This is only used for LedgerWallet and LedgerComm backend.
     APP_NAME=str(),
 
-    # Use this parameter if the app is not compiled at the project root directory.
-    # This parameter will indicate the subdirectory where Speculos will search the "build/" directory
-    # example: "." or "app/"
+    # Use this parameter to point to the repository holding the build output of the app
+    # As this parameter defaults to the base project root, it can be omitted in most cases
+    # Use cases : your app is not stored at the project root dir, or you are using LOAD_MAIN_APP_AS_LIBRARY
+    # example: "./app/"
     APP_DIR=".",
 
-    # use this parameter if you want Speculos to emulate other applications being installed on the device
+    # Set True if the app being tested with Ragger should be loaded as a library and not as a standalone app
+    # If using this mode, use APP_DIR to set the path of the standalone app that will use the tested library
+    # Useful for Ethereum plugins, for example
+    LOAD_MAIN_APP_AS_LIBRARY=False,
+
+    # use this parameter if you want Speculos to sideload libraries being installed on the device
+    # Useful for Ethereum main app and exchange app, for example
     # example: {"bitcoin": "Bitcoin", "ethereum": "Ethereum"}
     # this would result in Speculos being launched with -lbitcoin:/path/to/bitcoin_device.elf
+    # Mutually exclusive with LOAD_MAIN_APP_AS_LIBRARY
     SIDELOADED_APPS=dict(),
 
     # Mandatory in case SIDELOADED_APPS is used

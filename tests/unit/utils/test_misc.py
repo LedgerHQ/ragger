@@ -29,16 +29,16 @@ class TestMisc(TestCase):
             app_name, device = "some_name", "some_device"
             expected = (dir_path / f"{app_name}_{device}.elf")
             expected.touch()
-            self.assertEqual(expected, misc.app_path_from_app_name(dir_path, app_name, device))
+            self.assertEqual(expected, misc.find_library_application(dir_path, app_name, device))
 
     def test_app_path_from_app_name_nok_no_directory(self):
         with self.assertRaises(AssertionError):
-            misc.app_path_from_app_name(Path("/this/does/not/exists/"), "a", "b")
+            misc.find_library_application(Path("/this/does/not/exists/"), "a", "b")
 
     def test_app_path_from_app_name_nok_no_file(self):
         with self.directory() as dir_path:
             with self.assertRaises(AssertionError):
-                misc.app_path_from_app_name(dir_path, "a", "b")
+                misc.find_library_application(dir_path, "a", "b")
 
     def test_find_project_root_dir_ok(self):
         with self.directory() as dir_path:

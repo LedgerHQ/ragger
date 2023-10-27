@@ -4,7 +4,7 @@ from pathlib import Path
 from ragger.firmware import Firmware
 from ragger.backend import SpeculosBackend, LedgerCommBackend, LedgerWalletBackend
 from ragger.navigator import NanoNavigator, StaxNavigator
-from ragger.utils import find_project_root_dir, app_path_from_app_name
+from ragger.utils import find_project_root_dir, find_library_application, find_main_application
 from ragger.utils.misc import get_current_app_name_and_version, exit_current_app, open_app_from_dashboard
 from ragger.logger import get_default_logger
 from dataclasses import fields
@@ -114,28 +114,27 @@ def prepare_speculos_args(root_pytest_dir: Path, firmware: Firmware, display: bo
     if device == "nanosp":
         device = "nanos2"
 
-    # Find the compiled application for the requested device
+    # Find the project root repository
     project_root_dir = find_project_root_dir(root_pytest_dir)
 
-    base_path = Path(project_root_dir / conf.OPTIONAL.APP_DIR).resolve()
-    app_path = Path(base_path / "build" / device / "bin" / "app.elf").resolve()
-    if not app_path.is_file():
-        raise ValueError(f"File '{app_path}' missing. Did you compile for this target?")
+    # Find the standalone application for the requested device
+    app_path = find_main_application(project_root_dir / conf.OPTIONAL.APP_DIR, device)
 
-    if not len(conf.OPTIONAL.SIDELOADED_APPS) == 0:
+    # Find all libraries that have to be sideloaded
+    if conf.OPTIONAL.LOAD_MAIN_APP_AS_LIBRARY:
+        # This repo holds the library, not the standalone app: search in root_dir/build
+        lib_path = find_main_application(project_root_dir, device)
+        speculos_args.append(f"-l{lib_path}")
+
+    elif len(conf.OPTIONAL.SIDELOADED_APPS) != 0:
+        # We are testing a a standalone app that needs libraries: search in SIDELOADED_APPS_DIR
         if conf.OPTIONAL.SIDELOADED_APPS_DIR == "":
             raise ValueError("Configuration \"SIDELOADED_APPS_DIR\" is mandatory if \
                              \"SIDELOADED_APPS\" is used")
-        libs_dir = Path(project_root_dir / conf.OPTIONAL.SIDELOADED_APPS_DIR).resolve()
-        if not libs_dir.is_dir():
-            raise ValueError(f"Sideloaded apps directory '{libs_dir}' missing. \
-                             Did you gather the elfs?")
-
+        libs_dir = Path(project_root_dir / conf.OPTIONAL.SIDELOADED_APPS_DIR)
         # Add "-l Appname:filepath" to Speculos command line for every required lib app
         for coin_name, lib_name in conf.OPTIONAL.SIDELOADED_APPS.items():
-            lib_path = app_path_from_app_name(libs_dir, coin_name, device)
-            if not lib_path.is_file():
-                raise ValueError(f"File '{lib_path}' missing. Did you compile for this target?")
+            lib_path = find_library_application(libs_dir, coin_name, device)
             speculos_args.append(f"-l{lib_name}:{lib_path}")
 
     # Check if custom user seed has been provided through CLI or optional configuration.

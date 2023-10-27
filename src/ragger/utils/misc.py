@@ -18,7 +18,7 @@ from pathlib import Path
 from ragger.error import ExceptionRAPDU
 
 
-def app_path_from_app_name(app_dir: Path, app_name: str, device: str) -> Path:
+def find_library_application(base_dir: Path, name: str, device: str) -> Path:
     """
     Builds an application ELF path according to a directory, an application name
     and a device name.
@@ -26,17 +26,28 @@ def app_path_from_app_name(app_dir: Path, app_name: str, device: str) -> Path:
     ``<directory>/<application name>_<device name>.elf``
     Example: ``tests/elfs/exchange_nanox.elf``
     The directory and resulting path existence are checked.
-    :param app_dir: The directory where the application ELF is
-    :type app_dir: Path
-    :param app_name: The name of the application
-    :type app_name: str
+    :param base_dir: The directory where the application ELF is
+    :type base_dir: Path
+    :param name: The name of the application
+    :type name: str
     :param device: The device type name (ex: 'nanos', 'nanosp', ...)
     :type device: str
     """
-    assert app_dir.is_dir(), f"{app_dir} is not a directory"
-    app_path = app_dir / (app_name + "_" + device + ".elf")
-    assert app_path.is_file(), f"{app_path} must exist"
-    return app_path
+    if not base_dir.is_dir():
+        raise AssertionError(f"{base_dir} is not a directory")
+    lib = Path(base_dir / (name + "_" + device + ".elf")).resolve()
+    if not lib.is_file():
+        raise AssertionError(f"File '{lib}' missing. Did you compile for this target?")
+    return lib
+
+
+def find_main_application(base_dir: Path, device: str) -> Path:
+    if not base_dir.is_dir():
+        raise AssertionError(f"{base_dir} is not a directory")
+    app = Path(base_dir / "build" / device / "bin" / "app.elf").resolve()
+    if not app.is_file():
+        raise AssertionError(f"File '{app}' missing. Did you compile for this target?")
+    return app
 
 
 def _is_root(path_to_check: Path) -> bool:
