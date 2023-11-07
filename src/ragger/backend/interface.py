@@ -19,7 +19,7 @@ from enum import Enum, auto
 from pathlib import Path
 from time import time
 from types import TracebackType
-from typing import Optional, Type, Generator, Any
+from typing import Optional, Type, Generator, Any, Iterable
 
 from ragger.firmware import Firmware
 from ragger.utils import pack_APDU, RAPDU, Crop
@@ -30,11 +30,15 @@ class RaisePolicy(Enum):
     RAISE_NOTHING = auto()
     RAISE_ALL_BUT_0x9000 = auto()
     RAISE_ALL = auto()
+    RAISE_CUSTOM = auto()
 
 
 class BackendInterface(ABC):
 
-    def __init__(self, firmware: Firmware, log_apdu_file: Optional[Path] = None):
+    def __init__(self,
+                 firmware: Firmware,
+                 log_apdu_file: Optional[Path] = None,
+                 whitelisted_status: Iterable = ()):
         """Initializes the Backend
 
         :param firmware: Which Firmware will be managed
@@ -49,6 +53,8 @@ class BackendInterface(ABC):
 
         self.logger = get_default_logger()
         self.apdu_logger = get_apdu_logger()
+
+        self.whitelisted_status = whitelisted_status
 
     @property
     def firmware(self) -> Firmware:
@@ -94,7 +100,9 @@ class BackendInterface(ABC):
         """
         return ((self.raise_policy == RaisePolicy.RAISE_ALL)
                 or ((self.raise_policy == RaisePolicy.RAISE_ALL_BUT_0x9000) and
-                    (rapdu.status != 0x9000)))
+                    (rapdu.status != 0x9000))
+                or ((self.raise_policy == RaisePolicy.RAISE_CUSTOM) and
+                    (rapdu.status not in self.whitelisted_status)))
 
     def send(self, cla: int, ins: int, p1: int = 0, p2: int = 0, data: bytes = b"") -> None:
         """
