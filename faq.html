@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Frequently Asked Questions &mdash; Ragger 1.12.0 documentation</title>
+  <title>Frequently Asked Questions &mdash; Ragger 1.12.1.dev2 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
@@ -157,12 +157,15 @@ how a backend should react when receiving a response from the
 backend will raise an <a class="reference internal" href="source.html#ragger.error.ExceptionRAPDU" title="ragger.error.ExceptionRAPDU"><code class="xref py py-class docutils literal notranslate"><span class="pre">ExceptionRAPDU</span></code></a>
 if the <a class="reference internal" href="glossary.html#term-APDU"><span class="xref std std-term">APDU</span></a> returned by the <a class="reference internal" href="glossary.html#term-Application"><span class="xref std std-term">application</span></a> does not end with
 <code class="docutils literal notranslate"><span class="pre">b'0x9000'</span></code>, else returns a <a class="reference internal" href="source.html#ragger.utils.structs.RAPDU" title="ragger.utils.structs.RAPDU"><code class="xref py py-class docutils literal notranslate"><span class="pre">RAPDU</span></code></a>
-instance. This behavior can be change with the two other options:</p>
+instance. This behavior can be change with the three other options:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">RaisePolicy.RAISE_NOTHING</span></code>, where the backend will never raise, and always
 returns a proper <a class="reference internal" href="source.html#ragger.utils.structs.RAPDU" title="ragger.utils.structs.RAPDU"><code class="xref py py-class docutils literal notranslate"><span class="pre">RAPDU</span></code></a>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">RaisePolicy.RAISE_ALL</span></code>, where the backend will always raise a
 <a class="reference internal" href="source.html#ragger.error.ExceptionRAPDU" title="ragger.error.ExceptionRAPDU"><code class="xref py py-class docutils literal notranslate"><span class="pre">ExceptionAPDU</span></code></a>, whatever the status.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RaisePolicy.RAISE_CUSTOM</span></code>, where the backend will raise a
+<a class="reference internal" href="source.html#ragger.error.ExceptionRAPDU" title="ragger.error.ExceptionRAPDU"><code class="xref py py-class docutils literal notranslate"><span class="pre">ExceptionAPDU</span></code></a>, for <a class="reference internal" href="glossary.html#term-APDU"><span class="xref std std-term">APDU</span></a> ending with
+status defined in <code class="docutils literal notranslate"><span class="pre">whitelisted_status</span></code>.</p></li>
 </ul>
 <p>From that, every higher-level error management can be performed on top of
 <code class="docutils literal notranslate"><span class="pre">Ragger</span></code>.</p>
