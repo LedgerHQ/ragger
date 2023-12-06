@@ -17,7 +17,7 @@ from contextlib import contextmanager
 from io import BytesIO
 from pathlib import Path
 from PIL import Image
-from typing import Optional, Generator
+from typing import Optional, Generator, List
 from time import time, sleep
 from re import match
 
@@ -51,24 +51,31 @@ def raise_policy_enforcer(function):
 
 class SpeculosBackend(BackendInterface):
 
+    _DEFAULT_API_PORT = 5000
     _ARGS_KEY = 'args'
+    _ARGS_API_PORT_KEY = '--api-port'
 
     def __init__(self,
                  application: Path,
                  firmware: Firmware,
-                 host: str = "127.0.0.1",
-                 port: int = 5000,
                  log_apdu_file: Optional[Path] = None,
                  **kwargs):
         super().__init__(firmware=firmware, log_apdu_file=log_apdu_file)
-        self._host = host
-        self._port = port
+        self._port = self._DEFAULT_API_PORT
         args = ["--model", firmware.name]
-        if self._ARGS_KEY in kwargs:
-            assert isinstance(kwargs[self._ARGS_KEY], list), \
-                f"'{self._ARGS_KEY}' ({kwargs[self._ARGS_KEY]}) keyword " \
-                "argument  must be a list of arguments"
-            kwargs[self._ARGS_KEY].extend(args)
+        speculos_args: Optional[List] = kwargs.get(self._ARGS_KEY)
+        if speculos_args is not None:
+            assert isinstance(speculos_args, list), \
+                f"'{self._ARGS_KEY}' ({speculos_args}) keyword argument must be a list of arguments"
+            # let's find if the API port is specified in the CLI arguments
+            try:
+                index = speculos_args.index(self._ARGS_API_PORT_KEY)
+                self._port = int(speculos_args[index + 1])
+                self.logger.info("Using custom port %d for the API", self._port)
+            except ValueError:
+                # '--api-port' was not found in `speculos_args`
+                pass
+            speculos_args.extend(args)
         else:
             kwargs[self._ARGS_KEY] = args
         self._client: SpeculosClient = SpeculosClient(app=str(application),
@@ -81,7 +88,7 @@ class SpeculosBackend(BackendInterface):
 
     @property
     def url(self) -> str:
-        return f"http://{self._host}:{self._port}"
+        return f"http://127.0.0.1:{self._port}"
 
     def _retrieve_client_screen_content(self) -> dict:
         raw_content = self._client.get_current_screen_content()
