@@ -73,6 +73,7 @@ class SpeculosBackend(BackendInterface):
     _DEFAULT_API_PORT = 5000
     _ARGS_KEY = 'args'
     _ARGS_API_PORT_KEY = '--api-port'
+    _ARGS_APDU_PORT_KEY = '--apdu-port'
 
     def __init__(self,
                  application: Path,
@@ -302,9 +303,22 @@ class SpeculosBackend(BackendInterface):
             if different_attestation:
                 additional_args.extend(["--attestation-key", urandom(32).hex()])
             if "args" in tmp_kwargs:
-                tmp_kwargs["args"].extend(additional_args)
-            else:
-                tmp_kwargs["args"] = additional_args
+                existing_args = tmp_kwargs.pop("args")
+                if cls._ARGS_APDU_PORT_KEY in existing_args:
+                    logger.warning("'%s' argument is ignored on batch mode",
+                                   cls._ARGS_APDU_PORT_KEY)
+                    index = existing_args.index(cls._ARGS_APDU_PORT_KEY)
+                    # popipng argument and its value
+                    existing_args.pop(index)
+                    existing_args.pop(index)
+                if cls._ARGS_API_PORT_KEY in existing_args:
+                    logger.warning("'%s' argument is ignored on batch mode", cls._ARGS_API_PORT_KEY)
+                    index = existing_args.index(cls._ARGS_API_PORT_KEY)
+                    # popping argument and its value
+                    existing_args.pop(index)
+                    existing_args.pop(index)
+                additional_args = existing_args + additional_args
+            tmp_kwargs["args"] = additional_args
             logger.info("Args: %s", tmp_kwargs["args"])
             result.append(cls(application, firmware, *args, **tmp_kwargs))
         return result
