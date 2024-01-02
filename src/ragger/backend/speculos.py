@@ -272,6 +272,17 @@ class SpeculosBackend(BackendInterface):
                 return
 
     @classmethod
+    def clean_args(cls: Type[T], speculos_args: List) -> None:
+        logger = get_default_logger()
+        for argument in [cls._ARGS_APDU_PORT_KEY, cls._ARGS_API_PORT_KEY]:
+            if argument in speculos_args:
+                logger.warning("'%s' argument is ignored on batch mode", argument)
+                index = speculos_args.index(argument)
+                # popipng argument and its value
+                speculos_args.pop(index)
+                speculos_args.pop(index)
+
+    @classmethod
     def batch(cls: Type[T],
               application: Path,
               firmware: Firmware,
@@ -304,19 +315,7 @@ class SpeculosBackend(BackendInterface):
                 additional_args.extend(["--attestation-key", urandom(32).hex()])
             if "args" in tmp_kwargs:
                 existing_args = tmp_kwargs.pop("args")
-                if cls._ARGS_APDU_PORT_KEY in existing_args:
-                    logger.warning("'%s' argument is ignored on batch mode",
-                                   cls._ARGS_APDU_PORT_KEY)
-                    index = existing_args.index(cls._ARGS_APDU_PORT_KEY)
-                    # popipng argument and its value
-                    existing_args.pop(index)
-                    existing_args.pop(index)
-                if cls._ARGS_API_PORT_KEY in existing_args:
-                    logger.warning("'%s' argument is ignored on batch mode", cls._ARGS_API_PORT_KEY)
-                    index = existing_args.index(cls._ARGS_API_PORT_KEY)
-                    # popping argument and its value
-                    existing_args.pop(index)
-                    existing_args.pop(index)
+                cls.clean_args(existing_args)
                 additional_args = existing_args + additional_args
             tmp_kwargs["args"] = additional_args
             logger.info("Args: %s", tmp_kwargs["args"])

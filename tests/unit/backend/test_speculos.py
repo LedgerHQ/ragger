@@ -6,6 +6,8 @@ from typing import List
 from ragger.backend import SpeculosBackend
 from ragger.firmware import Firmware
 
+APPNAME = "some app"
+
 
 def get_next_in_list(the_list: List, elt: str) -> str:
     index = the_list.index(elt)
@@ -17,19 +19,19 @@ class TestSpeculosBackend(TestCase):
     maxDiff = None
 
     def test___init__ok(self):
-        SpeculosBackend("some app", Firmware.NANOS)
+        SpeculosBackend(APPNAME, Firmware.NANOS)
 
     def test___init__args_ok(self):
-        SpeculosBackend("some app", Firmware.NANOS, args=["some", "specific", "arguments"])
+        SpeculosBackend(APPNAME, Firmware.NANOS, args=["some", "specific", "arguments"])
 
     def test___init__args_nok(self):
         with self.assertRaises(AssertionError):
-            SpeculosBackend("some app", Firmware.NANOS, args="not a list")
+            SpeculosBackend(APPNAME, Firmware.NANOS, args="not a list")
 
     def test_context_manager(self):
         expected_image = b"1234"
-        with patch("ragger.backend.speculos.SpeculosClient") as patched_client:
-            backend = SpeculosBackend("some app", Firmware.NANOS)
+        with patch("ragger.backend.speculos.SpeculosClient"):
+            backend = SpeculosBackend(APPNAME, Firmware.NANOS)
         self.assertIsNone(backend._last_screenshot)
         self.assertIsNone(backend._home_screenshot)
         # patching SpeculosClient.get_screenshot
@@ -50,10 +52,9 @@ class TestSpeculosBackend(TestCase):
             client_number = 2
             arg_api_port = 1234
             arg_apdu_port = 4321
-            application = "some app"
 
             clients = SpeculosBackend.batch(
-                application,
+                APPNAME,
                 Firmware.NANOS,
                 client_number,
                 different_attestation=True,
@@ -73,7 +74,7 @@ class TestSpeculosBackend(TestCase):
             for index, client in enumerate(clients):
                 args, kwargs = all_client_args[index]
                 self.assertEqual(args, ())
-                self.assertEqual(kwargs["app"], application)
+                self.assertEqual(kwargs["app"], APPNAME)
                 self.assertEqual(kwargs["api_url"], f"http://127.0.0.1:{client._port}")
                 speculos_args = kwargs["args"]
                 client_seeds.add(get_next_in_list(speculos_args, "--seed"))
