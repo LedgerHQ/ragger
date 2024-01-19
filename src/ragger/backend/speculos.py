@@ -13,11 +13,15 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
+import socket
 from contextlib import contextmanager
+from copy import deepcopy
 from io import BytesIO
+from mnemonic import Mnemonic
+from os import urandom
 from pathlib import Path
 from PIL import Image
-from typing import Optional, Generator, List
+from typing import Optional, Generator, List, Type, TypeVar
 from time import time, sleep
 from re import match
 
@@ -26,8 +30,23 @@ from speculos.mcu.seproxyhal import TICKER_DELAY
 
 from ragger.error import ExceptionRAPDU
 from ragger.firmware import Firmware
+from ragger.logger import get_default_logger
 from ragger.utils import RAPDU, Crop
 from .interface import BackendInterface
+
+STARTING_RANGE = 7000
+T = TypeVar("T", bound="SpeculosBackend")
+
+
+def _is_port_in_use(port: int) -> bool:
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        return s.connect_ex(('localhost', port)) == 0
+
+
+def _get_unused_port_from(starting_port: int) -> int:
+    while _is_port_in_use(starting_port):
+        starting_port += 1
+    return starting_port
 
 
 def raise_policy_enforcer(function):
@@ -54,6 +73,7 @@ class SpeculosBackend(BackendInterface):
     _DEFAULT_API_PORT = 5000
     _ARGS_KEY = 'args'
     _ARGS_API_PORT_KEY = '--api-port'
+    _ARGS_APDU_PORT_KEY = '--apdu-port'
 
     def __init__(self,
                  application: Path,
@@ -250,3 +270,54 @@ class SpeculosBackend(BackendInterface):
             self.wait_for_screen_change(endtime - time())
             if screenshot_equal(self._last_screenshot, self._home_screenshot):
                 return
+
+    @classmethod
+    def clean_args(cls: Type[T], speculos_args: List) -> None:
+        logger = get_default_logger()
+        for argument in [cls._ARGS_APDU_PORT_KEY, cls._ARGS_API_PORT_KEY]:
+            if argument in speculos_args:
+                logger.warning("'%s' argument is ignored on batch mode", argument)
+                index = speculos_args.index(argument)
+                # popipng argument and its value
+                speculos_args.pop(index)
+                speculos_args.pop(index)
+
+    @classmethod
+    def batch(cls: Type[T],
+              application: Path,
+              firmware: Firmware,
+              number: int,
+              *args,
+              different_seeds: bool = True,
+              different_rng: bool = True,
+              different_private: bool = True,
+              different_attestation: bool = False,
+              **kwargs) -> List["SpeculosBackend"]:
+        logger = get_default_logger()
+        logger.info("Request to spawn %d Speculos instances of '%s'", number, application)
+        test_port = STARTING_RANGE
+        result: List["SpeculosBackend"] = list()
+        while len(result) < number:
+            tmp_kwargs = deepcopy(kwargs)
+            api_port = _get_unused_port_from(test_port)
+            apdu_port = _get_unused_port_from(api_port + 1)
+            logger.info("Instance %d ports: %d (API) and %s (APDU)",
+                        len(result) + 1, api_port, apdu_port)
+            test_port = apdu_port + 1
+            additional_args = [cls._ARGS_API_PORT_KEY, str(api_port), "--apdu-port", str(apdu_port)]
+            if different_seeds:
+                additional_args.extend(["--seed", Mnemonic("english").generate(strength=256)])
+            if different_rng:
+                additional_args.extend(["--deterministic-rng", f"{apdu_port}{api_port}"])
+            if different_private:
+                additional_args.extend(["--user-private-key", urandom(32).hex()])
+            if different_attestation:
+                additional_args.extend(["--attestation-key", urandom(32).hex()])
+            if "args" in tmp_kwargs:
+                existing_args = tmp_kwargs.pop("args")
+                cls.clean_args(existing_args)
+                additional_args = existing_args + additional_args
+            tmp_kwargs["args"] = additional_args
+            logger.info("Args: %s", tmp_kwargs["args"])
+            result.append(cls(application, firmware, *args, **tmp_kwargs))
+        return result

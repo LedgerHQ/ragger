@@ -32,12 +32,16 @@ More complete documentation can be found [here](https://ledgerhq.github.io/ragge
 
 ### Python package
 
-Ragger is currently not available on PIP repositories.
-
-To install it, you need to run at the root of the `git` repository:
+Ragger is available on https://pypi.org. To install it, just run:
 
 ```
-pip install --extra-index-url https://test.pypi.org/simple/ '.[all_backends]'
+pip install ragger[all_backends]
+```
+
+You can also install it from sources. At the root of the `git` repository, run:
+
+```
+pip install '.[all_backends]'
 ```
 
 The extra index is important, as it brings the latest version of Speculos.
