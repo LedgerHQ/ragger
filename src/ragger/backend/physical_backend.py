@@ -15,6 +15,7 @@
 """
 from pathlib import Path
 from PIL import Image, ImageOps
+from pytesseract import image_to_data, Output
 from types import TracebackType
 from typing import List, Optional, Type
 
@@ -23,16 +24,6 @@ from ragger.gui import RaggerGUI
 from ragger.navigator.instruction import NavInsID
 from ragger.utils import Crop
 from .interface import BackendInterface
-
-try:
-    from pytesseract import image_to_data, Output
-
-    TESSERACT_AVAILABLE = True
-except ImportError as e:
-    if "pytesseract" not in str(e):
-        raise e
-
-    TESSERACT_AVAILABLE = False
 
 
 class PhysicalBackend(BackendInterface):
@@ -107,8 +98,6 @@ class PhysicalBackend(BackendInterface):
             return True
         self.init_gui()
         if self._last_valid_snap_path:
-            if not TESSERACT_AVAILABLE:
-                raise ImportError("Missing pytesseract module for this usage")
             image = Image.open(self._last_valid_snap_path)
             # Nano (s,sp,x) snapshots are white/blue text on black background,
             # tesseract cannot do OCR on these. Invert image so it has

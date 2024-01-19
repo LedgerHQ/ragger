@@ -115,7 +115,7 @@ def test_waiting_screen(backend, firmware, navigator):
                 NavInsID.USE_CASE_REVIEW_CONFIRM,
                 NavIns(NavInsID.WAIT_FOR_TEXT_ON_SCREEN, ("WILL NOT BE FOUND", ))
             ], "Hold to sign", ROOT_SCREENSHOT_PATH, "waiting_screen")
-            assert "Timeout waiting for screen change" in str(error.exception)
+    assert "Timeout waiting for screen change" in str(error.value)
 
     # Verify the error flow of WAIT_FOR_TEXT_ON_SCREEN instruction
     backend.exchange_raw(prep_tx_apdu)
@@ -125,4 +125,4 @@ def test_waiting_screen(backend, firmware, navigator):
                 NavInsID.USE_CASE_REVIEW_CONFIRM,
                 NavIns(NavInsID.WAIT_FOR_TEXT_NOT_ON_SCREEN, ("T", ))
             ], "Hold to sign", ROOT_SCREENSHOT_PATH, "waiting_screen")
-            assert "Timeout waiting for screen change" in str(error.exception)
+    assert "Timeout waiting for screen change" in str(error.value)
