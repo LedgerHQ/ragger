@@ -16,7 +16,7 @@
 from dataclasses import dataclass
 
 
-@dataclass(frozen=True)
+@dataclass
 class ExceptionRAPDU(Exception):
     """
     Depending on the :class:`RaisePolicy <ragger.backend.interface.RaisePolicy>`,
