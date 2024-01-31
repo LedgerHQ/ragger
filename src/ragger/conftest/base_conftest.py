@@ -129,8 +129,8 @@ def prepare_speculos_args(root_pytest_dir: Path, firmware: Firmware, display: bo
     elif len(conf.OPTIONAL.SIDELOADED_APPS) != 0:
         # We are testing a a standalone app that needs libraries: search in SIDELOADED_APPS_DIR
         if conf.OPTIONAL.SIDELOADED_APPS_DIR == "":
-            raise ValueError("Configuration \"SIDELOADED_APPS_DIR\" is mandatory if \
-                             \"SIDELOADED_APPS\" is used")
+            raise ValueError("Configuration \"SIDELOADED_APPS_DIR\" is mandatory if "
+                             "\"SIDELOADED_APPS\" is used")
         libs_dir = Path(project_root_dir / conf.OPTIONAL.SIDELOADED_APPS_DIR)
         # Add "-l Appname:filepath" to Speculos command line for every required lib app
         for coin_name, lib_name in conf.OPTIONAL.SIDELOADED_APPS.items():

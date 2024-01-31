@@ -1,31 +1,18 @@
 import os
-from contextlib import contextmanager
 from pathlib import Path
-from tempfile import mkdtemp
 from unittest import TestCase
+from unittest.mock import MagicMock
+
+from ragger.error import ExceptionRAPDU
 from ragger.utils import misc
 
-
-def rmdir(directory):
-    directory = Path(directory)
-    for item in directory.iterdir():
-        if item.is_dir():
-            rmdir(item)
-        else:
-            item.unlink()
-    directory.rmdir()
+from ..helpers import temporary_directory
 
 
 class TestMisc(TestCase):
 
-    @contextmanager
-    def directory(self):
-        dir_path = Path(mkdtemp())
-        yield dir_path
-        rmdir(dir_path)
-
     def test_app_path_from_app_name_ok(self):
-        with self.directory() as dir_path:
+        with temporary_directory() as dir_path:
             app_name, device = "some_name", "some_device"
             expected = (dir_path / f"{app_name}_{device}.elf")
             expected.touch()
@@ -36,12 +23,38 @@ class TestMisc(TestCase):
             misc.find_library_application(Path("/this/does/not/exists/"), "a", "b")
 
     def test_app_path_from_app_name_nok_no_file(self):
-        with self.directory() as dir_path:
+        with temporary_directory() as dir_path:
             with self.assertRaises(AssertionError):
                 misc.find_library_application(dir_path, "a", "b")
 
+    def test_find_main_application_ok(self):
+        device = "device"
+        with temporary_directory() as dir_path:
+            tmp_dir = (dir_path / "build" / device / "bin")
+            tmp_dir.mkdir(parents=True, exist_ok=True)
+            expected = tmp_dir / "app.elf"
+            expected.touch()
+            result = misc.find_main_application(dir_path, device)
+            self.assertEqual(result, expected)
+
+    def test_find_main_application_nok_not_dir(self):
+        directory, device = Path("does not exist"), "device"
+        with self.assertRaises(AssertionError) as error:
+            misc.find_main_application(directory, device)
+        self.assertIn(str(directory), str(error.exception))
+
+    def test_find_main_application_nok_not_file(self):
+        device = "device"
+        with temporary_directory() as dir_path:
+            tmp_dir = (dir_path / "build" / device / "bin")
+            tmp_dir.mkdir(parents=True, exist_ok=True)
+            expected = tmp_dir / "app.elf"
+            with self.assertRaises(AssertionError) as error:
+                misc.find_main_application(dir_path, device)
+            self.assertIn(str(expected), str(error.exception))
+
     def test_find_project_root_dir_ok(self):
-        with self.directory() as dir_path:
+        with temporary_directory() as dir_path:
             os.mkdir(Path(dir_path / ".git").resolve())
             nested_dir = Path(dir_path / "subfolder").resolve()
             os.mkdir(nested_dir)
@@ -52,7 +65,7 @@ class TestMisc(TestCase):
                 Path(misc.find_project_root_dir(nested_dir)).resolve())
 
     def test_find_project_root_dir_nok(self):
-        with self.directory() as dir_path:
+        with temporary_directory() as dir_path:
             nested_dir = Path(dir_path / "subfolder").resolve()
             os.mkdir(nested_dir)
             nested_dir = Path(nested_dir / "another_subfolder").resolve()
@@ -82,3 +95,53 @@ class TestMisc(TestCase):
         message = b"some message to split"
         expected = [b"some ", b"messa", b"ge to", b" spli", b"t"]
         self.assertEqual(expected, misc.split_message(message, 5))
+
+    def test_get_current_app_name_and_version_ok(self):
+        name, version = "appname", "12.345.6789"
+        backend = MagicMock()
+        # format (=1)
+        # <l1v name>
+        # <l1v version>
+        # <l1v flags>
+        backend.exchange().data = bytes.fromhex("01") \
+            + len(name.encode()).to_bytes(1, "big") + name.encode() \
+            + len(version.encode()).to_bytes(1, "big") + version.encode() \
+            + bytes.fromhex("0112")
+        result_name, result_version = misc.get_current_app_name_and_version(backend)
+        self.assertEqual(name, result_name)
+        self.assertEqual(version, result_version)
+
+    def test_get_current_app_name_and_version_nok(self):
+        error_status, backend = 0x1234, MagicMock()
+        backend.exchange.side_effect = ExceptionRAPDU(error_status)
+        with self.assertRaises(ExceptionRAPDU) as error:
+            misc.get_current_app_name_and_version(backend)
+        self.assertEqual(error.exception.status, error_status)
+        # specific behavior: device locked
+        backend.exchange.side_effect = ExceptionRAPDU(misc.ERROR_BOLOS_DEVICE_LOCKED)
+        with self.assertRaises(ValueError) as error:
+            misc.get_current_app_name_and_version(backend)
+        self.assertEqual(misc.ERROR_MSG_DEVICE_LOCKED, str(error.exception))
+
+    def test_exit_current_app(self):
+        backend = MagicMock()
+        self.assertIsNone(misc.exit_current_app(backend))
+
+    def test_open_app_from_dashboard_ok(self):
+        backend = MagicMock()
+        self.assertIsNone(misc.open_app_from_dashboard(backend, "some app"))
+
+    def test_open_app_from_dashboard_nok(self):
+        error_status, backend = 0x1234, MagicMock()
+        backend.exchange.side_effect = ExceptionRAPDU(error_status)
+        with self.assertRaises(ExceptionRAPDU) as error:
+            misc.open_app_from_dashboard(backend, "first app")
+        self.assertEqual(error.exception.status, error_status)
+        # specific behavior: user refuses
+        backend.exchange.side_effect = ExceptionRAPDU(misc.ERROR_DENIED_BY_USER)
+        with self.assertRaises(ValueError) as error:
+            misc.open_app_from_dashboard(backend, "second app")
+        # specific behavior: app not installed
+        backend.exchange.side_effect = ExceptionRAPDU(misc.ERROR_APP_NOT_FOUND)
+        with self.assertRaises(ValueError) as error:
+            misc.open_app_from_dashboard(backend, "third app")
