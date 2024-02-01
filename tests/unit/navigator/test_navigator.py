@@ -1,9 +1,9 @@
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest import TestCase
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
-from ragger.backend import SpeculosBackend
+from ragger.backend import SpeculosBackend, LedgerCommBackend
 from ragger.firmware import Firmware
 from ragger.navigator import Navigator, NavIns, NavInsID
 
@@ -219,3 +219,55 @@ class TestNavigator(TestCase):
 
         with self.assertRaises(TimeoutError):
             self.navigator.navigate_until_text_and_compare(ni, [], "not important", timeout=0)
+
+    def test_navigate_until_snap_not_speculos(self):
+        self.navigator._backend = MagicMock(spec=LedgerCommBackend)
+        self.assertEqual(
+            0,
+            self.navigator.navigate_until_snap(NavInsID.WAIT, NavInsID.WAIT, Path(), Path(), "",
+                                               ""))
+
+    def test_navigate_until_snap_ok(self):
+        self.navigator._backend = MagicMock(spec=SpeculosBackend)
+        self.navigator._check_snaps_dir_path = MagicMock()
+        self.navigator._run_instruction = MagicMock()
+        self.navigator._compare_snap_with_timeout = MagicMock()
+        snapshot_comparisons = (True, True, False)
+        # comparing first snapshot: True
+        # then comparing snapshots until given: True (i.e first snapshot is the expected one)
+        # then waiting for a screen change: False (screen changed)
+        expected_idx = 0
+        # as there is no snapshot between the first image and the last snapshot, the index is 0
+        self.navigator._compare_snap_with_timeout.side_effect = snapshot_comparisons
+        self.assertEqual(
+            expected_idx,
+            self.navigator.navigate_until_snap(NavInsID.WAIT, NavInsID.WAIT, Path(), Path(), "",
+                                               ""))
+
+        snapshot_comparisons = (True, False, False, True, False)
+        # comparing first snapshot: True
+        # then comparing snapshots until given: False, False, True (i.e first two snapshots did not match, but the third is the expected one)
+        # then waiting for a screen change: False (screen changed)
+        expected_idx = 2
+        # as there is 2 snapshots between the first image and the last snapshot, the index is 0
+        self.navigator._compare_snap_with_timeout.side_effect = snapshot_comparisons
+        self.assertEqual(
+            expected_idx,
+            self.navigator.navigate_until_snap(NavInsID.WAIT, NavInsID.WAIT, Path(), Path(), "",
+                                               ""))
+
+    def test_navigate_until_snap_nok_timeout(self):
+        self.navigator._backend = MagicMock(spec=SpeculosBackend)
+        self.navigator._check_snaps_dir_path = MagicMock()
+        self.navigator._run_instruction = MagicMock()
+        self.navigator._compare_snap_with_timeout = MagicMock()
+        self.navigator._compare_snap_with_timeout.return_value = True
+        with patch("ragger.navigator.navigator.LAST_SCREEN_UPDATE_TIMEOUT", 0):
+            with self.assertRaises(TimeoutError):
+                self.navigator.navigate_until_snap(NavInsID.WAIT,
+                                                   NavInsID.WAIT,
+                                                   Path(),
+                                                   Path(),
+                                                   "",
+                                                   "",
+                                                   timeout=0)

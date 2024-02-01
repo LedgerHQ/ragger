@@ -25,6 +25,8 @@ from ragger.utils import Crop
 
 from .instruction import NavIns, NavInsID
 
+LAST_SCREEN_UPDATE_TIMEOUT = 2
+
 
 class Navigator(ABC):
 
@@ -418,10 +420,9 @@ class Navigator(ABC):
 
             # Make sure there is a screen update after the final action.
             start = time()
-            last_screen_update_timeout = 2
             while self._compare_snap_with_timeout(last_golden_snap, timeout_s=0.5, crop=crop_last):
                 now = time()
-                if (now - start > last_screen_update_timeout):
+                if (now - start > LAST_SCREEN_UPDATE_TIMEOUT):
                     raise TimeoutError(
                         f"Timeout waiting for screen change after last snapshot : {last_golden_snap}"
                     )

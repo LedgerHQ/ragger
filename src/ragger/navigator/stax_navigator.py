@@ -26,6 +26,8 @@ from .instruction import NavInsID
 class StaxNavigator(Navigator):
 
     def __init__(self, backend: BackendInterface, firmware: Firmware, golden_run: bool = False):
+        if firmware != Firmware.STAX:
+            raise ValueError(f"'{self.__class__.__name__}' only works on Stax")
         screen = FullScreen(backend, firmware)
         callbacks: Dict[NavInsID, Callable] = {
             NavInsID.WAIT: sleep,

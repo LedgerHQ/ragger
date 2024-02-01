@@ -17,6 +17,12 @@ from typing import Optional, Tuple, List
 from pathlib import Path
 from ragger.error import ExceptionRAPDU
 
+ERROR_BOLOS_DEVICE_LOCKED = 0x5515
+ERROR_DENIED_BY_USER = 0x5501
+ERROR_APP_NOT_FOUND = 0x6807
+
+ERROR_MSG_DEVICE_LOCKED = "Your device is locked"
+
 
 def find_library_application(base_dir: Path, name: str, device: str) -> Path:
     """
@@ -117,8 +123,8 @@ def get_current_app_name_and_version(backend):
 
         return app_name, version
     except ExceptionRAPDU as e:
-        if e.status == 0x5515:
-            raise ValueError("Your device is locked")
+        if e.status == ERROR_BOLOS_DEVICE_LOCKED:
+            raise ValueError(ERROR_MSG_DEVICE_LOCKED)
         raise e
 
 
@@ -139,8 +145,8 @@ def open_app_from_dashboard(backend, app_name: str):
             p2=0,
             data=app_name.encode())
     except ExceptionRAPDU as e:
-        if e.status == 0x5501:
+        if e.status == ERROR_DENIED_BY_USER:
             raise ValueError("Open app consent denied by the user")
-        elif e.status == 0x6807:
+        elif e.status == ERROR_APP_NOT_FOUND:
             raise ValueError(f"App '{app_name} is not present")
         raise e
