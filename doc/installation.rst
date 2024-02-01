@@ -8,7 +8,7 @@ installed with ``pip``:
 
 .. code-block:: bash
 
-   pip install --extra-index-url https://test.pypi.org/simple/ ragger
+   pip install ragger
 
 
 By default - to avoid wasting useless time and space - the ``ragger`` package

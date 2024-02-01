@@ -16,9 +16,8 @@
 from .interface import BackendInterface, RaisePolicy
 from .stub import StubBackend
 
-
-ERROR_MSG = "This backend needs {}. Please install this package (run `pip install " \
-    "--extra-index-url https://test.pypi.org/simple/ ragger[{}]` or check this address: '{}')"
+ERROR_MSG = ("This backend needs {}. Please install this package (run `pip install ragger[{}]` or "
+             "check this address: '{}')")
 
 try:
     from .speculos import SpeculosBackend
