@@ -8,8 +8,8 @@ This framework allows testing the application on the Speculos emulator or on a r
 ### Install ragger and dependencies
 
 ```
-pip install --extra-index-url https://test.pypi.org/simple/ -r requirements.txt
 sudo apt-get update && sudo apt-get install qemu-user-static
+pip install .[speculos]
 ```
 
 ### Compile the application
@@ -61,7 +61,7 @@ Standard useful pytest options
     -s              enable logs for successful tests, on Speculos it will enable app logs if compiled with DEBUG=1
     -k <testname>   only run the tests that contain <testname> in their names
     --tb=short      in case of errors, formats the test traceback in a readable way
-``` 
+```
 
 Custom pytest options
 ```
@@ -72,4 +72,3 @@ Custom pytest options
     --log_apdu_file <filepath>  log all apdu exchanges to the file in parameter. The previous file content is erased
     --seed                      on Speculos, use the seed (mnemonic) provided.
 ```
-

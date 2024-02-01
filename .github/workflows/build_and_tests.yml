@@ -46,7 +46,7 @@ jobs:
 
     - name: Build & install
       run: |
-        pip install --extra-index-url https://test.pypi.org/simple/ -U .[tests,all_backends]
+        pip install -U .[tests,all_backends]
         pip install -U click>=8
 
     - name: Download app binaries
@@ -81,14 +81,8 @@ jobs:
     - name: Build Ragger Python package
       run: |
         pip install --upgrade pip build twine
-        if [[ ${{ github.ref }} == "refs/tags/"* ]]; \
-        then \
-            python -m build; \
-            pip install .
-        else \
-            PIP_EXTRA_INDEX_URL=https://test.pypi.org/simple/ python -m build; \
-            pip install --extra-index-url https://test.pypi.org/simple/ .
-        fi
+        python -m build
+        pip install .
         python -m twine check dist/*
         echo "TAG_VERSION=$(python -c 'from ragger import __version__; print(__version__)')" >> "$GITHUB_ENV"
 
