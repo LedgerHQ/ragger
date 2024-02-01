@@ -7,16 +7,9 @@ dependencies:
 
 .. code-block:: bash
 
-   $ pip install --extra-index-url https://test.pypi.org/simple/ ragger[speculos]
+   $ pip install ragger[speculos]
 
-Some explanation on arguments:
-
-- ``--extra-index-url https://test.pypi.org/simple/`` is necessary to get the
-  latest version of ``Ragger``, as it is currently not deployed on the
-  stable ``pypi`` repositories.
-- ``ragger[speculos]`` means than Speculos and its dependencies will also
-  be installed. ``Ragger`` tries to uncouple its dependencies so that only
-  what is needed is installed.
-  All the extras can be seen
-  `in the setup.cfg <https://github.com/LedgerHQ/ragger/blob/develop/setup.cfg#L36-L100>`_
-  file.
+``ragger[speculos]`` means than Speculos and its dependencies will also be
+installed. ``Ragger`` tries to uncouple its dependencies so that only what is
+needed is installed. All the extras can be seen in the `setup.cfg
+<https://github.com/LedgerHQ/ragger/blob/master/setup.cfg#L39-L74>`_ file.

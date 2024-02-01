@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ragger installation &mdash; Ragger 1.14.3.dev5 documentation</title>
+  <title>Ragger installation &mdash; Ragger 1.14.3.dev7 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
@@ -102,21 +102,12 @@
 <p>First step of all is the installation of <code class="docutils literal notranslate"><span class="pre">Ragger</span></code>. At first, we are going to
 test it with <a class="reference internal" href="glossary.html#term-Speculos"><span class="xref std std-term">Speculos</span></a>, so we are going to install <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> with Speculos
 dependencies:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--extra-index-url<span class="w"> </span>https://test.pypi.org/simple/<span class="w"> </span>ragger<span class="o">[</span>speculos<span class="o">]</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>ragger<span class="o">[</span>speculos<span class="o">]</span>
 </pre></div>
 </div>
-<p>Some explanation on arguments:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">--extra-index-url</span> <span class="pre">https://test.pypi.org/simple/</span></code> is necessary to get the
-latest version of <code class="docutils literal notranslate"><span class="pre">Ragger</span></code>, as it is currently not deployed on the
-stable <code class="docutils literal notranslate"><span class="pre">pypi</span></code> repositories.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">ragger[speculos]</span></code> means than Speculos and its dependencies will also
-be installed. <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> tries to uncouple its dependencies so that only
-what is needed is installed.
-All the extras can be seen
-<a class="reference external" href="https://github.com/LedgerHQ/ragger/blob/develop/setup.cfg#L36-L100">in the setup.cfg</a>
-file.</p></li>
-</ul>
+<p><code class="docutils literal notranslate"><span class="pre">ragger[speculos]</span></code> means than Speculos and its dependencies will also be
+installed. <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> tries to uncouple its dependencies so that only what is
+needed is installed. All the extras can be seen in the <a class="reference external" href="https://github.com/LedgerHQ/ragger/blob/master/setup.cfg#L39-L74">setup.cfg</a> file.</p>
 </div>
 
 
