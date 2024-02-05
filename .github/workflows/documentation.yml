@@ -26,7 +26,9 @@ jobs:
           sudo apt-get update
           sudo apt-get install graphviz
       - name: Install Python dependencies
-        run: pip install .[doc]
+        run: |
+          pip install -U pip
+          pip install .[doc]
       - name: Generating automatic resources
         run: (cd doc && make gen_resources)
       - name: Generate the documentation

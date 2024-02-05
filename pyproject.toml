@@ -1,10 +1,96 @@
 [build-system]
 requires = [
-    "setuptools>=45",
+    "setuptools>=61.2",
     "setuptools_scm[toml]>=6.2",
     "wheel"
 ]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "ragger"
+authors = [{name = "Ledger", email = "hello@ledger.fr"}]
+description = "Testing framework using Speculos and LedgerComm as backends"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS :: MacOS X",
+]
+requires-python = ">=3.8"
+dependencies = [
+    "bip_utils>=2.4.0",
+    "py-sr25519-bindings>=0.2.0,<0.3.0",
+]
+dynamic = ["version"]
+
+[project.readme]
+file = "README.md"
+content-type = "text/markdown"
+
+[project.urls]
+Homepage = "https://github.com/LedgerHQ/ragger"
+"Bug Tracker" = "https://github.com/LedgerHQ/ragger/issues"
+
+[project.optional-dependencies]
+tests = [
+    "pytest",
+    "pytest-cov",
+]
+checkers = [
+    "yapf",
+    "toml",
+    "flake8",
+    "mypy",
+    "bandit",
+    "pyqt5-stubs",
+]
+doc = [
+    # embeds pyreverse
+    "pylint",
+    "sphinx",
+    "sphinx-rtd-theme",
+    "sphinxcontrib-images",
+    "sphinx-copybutton",
+    "Jinja2>=3.0",
+    # higher versions trigger build bugs with the RTD theme
+    "docutils==0.16",
+]
+speculos = [
+    "speculos>=0.5.0",
+    "mnemonic",
+]
+ledgercomm = [
+    "ledgercomm>=1.2.1",
+    "ledgercomm[hid]>=1.2.1",
+    "pyqt5",
+    "pytesseract",
+]
+ledgerwallet = [
+    "ledgerwallet>=0.4.0",
+    "pyqt5",
+    "pytesseract",
+]
+all_backends = [
+    "ragger[speculos]",
+    "ragger[ledgercomm]",
+    "ragger[ledgerwallet]",
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+exclude = ["tests"]
+namespaces = false
+
+[tool.setuptools.package-data]
+ragger = ["py.typed"]
 
 [tool.setuptools_scm]
 write_to = "src/ragger/__version__.py"
