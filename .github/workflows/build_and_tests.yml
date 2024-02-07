@@ -32,7 +32,7 @@ jobs:
 
     steps:
     - name: Clone
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
@@ -68,16 +68,15 @@ jobs:
 
   package_and_deploy:
     name: Build and deploy Ragger Python Package
+    needs: [build_install_test]
     runs-on: ubuntu-latest
     steps:
 
     - name: Clone
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
-    # Fetching dependencies from test.pypi,org or pypi.org depending on the package destination:
-    # tag -> pypi.org, not tag -> test.pypi.org
     - name: Build Ragger Python package
       run: |
         pip install --upgrade pip build twine
@@ -89,11 +88,11 @@ jobs:
     - name: Display current status
       run: |
         echo "Current status is:"
-        if [[ ${{ github.ref }} == "refs/tags/"* ]]; \
-        then \
-            echo "- Triggered from tag, will be deployed on pypi.org"; \
-        else \
-            echo "- Not triggered from tag, will be deployed on test.pypi.org"; \
+        if [[ ${{ github.ref }} == "refs/tags/"* ]];
+        then
+            echo "- Triggered from tag, package will be a release";
+        else
+            echo "- Not triggered from tag, package will be a pre-release";
         fi
         echo "- Tag version: ${{ env.TAG_VERSION }}"
 
@@ -101,12 +100,12 @@ jobs:
       if: startsWith(github.ref, 'refs/tags/')
       run: |
         CHANGELOG_VERSION=$(grep -Po '(?<=## \[)(\d+\.)+[^\]]' CHANGELOG.md | head -n 1)
-        if [ "${{ env.TAG_VERSION }}" == "${CHANGELOG_VERSION}" ]; \
-        then \
-            exit 0; \
-        else \
-            echo "Tag '${{ env.TAG_VERSION }}' and CHANGELOG '${CHANGELOG_VERSION}' versions mismatch!"; \
-            exit 1; \
+        if [ "${{ env.TAG_VERSION }}" == "${CHANGELOG_VERSION}" ];
+        then
+            exit 0;
+        else
+            echo "Tag '${{ env.TAG_VERSION }}' and CHANGELOG '${CHANGELOG_VERSION}' versions mismatch!";
+            exit 1;
         fi
 
     - name: Publish Python package on pypi.org
@@ -123,15 +122,7 @@ jobs:
       with:
         automatic_release_tag: "v${{ env.TAG_VERSION }}"
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        prerelease: true
+        prerelease: false
         files: |
           LICENSE
           dist/
-
-    - name: Publish Python package on test.pypi.org
-      if: success() && github.event_name == 'push'
-      run: python -m twine upload --repository testpypi dist/*
-      env:
-        TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.TEST_PYPI_PUBLIC_API_TOKEN  }}
-        TWINE_NON_INTERACTIVE: 1

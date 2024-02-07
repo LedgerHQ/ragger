@@ -183,16 +183,15 @@ Once done, you can generate the documentation:
 
 Versions and changes are documented into the [CHANGELOG.md](CHANGELOG.MD) file.
 
-Pushing a tag on the central GitHub repository triggers a deployment. Python packages are deployed
-onto `pypi.org` or `test.pypi.org` depending on the tag, which must follow the following scheme:
+Merging on master or pushing a tag on the GitHub repository triggers a deployment. Python packages
+are deployed into `pypi.org`.
 
-- if the tag starts with `test-v`, for instance `test-v2.9.23`, the package is deployed on
-  `test.pypi.org` with version `2.9.23`.
-- if the tag directly is composed of the `v` + the version, for instance `v2.9.23`, the package is
-  deployed on `pypi.org` with version `2.9.23`.
-
-The version substring itself must respect the basic form of semantic versioning, i.e `(\d\.){2}\d`.
-`-alpha`, `.dev22+ff35` or whatever other format will not be accepted, and the CI will fail.
-
-The version embedded into the tag must also fit with the latest version documented into the
-[CHANGELOG.md](CHANGELOG.MD) file. If not, the CI will fail.
+- if triggered via a merge, the package will be a "pre-release", with a version matching
+  `<M>.<m>.<p+1>-dev<N>` with:
+  - `M` the major number of the latest version,
+  - `m` the minor number of the latest version,
+  - `p` the patch number of the latest version,
+  - `N` the number of commits since the latest version.
+- if triggered via a tag, the package will be a release with the tag as the version.
+  The version embedded into the tag must also fit with the latest version documented into the
+  [CHANGELOG.md](CHANGELOG.MD) file. If not, the CI will fail.

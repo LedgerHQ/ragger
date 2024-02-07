@@ -14,17 +14,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Clone
-      uses: actions/checkout@v3
-    - run: pip install flake8
+      uses: actions/checkout@v4
+    - run: pip install flake8 flake8-pyproject
     - name: Flake8 lint Python code
-      run: find src/ -type f -name '*.py' -exec flake8 --max-line-length=120 '{}' '+'
+      run: flake8 src/
 
   yapf:
     name: Formatting
     runs-on: ubuntu-latest
     steps:
     - name: Clone
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - run: pip install yapf toml
     - name: Yapf source formatting
       run: |
@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Clone
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - run: pip install mypy
     - name: Mypy type checking
       run: mypy src
@@ -47,7 +47,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Clone
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - run: pip install bandit
     - name: Bandit security checking
       run: bandit -r src -ll
@@ -57,7 +57,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Clone
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Check misspellings
       uses: codespell-project/actions-codespell@v1
       with:
