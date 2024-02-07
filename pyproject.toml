@@ -44,6 +44,7 @@ checkers = [
     "yapf",
     "toml",
     "flake8",
+    "flake8-pyproject",
     "mypy",
     "bandit",
     "pyqt5-stubs",
@@ -109,3 +110,6 @@ exclude_lines = [
     "@abstractmethod",
     "pragma: no cover"
 ]
+
+[tool.flake8]
+max-line-length = 120

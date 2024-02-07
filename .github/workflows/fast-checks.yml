@@ -15,9 +15,9 @@ jobs:
     steps:
     - name: Clone
       uses: actions/checkout@v4
-    - run: pip install flake8
+    - run: pip install flake8 flake8-pyproject
     - name: Flake8 lint Python code
-      run: find src/ -type f -name '*.py' -exec flake8 --max-line-length=120 '{}' '+'
+      run: flake8 src/
 
   yapf:
     name: Formatting
