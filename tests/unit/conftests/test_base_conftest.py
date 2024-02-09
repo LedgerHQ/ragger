@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Tuple
 from unittest import TestCase
 from unittest.mock import patch
 
@@ -8,12 +9,15 @@ from ragger.firmware import Firmware
 from ..helpers import temporary_directory
 
 
-def prepare_base_dir(directory: Path) -> Path:
+def prepare_base_dir(directory: Path) -> Tuple[Path, Path]:
     (directory / ".git").mkdir()
     (directory / "build" / "stax" / "bin").mkdir(parents=True, exist_ok=True)
+    (directory / "deps" / "dep" / "build" / "stax" / "bin").mkdir(parents=True, exist_ok=True)
+    dep_path = (directory / "deps" / "dep" / "build" / "stax" / "bin" / "app.elf")
+    dep_path.touch()
     app_path = (directory / "build" / "stax" / "bin" / "app.elf")
     app_path.touch()
-    return app_path
+    return app_path, dep_path
 
 
 class TestBaseConftest(TestCase):
@@ -23,7 +27,7 @@ class TestBaseConftest(TestCase):
 
     def test_prepare_speculos_args_simplest(self):
         with temporary_directory() as temp_dir:
-            app_path = prepare_base_dir(temp_dir)
+            app_path, _ = prepare_base_dir(temp_dir)
             result_app, result_args = bc.prepare_speculos_args(temp_dir, Firmware.STAX, False,
                                                                self.seed)
             self.assertEqual(result_app, app_path)
@@ -31,7 +35,7 @@ class TestBaseConftest(TestCase):
 
     def test_prepare_speculos_args_simple_with_gui(self):
         with temporary_directory() as temp_dir:
-            app_path = prepare_base_dir(temp_dir)
+            app_path, _ = prepare_base_dir(temp_dir)
             result_app, result_args = bc.prepare_speculos_args(temp_dir, Firmware.STAX, True,
                                                                self.seed)
             self.assertEqual(result_app, app_path)
@@ -39,12 +43,13 @@ class TestBaseConftest(TestCase):
 
     def test_prepare_speculos_args_main_as_library(self):
         with temporary_directory() as temp_dir:
-            app_path = prepare_base_dir(temp_dir)
+            app_path, dep_path = prepare_base_dir(temp_dir)
             with patch("ragger.conftest.base_conftest.conf.OPTIONAL.LOAD_MAIN_APP_AS_LIBRARY",
                        True):
-                result_app, result_args = bc.prepare_speculos_args(temp_dir, Firmware.STAX, False,
-                                                                   self.seed)
-                self.assertEqual(result_app, app_path)
+                with patch("ragger.conftest.base_conftest.conf.OPTIONAL.APP_DIR", "deps"):
+                    result_app, result_args = bc.prepare_speculos_args(
+                        temp_dir, Firmware.STAX, False, self.seed)
+                self.assertEqual(result_app, dep_path)
                 self.assertEqual(result_args, {"args": [f"-l{app_path}", "--seed", self.seed]})
 
     def test_prepare_speculos_args_sideloaded_apps_nok_no_dir(self):
@@ -58,7 +63,7 @@ class TestBaseConftest(TestCase):
     def test_prepare_speculos_args_sideloaded_apps_ok(self):
         lib1_bin, lib1_name, lib2_bin, lib2_name = "lib1", "name1", "lib2", "name2"
         with temporary_directory() as temp_dir:
-            app_path = prepare_base_dir(temp_dir)
+            app_path, _ = prepare_base_dir(temp_dir)
             sideloaded_apps_dir = temp_dir / "here"
             sideloaded_apps_dir.mkdir()
             lib1_path = sideloaded_apps_dir / f"{lib1_bin}_stax.elf"
