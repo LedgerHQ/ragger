@@ -34,8 +34,8 @@ class DummyBackend(BackendInterface):
     def exchange_async_raw(self, *args, **kwargs):
         return self.mock.exchange_async_raw(*args, **kwargs)
 
-    def exchange_raw(self, *args, **kwargs):
-        return self.mock.exchange_raw(*args, **kwargs)
+    def exchange_raw(self, data: bytes, tick_timeout: int):
+        return self.mock.exchange_raw(data, tick_timeout)
 
     def receive(self):
         return self.mock.receive()
@@ -100,7 +100,7 @@ class TestBackendInterface(TestCase):
         self.assertFalse(self.backend.mock.send_raw.called)
         result = self.backend.exchange(cla, ins, p1, p2)
         self.assertTrue(self.backend.mock.exchange_raw.called)
-        self.assertEqual(self.backend.mock.exchange_raw.call_args, ((expected, ), ))
+        self.assertEqual(self.backend.mock.exchange_raw.call_args, ((expected, 5 * 60 * 10), ))
         self.assertEqual(result, self.backend.mock.exchange_raw())
 
     def test_exchange_async(self):

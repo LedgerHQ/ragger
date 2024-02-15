@@ -175,9 +175,9 @@ class SpeculosBackend(BackendInterface):
         return result
 
     @raise_policy_enforcer
-    def exchange_raw(self, data: bytes = b"") -> RAPDU:
+    def exchange_raw(self, data: bytes = b"", tick_timeout: int = 5 * 60 * 10) -> RAPDU:
         self.apdu_logger.info("=> %s", data.hex())
-        return RAPDU(0x9000, self._client._apdu_exchange(data))
+        return RAPDU(0x9000, self._client._apdu_exchange(data, tick_timeout=tick_timeout))
 
     @raise_policy_enforcer
     def _get_last_async_response(self, response) -> RAPDU:

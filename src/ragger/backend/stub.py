@@ -47,7 +47,7 @@ class StubBackend(BackendInterface):
     def receive(self) -> RAPDU:
         return RAPDU(0x9000, b"")
 
-    def exchange_raw(self, data: bytes = b"") -> RAPDU:
+    def exchange_raw(self, data: bytes = b"", tick_timeout: int = 5 * 60 * 10) -> RAPDU:
         return RAPDU(0x9000, b"")
 
     @contextmanager
