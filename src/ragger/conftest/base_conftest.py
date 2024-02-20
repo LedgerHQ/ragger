@@ -122,12 +122,13 @@ def prepare_speculos_args(root_pytest_dir: Path, firmware: Firmware, display: bo
     # project_root_dir / conf.OPTIONAL.APP_DIR. There should be only one subfolder in the path.
     app_path = None
     if conf.OPTIONAL.LOAD_MAIN_APP_AS_LIBRARY:
-        app_dir_children = list((project_root_dir / conf.OPTIONAL.APP_DIR).iterdir())
-        if len(app_dir_children) != 1:
+        app_dir_content = list((project_root_dir / conf.OPTIONAL.APP_DIR).iterdir())
+        app_dir_subdirectories = [child for child in app_dir_content if child.is_dir()]
+        if len(app_dir_subdirectories) != 1:
             raise ValueError(
-                f"Expected a single folder in {conf.OPTIONAL.APP_DIR}, found {len(app_dir_children)}"
+                f"Expected a single folder in {conf.OPTIONAL.APP_DIR}, found {len(app_dir_subdirectories)}"
             )
-        app_path = find_main_application(app_dir_children[0], device)
+        app_path = find_main_application(app_dir_subdirectories[0], device)
     # If the app is standalone, the main app should be located in project_root_dir / conf.OPTIONAL.APP_DIR
     else:
         app_path = find_main_application(project_root_dir / conf.OPTIONAL.APP_DIR, device)
