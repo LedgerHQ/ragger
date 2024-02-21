@@ -15,6 +15,8 @@ def prepare_base_dir(directory: Path) -> Tuple[Path, Path]:
     (directory / "deps" / "dep" / "build" / "stax" / "bin").mkdir(parents=True, exist_ok=True)
     dep_path = (directory / "deps" / "dep" / "build" / "stax" / "bin" / "app.elf")
     dep_path.touch()
+    token_file_path = (directory / "deps" / ".ethereum_application_build_goes_there")
+    token_file_path.touch()
     app_path = (directory / "build" / "stax" / "bin" / "app.elf")
     app_path.touch()
     return app_path, dep_path
