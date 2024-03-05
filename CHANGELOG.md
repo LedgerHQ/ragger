@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
+## [1.15.0] - 2024-03-??
+
+### Added
+- navigator: `BaseNavInsID` allows to create custom `NavInsID` while using `Navigator` methods
+             without additional type conversion.
+
 ## [1.14.4] - 2024-02-21
 
 ### Fixed
@@ -209,8 +216,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.4.0] - 2023-02-09
 
-### Added
-
 ### Changed
 - template: conftest.py: Target nanosp release 1.0.4 which is now supported by speculos
 - backend: speculos.py: Do not pass `--sdk` argument anymore, this enforce using either last speculos supported SDK or app elf file with metadata.
@@ -224,10 +229,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.3.1] - 2023-01-24
 
-### Added
-
-### Changed
-
 ### Fixed
 
 - backend/speculos : improved reliability of wait_for_screen_change
@@ -236,8 +237,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - navigator: Don't clean already existing snapshots when running `navigate_and_compare()` through `navigate_until_text_and_compare()`.
 
 ## [1.3.0] - 2023-01-18
-
-### Added
 
 ### Changed
 - template: conftest.py: Use session scope for firmware and backend fixtures
@@ -264,7 +263,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
              which will automatically be converted to `NavIns` (with no argument for the callback)
 
 ### Fixed
-
 
 ## [1.1.0] - 2023-01-02
 

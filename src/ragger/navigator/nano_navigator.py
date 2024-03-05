@@ -18,7 +18,7 @@ from typing import Callable, Dict
 
 from ragger.backend import BackendInterface
 from ragger.firmware import Firmware
-from .navigator import NavInsID, Navigator
+from .navigator import BaseNavInsID, Navigator, NavInsID
 
 
 class NanoNavigator(Navigator):
@@ -26,7 +26,7 @@ class NanoNavigator(Navigator):
     def __init__(self, backend: BackendInterface, firmware: Firmware, golden_run: bool = False):
         if firmware == Firmware.STAX:
             raise ValueError(f"'{self.__class__.__name__}' does not work on Stax")
-        callbacks: Dict[NavInsID, Callable] = {
+        callbacks: Dict[BaseNavInsID, Callable] = {
             NavInsID.WAIT: sleep,
             NavInsID.WAIT_FOR_SCREEN_CHANGE: backend.wait_for_screen_change,
             NavInsID.WAIT_FOR_HOME_SCREEN: backend.wait_for_home_screen,

@@ -20,7 +20,7 @@ from ragger.backend import BackendInterface
 from ragger.firmware import Firmware
 from ragger.firmware.stax import FullScreen
 from .navigator import Navigator
-from .instruction import NavInsID
+from .instruction import BaseNavInsID, NavInsID
 
 
 class StaxNavigator(Navigator):
@@ -29,7 +29,7 @@ class StaxNavigator(Navigator):
         if firmware != Firmware.STAX:
             raise ValueError(f"'{self.__class__.__name__}' only works on Stax")
         screen = FullScreen(backend, firmware)
-        callbacks: Dict[NavInsID, Callable] = {
+        callbacks: Dict[BaseNavInsID, Callable] = {
             NavInsID.WAIT: sleep,
             NavInsID.WAIT_FOR_SCREEN_CHANGE: backend.wait_for_screen_change,
             NavInsID.WAIT_FOR_HOME_SCREEN: backend.wait_for_home_screen,

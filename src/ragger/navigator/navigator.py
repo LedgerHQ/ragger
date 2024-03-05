@@ -23,9 +23,10 @@ from ragger.backend import BackendInterface, SpeculosBackend
 from ragger.firmware import Firmware
 from ragger.utils import Crop
 
-from .instruction import NavIns, NavInsID
+from .instruction import BaseNavInsID, NavIns, NavInsID
 
 LAST_SCREEN_UPDATE_TIMEOUT = 2
+InstructionType = Union[NavIns, BaseNavInsID]
 
 
 class Navigator(ABC):
@@ -37,7 +38,7 @@ class Navigator(ABC):
     def __init__(self,
                  backend: BackendInterface,
                  firmware: Firmware,
-                 callbacks: Dict[NavInsID, Callable],
+                 callbacks: Dict[BaseNavInsID, Callable],
                  golden_run: bool = False):
         """Initializes the Backend
 
@@ -112,12 +113,12 @@ class Navigator(ABC):
             golden, tmp_snap_path=tmp,
             golden_run=self._golden_run), f"Screen does not match golden {tmp}."
 
-    def add_callback(self, ins_id: NavInsID, callback: Callable, override: bool = True) -> None:
+    def add_callback(self, ins_id: BaseNavInsID, callback: Callable, override: bool = True) -> None:
         """
         Register a new callback.
 
         :param ins_id: The navigation instruction ID which will trigger the callback
-        :type ins_id: NavInsID
+        :type ins_id: BaseNavInsID
         :param callback: The callback to call
         :type callback: Callable
         :param override: Replace an existing callback if the navigation instruction ID already
@@ -136,13 +137,13 @@ class Navigator(ABC):
         self._callbacks[ins_id] = callback
 
     def _run_instruction(self,
-                         instruction: Union[NavIns, NavInsID],
+                         instruction: InstructionType,
                          timeout: float = 10.0,
                          wait_for_screen_change: bool = True,
                          path: Optional[Path] = None,
                          test_case_name: Optional[Path] = None,
                          snap_idx: int = 0) -> None:
-        if isinstance(instruction, NavInsID):
+        if isinstance(instruction, BaseNavInsID):
             instruction = NavIns(instruction)
         if instruction.id not in self._callbacks:
             raise NotImplementedError(f"No callback registered for instruction ID {instruction.id}")
@@ -208,7 +209,7 @@ class Navigator(ABC):
     def navigate_and_compare(self,
                              path: Optional[Path],
                              test_case_name: Optional[Path],
-                             instructions: List[Union[Union[NavIns, NavInsID]]],
+                             instructions: List[Union[InstructionType]],
                              timeout: float = 10.0,
                              screen_change_before_first_instruction: bool = True,
                              screen_change_after_last_instruction: bool = True,
@@ -223,7 +224,7 @@ class Navigator(ABC):
         :type test_case_name: Optional[Path]
         :param instructions: Set of navigation instructions. Navigation instruction IDs are also
                              accepted.
-        :type instructions: List[Union[NavIns, NavInsID]]
+        :type instructions: List[Union[NavIns, BaseNavInsID]]
         :param timeout: Timeout for each navigation step.
         :type timeout: int
         :param screen_change_before_first_instruction: Wait for a screen change before first
@@ -283,7 +284,7 @@ class Navigator(ABC):
         self._backend.resume_ticker()
 
     def navigate(self,
-                 instructions: List[Union[NavIns, NavInsID]],
+                 instructions: List[InstructionType],
                  timeout: float = 10.0,
                  screen_change_before_first_instruction: bool = True,
                  screen_change_after_last_instruction: bool = True) -> None:
@@ -293,7 +294,7 @@ class Navigator(ABC):
         :param instructions: Set of navigation instructions. Navigation instruction IDs are also
                              accepted, and will be converted into navigation instruction (without
                              any argument)
-        :type instructions: List[Union[NavIns, NavInsID]]
+        :type instructions: List[Union[NavIns, BaseNavInsID]]
         :param timeout: Timeout for each navigation step.
         :type timeout: int
         :param screen_change_before_first_instruction: Wait for a screen change before first
@@ -319,8 +320,8 @@ class Navigator(ABC):
             screen_change_after_last_instruction=screen_change_after_last_instruction)
 
     def navigate_until_snap(self,
-                            navigate_instruction: Union[NavIns, NavInsID],
-                            validation_instruction: Union[NavIns, NavInsID],
+                            navigate_instruction: InstructionType,
+                            validation_instruction: InstructionType,
                             path: Path,
                             test_case_name: Path,
                             start_img_name: str,
@@ -341,10 +342,10 @@ class Navigator(ABC):
 
         :param navigate_instruction: Navigation instruction to be performed until last snapshot is found.
                                      Navigation instruction ID is also accepted.
-        :type navigate_instruction: Union[NavIns, NavInsID]
+        :type navigate_instruction: Union[NavIns, BaseNavInsID]
         :param validation_instruction: Navigation instruction to be performed once last snapshot is found.
                                        Navigation instruction ID is also accepted.
-        :type validation_instruction: Union[NavIns, NavInsID]
+        :type validation_instruction: Union[NavIns, BaseNavInsID]
         :param path: Absolute path to the snapshots directory.
         :type path: Path
         :param test_case_name: Relative path to the test case snapshots directory (from path).
@@ -431,8 +432,8 @@ class Navigator(ABC):
         return img_idx
 
     def navigate_until_text_and_compare(self,
-                                        navigate_instruction: Union[NavIns, NavInsID],
-                                        validation_instructions: List[Union[NavIns, NavInsID]],
+                                        navigate_instruction: InstructionType,
+                                        validation_instructions: List[InstructionType],
                                         text: str,
                                         path: Optional[Path] = None,
                                         test_case_name: Optional[Path] = None,
@@ -456,10 +457,10 @@ class Navigator(ABC):
         :type test_case_name: Path
         :param navigate_instruction: Navigation instruction to be performed until the text is found.
                                      Navigation instruction ID is also accepted.
-        :type navigate_instruction: Union[NavIns, NavInsID]
+        :type navigate_instruction: Union[NavIns, BaseNavInsID]
         :param validation_instructions: Navigation instructions to be performed once the text is found.
                                         Navigation instruction IDs are also accepted.
-        :type validation_instructions: List[Union[NavIns, NavInsID]]
+        :type validation_instructions: List[Union[NavIns, BaseNavInsID]]
         :param text: Text string to look for.
         :type text: str
         :param timeout: Timeout for the whole navigation loop.
@@ -532,8 +533,8 @@ class Navigator(ABC):
         self._backend.resume_ticker()
 
     def navigate_until_text(self,
-                            navigate_instruction: Union[NavIns, NavInsID],
-                            validation_instructions: List[Union[NavIns, NavInsID]],
+                            navigate_instruction: InstructionType,
+                            validation_instructions: List[InstructionType],
                             text: str,
                             timeout: int = 300,
                             screen_change_before_first_instruction: bool = True,
@@ -550,10 +551,10 @@ class Navigator(ABC):
 
         :param navigate_instruction: Navigation instruction to be performed until the text is found.
                                      Navigation instruction ID is also accepted.
-        :type navigate_instruction: Union[NavIns, NavInsID]
+        :type navigate_instruction: Union[NavIns, BaseNavInsID]
         :param validation_instructions: Navigation instructions to be performed once the text is found.
                                         Navigation instruction IDs are also accepted.
-        :type validation_instructions: List[Union[NavIns, NavInsID]]
+        :type validation_instructions: List[Union[NavIns, BaseNavInsID]]
         :param text: Text string to look for.
         :type text: str
         :param timeout: Timeout for the whole navigation loop.
