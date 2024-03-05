@@ -2,7 +2,15 @@ from enum import auto, Enum
 from typing import Any, Dict
 
 
-class NavInsID(Enum):
+class BaseNavInsID(Enum):
+    """
+    Base NavInsID class, allowing to define NavInsID specific to one's application
+    while being compatible with all Navigator methods.
+    """
+    pass
+
+
+class NavInsID(BaseNavInsID):
     """
     Pre-defined instruction ID to navigate into a device UI.
     """
@@ -70,7 +78,7 @@ class NavInsID(Enum):
 
 class NavIns:
 
-    def __init__(self, id: NavInsID, args=(), kwargs: Dict[str, Any] = {}):
+    def __init__(self, id: BaseNavInsID, args=(), kwargs: Dict[str, Any] = {}):
         self.id = id
         self.args = args
         self.kwargs = kwargs

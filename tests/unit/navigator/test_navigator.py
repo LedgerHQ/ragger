@@ -5,7 +5,7 @@ from unittest.mock import MagicMock, patch
 
 from ragger.backend import SpeculosBackend, LedgerCommBackend
 from ragger.firmware import Firmware
-from ragger.navigator import Navigator, NavIns, NavInsID
+from ragger.navigator import BaseNavInsID, Navigator, NavIns, NavInsID
 
 
 class TestNavigator(TestCase):
@@ -117,6 +117,38 @@ class TestNavigator(TestCase):
         self.navigator._backend.compare_screen_with_snapshot.return_value = False
         with self.assertRaises(AssertionError):
             self.navigator._compare_snap(self.pathdir, self.pathdir, 1)
+
+    def test__run_instructions_nok_no_callback(self):
+        instruction = NavIns(NavInsID.WAIT)
+        with self.assertRaises(NotImplementedError):
+            self.navigator._run_instruction(instruction)
+
+    def test__run_instructions_NavIns(self):
+        cb_wait = MagicMock()
+        self.navigator._callbacks = {NavInsID.WAIT: cb_wait}
+        args, kwargs = ("some", "args"), {"1": 2}
+        instruction = NavIns(NavInsID.WAIT, args, kwargs)
+        self.assertIsNone(self.navigator._run_instruction(instruction))
+        self.assertEqual(cb_wait.call_count, 1)
+        self.assertEqual(cb_wait.call_args, (args, kwargs))
+
+    def test__run_instructions_NavInsID(self):
+        cb_wait = MagicMock()
+        self.navigator._callbacks = {NavInsID.WAIT: cb_wait}
+        self.assertIsNone(self.navigator._run_instruction(NavInsID.WAIT))
+        self.assertEqual(cb_wait.call_count, 1)
+        self.assertEqual(cb_wait.call_args, ((), ))
+
+    def test__run_instructions_custom_instruction(self):
+
+        class TestInsID(BaseNavInsID):
+            WAIT = 1
+
+        cb_wait = MagicMock()
+        self.navigator._callbacks = {TestInsID.WAIT: cb_wait}
+        self.assertIsNone(self.navigator._run_instruction(TestInsID.WAIT))
+        self.assertEqual(cb_wait.call_count, 1)
+        self.assertEqual(cb_wait.call_args, ((), ))
 
     def test_navigate_nok_raises(self):
         with self.assertRaises(NotImplementedError):
