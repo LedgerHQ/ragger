@@ -38,7 +38,7 @@ jobs:
     steps:
     - name: Clone
       uses: actions/checkout@v4
-    - run: pip install mypy
+    - run: pip install mypy types-toml
     - name: Mypy type checking
       run: mypy src
 

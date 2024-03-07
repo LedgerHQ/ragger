@@ -13,6 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
+import toml
 from typing import Optional, Tuple, List
 from pathlib import Path
 from ragger.error import ExceptionRAPDU
@@ -47,10 +48,15 @@ def find_library_application(base_dir: Path, name: str, device: str) -> Path:
     return lib
 
 
-def find_main_application(base_dir: Path, device: str) -> Path:
+def find_main_application(base_dir: Path, device: str, sdk: str) -> Path:
     if not base_dir.is_dir():
         raise AssertionError(f"{base_dir} is not a directory")
-    app = Path(base_dir / "build" / device / "bin" / "app.elf").resolve()
+    app = base_dir.resolve()
+    if sdk == "rust":
+        app_name = toml.load(base_dir / "Cargo.toml")["package"]["name"]
+        app = app / "target" / device / "release" / app_name
+    else:
+        app = app / "build" / device / "bin" / "app.elf"
     if not app.is_file():
         raise AssertionError(f"File '{app}' missing. Did you compile for this target?")
     return app

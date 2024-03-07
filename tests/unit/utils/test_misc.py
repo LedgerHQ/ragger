@@ -1,10 +1,11 @@
 import os
 from pathlib import Path
 from unittest import TestCase
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 from ragger.error import ExceptionRAPDU
 from ragger.utils import misc
+from ragger.conftest import configuration as conf
 
 from ..helpers import temporary_directory
 
@@ -27,30 +28,42 @@ class TestMisc(TestCase):
             with self.assertRaises(AssertionError):
                 misc.find_library_application(dir_path, "a", "b")
 
-    def test_find_main_application_ok(self):
-        device = "device"
+    def test_find_main_application_ok_c(self):
+        device, sdk = "device", "sdk"
         with temporary_directory() as dir_path:
             tmp_dir = (dir_path / "build" / device / "bin")
             tmp_dir.mkdir(parents=True, exist_ok=True)
             expected = tmp_dir / "app.elf"
             expected.touch()
-            result = misc.find_main_application(dir_path, device)
+            result = misc.find_main_application(dir_path, device, sdk)
+            self.assertEqual(result, expected)
+
+    def test_find_main_application_ok_rust(self):
+        device, sdk, appname = "device", "rust", "rustapp"
+        with temporary_directory() as dir_path:
+            tmp_dir = (dir_path / "target" / device / "release")
+            tmp_dir.mkdir(parents=True, exist_ok=True)
+            expected = tmp_dir / appname
+            expected.touch()
+            with patch("ragger.utils.misc.toml") as toml_patch:
+                toml_patch.load.return_value = {"package": {"name": appname}}
+                result = misc.find_main_application(dir_path, device, sdk)
             self.assertEqual(result, expected)
 
     def test_find_main_application_nok_not_dir(self):
-        directory, device = Path("does not exist"), "device"
+        directory, device, sdk = Path("does not exist"), "device", "sdk"
         with self.assertRaises(AssertionError) as error:
-            misc.find_main_application(directory, device)
+            misc.find_main_application(directory, device, sdk)
         self.assertIn(str(directory), str(error.exception))
 
     def test_find_main_application_nok_not_file(self):
-        device = "device"
+        device, sdk = "device", "sdk"
         with temporary_directory() as dir_path:
             tmp_dir = (dir_path / "build" / device / "bin")
             tmp_dir.mkdir(parents=True, exist_ok=True)
             expected = tmp_dir / "app.elf"
             with self.assertRaises(AssertionError) as error:
-                misc.find_main_application(dir_path, device)
+                misc.find_main_application(dir_path, device, sdk)
             self.assertIn(str(expected), str(error.exception))
 
     def test_find_project_root_dir_ok(self):

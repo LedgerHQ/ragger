@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Tuple
 from unittest import TestCase
@@ -22,6 +23,21 @@ def prepare_base_dir(directory: Path) -> Tuple[Path, Path]:
     return app_path, dep_path
 
 
+@dataclass
+class AppMock:
+    build_directory: str
+    sdk: str
+
+
+@dataclass
+class ManifestMock:
+    app: AppMock
+
+    @staticmethod
+    def from_path(*args):
+        return ManifestMock(AppMock(".", "c"))
+
+
 class TestBaseConftest(TestCase):
 
     def setUp(self):
@@ -30,16 +46,18 @@ class TestBaseConftest(TestCase):
     def test_prepare_speculos_args_simplest(self):
         with temporary_directory() as temp_dir:
             app_path, _ = prepare_base_dir(temp_dir)
-            result_app, result_args = bc.prepare_speculos_args(temp_dir, Firmware.STAX, False,
-                                                               self.seed)
+            with patch("ragger.conftest.base_conftest.Manifest", ManifestMock):
+                result_app, result_args = bc.prepare_speculos_args(temp_dir, Firmware.STAX, False,
+                                                                   self.seed)
             self.assertEqual(result_app, app_path)
             self.assertEqual(result_args, {"args": ["--seed", self.seed]})
 
     def test_prepare_speculos_args_simple_with_gui(self):
         with temporary_directory() as temp_dir:
             app_path, _ = prepare_base_dir(temp_dir)
-            result_app, result_args = bc.prepare_speculos_args(temp_dir, Firmware.STAX, True,
-                                                               self.seed)
+            with patch("ragger.conftest.base_conftest.Manifest", ManifestMock):
+                result_app, result_args = bc.prepare_speculos_args(temp_dir, Firmware.STAX, True,
+                                                                   self.seed)
             self.assertEqual(result_app, app_path)
             self.assertEqual(result_args, {"args": ["--display", "qt", "--seed", self.seed]})
 
@@ -48,19 +66,20 @@ class TestBaseConftest(TestCase):
             app_path, dep_path = prepare_base_dir(temp_dir)
             with patch("ragger.conftest.base_conftest.conf.OPTIONAL.LOAD_MAIN_APP_AS_LIBRARY",
                        True):
-                with patch("ragger.conftest.base_conftest.conf.OPTIONAL.APP_DIR", "deps"):
+                with patch("ragger.conftest.base_conftest.Manifest", ManifestMock) as manifest:
                     result_app, result_args = bc.prepare_speculos_args(
                         temp_dir, Firmware.STAX, False, self.seed)
-                self.assertEqual(result_app, dep_path)
-                self.assertEqual(result_args, {"args": [f"-l{app_path}", "--seed", self.seed]})
+            self.assertEqual(result_app, dep_path)
+            self.assertEqual(result_args, {"args": [f"-l{app_path}", "--seed", self.seed]})
 
     def test_prepare_speculos_args_sideloaded_apps_nok_no_dir(self):
         with temporary_directory() as temp_dir:
             prepare_base_dir(temp_dir)
             with patch("ragger.conftest.base_conftest.conf.OPTIONAL.SIDELOADED_APPS",
                        ["more than 1 elt"]):
-                with self.assertRaises(ValueError):
-                    bc.prepare_speculos_args(temp_dir, Firmware.STAX, False, self.seed)
+                with patch("ragger.conftest.base_conftest.Manifest", ManifestMock):
+                    with self.assertRaises(ValueError):
+                        bc.prepare_speculos_args(temp_dir, Firmware.STAX, False, self.seed)
 
     def test_prepare_speculos_args_sideloaded_apps_ok(self):
         lib1_bin, lib1_name, lib2_bin, lib2_name = "lib1", "name1", "lib2", "name2"
@@ -79,8 +98,9 @@ class TestBaseConftest(TestCase):
                 with patch("ragger.conftest.base_conftest.conf.OPTIONAL.SIDELOADED_APPS_DIR",
                            sideloaded_apps_dir):
 
-                    result_app, result_args = bc.prepare_speculos_args(
-                        temp_dir, Firmware.STAX, False, self.seed)
+                    with patch("ragger.conftest.base_conftest.Manifest", ManifestMock):
+                        result_app, result_args = bc.prepare_speculos_args(
+                            temp_dir, Firmware.STAX, False, self.seed)
                     self.assertEqual(result_app, app_path)
                     self.assertEqual(
                         result_args, {
@@ -98,8 +118,9 @@ class TestBaseConftest(TestCase):
         with patch("ragger.conftest.base_conftest.SpeculosBackend") as backend:
             with temporary_directory() as temp_dir:
                 prepare_base_dir(temp_dir)
-                result = bc.create_backend(temp_dir, "Speculos", Firmware.STAX, False, None,
-                                           self.seed)
+                with patch("ragger.conftest.base_conftest.Manifest", ManifestMock):
+                    result = bc.create_backend(temp_dir, "Speculos", Firmware.STAX, False, None,
+                                               self.seed)
                 self.assertEqual(result, backend())
 
     def test_create_backend_ledgercomm(self):

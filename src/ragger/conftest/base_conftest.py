@@ -1,6 +1,7 @@
 import pytest
 from typing import Optional
 from pathlib import Path
+from ledgered.manifest import Manifest
 from ragger.firmware import Firmware
 from ragger.backend import SpeculosBackend, LedgerCommBackend, LedgerWalletBackend
 from ragger.navigator import NanoNavigator, StaxNavigator
@@ -117,26 +118,29 @@ def prepare_speculos_args(root_pytest_dir: Path, firmware: Firmware, display: bo
     # Find the project root repository
     project_root_dir = find_project_root_dir(root_pytest_dir)
 
+    manifest = Manifest.from_path(project_root_dir / "ledger_app.toml")
+
     # Find the standalone application for the requested device
     # If the app is to be loaded as a library, the main app should be located in a subfolder of
-    # project_root_dir / conf.OPTIONAL.APP_DIR. There should be only one subfolder in the path.
+    # project_root_dir / manifest.app.build_directory. There should be only one subfolder in the path.
     app_path = None
     if conf.OPTIONAL.LOAD_MAIN_APP_AS_LIBRARY:
-        app_dir_content = list((project_root_dir / conf.OPTIONAL.APP_DIR).iterdir())
+        app_dir_content = list((project_root_dir / manifest.app.build_directory).iterdir())
         app_dir_subdirectories = [child for child in app_dir_content if child.is_dir()]
         if len(app_dir_subdirectories) != 1:
             raise ValueError(
-                f"Expected a single folder in {conf.OPTIONAL.APP_DIR}, found {len(app_dir_subdirectories)}"
+                f"Expected a single folder in {manifest.app.build_directory}, found {len(app_dir_subdirectories)}"
             )
-        app_path = find_main_application(app_dir_subdirectories[0], device)
-    # If the app is standalone, the main app should be located in project_root_dir / conf.OPTIONAL.APP_DIR
+        app_path = find_main_application(app_dir_subdirectories[0], device, manifest.app.sdk)
+    # If the app is standalone, the main app should be located in project_root_dir / manifest.app.build_directory
     else:
-        app_path = find_main_application(project_root_dir / conf.OPTIONAL.APP_DIR, device)
+        app_path = find_main_application(project_root_dir / manifest.app.build_directory, device,
+                                         manifest.app.sdk)
 
     # Find all libraries that have to be sideloaded
     if conf.OPTIONAL.LOAD_MAIN_APP_AS_LIBRARY:
         # This repo holds the library, not the standalone app: search in root_dir/build
-        lib_path = find_main_application(project_root_dir, device)
+        lib_path = find_main_application(project_root_dir, device, manifest.app.sdk)
         speculos_args.append(f"-l{lib_path}")
 
     elif len(conf.OPTIONAL.SIDELOADED_APPS) != 0:

@@ -24,6 +24,7 @@ requires-python = ">=3.8"
 dependencies = [
     "bip_utils>=2.4.0",
     "py-sr25519-bindings>=0.2.0,<0.3.0",
+    "ledgered>=0.5.0",
 ]
 dynamic = ["version"]
 

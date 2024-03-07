@@ -4,7 +4,6 @@ from dataclasses import dataclass
 @dataclass
 class OptionalOptions:
     APP_NAME: str
-    APP_DIR: str
     LOAD_MAIN_APP_AS_LIBRARY: bool
     SIDELOADED_APPS: dict
     SIDELOADED_APPS_DIR: str
@@ -16,12 +15,6 @@ OPTIONAL = OptionalOptions(
     # Use this parameter if you want to make sure the right app is started upon backend instantiation.
     # This is only used for LedgerWallet and LedgerComm backend.
     APP_NAME=str(),
-
-    # Use this parameter to point to the repository holding the build output of the app
-    # As this parameter defaults to the base project root, it can be omitted in most cases
-    # Use cases : your app is not stored at the project root dir, or you are using LOAD_MAIN_APP_AS_LIBRARY
-    # example: "./app/"
-    APP_DIR=".",
 
     # Set True if the app being tested with Ragger should be loaded as a library and not as a standalone app
     # If using this mode, use APP_DIR to set the path of the standalone app that will use the tested library
