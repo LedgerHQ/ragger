@@ -5,6 +5,7 @@ from unittest.mock import MagicMock
 
 from ragger.error import ExceptionRAPDU
 from ragger.utils import misc
+from ragger.conftest import configuration as conf
 
 from ..helpers import temporary_directory
 
@@ -34,13 +35,15 @@ class TestMisc(TestCase):
             tmp_dir.mkdir(parents=True, exist_ok=True)
             expected = tmp_dir / "app.elf"
             expected.touch()
-            result = misc.find_main_application(dir_path, device)
+            result = misc.find_main_application(dir_path, conf.OPTIONAL.BUILD_DIR,
+                                                conf.OPTIONAL.BIN_NAME, device)
             self.assertEqual(result, expected)
 
     def test_find_main_application_nok_not_dir(self):
         directory, device = Path("does not exist"), "device"
         with self.assertRaises(AssertionError) as error:
-            misc.find_main_application(directory, device)
+            misc.find_main_application(directory, conf.OPTIONAL.BUILD_DIR, conf.OPTIONAL.BIN_NAME,
+                                       device)
         self.assertIn(str(directory), str(error.exception))
 
     def test_find_main_application_nok_not_file(self):
@@ -50,7 +53,8 @@ class TestMisc(TestCase):
             tmp_dir.mkdir(parents=True, exist_ok=True)
             expected = tmp_dir / "app.elf"
             with self.assertRaises(AssertionError) as error:
-                misc.find_main_application(dir_path, device)
+                misc.find_main_application(dir_path, conf.OPTIONAL.BUILD_DIR,
+                                           conf.OPTIONAL.BIN_NAME, device)
             self.assertIn(str(expected), str(error.exception))
 
     def test_find_project_root_dir_ok(self):

@@ -47,10 +47,12 @@ def find_library_application(base_dir: Path, name: str, device: str) -> Path:
     return lib
 
 
-def find_main_application(base_dir: Path, device: str) -> Path:
+def find_main_application(base_dir: Path, build_dir: str, bin_name: str, device: str) -> Path:
     if not base_dir.is_dir():
         raise AssertionError(f"{base_dir} is not a directory")
-    app = Path(base_dir / "build" / device / "bin" / "app.elf").resolve()
+    app = Path(base_dir / build_dir / device / bin_name).resolve()
+    if not app.is_file() and device == "nanos2":
+        app = Path(base_dir / build_dir / "nanosp" / bin_name).resolve()
     if not app.is_file():
         raise AssertionError(f"File '{app}' missing. Did you compile for this target?")
     return app

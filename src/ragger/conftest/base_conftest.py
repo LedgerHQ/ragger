@@ -128,15 +128,18 @@ def prepare_speculos_args(root_pytest_dir: Path, firmware: Firmware, display: bo
             raise ValueError(
                 f"Expected a single folder in {conf.OPTIONAL.APP_DIR}, found {len(app_dir_subdirectories)}"
             )
-        app_path = find_main_application(app_dir_subdirectories[0], device)
+        app_path = find_main_application(app_dir_subdirectories[0], conf.OPTIONAL.BUILD_DIR,
+                                         conf.OPTIONAL.BIN_NAME, device)
     # If the app is standalone, the main app should be located in project_root_dir / conf.OPTIONAL.APP_DIR
     else:
-        app_path = find_main_application(project_root_dir / conf.OPTIONAL.APP_DIR, device)
+        app_path = find_main_application(project_root_dir / conf.OPTIONAL.APP_DIR,
+                                         conf.OPTIONAL.BUILD_DIR, conf.OPTIONAL.BIN_NAME, device)
 
     # Find all libraries that have to be sideloaded
     if conf.OPTIONAL.LOAD_MAIN_APP_AS_LIBRARY:
         # This repo holds the library, not the standalone app: search in root_dir/build
-        lib_path = find_main_application(project_root_dir, device)
+        lib_path = find_main_application(project_root_dir, conf.OPTIONAL.BUILD_DIR,
+                                         conf.OPTIONAL.BIN_NAME, device)
         speculos_args.append(f"-l{lib_path}")
 
     elif len(conf.OPTIONAL.SIDELOADED_APPS) != 0:

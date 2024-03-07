@@ -5,6 +5,8 @@ from dataclasses import dataclass
 class OptionalOptions:
     APP_NAME: str
     APP_DIR: str
+    BUILD_DIR: str
+    BIN_NAME: str
     LOAD_MAIN_APP_AS_LIBRARY: bool
     SIDELOADED_APPS: dict
     SIDELOADED_APPS_DIR: str
@@ -22,6 +24,16 @@ OPTIONAL = OptionalOptions(
     # Use cases : your app is not stored at the project root dir, or you are using LOAD_MAIN_APP_AS_LIBRARY
     # example: "./app/"
     APP_DIR=".",
+
+    # Use this parameter to point to the repository holding the build output of the app for each device
+    # This parameter defaults to the C-SDK build output ("build/")
+    # For RUST-SDK, should be set to "target"
+    BUILD_DIR="build",
+
+    # Use this parameter to point to the app binary
+    # This parameter defaults to the C-SDK binary name ("bin/app.elf")
+    # For RUST-SDK binary, should be for instance set to "release/app-name"
+    BIN_NAME="bin/app.elf",
 
     # Set True if the app being tested with Ragger should be loaded as a library and not as a standalone app
     # If using this mode, use APP_DIR to set the path of the standalone app that will use the tested library
