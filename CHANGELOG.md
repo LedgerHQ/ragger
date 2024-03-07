@@ -6,11 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## [1.15.0] - 2024-03-??
+## [1.15.0] - 2024-03-07
 
 ### Added
 - navigator: `BaseNavInsID` allows to create custom `NavInsID` while using `Navigator` methods
              without additional type conversion.
+- backend: Add optional argument to allow timeout in apdu exchange functions with default value of 5
+  minutes
 
 ## [1.14.4] - 2024-02-21
 
