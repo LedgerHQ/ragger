@@ -157,7 +157,13 @@ class BackendInterface(ABC):
         """
         raise NotImplementedError
 
-    def exchange(self, cla: int, ins: int, p1: int = 0, p2: int = 0, data: bytes = b"") -> RAPDU:
+    def exchange(self,
+                 cla: int,
+                 ins: int,
+                 p1: int = 0,
+                 p2: int = 0,
+                 data: bytes = b"",
+                 tick_timeout: int = 5 * 60 * 10) -> RAPDU:
         """
         Formats and sends an APDU to the backend, then receives its response.
 
@@ -181,10 +187,10 @@ class BackendInterface(ABC):
         :return: The APDU response
         :rtype: RAPDU
         """
-        return self.exchange_raw(pack_APDU(cla, ins, p1, p2, data))
+        return self.exchange_raw(pack_APDU(cla, ins, p1, p2, data), tick_timeout=tick_timeout)
 
     @abstractmethod
-    def exchange_raw(self, data: bytes = b"") -> RAPDU:
+    def exchange_raw(self, data: bytes = b"", tick_timeout: int = 5 * 60 * 10) -> RAPDU:
         """
         Sends the given APDU to the backend, then receives its response.
 
