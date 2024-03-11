@@ -39,6 +39,8 @@ def find_library_application(base_dir: Path, name: str, device: str) -> Path:
     :type name: str
     :param device: The device type name (ex: 'nanos', 'nanosp', ...)
     :type device: str
+    :return: The path of the library application binary
+    :rtype: Path
     """
     if not base_dir.is_dir():
         raise AssertionError(f"{base_dir} is not a directory")
@@ -48,11 +50,25 @@ def find_library_application(base_dir: Path, name: str, device: str) -> Path:
     return lib
 
 
-def find_main_application(base_dir: Path, device: str, sdk: str) -> Path:
+def find_application(base_dir: Path, device: str, sdk: str) -> Path:
+    """
+    Search for an application binary, expecting it to be located in a typical build
+    directory tree, depending on the SDK:
+    - "<base_dir>/build/<device>/app.elf" for C SDK
+    - "<base_dir>/target/<device>/release/<bin_name>" for Rust SDK
+    :param base_dir: The root directory where to search the app binary.
+    :type base_dir: Path
+    :param device: The device type name (ex: 'nanos', 'nanosp', ...)
+    :type device: str
+    :param sdk: The SDK name (either "c" or "rust")
+    :type sdk: str
+    :return: The path of the application binary
+    :rtype: Path
+    """
     if not base_dir.is_dir():
         raise AssertionError(f"{base_dir} is not a directory")
     app = base_dir.resolve()
-    if sdk == "rust":
+    if sdk.lower() == "rust":
         app_name = toml.load(base_dir / "Cargo.toml")["package"]["name"]
         app = app / "target" / device / "release" / app_name
     else:

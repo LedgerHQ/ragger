@@ -64,8 +64,7 @@ class TestBaseConftest(TestCase):
     def test_prepare_speculos_args_main_as_library(self):
         with temporary_directory() as temp_dir:
             app_path, dep_path = prepare_base_dir(temp_dir)
-            with patch("ragger.conftest.base_conftest.conf.OPTIONAL.LOAD_MAIN_APP_AS_LIBRARY",
-                       True):
+            with patch("ragger.conftest.base_conftest.conf.OPTIONAL.MAIN_APP_DIR", "./deps"):
                 with patch("ragger.conftest.base_conftest.Manifest", ManifestMock) as manifest:
                     result_app, result_args = bc.prepare_speculos_args(
                         temp_dir, Firmware.STAX, False, self.seed)
