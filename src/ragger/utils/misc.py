@@ -69,6 +69,8 @@ def find_application(base_dir: Path, device: str, sdk: str) -> Path:
         raise AssertionError(f"{base_dir} is not a directory")
     app = base_dir.resolve()
     if sdk.lower() == "rust":
+        if device == "nanos2":
+            device = "nanosplus"
         app_name = toml.load(base_dir / "Cargo.toml")["package"]["name"]
         app = app / "target" / device / "release" / app_name
     else:
