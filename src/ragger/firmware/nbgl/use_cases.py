@@ -13,31 +13,10 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-from ragger.backend import BackendInterface
-from ragger.firmware import Firmware
-from .positions import POSITIONS
+from .element import Element
 
 
-class _UseCase:
-
-    def __init__(self, client: BackendInterface, firmware: Firmware):
-        self._client = client
-        self._firmware = firmware
-
-    @property
-    def client(self) -> BackendInterface:
-        return self._client
-
-    @property
-    def firmware(self) -> Firmware:
-        return self._firmware
-
-    @property
-    def positions(self):
-        return POSITIONS[str(self.__class__.__name__)]
-
-
-class UseCaseHome(_UseCase):
+class UseCaseHome(Element):
 
     def info(self):
         self.client.finger_touch(*self.positions["info"])
@@ -55,7 +34,7 @@ class UseCaseHomeExt(UseCaseHome):
         self.client.finger_touch(*self.positions["action"])
 
 
-class UseCaseSettings(_UseCase):
+class UseCaseSettings(Element):
 
     def single_page_exit(self):
         self.client.finger_touch(*self.positions["single_page_exit"])
@@ -70,7 +49,7 @@ class UseCaseSettings(_UseCase):
         self.client.finger_touch(*self.positions["next"])
 
 
-class UseCaseSubSettings(_UseCase):
+class UseCaseSubSettings(Element):
 
     def exit(self):
         self.client.finger_touch(*self.positions["exit"])
@@ -82,7 +61,7 @@ class UseCaseSubSettings(_UseCase):
         self.client.finger_touch(*self.positions["next"])
 
 
-class UseCaseChoice(_UseCase):
+class UseCaseChoice(Element):
 
     def confirm(self):
         self.client.finger_touch(*self.positions["confirm"])
@@ -91,13 +70,13 @@ class UseCaseChoice(_UseCase):
         self.client.finger_touch(*self.positions["reject"])
 
 
-class UseCaseStatus(_UseCase):
+class UseCaseStatus(Element):
 
     def dismiss(self):
         self.client.finger_touch(*self.positions["dismiss"])
 
 
-class UseCaseReview(_UseCase):
+class UseCaseReview(Element):
 
     def tap(self):
         self.client.finger_touch(*self.positions["tap"])
@@ -113,7 +92,7 @@ class UseCaseReview(_UseCase):
         self.client.finger_touch(*self.positions["confirm"], 3.0)
 
 
-class UseCaseViewDetails(_UseCase):
+class UseCaseViewDetails(Element):
 
     def exit(self):
         self.client.finger_touch(*self.positions["exit"])
@@ -125,7 +104,7 @@ class UseCaseViewDetails(_UseCase):
         self.client.finger_touch(*self.positions["next"])
 
 
-class UseCaseAddressConfirmation(_UseCase):
+class UseCaseAddressConfirmation(Element):
 
     def tap(self):
         self.client.finger_touch(*self.positions["tap"])

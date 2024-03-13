@@ -18,6 +18,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Speculos backend: fixed internal snapshot state desync compare screen with text
+- speculos backend: fixed internal snapshot state desync compare screen with text
+## [1.17.0] - 2024-04-?
+
+### Addded
+- Flex firmware & navigation
 
 ## [1.16.2] - 2024-04-02
 
@@ -33,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added:
 - conftest: Integrating Rust application binary paths
+- navigation: Flex integration
 
 ### Changed
 - conftest: `APP_DIR` and `LOAD_MAIN_APP_AS_LIBRARY` are replaced by the optional parameter

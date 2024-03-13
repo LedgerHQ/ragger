@@ -24,7 +24,7 @@ requires-python = ">=3.8"
 dependencies = [
     "bip_utils>=2.4.0",
     "py-sr25519-bindings>=0.2.0,<0.3.0",
-    "ledgered>=0.5.0",
+    "ledgered>=0.6.3",
 ]
 dynamic = ["version"]
 
@@ -47,6 +47,7 @@ checkers = [
     "flake8",
     "flake8-pyproject",
     "mypy",
+    "types-toml",
     "bandit",
     "pyqt5-stubs",
 ]
@@ -62,7 +63,7 @@ doc = [
     "docutils==0.16",
 ]
 speculos = [
-    "speculos>=0.5.1",
+    "speculos>=0.8.0",
     "mnemonic",
 ]
 ledgercomm = [

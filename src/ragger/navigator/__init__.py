@@ -15,11 +15,11 @@
 """
 from .instruction import BaseNavInsID, NavInsID, NavIns
 from .navigator import Navigator
-from .stax_navigator import StaxNavigator
+from .nbgl_navigator import NBGLNavigator
 from .nano_navigator import NanoNavigator
 from .navigation_scenario import NavigateWithScenario
 
 __all__ = [
-    "BaseNavInsID", "NavInsID", "NavIns", "Navigator", "StaxNavigator", "NanoNavigator",
+    "BaseNavInsID", "NavInsID", "NavIns", "Navigator", "NBGLNavigator", "NanoNavigator",
     "NavigateWithScenario"
 ]

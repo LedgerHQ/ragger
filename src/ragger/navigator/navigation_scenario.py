@@ -21,7 +21,7 @@ class NavigationScenarioData:
             self.validation = [NavInsID.BOTH_CLICK]
             self.pattern = "^Approve$" if approve else "^Reject$"
 
-        elif device.startswith("stax"):
+        elif device.startswith("stax") or device.startswith("flex"):
             if use_case == UseCase.ADDRESS_CONFIRMATION:
                 self.navigation = NavInsID.USE_CASE_REVIEW_TAP
                 if approve:
