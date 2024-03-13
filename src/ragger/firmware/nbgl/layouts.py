@@ -15,42 +15,21 @@
 """
 import logging
 
-from ragger.backend import BackendInterface
-from ragger.firmware import Firmware
-from .positions import POSITIONS
-
-
-class _Layout:
-
-    def __init__(self, client: BackendInterface, firmware: Firmware):
-        self._client = client
-        self._firmware = firmware
-
-    @property
-    def client(self) -> BackendInterface:
-        return self._client
-
-    @property
-    def firmware(self) -> Firmware:
-        return self._firmware
-
-    @property
-    def positions(self):
-        return POSITIONS[str(self.__class__.__name__)]
+from .element import Element
 
 
 # Center
 ########
 
 
-class ChoiceList(_Layout):
+class ChoiceList(Element):
 
     def choose(self, index: int):
         assert 1 <= index <= 6, "Choice index must be in [1, 6]"
         self.client.finger_touch(*self.positions[index])
 
 
-class Suggestions(_Layout):
+class Suggestions(Element):
 
     def choose(self, index: int):
         assert 1 <= index <= 4, "Suggestion index must be in [1, 4]"
@@ -58,7 +37,7 @@ class Suggestions(_Layout):
 
 
 # Keyboards
-class _GenericKeyboard(_Layout):
+class _GenericKeyboard(Element):
 
     def write(self, word: str):
         for letter in word.lower():
@@ -100,7 +79,7 @@ class FullKeyboardSpecialCharacters2(_FullKeyboardSpecialCharacters):
 
 
 # Center Info
-class TappableCenter(_Layout):
+class TappableCenter(Element):
 
     def tap(self):
         self.client.finger_touch(*self.positions)
@@ -108,7 +87,7 @@ class TappableCenter(_Layout):
 
 # Headers
 #########
-class RightHeader(_Layout):
+class RightHeader(Element):
 
     def tap(self):
         self.client.finger_touch(*self.positions)
@@ -118,7 +97,7 @@ ExitHeader = RightHeader
 InfoHeader = RightHeader
 
 
-class LeftHeader(_Layout):
+class LeftHeader(Element):
 
     def tap(self):
         self.client.finger_touch(*self.positions)
@@ -129,7 +108,7 @@ NavigationHeader = LeftHeader
 
 # Footers
 #########
-class CenteredFooter(_Layout):
+class CenteredFooter(Element):
 
     def tap(self):
         self.client.finger_touch(*self.positions)

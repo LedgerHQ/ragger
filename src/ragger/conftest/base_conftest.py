@@ -14,13 +14,14 @@ from . import configuration as conf
 
 BACKENDS = ["speculos", "ledgercomm", "ledgerwallet"]
 
-DEVICES = ["nanos", "nanox", "nanosp", "stax", "all", "all_nano"]
+DEVICES = ["nanos", "nanox", "nanosp", "stax", "europa", "all", "all_nano"]
 
 FIRMWARES = [
     Firmware.NANOS,
     Firmware.NANOSP,
     Firmware.NANOX,
     Firmware.STAX,
+    Firmware.EUROPA,
 ]
 
 
