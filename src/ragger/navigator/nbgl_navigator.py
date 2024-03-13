@@ -23,11 +23,11 @@ from .navigator import Navigator
 from .instruction import BaseNavInsID, NavInsID
 
 
-class StaxNavigator(Navigator):
+class NBGLNavigator(Navigator):
 
     def __init__(self, backend: BackendInterface, firmware: Firmware, golden_run: bool = False):
-        if firmware != Firmware.STAX:
-            raise ValueError(f"'{self.__class__.__name__}' only works on Stax")
+        if firmware not in [Firmware.STAX, Firmware.FLEX]:
+            raise ValueError(f"'{self.__class__.__name__}' only works on Stax or Flex")
         screen = FullScreen(backend, firmware)
         callbacks: Dict[BaseNavInsID, Callable] = {
             NavInsID.WAIT: sleep,

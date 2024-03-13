@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added:
 - conftest: Integrating Rust application binary paths
+- navigation: Flex integration
 
 ### Changed
 - conftest: `APP_DIR` and `LOAD_MAIN_APP_AS_LIBRARY` are replaced by the optional parameter

@@ -17,17 +17,17 @@ class TestFullScreen(TestCase):
         # all of this layouts only have a 'tap' method with no argument,
         # which translate to a backend.touch_finger on a fixed position
         layout_positions = [
-            (self.screen.right_header, POSITIONS["RightHeader"]),
-            (self.screen.exit_header, POSITIONS["RightHeader"]),
-            (self.screen.info_header, POSITIONS["RightHeader"]),
-            (self.screen.left_header, POSITIONS["LeftHeader"]),
-            (self.screen.navigation_header, POSITIONS["LeftHeader"]),
-            (self.screen.tappable_center, POSITIONS["TappableCenter"]),
-            (self.screen.centered_footer, POSITIONS["CenteredFooter"]),
-            (self.screen.cancel_footer, POSITIONS["CenteredFooter"]),
-            (self.screen.exit_footer, POSITIONS["CenteredFooter"]),
-            (self.screen.info_footer, POSITIONS["CenteredFooter"]),
-            (self.screen.settings_footer, POSITIONS["CenteredFooter"]),
+            (self.screen.right_header, POSITIONS["RightHeader"][self.firmware]),
+            (self.screen.exit_header, POSITIONS["RightHeader"][self.firmware]),
+            (self.screen.info_header, POSITIONS["RightHeader"][self.firmware]),
+            (self.screen.left_header, POSITIONS["LeftHeader"][self.firmware]),
+            (self.screen.navigation_header, POSITIONS["LeftHeader"][self.firmware]),
+            (self.screen.tappable_center, POSITIONS["TappableCenter"][self.firmware]),
+            (self.screen.centered_footer, POSITIONS["CenteredFooter"][self.firmware]),
+            (self.screen.cancel_footer, POSITIONS["CenteredFooter"][self.firmware]),
+            (self.screen.exit_footer, POSITIONS["CenteredFooter"][self.firmware]),
+            (self.screen.info_footer, POSITIONS["CenteredFooter"][self.firmware]),
+            (self.screen.settings_footer, POSITIONS["CenteredFooter"][self.firmware]),
         ]
         call_number = 0
         self.assertEqual(self.backend.finger_touch.call_count, call_number)
@@ -40,8 +40,8 @@ class TestFullScreen(TestCase):
 
     def test_choosing_layouts(self):
         layout_index_positions = [
-            (self.screen.choice_list, 1, POSITIONS["ChoiceList"]),
-            (self.screen.suggestions, 2, POSITIONS["Suggestions"]),
+            (self.screen.choice_list, 1, POSITIONS["ChoiceList"][self.firmware]),
+            (self.screen.suggestions, 2, POSITIONS["Suggestions"][self.firmware]),
         ]
         call_number = 0
         self.assertEqual(self.backend.finger_touch.call_count, call_number)
@@ -54,12 +54,14 @@ class TestFullScreen(TestCase):
 
     def test_keyboards_common_functions(self):
         layouts_word_positions = [
-            (self.screen.letter_only_keyboard, "basicword", POSITIONS["LetterOnlyKeyboard"]),
-            (self.screen.full_keyboard_letters, "still basic", POSITIONS["FullKeyboardLetters"]),
+            (self.screen.letter_only_keyboard, "basicword",
+             POSITIONS["LetterOnlyKeyboard"][self.firmware]),
+            (self.screen.full_keyboard_letters, "still basic",
+             POSITIONS["FullKeyboardLetters"][self.firmware]),
             (self.screen.full_keyboard_special_characters_1, "12)&@'.",
-             POSITIONS["FullKeyboardSpecialCharacters1"]),
+             POSITIONS["FullKeyboardSpecialCharacters1"][self.firmware]),
             (self.screen.full_keyboard_special_characters_2, "[$?~+*|",
-             POSITIONS["FullKeyboardSpecialCharacters2"]),
+             POSITIONS["FullKeyboardSpecialCharacters2"][self.firmware]),
         ]
         self.assertEqual(self.backend.finger_touch.call_count, 0)
         for (layout, word, positions) in layouts_word_positions:
@@ -78,11 +80,11 @@ class TestFullScreen(TestCase):
 
     def test_keyboards_change_layout(self):
         layouts_positions = [
-            (self.screen.full_keyboard_letters, POSITIONS["FullKeyboardLetters"]),
+            (self.screen.full_keyboard_letters, POSITIONS["FullKeyboardLetters"][self.firmware]),
             (self.screen.full_keyboard_special_characters_1,
-             POSITIONS["FullKeyboardSpecialCharacters1"]),
+             POSITIONS["FullKeyboardSpecialCharacters1"][self.firmware]),
             (self.screen.full_keyboard_special_characters_2,
-             POSITIONS["FullKeyboardSpecialCharacters2"]),
+             POSITIONS["FullKeyboardSpecialCharacters2"][self.firmware]),
         ]
         call_number = 0
         self.assertEqual(self.backend.finger_touch.call_count, call_number)
@@ -98,14 +100,14 @@ class TestFullScreen(TestCase):
         self.screen.full_keyboard_letters.change_case()
         self.assertEqual(self.backend.finger_touch.call_count, 1)
         self.assertEqual(self.backend.finger_touch.call_args,
-                         ((*POSITIONS["FullKeyboardLetters"]["change_case"], ), ))
+                         ((*POSITIONS["FullKeyboardLetters"][self.firmware]["change_case"], ), ))
 
     def test_keyboards_change_special_characters(self):
         layouts_positions = [
             (self.screen.full_keyboard_special_characters_1,
-             POSITIONS["FullKeyboardSpecialCharacters2"]),
+             POSITIONS["FullKeyboardSpecialCharacters2"][self.firmware]),
             (self.screen.full_keyboard_special_characters_2,
-             POSITIONS["FullKeyboardSpecialCharacters2"]),
+             POSITIONS["FullKeyboardSpecialCharacters2"][self.firmware]),
         ]
         call_number = 0
         self.assertEqual(self.backend.finger_touch.call_count, call_number)
