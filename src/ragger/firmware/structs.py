@@ -21,6 +21,7 @@ class Firmware(IntEnum):
     NANOSP = auto()
     NANOX = auto()
     STAX = auto()
+    EUROPA = auto()
 
     @property
     def device(self) -> str:
