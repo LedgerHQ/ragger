@@ -9,6 +9,7 @@ __version__.py
 
 tests/elfs/
 snapshots-tmp/
+ledger_app.toml
 
 # doc
 doc/images/*generated*

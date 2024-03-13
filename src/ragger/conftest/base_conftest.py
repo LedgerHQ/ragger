@@ -1,10 +1,11 @@
 import pytest
 from typing import Optional
 from pathlib import Path
+from ledgered.manifest import Manifest
 from ragger.firmware import Firmware
 from ragger.backend import SpeculosBackend, LedgerCommBackend, LedgerWalletBackend
 from ragger.navigator import NanoNavigator, StaxNavigator
-from ragger.utils import find_project_root_dir, find_library_application, find_main_application
+from ragger.utils import find_project_root_dir, find_library_application, find_application
 from ragger.utils.misc import get_current_app_name_and_version, exit_current_app, open_app_from_dashboard
 from ragger.logger import get_default_logger
 from dataclasses import fields
@@ -117,26 +118,29 @@ def prepare_speculos_args(root_pytest_dir: Path, firmware: Firmware, display: bo
     # Find the project root repository
     project_root_dir = find_project_root_dir(root_pytest_dir)
 
-    # Find the standalone application for the requested device
+    manifest = Manifest.from_path(project_root_dir / "ledger_app.toml")
+
+    # Find the main application for the requested device
     # If the app is to be loaded as a library, the main app should be located in a subfolder of
-    # project_root_dir / conf.OPTIONAL.APP_DIR. There should be only one subfolder in the path.
-    app_path = None
-    if conf.OPTIONAL.LOAD_MAIN_APP_AS_LIBRARY:
-        app_dir_content = list((project_root_dir / conf.OPTIONAL.APP_DIR).iterdir())
+    # project_root_dir / conf.OPTIONAL.MAIN_APP_DIR. There should be only one subfolder in the path.
+    main_app_path = None
+    if conf.OPTIONAL.MAIN_APP_DIR is not None:
+        app_dir_content = list((project_root_dir / conf.OPTIONAL.MAIN_APP_DIR).iterdir())
         app_dir_subdirectories = [child for child in app_dir_content if child.is_dir()]
         if len(app_dir_subdirectories) != 1:
             raise ValueError(
-                f"Expected a single folder in {conf.OPTIONAL.APP_DIR}, found {len(app_dir_subdirectories)}"
+                f"Expected a single folder in {manifest.app.build_directory}, found {len(app_dir_subdirectories)}"
             )
-        app_path = find_main_application(app_dir_subdirectories[0], device)
-    # If the app is standalone, the main app should be located in project_root_dir / conf.OPTIONAL.APP_DIR
+        main_app_path = find_application(app_dir_subdirectories[0], device, "c")
+    # If the app is standalone, the main app should be located in project_root_dir / manifest.app.build_directory
     else:
-        app_path = find_main_application(project_root_dir / conf.OPTIONAL.APP_DIR, device)
+        main_app_path = find_application(project_root_dir / manifest.app.build_directory, device,
+                                         manifest.app.sdk)
 
     # Find all libraries that have to be sideloaded
-    if conf.OPTIONAL.LOAD_MAIN_APP_AS_LIBRARY:
+    if conf.OPTIONAL.MAIN_APP_DIR is not None:
         # This repo holds the library, not the standalone app: search in root_dir/build
-        lib_path = find_main_application(project_root_dir, device)
+        lib_path = find_application(project_root_dir, device, manifest.app.sdk)
         speculos_args.append(f"-l{lib_path}")
 
     elif len(conf.OPTIONAL.SIDELOADED_APPS) != 0:
@@ -157,7 +161,7 @@ def prepare_speculos_args(root_pytest_dir: Path, firmware: Firmware, display: bo
     elif not len(conf.OPTIONAL.CUSTOM_SEED) == 0:
         speculos_args += ["--seed", conf.OPTIONAL.CUSTOM_SEED]
 
-    return (app_path, {"args": speculos_args})
+    return (main_app_path, {"args": speculos_args})
 
 
 # Depending on the "--backend" option value, a different backend is
@@ -173,9 +177,9 @@ def create_backend(root_pytest_dir: Path, backend_name: str, firmware: Firmware,
     elif backend_name.lower() == "ledgerwallet":
         return LedgerWalletBackend(firmware=firmware, log_apdu_file=log_apdu_file, with_gui=display)
     elif backend_name.lower() == "speculos":
-        app_path, speculos_args = prepare_speculos_args(root_pytest_dir, firmware, display,
-                                                        cli_user_seed)
-        return SpeculosBackend(app_path,
+        main_app_path, speculos_args = prepare_speculos_args(root_pytest_dir, firmware, display,
+                                                             cli_user_seed)
+        return SpeculosBackend(main_app_path,
                                firmware=firmware,
                                log_apdu_file=log_apdu_file,
                                **speculos_args)

@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.16.0] - 2024-03-??
+
+### Added:
+- conftest: Integrating Rust application binary paths
+
+### Changed
+- conftest: `APP_DIR` and `LOAD_MAIN_APP_AS_LIBRARY` are replaced by the optional parameter
+            `MAIN_APP_DIR`.
 
 ## [1.15.0] - 2024-03-07
 
@@ -12,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - navigator: `BaseNavInsID` allows to create custom `NavInsID` while using `Navigator` methods
              without additional type conversion.
 - backend: Add optional argument to allow timeout in apdu exchange functions with default value of 5
-  minutes
+           minutes
 
 ## [1.14.4] - 2024-02-21
 
@@ -247,7 +255,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - requirements: Removed the dependency on protobuf package
-
 
 ## [1.2.0] - 2023-01-04
 
