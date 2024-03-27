@@ -204,8 +204,8 @@ POSITIONS = {
         "quit": BUTTON_LOWER_MIDDLE
     },
     "UseCaseSettings": {
-        "single_page_exit": BUTTON_LOWER_MIDDLE,
-        "multi_page_exit": BUTTON_LOWER_LEFT,
+        "single_page_exit": BUTTON_UPPER_LEFT,
+        "multi_page_exit": BUTTON_UPPER_LEFT,
         "previous": BUTTON_LOWER_MIDDLE,
         "next": BUTTON_LOWER_RIGHT,
     },
