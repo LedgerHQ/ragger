@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.16.0] - 2024-03-??
+## [1.16.0] - 2024-03-27
 
 ### Added:
 - conftest: Integrating Rust application binary paths
@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - conftest: `APP_DIR` and `LOAD_MAIN_APP_AS_LIBRARY` are replaced by the optional parameter
             `MAIN_APP_DIR`.
+- firmware: stax: positions: Update settings exit for new SDK v15.2.0
 
 ## [1.15.0] - 2024-03-07
 
