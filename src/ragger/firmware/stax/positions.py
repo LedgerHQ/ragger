@@ -206,7 +206,7 @@ POSITIONS = {
     "UseCaseSettings": {
         "single_page_exit": BUTTON_UPPER_LEFT,
         "multi_page_exit": BUTTON_UPPER_LEFT,
-        "previous": BUTTON_LOWER_MIDDLE,
+        "previous": BUTTON_LOWER_LEFT,
         "next": BUTTON_LOWER_RIGHT,
     },
     "UseCaseSubSettings": {
