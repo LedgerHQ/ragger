@@ -47,6 +47,7 @@ checkers = [
     "flake8",
     "flake8-pyproject",
     "mypy",
+    "types-toml",
     "bandit",
     "pyqt5-stubs",
 ]
