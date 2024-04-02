@@ -99,7 +99,7 @@ class LedgerCommBackend(PhysicalBackend):
         return result
 
     @raise_policy_enforcer
-    def exchange_raw(self, data: bytes = b"") -> RAPDU:
+    def exchange_raw(self, data: bytes = b"", tick_timeout: int = 0) -> RAPDU:
         self.apdu_logger.debug("=> %s", data.hex())
         assert self._client is not None
         result = RAPDU(*self._client.exchange_raw(data))
