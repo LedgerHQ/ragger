@@ -90,7 +90,7 @@ class LedgerWalletBackend(PhysicalBackend):
         return result
 
     @raise_policy_enforcer
-    def exchange_raw(self, data: bytes = b"") -> RAPDU:
+    def exchange_raw(self, data: bytes = b"", tick_timeout: int = 0) -> RAPDU:
         self.apdu_logger.debug("=> %s", data.hex())
         assert self._client is not None
         raw_result = self._client.raw_exchange(data)
