@@ -526,7 +526,7 @@
 <polyline fill="none" stroke="#99ddff" points="8498.67,-334.3 8976.67,-334.3 "/>
 <polyline fill="none" stroke="#99ddff" points="8498.67,-309.5 8976.67,-309.5 "/>
 <text text-anchor="start" x="8506.67" y="-294.3" font-family="Times,serif" font-size="14.00">exchange_async_raw(data: bytes): Generator[None, None, None]</text>
-<text text-anchor="start" x="8506.67" y="-279.3" font-family="Times,serif" font-size="14.00">exchange_raw(data: bytes): RAPDU</text>
+<text text-anchor="start" x="8506.67" y="-279.3" font-family="Times,serif" font-size="14.00">exchange_raw(data: bytes, tick_timeout: int): RAPDU</text>
 <text text-anchor="start" x="8506.67" y="-264.3" font-family="Times,serif" font-size="14.00">handle_usb_reset(): None</text>
 <text text-anchor="start" x="8506.67" y="-249.3" font-family="Times,serif" font-size="14.00">receive(): RAPDU</text>
 <text text-anchor="start" x="8506.67" y="-234.3" font-family="Times,serif" font-size="14.00">send_raw(data: bytes): None</text>
@@ -568,7 +568,7 @@
 <polyline fill="none" stroke="#99ddff" points="8002.67,-334.3 8480.67,-334.3 "/>
 <polyline fill="none" stroke="#99ddff" points="8002.67,-309.5 8480.67,-309.5 "/>
 <text text-anchor="start" x="8010.67" y="-294.3" font-family="Times,serif" font-size="14.00">exchange_async_raw(data: bytes): Generator[None, None, None]</text>
-<text text-anchor="start" x="8010.67" y="-279.3" font-family="Times,serif" font-size="14.00">exchange_raw(data: bytes): RAPDU</text>
+<text text-anchor="start" x="8010.67" y="-279.3" font-family="Times,serif" font-size="14.00">exchange_raw(data: bytes, tick_timeout: int): RAPDU</text>
 <text text-anchor="start" x="8010.67" y="-264.3" font-family="Times,serif" font-size="14.00">handle_usb_reset(): None</text>
 <text text-anchor="start" x="8010.67" y="-249.3" font-family="Times,serif" font-size="14.00">receive(): RAPDU</text>
 <text text-anchor="start" x="8010.67" y="-234.3" font-family="Times,serif" font-size="14.00">send_raw(data: bytes): None</text>
