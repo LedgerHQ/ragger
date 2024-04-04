@@ -2,8 +2,8 @@ from unittest import TestCase
 from unittest.mock import MagicMock
 
 from ragger.firmware import Firmware
-from ragger.firmware.nbgl import FullScreen
-from ragger.firmware.nbgl.positions import POSITIONS
+from ragger.firmware.touch import FullScreen
+from ragger.firmware.touch.positions import POSITIONS
 
 
 class TestFullScreen(TestCase):

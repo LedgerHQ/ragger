@@ -18,12 +18,12 @@ from typing import Callable, Dict
 
 from ragger.backend import BackendInterface
 from ragger.firmware import Firmware
-from ragger.firmware.nbgl import FullScreen
+from ragger.firmware.touch import FullScreen
 from .navigator import Navigator
 from .instruction import BaseNavInsID, NavInsID
 
 
-class NBGLNavigator(Navigator):
+class TouchNavigator(Navigator):
 
     def __init__(self, backend: BackendInterface, firmware: Firmware, golden_run: bool = False):
         if firmware not in [Firmware.STAX, Firmware.FLEX]:

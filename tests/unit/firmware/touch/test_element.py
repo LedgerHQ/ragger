@@ -1,7 +1,7 @@
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
-from ragger.firmware.nbgl.element import Element
+from ragger.firmware.touch.element import Element
 
 
 class TestElement(TestCase):
@@ -10,7 +10,7 @@ class TestElement(TestCase):
         client = MagicMock()
         firmware = MagicMock()
         positions = MagicMock()
-        with patch("ragger.firmware.nbgl.element.POSITIONS", {Element.__name__: positions}):
+        with patch("ragger.firmware.touch.element.POSITIONS", {Element.__name__: positions}):
             element = Element(client, firmware)
             self.assertEqual(element.firmware, firmware)
             self.assertEqual(element.client, client)
