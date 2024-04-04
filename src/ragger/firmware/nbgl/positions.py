@@ -32,6 +32,9 @@ STAX_CENTER = Position(200, 335)
 # Flex resolution is 480x600
 FLEX_CENTER = Position(240, 300)
 
+# Used for Flex keyboard 'validation' button, which is not vertically centered, contrary to Stax
+FLEX_BUTTON_UPPER_CENTER_MIDDLE = Position(240, 250)
+
 STAX_BUTTON_UPPER_LEFT = Position(36, 36)
 FLEX_BUTTON_UPPER_LEFT = Position(45, 45)
 
@@ -365,6 +368,10 @@ POSITIONS = {
     "TappableCenter": {
         Firmware.STAX: STAX_CENTER,
         Firmware.FLEX: FLEX_CENTER,
+    },
+    "KeyboardConfirmationButton": {
+        Firmware.STAX: STAX_CENTER,
+        Firmware.FLEX: FLEX_BUTTON_UPPER_CENTER_MIDDLE,
     },
     "RightHeader": {
         Firmware.STAX: STAX_BUTTON_UPPER_RIGHT,
