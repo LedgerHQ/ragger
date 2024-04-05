@@ -76,6 +76,12 @@ class StubBackend(BackendInterface):
     def wait_for_screen_change(self, timeout: float = 10.0) -> None:
         pass
 
+    def wait_for_text_on_screen(self, text: str, timeout: float = 10.0) -> None:
+        return
+
+    def wait_for_text_not_on_screen(self, text: str, timeout: float = 10.0) -> None:
+        return
+
     def compare_screen_with_text(self, text: str) -> bool:
         return True
 

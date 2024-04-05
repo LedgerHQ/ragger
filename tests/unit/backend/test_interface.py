@@ -55,6 +55,12 @@ class DummyBackend(BackendInterface):
     def wait_for_screen_change(self, timeout: float = 10.0, context: list = []):
         return self.mock.wait_for_screen_change()
 
+    def wait_for_text_on_screen(self, text: str, timeout: float = 10.0) -> None:
+        self.mock.wait_for_text_on_screen()
+
+    def wait_for_text_not_on_screen(self, text: str, timeout: float = 10.0) -> None:
+        self.mock.wait_for_text_not_on_screen()
+
     def compare_screen_with_text(self, text: str):
         return self.mock.compare_screen_with_text()
 

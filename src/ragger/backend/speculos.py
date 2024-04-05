@@ -98,6 +98,7 @@ class SpeculosBackend(BackendInterface):
             speculos_args.extend(args)
         else:
             kwargs[self._ARGS_KEY] = args
+
         self._client: SpeculosClient = SpeculosClient(app=str(application),
                                                       api_url=self.url,
                                                       **kwargs)
@@ -245,6 +246,29 @@ class SpeculosBackend(BackendInterface):
             if match(text, event.get("text", "")):
                 return True
         return False
+
+    def _wait_for_text_on_screen_or_not(self,
+                                        should_be_on_screen: bool,
+                                        text: str,
+                                        timeout: float = 10.0) -> None:
+        endtime = time() + timeout
+        # Only manual ticks sent by compare_screen_with_text in this function because
+        # we don't want a desync between screen and events
+        self.pause_ticker()
+        while True:
+            if self.compare_screen_with_text(text) == should_be_on_screen:
+                # TODO: investigate while this line is needed.. It should not be
+                self._last_screenshot = BytesIO(self._client.get_screenshot())
+                self.resume_ticker()
+                return
+            else:
+                self.wait_for_screen_change(endtime - time())
+
+    def wait_for_text_on_screen(self, text: str, timeout: float = 10.0) -> None:
+        self._wait_for_text_on_screen_or_not(True, text, timeout)
+
+    def wait_for_text_not_on_screen(self, text: str, timeout: float = 10.0) -> None:
+        self._wait_for_text_on_screen_or_not(False, text, timeout)
 
     def wait_for_screen_change(self, timeout: float = 10.0) -> None:
         screenshot = BytesIO(self._client.get_screenshot())
