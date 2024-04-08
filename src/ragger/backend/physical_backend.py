@@ -115,6 +115,12 @@ class PhysicalBackend(BackendInterface):
     def wait_for_screen_change(self, timeout: float = 10.0) -> None:
         return
 
+    def wait_for_text_on_screen(self, text: str, timeout: float = 10.0) -> None:
+        return
+
+    def wait_for_text_not_on_screen(self, text: str, timeout: float = 10.0) -> None:
+        return
+
     def get_current_screen_content(self) -> List:
         return list()
 

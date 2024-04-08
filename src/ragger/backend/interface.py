@@ -17,7 +17,6 @@ from abc import ABC, abstractmethod
 from contextlib import contextmanager
 from enum import Enum, auto
 from pathlib import Path
-from time import time
 from types import TracebackType
 from typing import Optional, Type, Generator, Any, Iterable
 
@@ -433,6 +432,7 @@ class BackendInterface(ABC):
         """
         raise NotImplementedError
 
+    @abstractmethod
     def wait_for_text_on_screen(self, text: str, timeout: float = 10.0) -> None:
         """
         Wait until the screen content contains the text string provider.
@@ -453,15 +453,9 @@ class BackendInterface(ABC):
         :return: None
         :rtype: NoneType
         """
-        if self.compare_screen_with_text(text):
-            return
+        raise NotImplementedError
 
-        endtime = time() + timeout
-        while True:
-            self.wait_for_screen_change(endtime - time())
-            if self.compare_screen_with_text(text):
-                return
-
+    @abstractmethod
     def wait_for_text_not_on_screen(self, text: str, timeout: float = 10.0) -> None:
         """
         Wait until the screen content does not contains the text string provider.
@@ -482,14 +476,7 @@ class BackendInterface(ABC):
         :return: None
         :rtype: NoneType
         """
-        if not self.compare_screen_with_text(text):
-            return
-
-        endtime = time() + timeout
-        while True:
-            self.wait_for_screen_change(endtime - time())
-            if not self.compare_screen_with_text(text):
-                return
+        raise NotImplementedError
 
     @abstractmethod
     def get_current_screen_content(self) -> Any:
