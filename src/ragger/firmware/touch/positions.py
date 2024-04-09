@@ -463,10 +463,10 @@ POSITIONS = {
             "reject": STAX_BUTTON_LOWER_MIDDLE,
         },
         Firmware.FLEX: {
-            "tap": FLEX_CENTER,
-            "previous": FLEX_BUTTON_UPPER_LEFT,
+            "tap": FLEX_BUTTON_LOWER_RIGHT,
+            "previous": FLEX_BUTTON_LOWER_MIDDLE,
             "confirm": FLEX_BUTTON_ABOVE_LOWER_MIDDLE,
-            "reject": FLEX_BUTTON_LOWER_MIDDLE,
+            "reject": FLEX_BUTTON_LOWER_LEFT,
         }
     },
     "UseCaseViewDetails": {

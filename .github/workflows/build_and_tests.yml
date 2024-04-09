@@ -61,7 +61,7 @@ jobs:
         echo """[app]
         build_directory = \"./\"
         sdk = \"C\"
-        devices =  [\"nanos\", \"nanos+\", \"nanox\", \"stax\"]""" > ledger_app.toml
+        devices =  [\"nanos\", \"nanos+\", \"nanox\", \"stax\", \"flex\"]""" > ledger_app.toml
 
     - name: Check the downloaded files
       run: tree .
