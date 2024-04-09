@@ -121,7 +121,7 @@ class SpeculosBackend(BackendInterface):
         raw_content = self._client.get_current_screen_content()
         # Keep only text events
         # This removes events such as: {'text': ' ', 'x': 0, 'y': 464}
-        # They probably comes from long press progress bar on Stax
+        # They probably comes from long press progress bar on Stax/Flex
         # and if not removed they falsely make wait_for_screen_change
         # consider screen as changed when screen text didn't and that's
         # what we want here.
