@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.18.0] - 2024-04-12
+
+### Added
+- Flex firmware & navigation
+
+### Changed
+- firmware: 'stax' module is renamed 'touch', as it is no longer specific to the Stax device
+- navigator: 'StaxNavigator' class is renamed 'TouchNavigator', as it is no longer specific to the
+             Stax device
+
+### Removed
+- firmware: deprecated properties `Firmware.has_bal` and `has_nbgl`
+
 ## [1.17.0] - 2024-04-11
 
 ### Added
@@ -18,11 +31,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Speculos backend: fixed internal snapshot state desync compare screen with text
-- speculos backend: fixed internal snapshot state desync compare screen with text
-## [1.17.0] - 2024-04-?
-
-### Addded
-- Flex firmware & navigation
 
 ## [1.16.2] - 2024-04-02
 
@@ -38,7 +46,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added:
 - conftest: Integrating Rust application binary paths
-- navigation: Flex integration
 
 ### Changed
 - conftest: `APP_DIR` and `LOAD_MAIN_APP_AS_LIBRARY` are replaced by the optional parameter
