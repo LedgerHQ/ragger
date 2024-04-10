@@ -42,8 +42,7 @@ STAX_BUTTON_UPPER_RIGHT = Position(342, 55)
 FLEX_BUTTON_UPPER_RIGHT = Position(405, 75)
 
 STAX_BUTTON_LOWER_LEFT = Position(36, 606)
-# TODO: Look for use cases / layout using this button
-FLEX_BUTTON_LOWER_LEFT = Position(0, 0)
+FLEX_BUTTON_LOWER_LEFT = Position(55, 530)
 
 STAX_BUTTON_LOWER_MIDDLE = Position(200, 606)
 FLEX_BUTTON_LOWER_MIDDLE = Position(240, 550)
@@ -385,6 +384,14 @@ POSITIONS = {
         Firmware.STAX: STAX_BUTTON_LOWER_MIDDLE,
         Firmware.FLEX: FLEX_BUTTON_LOWER_MIDDLE
     },
+    "LeftFooter": {
+        Firmware.STAX: STAX_BUTTON_LOWER_LEFT,
+        Firmware.FLEX: FLEX_BUTTON_LOWER_LEFT
+    },
+    "CancelFooter": {
+        Firmware.STAX: STAX_BUTTON_LOWER_MIDDLE,
+        Firmware.FLEX: FLEX_BUTTON_LOWER_LEFT
+    },
     "UseCaseHome": {
         Firmware.STAX: {
             "info": STAX_BUTTON_UPPER_RIGHT,
@@ -444,7 +451,7 @@ POSITIONS = {
         },
         Firmware.FLEX: {
             "confirm": FLEX_BUTTON_ABOVE_LOWER_MIDDLE,
-            "reject": FLEX_BUTTON_LOWER_MIDDLE,
+            "reject": FLEX_BUTTON_LOWER_LEFT,
         }
     },
     "UseCaseStatus": {
@@ -492,7 +499,7 @@ POSITIONS = {
             "tap": FLEX_BUTTON_ABOVE_LOWER_MIDDLE,
             "exit_qr": FLEX_BUTTON_LOWER_MIDDLE,
             "confirm": FLEX_BUTTON_ABOVE_LOWER_MIDDLE,
-            "cancel": FLEX_BUTTON_LOWER_MIDDLE,
+            "cancel": FLEX_BUTTON_LOWER_LEFT,
         }
     },
 }

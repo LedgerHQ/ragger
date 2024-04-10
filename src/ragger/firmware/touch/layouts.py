@@ -77,11 +77,15 @@ class FullKeyboardSpecialCharacters2(_FullKeyboardSpecialCharacters):
     pass
 
 
-# Center Info
-class TappableCenter(Element):
+class _TappableElement(Element):
 
     def tap(self):
         self.client.finger_touch(*self.positions)
+
+
+# Center Info
+class TappableCenter(_TappableElement):
+    pass
 
 
 class KeyboardConfirmationButton(Element):
@@ -98,20 +102,16 @@ class KeyboardConfirmationButton(Element):
 
 # Headers
 #########
-class RightHeader(Element):
-
-    def tap(self):
-        self.client.finger_touch(*self.positions)
+class RightHeader(_TappableElement):
+    pass
 
 
 ExitHeader = RightHeader
 InfoHeader = RightHeader
 
 
-class LeftHeader(Element):
-
-    def tap(self):
-        self.client.finger_touch(*self.positions)
+class LeftHeader(_TappableElement):
+    pass
 
 
 NavigationHeader = LeftHeader
@@ -119,13 +119,18 @@ NavigationHeader = LeftHeader
 
 # Footers
 #########
-class CenteredFooter(Element):
-
-    def tap(self):
-        self.client.finger_touch(*self.positions)
+class CenteredFooter(_TappableElement):
+    pass
 
 
-CancelFooter = CenteredFooter
-ExitFooter = CenteredFooter
-InfoFooter = CenteredFooter
-SettingsFooter = CenteredFooter
+class LeftFooter(_TappableElement):
+    pass
+
+
+class CancelFooter(_TappableElement):
+    pass
+
+
+ExitFooter = CancelFooter
+InfoFooter = CancelFooter
+SettingsFooter = CancelFooter
