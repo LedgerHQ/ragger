@@ -17,5 +17,9 @@ from .instruction import BaseNavInsID, NavInsID, NavIns
 from .navigator import Navigator
 from .stax_navigator import StaxNavigator
 from .nano_navigator import NanoNavigator
+from .navigation_scenario import NavigateWithScenario
 
-__all__ = ["BaseNavInsID", "NavInsID", "NavIns", "Navigator", "StaxNavigator", "NanoNavigator"]
+__all__ = [
+    "BaseNavInsID", "NavInsID", "NavIns", "Navigator", "StaxNavigator", "NanoNavigator",
+    "NavigateWithScenario"
+]
