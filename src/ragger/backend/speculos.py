@@ -261,10 +261,11 @@ class SpeculosBackend(BackendInterface):
         # Only manual ticks sent by compare_screen_with_text in this function because
         # we don't want a desync between screen and events
         self.pause_ticker()
+        # Save current snapshot in case its content already matches and we never
+        # call wait_for_screen_change
+        self._last_screenshot = BytesIO(self._client.get_screenshot())
         while True:
             if self.compare_screen_with_text(text) == should_be_on_screen:
-                # TODO: investigate while this line is needed.. It should not be
-                self._last_screenshot = BytesIO(self._client.get_screenshot())
                 self.resume_ticker()
                 return
             else:
