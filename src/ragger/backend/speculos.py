@@ -81,24 +81,30 @@ class SpeculosBackend(BackendInterface):
                  log_apdu_file: Optional[Path] = None,
                  **kwargs):
         super().__init__(firmware=firmware, log_apdu_file=log_apdu_file)
-        self._port = self._DEFAULT_API_PORT
+        # crafting Speculos arguments
         args = ["--model", firmware.name]
-        speculos_args: Optional[List] = kwargs.get(self._ARGS_KEY)
-        if speculos_args is not None:
-            assert isinstance(speculos_args, list), \
-                f"'{self._ARGS_KEY}' ({speculos_args}) keyword argument must be a list of arguments"
-            # let's find if the API port is specified in the CLI arguments
-            try:
-                index = speculos_args.index(self._ARGS_API_PORT_KEY)
-                self._port = int(speculos_args[index + 1])
-                self.logger.info("Using custom port %d for the API", self._port)
-            except ValueError:
-                # '--api-port' was not found in `speculos_args`
-                pass
-            speculos_args.extend(args)
+        speculos_args: List = kwargs.get(self._ARGS_KEY, list())
+        assert isinstance(speculos_args, list), \
+            f"'{self._ARGS_KEY}' ({speculos_args}) keyword argument must be a list of arguments"
+        # Inferring the API port
+        if self._ARGS_API_PORT_KEY in speculos_args:
+            index = speculos_args.index(self._ARGS_API_PORT_KEY)
+            self._api_port = int(speculos_args[index + 1])
         else:
-            kwargs[self._ARGS_KEY] = args
+            self._api_port = _get_unused_port_from(self._DEFAULT_API_PORT)
+            args.extend([self._ARGS_API_PORT_KEY, str(self._api_port)])
+        # Inferring the APDU port
+        if self._ARGS_APDU_PORT_KEY in speculos_args:
+            index = speculos_args.index(self._ARGS_APDU_PORT_KEY)
+            self._apdu_port = int(speculos_args[index + 1])
+        else:
+            self._apdu_port = _get_unused_port_from(self._api_port + 1)
+            args.extend([self._ARGS_APDU_PORT_KEY, str(self._apdu_port)])
+        speculos_args.extend(args)
+        kwargs[self._ARGS_KEY] = speculos_args
 
+        self.logger.info("Speculos binary: '%s'", application)
+        self.logger.info("Speculos options: '%s'", " ".join(kwargs[self._ARGS_KEY]))
         self._client: SpeculosClient = SpeculosClient(app=str(application),
                                                       api_url=self.url,
                                                       **kwargs)
@@ -109,7 +115,7 @@ class SpeculosBackend(BackendInterface):
 
     @property
     def url(self) -> str:
-        return f"http://127.0.0.1:{self._port}"
+        return f"http://127.0.0.1:{self._api_port}"
 
     def _retrieve_client_screen_content(self) -> dict:
         raw_content = self._client.get_current_screen_content()

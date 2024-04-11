@@ -19,7 +19,27 @@ class TestSpeculosBackend(TestCase):
     maxDiff = None
 
     def test___init__ok(self):
-        SpeculosBackend(APPNAME, Firmware.NANOS)
+        b = SpeculosBackend(APPNAME, Firmware.NANOS)
+        self.assertEqual(b._api_port, b._DEFAULT_API_PORT)
+        self.assertEqual(b._apdu_port, b._DEFAULT_API_PORT + 1)
+
+    def test___init__ports_ok(self):
+        api_port, apdu_port = 4567, 9876
+        b1 = SpeculosBackend(APPNAME,
+                             Firmware.NANOS,
+                             args=["--api-port",
+                                   str(api_port), "--apdu-port",
+                                   str(apdu_port)])
+        self.assertEqual(b1._api_port, api_port)
+        self.assertEqual(b1._apdu_port, apdu_port)
+
+        b2 = SpeculosBackend(APPNAME, Firmware.NANOS, args=["--api-port", str(api_port)])
+        self.assertEqual(b2._api_port, api_port)
+        self.assertEqual(b2._apdu_port, api_port + 1)
+
+        b3 = SpeculosBackend(APPNAME, Firmware.NANOS, args=["--apdu-port", str(apdu_port)])
+        self.assertEqual(b3._api_port, b3._DEFAULT_API_PORT)
+        self.assertEqual(b3._apdu_port, apdu_port)
 
     def test___init__args_ok(self):
         SpeculosBackend(APPNAME, Firmware.NANOS, args=["some", "specific", "arguments"])
@@ -75,23 +95,23 @@ class TestSpeculosBackend(TestCase):
                 args, kwargs = all_client_args[index]
                 self.assertEqual(args, ())
                 self.assertEqual(kwargs["app"], APPNAME)
-                self.assertEqual(kwargs["api_url"], f"http://127.0.0.1:{client._port}")
+                self.assertEqual(kwargs["api_url"], f"http://127.0.0.1:{client._api_port}")
                 speculos_args = kwargs["args"]
                 client_seeds.add(get_next_in_list(speculos_args, "--seed"))
                 client_rngs.add(get_next_in_list(speculos_args, "--deterministic-rng"))
                 client_priv_keys.add(get_next_in_list(speculos_args, "--user-private-key"))
                 client_attestations.add(get_next_in_list(speculos_args, "--attestation-key"))
                 api_port = int(get_next_in_list(speculos_args, "--api-port"))
-                client_api_ports.add(client._port)
+                client_api_ports.add(client._api_port)
                 apdu_port = int(get_next_in_list(speculos_args, "--apdu-port"))
-                client_apdu_ports.add(client._port)
+                client_apdu_ports.add(client._api_port)
 
                 # ports given as original arguments are overridden
                 self.assertNotEqual(api_port, arg_api_port)
                 self.assertNotEqual(apdu_port, arg_api_port)
                 # API port has been overridden by a generated port
                 # (APDU port too, but it is not stored into SpeculosBackend)
-                self.assertEqual(client._port, api_port)
+                self.assertEqual(client._api_port, api_port)
 
                 self.assertIsInstance(client, SpeculosBackend)
                 self.assertIsInstance(client._client, MagicMock)
