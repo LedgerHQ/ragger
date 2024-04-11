@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Speculos backend: if not specified, availability of API and APDU ports are checked to avoid collision
 - navigator: New pytest fixture to navigate by scenario to simplify classic navigation operations
 
+### Fixed
+- Speculos backend: Properly fixed internal snapshot state desync compare screen with text
+
 ## [1.16.3] - 2024-04-05
 
 ### Fixed
