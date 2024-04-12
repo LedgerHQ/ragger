@@ -24,8 +24,8 @@ from .navigator import BaseNavInsID, Navigator, NavInsID
 class NanoNavigator(Navigator):
 
     def __init__(self, backend: BackendInterface, firmware: Firmware, golden_run: bool = False):
-        if firmware == Firmware.STAX:
-            raise ValueError(f"'{self.__class__.__name__}' does not work on Stax")
+        if firmware in [Firmware.STAX, Firmware.FLEX]:
+            raise ValueError(f"'{self.__class__.__name__}' does not work on Stax/Flex")
         callbacks: Dict[BaseNavInsID, Callable] = {
             NavInsID.WAIT: sleep,
             NavInsID.WAIT_FOR_SCREEN_CHANGE: backend.wait_for_screen_change,

@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.18.0] - 2024-04-12
+
+### Added
+- Flex firmware & navigation
+
+### Changed
+- firmware: 'stax' module is renamed 'touch', as it is no longer specific to the Stax device
+- navigator: 'StaxNavigator' class is renamed 'TouchNavigator', as it is no longer specific to the
+             Stax device
+
+### Removed
+- firmware: deprecated properties `Firmware.has_bal` and `has_nbgl`
+
 ## [1.17.0] - 2024-04-11
 
 ### Added

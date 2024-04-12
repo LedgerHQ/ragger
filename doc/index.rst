@@ -3,7 +3,7 @@ The Ragger framework
 
 ``Ragger`` is a Python framework which aims at simplifying the test and overall
 automatic manipulation of applications running on Ledger devices: NanoS, NanoS+,
-NanoX and Stax (sometimes referred as Fatstacks in the sources).
+NanoX, Stax and Flex.
 
 It is composed of a tiny wrapper around other Ledger's libraries which abstract
 and/or provide access to Ledger's cold wallet, and higher-level classes allowing

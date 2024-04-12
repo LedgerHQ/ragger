@@ -44,8 +44,6 @@ You can also install it from sources. At the root of the `git` repository, run:
 pip install '.[all_backends]'
 ```
 
-The extra index is important, as it brings the latest version of Speculos.
-
 ### Extras
 
 Sometimes we just need some function embedded in the library, or just one backend. It can be

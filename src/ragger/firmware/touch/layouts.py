@@ -15,42 +15,20 @@
 """
 import logging
 
-from ragger.backend import BackendInterface
-from ragger.firmware import Firmware
-from .positions import POSITIONS
-
-
-class _Layout:
-
-    def __init__(self, client: BackendInterface, firmware: Firmware):
-        self._client = client
-        self._firmware = firmware
-
-    @property
-    def client(self) -> BackendInterface:
-        return self._client
-
-    @property
-    def firmware(self) -> Firmware:
-        return self._firmware
-
-    @property
-    def positions(self):
-        return POSITIONS[str(self.__class__.__name__)]
-
+from .element import Element
 
 # Center
 ########
 
 
-class ChoiceList(_Layout):
+class ChoiceList(Element):
 
     def choose(self, index: int):
         assert 1 <= index <= 6, "Choice index must be in [1, 6]"
         self.client.finger_touch(*self.positions[index])
 
 
-class Suggestions(_Layout):
+class Suggestions(Element):
 
     def choose(self, index: int):
         assert 1 <= index <= 4, "Suggestion index must be in [1, 4]"
@@ -58,7 +36,7 @@ class Suggestions(_Layout):
 
 
 # Keyboards
-class _GenericKeyboard(_Layout):
+class _GenericKeyboard(Element):
 
     def write(self, word: str):
         for letter in word.lower():
@@ -99,29 +77,41 @@ class FullKeyboardSpecialCharacters2(_FullKeyboardSpecialCharacters):
     pass
 
 
-# Center Info
-class TappableCenter(_Layout):
+class _TappableElement(Element):
 
     def tap(self):
+        self.client.finger_touch(*self.positions)
+
+
+# Center Info
+class TappableCenter(_TappableElement):
+    pass
+
+
+class KeyboardConfirmationButton(Element):
+    """
+    This layout is to be used as the confirmation button when coupled with a keyboard.
+
+    On Stax devices, the screen is high enough that this is equivalent to TappableCenter, however
+    on Flex, this button is not centered, but slightly closer to the top of the screen.
+    """
+
+    def confirm(self):
         self.client.finger_touch(*self.positions)
 
 
 # Headers
 #########
-class RightHeader(_Layout):
-
-    def tap(self):
-        self.client.finger_touch(*self.positions)
+class RightHeader(_TappableElement):
+    pass
 
 
 ExitHeader = RightHeader
 InfoHeader = RightHeader
 
 
-class LeftHeader(_Layout):
-
-    def tap(self):
-        self.client.finger_touch(*self.positions)
+class LeftHeader(_TappableElement):
+    pass
 
 
 NavigationHeader = LeftHeader
@@ -129,13 +119,18 @@ NavigationHeader = LeftHeader
 
 # Footers
 #########
-class CenteredFooter(_Layout):
-
-    def tap(self):
-        self.client.finger_touch(*self.positions)
+class CenteredFooter(_TappableElement):
+    pass
 
 
-CancelFooter = CenteredFooter
-ExitFooter = CenteredFooter
-InfoFooter = CenteredFooter
-SettingsFooter = CenteredFooter
+class LeftFooter(_TappableElement):
+    pass
+
+
+class CancelFooter(_TappableElement):
+    pass
+
+
+ExitFooter = CancelFooter
+InfoFooter = CancelFooter
+SettingsFooter = CancelFooter
