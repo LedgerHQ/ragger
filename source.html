@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Code documentation &mdash; Ragger 1.17.0 documentation</title>
+  <title>Code documentation &mdash; Ragger 1.17.1.dev10 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
@@ -86,17 +86,16 @@
 <li class="toctree-l4"><a class="reference internal" href="#ragger.firmware.Firmware.NANOSP"><code class="docutils literal notranslate"><span class="pre">Firmware.NANOSP</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ragger.firmware.Firmware.NANOX"><code class="docutils literal notranslate"><span class="pre">Firmware.NANOX</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ragger.firmware.Firmware.STAX"><code class="docutils literal notranslate"><span class="pre">Firmware.STAX</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragger.firmware.Firmware.FLEX"><code class="docutils literal notranslate"><span class="pre">Firmware.FLEX</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ragger.firmware.Firmware.device"><code class="docutils literal notranslate"><span class="pre">Firmware.device</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#ragger.firmware.Firmware.has_bagl"><code class="docutils literal notranslate"><span class="pre">Firmware.has_bagl</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#ragger.firmware.Firmware.has_nbgl"><code class="docutils literal notranslate"><span class="pre">Firmware.has_nbgl</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ragger.firmware.Firmware.is_nano"><code class="docutils literal notranslate"><span class="pre">Firmware.is_nano</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ragger.firmware.Firmware.name"><code class="docutils literal notranslate"><span class="pre">Firmware.name</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#ragger-firmware-stax"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.stax</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#ragger-firmware-stax-screen"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.stax.screen</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#ragger-firmware-stax-layouts"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.stax.layouts</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#ragger-firmware-stax-use-cases"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.stax.use_cases</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ragger-firmware-touch"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.touch</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ragger-firmware-touch-screen"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.touch.screen</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragger-firmware-touch-layouts"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.touch.layouts</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragger-firmware-touch-use-cases"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.touch.use_cases</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -166,11 +165,11 @@
 <li><p><a class="reference internal" href="#ragger-error" id="id8"><code class="docutils literal notranslate"><span class="pre">ragger.error</span></code></a></p></li>
 <li><p><a class="reference internal" href="#ragger-firmware" id="id9"><code class="docutils literal notranslate"><span class="pre">ragger.firmware</span></code></a></p>
 <ul>
-<li><p><a class="reference internal" href="#ragger-firmware-stax" id="id10"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.stax</span></code></a></p>
+<li><p><a class="reference internal" href="#ragger-firmware-touch" id="id10"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.touch</span></code></a></p>
 <ul>
-<li><p><a class="reference internal" href="#ragger-firmware-stax-screen" id="id11"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.stax.screen</span></code></a></p></li>
-<li><p><a class="reference internal" href="#ragger-firmware-stax-layouts" id="id12"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.stax.layouts</span></code></a></p></li>
-<li><p><a class="reference internal" href="#ragger-firmware-stax-use-cases" id="id13"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.stax.use_cases</span></code></a></p></li>
+<li><p><a class="reference internal" href="#ragger-firmware-touch-screen" id="id11"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.touch.screen</span></code></a></p></li>
+<li><p><a class="reference internal" href="#ragger-firmware-touch-layouts" id="id12"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.touch.layouts</span></code></a></p></li>
+<li><p><a class="reference internal" href="#ragger-firmware-touch-use-cases" id="id13"><code class="docutils literal notranslate"><span class="pre">ragger.firmware.touch.use_cases</span></code></a></p></li>
 </ul>
 </li>
 </ul>
@@ -285,25 +284,16 @@ should expect. This is declared with this class:</p>
 <span class="sig-name descname"><span class="pre">STAX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#ragger.firmware.Firmware.STAX" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ragger.firmware.Firmware.FLEX">
+<span class="sig-name descname"><span class="pre">FLEX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5</span></em><a class="headerlink" href="#ragger.firmware.Firmware.FLEX" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="ragger.firmware.Firmware.device">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">device</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#ragger.firmware.Firmware.device" title="Permalink to this definition"></a></dt>
 <dd><p>A proxy property for <a class="reference internal" href="#ragger.firmware.Firmware.name" title="ragger.firmware.Firmware.name"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Firmware.name</span></code></a>.
 This property is deprecated. It is advise to not use it.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="ragger.firmware.Firmware.has_bagl">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">has_bagl</span></span><a class="headerlink" href="#ragger.firmware.Firmware.has_bagl" title="Permalink to this definition"></a></dt>
-<dd><p>States if the firmware uses BAGL or not.
-Currently, this is a proxy to <a class="reference internal" href="#ragger.firmware.Firmware.is_nano" title="ragger.firmware.Firmware.is_nano"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Firmware.is_nano</span></code></a></p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="ragger.firmware.Firmware.has_nbgl">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">has_nbgl</span></span><a class="headerlink" href="#ragger.firmware.Firmware.has_nbgl" title="Permalink to this definition"></a></dt>
-<dd><p>States if the firmware uses NBGL or not.
-Currently only Stax device uses NBGL.</p>
 </dd></dl>
 
 <dl class="py property">
@@ -320,16 +310,16 @@ Currently only Stax device uses NBGL.</p>
 
 </dd></dl>
 
-<div class="section" id="ragger-firmware-stax">
-<h3><code class="docutils literal notranslate"><span class="pre">ragger.firmware.stax</span></code><a class="headerlink" href="#ragger-firmware-stax" title="Permalink to this heading"></a></h3>
-<div class="section" id="ragger-firmware-stax-screen">
-<h4><code class="docutils literal notranslate"><span class="pre">ragger.firmware.stax.screen</span></code><a class="headerlink" href="#ragger-firmware-stax-screen" title="Permalink to this heading"></a></h4>
+<div class="section" id="ragger-firmware-touch">
+<h3><code class="docutils literal notranslate"><span class="pre">ragger.firmware.touch</span></code><a class="headerlink" href="#ragger-firmware-touch" title="Permalink to this heading"></a></h3>
+<div class="section" id="ragger-firmware-touch-screen">
+<h4><code class="docutils literal notranslate"><span class="pre">ragger.firmware.touch.screen</span></code><a class="headerlink" href="#ragger-firmware-touch-screen" title="Permalink to this heading"></a></h4>
 </div>
-<div class="section" id="ragger-firmware-stax-layouts">
-<h4><code class="docutils literal notranslate"><span class="pre">ragger.firmware.stax.layouts</span></code><a class="headerlink" href="#ragger-firmware-stax-layouts" title="Permalink to this heading"></a></h4>
+<div class="section" id="ragger-firmware-touch-layouts">
+<h4><code class="docutils literal notranslate"><span class="pre">ragger.firmware.touch.layouts</span></code><a class="headerlink" href="#ragger-firmware-touch-layouts" title="Permalink to this heading"></a></h4>
 </div>
-<div class="section" id="ragger-firmware-stax-use-cases">
-<h4><code class="docutils literal notranslate"><span class="pre">ragger.firmware.stax.use_cases</span></code><a class="headerlink" href="#ragger-firmware-stax-use-cases" title="Permalink to this heading"></a></h4>
+<div class="section" id="ragger-firmware-touch-use-cases">
+<h4><code class="docutils literal notranslate"><span class="pre">ragger.firmware.touch.use_cases</span></code><a class="headerlink" href="#ragger-firmware-touch-use-cases" title="Permalink to this heading"></a></h4>
 </div>
 </div>
 </div>

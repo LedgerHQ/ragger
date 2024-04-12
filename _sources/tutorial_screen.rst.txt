@@ -1,7 +1,7 @@
 .. _tutorial_screen:
 
-Complex UI management - Stax
-============================
+Complex UI management - Flex / Stax
+===================================
 
 Interacting programmatically with an application tends to be a non-trivial
 thing, as complex processes (like performing a complete transaction) have to be
@@ -16,8 +16,8 @@ specifically about the UI, we saw :ref:`previously
 to cope with simple physical interactions (like on the Nano devices: only two
 buttons). But what to do with more complex interfaces?
 
-In particular, interacting with the Stax screen can be bothersome. It is hard to
-track of button positions, pages layouts and such.
+In particular, interacting with the touch screen devices (Stax or Flex) can be
+bothersome. It is hard to track of button positions, pages layouts and such.
 
 Study case
 ----------
@@ -66,7 +66,7 @@ to change some button position, or if higher-level graphic objects (such as
 the "info" button to the top left -, all this code becomes deprecated.
 
 
-That's why ``Ragger`` mimics the Stax SDK graphics library and provides
+That's why ``Ragger`` mimics the Flex/Stax SDK graphics library and provides
 :term:`Layout` and :term:`Use Case` (:term:`Page` will also come soon) classes
 that keep track of every interactive screen elements and expose meaningful
 methods to interact with them.
@@ -74,18 +74,18 @@ methods to interact with them.
 Layouts
 '''''''
 
-``Ragger``'s :mod:`Layouts <ragger.firmware.stax.layouts>` and
-:mod:`UseCases <ragger.firmware.stax.use_cases>` allows to quickly describe an
+``Ragger``'s :mod:`Layouts <ragger.firmware.touch.layouts>` and
+:mod:`UseCases <ragger.firmware.touch.use_cases>` allows to quickly describe an
 application screens and its attached behavior in a purely declarative way,
-thanks to the :class:`MetaScreen <ragger.firmware.stax.screen.MetaScreen>`
+thanks to the :class:`MetaScreen <ragger.firmware.touch.screen.MetaScreen>`
 metaclass. For instance, with the previously described application:
 
 .. code-block:: python
    :linenos:
 
 
-   from ragger.firmware.stax.screen import MetaScreen
-   from ragger.firmware.stax.layouts import CancelFooter, ExitFooter, InfoHeader
+   from ragger.firmware.touch.screen import MetaScreen
+   from ragger.firmware.touch.layouts import CancelFooter, ExitFooter, InfoHeader
 
    class RecoveryAppScreen(metaclass=MetaScreen)
        layout_quit = ExitFooter
@@ -131,7 +131,7 @@ way than if positions were still necessary:
    First of all, the buttons may be at the same place, but they don't carry the
    same purpose, and it is a good idea to reflect that on the code.
 
-   Second, if in a future version the Stax design changes and one of these
+   Second, if in a future version the Flex/Stax design changes and one of these
    button moves somewhere else on the screen's footer, **the layouts will be
    updated accordingly** in ``Ragger``, and the ``CancelFooter`` or ``ExitFooter``
    will still be valid, hence all code using this class remains valid too.
@@ -163,8 +163,8 @@ and start with ``use_case_``:
 .. code-block:: python
    :linenos:
 
-   from ragger.firmware.stax.screen import MetaScreen
-   from ragger.firmware.stax.use_case import UseCaseHome, UseCaseSettings
+   from ragger.firmware.touch.screen import MetaScreen
+   from ragger.firmware.touch.use_case import UseCaseHome, UseCaseSettings
 
    class RecoveryAppScreen(metaclass=MetaScreen)
        use_case_welcome = UseCaseHome
@@ -198,7 +198,7 @@ All-in-one solution: the ``FullScreen``
 All these classes helps you tailoring a fairly elegant and straight-forward
 client with meaningful and easy to write screen controls. However if you don't
 feel like crafting you own screen representation, ``Ragger`` comes with a
-:class:`FullScreen <ragger.firmware.stax.screen.FullScreen>` class
+:class:`FullScreen <ragger.firmware.touch.screen.FullScreen>` class
 which embeds every existing :term:`Layout` and :term:`Use Case`.
 
 It can be used to quickly instantiate a screen which could work with any
@@ -209,7 +209,7 @@ application screen, as declared button can be totally fictional.
 .. code-block:: python
    :linenos:
 
-   from ragger.firmware.stax.screen import FullScreen
+   from ragger.firmware.touch.screen import FullScreen
 
    screen = FullScreen(backend, firmware)
 

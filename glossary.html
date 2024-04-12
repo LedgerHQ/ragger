@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Glossary &mdash; Ragger 1.17.0 documentation</title>
+  <title>Glossary &mdash; Ragger 1.17.1.dev10 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
@@ -110,7 +110,6 @@ NanoS/S+/X), or an emulated one (thanks to <code class="docutils literal notrans
 <dt id="term-BAGL">BAGL<a class="headerlink" href="#term-BAGL" title="Permalink to this term"></a></dt><dd><p><strong>BAGL</strong> stands for “BOLOS Application Graphics Library”, and is a library
 integrated into the C SDK managing the UI of the NanoS, NanoX and NanoS+
 devices. It is embedded into the <a class="reference internal" href="#term-SDK"><span class="xref std std-term">SDK</span></a></p>
-<p>Its equivalent for <a class="reference internal" href="#term-Stax"><span class="xref std std-term">Stax</span></a> device is <a class="reference internal" href="#term-NBGL"><span class="xref std std-term">NBGL</span></a>.</p>
 </dd>
 <dt id="term-BOLOS">BOLOS<a class="headerlink" href="#term-BOLOS" title="Permalink to this term"></a></dt><dd><p><strong>BOLOS</strong> is <a class="reference external" href="https://www.ledger.com/introducing-bolos-blockchain-open-ledger-operating-system">the operating system running on all Ledger hardware wallets</a>.
 Its code is not open-source. Its capabilities can be used through the
@@ -154,6 +153,8 @@ with a Ledger device. It is hosted
 <dt id="term-NBGL">NBGL<a class="headerlink" href="#term-NBGL" title="Permalink to this term"></a></dt><dd><p><strong>NBGL</strong> stands for “New BOLOS Graphic Library”, and is the successor of
 <a class="reference internal" href="#term-BAGL"><span class="xref std std-term">BAGL</span></a> for more recent devices such as <a class="reference internal" href="#term-Stax"><span class="xref std std-term">Stax</span></a>. It is embedded
 into the <a class="reference internal" href="#term-SDK"><span class="xref std std-term">SDK</span></a>.</p>
+<p>It has also been back-ported to older devices such as NanoS+ and NanoX (but
+not NanoS) to ease interface flow development.</p>
 </dd>
 <dt id="term-Page">Page<a class="headerlink" href="#term-Page" title="Permalink to this term"></a></dt><dd><p>In the <a class="reference internal" href="#term-Stax"><span class="xref std std-term">Stax</span></a> SDK, a <strong>Page</strong> refers to a specific displayed Stax
 screen.A welcome page, a setting page are example of Pages. This name is
@@ -187,8 +188,8 @@ fast testing of an <a class="reference internal" href="#term-Application"><span 
 <p>It is composed of the emulator itself, and a HTTP client-server module
 allowing to easily control and communicate with said emulator.</p>
 </dd>
-<dt id="term-Stax">Stax<a class="headerlink" href="#term-Stax" title="Permalink to this term"></a></dt><dd><p><strong>Stax</strong> is the latest Ledger device which, in a programmatic point of
-view, mostly differs from previous devices by its richer UI and a touch
+<dt id="term-Stax">Stax<a class="headerlink" href="#term-Stax" title="Permalink to this term"></a></dt><dd><p><strong>Stax</strong> is the most premium Ledger device which, in a programmatic point
+of view, mostly differs from previous devices by its richer UI and a touch
 screen, justifying the usage of the new graphic library, <a class="reference internal" href="#term-NBGL"><span class="xref std std-term">NBGL</span></a>.</p>
 </dd>
 <dt id="term-Use-Case">Use Case<a class="headerlink" href="#term-Use-Case" title="Permalink to this term"></a></dt><dd><p>In the <a class="reference internal" href="#term-Stax"><span class="xref std std-term">Stax</span></a> SDK, a <strong>Use Case</strong> refers to a pre-designed

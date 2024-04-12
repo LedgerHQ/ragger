@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Rationale &mdash; Ragger 1.17.0 documentation</title>
+  <title>Rationale &mdash; Ragger 1.17.1.dev10 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
@@ -63,7 +63,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#abstracting-the-backends">Abstracting the backends</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#easing-the-development-of-application-clients">Easing the development of application clients</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#navigation">Navigation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#stax-screen-management">Stax screen management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#touch-screen-management">Touch screen management</a></li>
 </ul>
 </li>
 </ul>
@@ -132,7 +132,7 @@ or an emulated one:</p>
 <code class="xref py py-class docutils literal notranslate"><span class="pre">BackendInterface</span></code> interface.</p>
 <figure class="">
             <a 
-               data-lightbox="group-423a8f8f-ca00-46d5-a9ac-72b23c7c7ea4"
+               data-lightbox="group-3251fb4c-175b-4074-853e-748f8d7a0de1"
                href="_images/usage.svg"
                title="Software / communication layers between an application and its client"
                data-title="Software / communication layers between an application and its client"
@@ -172,7 +172,7 @@ callbacks, allows to abstract the expected behavior of an application.</p>
 a list of instructions.</p>
 <figure class="">
             <a 
-               data-lightbox="group-e1964603-3f08-413d-9435-4a1ce1df9af4"
+               data-lightbox="group-946f4567-1cd5-49d5-9eb1-1bc379d868dd"
                href="_images/navigate.svg"
                title="Software / communication layers between an application and its client"
                data-title="Software / communication layers between an application and its client"
@@ -193,12 +193,12 @@ it helps a lot to write code which on the first hand manipulate high-level
 concept as validating a transaction, and on the other hand deal with low-level
 details such as crafting an <a class="reference internal" href="glossary.html#term-APDU"><span class="xref std std-term">APDU</span></a> and click on a button at the right time.</p>
 </div>
-<div class="section" id="stax-screen-management">
-<h3>Stax screen management<a class="headerlink" href="#stax-screen-management" title="Permalink to this heading"></a></h3>
+<div class="section" id="touch-screen-management">
+<h3>Touch screen management<a class="headerlink" href="#touch-screen-management" title="Permalink to this heading"></a></h3>
 <p>Dealing with UI and user interaction is never simple. Nano devices has only two
 user physical inputs, through the two buttons, which already allows some
 elaborate combinations that could be challenging to test automatically.</p>
-<p>With the Stax device and its touchable screen, the number of possibilities
+<p>With the touchable screens of Stax or Flex devices, the number of possibilities
 drastically increases.</p>
 <p><code class="docutils literal notranslate"><span class="pre">Ragger</span></code> embeds tools allowing to ease the development and the maintenance of
 UI clients. this tools mainly consist of 3 components:</p>

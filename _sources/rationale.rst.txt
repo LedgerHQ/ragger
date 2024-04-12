@@ -96,24 +96,24 @@ it helps a lot to write code which on the first hand manipulate high-level
 concept as validating a transaction, and on the other hand deal with low-level
 details such as crafting an :term:`APDU` and click on a button at the right time.
 
-Stax screen management
-----------------------
+Touch screen management
+-----------------------
 
 Dealing with UI and user interaction is never simple. Nano devices has only two
 user physical inputs, through the two buttons, which already allows some
 elaborate combinations that could be challenging to test automatically.
 
-With the Stax device and its touchable screen, the number of possibilities
+With the touchable screens of Stax or Flex devices, the number of possibilities
 drastically increases.
 
 ``Ragger`` embeds tools allowing to ease the development and the maintenance of
 UI clients. this tools mainly consist of 3 components:
 
-- the :py:class:`layout classes <ragger.firmware.stax.layouts>`, representing
+- the :py:class:`layout classes <ragger.firmware.touch.layouts>`, representing
   the layouts proposed in the NBGL section of the C SDK,
-- the :py:class:`use cases classes <ragger.firmware.stax.use_cases>`,
+- the :py:class:`use cases classes <ragger.firmware.touch.use_cases>`,
   representing the use cases proposed in the NBGL section of the C SDK,
-- the :py:mod:`screen module <ragger.firmware.stax.screen>`, allowing to nest
+- the :py:mod:`screen module <ragger.firmware.touch.screen>`, allowing to nest
   the previous components in a single, centralized object.
 
 .. note::
@@ -127,7 +127,7 @@ These components bring multiple benefits:
 
 - these abstractions prevent to directly use ``(X, Y)`` coordinates to interact
   with the screen and propose higher-level methods (for instance, when using the
-  :py:class:`UseCaseHome <ragger.firmware.stax.use_cases.UseCaseHome>` use case,
+  :py:class:`UseCaseHome <ragger.firmware.touch.use_cases.UseCaseHome>` use case,
   going to the settings is triggered with the method ``UseCaseHome.settings()``
   instead of touching the screen at ``(342, 55)``). The client's code is
   meaningful.
@@ -137,14 +137,14 @@ These components bring multiple benefits:
 - the :term:`layouts <Layout>` and :term:`use cases <Use Case>` mimic the
   :term:`NBGL` capabilities, so that the ``Ragger`` client screen architecture
   is close to the application one.
-- the :py:class:`FullScreen <ragger.firmware.stax.screen.FullScreen>` class
-  embeds every existing :py:class:`layout <ragger.firmware.stax.layouts>` and
-  :py:class:`use case <ragger.firmware.stax.use_cases>` in a single class,
+- the :py:class:`FullScreen <ragger.firmware.touch.screen.FullScreen>` class
+  embeds every existing :py:class:`layout <ragger.firmware.touch.layouts>` and
+  :py:class:`use case <ragger.firmware.touch.use_cases>` in a single class,
   providing a fast way of testing an interface without any other configuration.
-- the :py:class:`MetaScreen <ragger.firmware.stax.screen.MetaScreen>` metaclass
+- the :py:class:`MetaScreen <ragger.firmware.touch.screen.MetaScreen>` metaclass
   allows to build custom screen classes nesting the
-  :py:class:`layouts <ragger.firmware.stax.layouts>` and the
-  :py:class:`use cases <ragger.firmware.stax.use_cases>` of your choosing,
+  :py:class:`layouts <ragger.firmware.touch.layouts>` and the
+  :py:class:`use cases <ragger.firmware.touch.use_cases>` of your choosing,
   creating a convenient and meaningful screen object where all UI interactions
   are centralized.
 

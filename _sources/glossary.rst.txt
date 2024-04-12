@@ -27,8 +27,6 @@ Glossary
      integrated into the C SDK managing the UI of the NanoS, NanoX and NanoS+
      devices. It is embedded into the :term:`SDK`
 
-     Its equivalent for :term:`Stax` device is :term:`NBGL`.
-
    BOLOS
      **BOLOS** is `the operating system running on all Ledger hardware wallets
      <https://www.ledger.com/introducing-bolos-blockchain-open-ledger-operating-system>`_.
@@ -85,6 +83,9 @@ Glossary
      :term:`BAGL` for more recent devices such as :term:`Stax`. It is embedded
      into the :term:`SDK`.
 
+     It has also been back-ported to older devices such as NanoS+ and NanoX (but
+     not NanoS) to ease interface flow development.
+
    Page
      In the :term:`Stax` SDK, a **Page** refers to a specific displayed Stax
      screen.A welcome page, a setting page are example of Pages. This name is
@@ -131,8 +132,8 @@ Glossary
      allowing to easily control and communicate with said emulator.
 
    Stax
-     **Stax** is the latest Ledger device which, in a programmatic point of
-     view, mostly differs from previous devices by its richer UI and a touch
+     **Stax** is the most premium Ledger device which, in a programmatic point
+     of view, mostly differs from previous devices by its richer UI and a touch
      screen, justifying the usage of the new graphic library, :term:`NBGL`.
 
    Use Case

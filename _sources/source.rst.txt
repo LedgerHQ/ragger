@@ -72,27 +72,29 @@ should expect. This is declared with this class:
 
    .. autoattribute:: STAX
 
+   .. autoattribute:: FLEX
 
-``ragger.firmware.stax``
+
+``ragger.firmware.touch``
 ++++++++++++++++++++++++
 
-``ragger.firmware.stax.screen``
+``ragger.firmware.touch.screen``
 '''''''''''''''''''''''''''''''
 
-.. automodule:: ragger.firmware.stax.screen
+.. automodule:: ragger.firmware.touch.screen
    :members:
 
-``ragger.firmware.stax.layouts``
+``ragger.firmware.touch.layouts``
 '''''''''''''''''''''''''''''''''
 
-.. automodule:: ragger.firmware.stax.layouts
+.. automodule:: ragger.firmware.touch.layouts
    :members:
    :undoc-members:
 
-``ragger.firmware.stax.use_cases``
+``ragger.firmware.touch.use_cases``
 ''''''''''''''''''''''''''''''''''
 
-.. automodule:: ragger.firmware.stax.use_cases
+.. automodule:: ragger.firmware.touch.use_cases
    :members:
    :undoc-members:
 
