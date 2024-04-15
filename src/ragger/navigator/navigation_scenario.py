@@ -85,7 +85,7 @@ class NavigateWithScenario():
                        custom_screen_text: Optional[str] = None,
                        do_comparison: bool = True):
         scenario = NavigationScenarioData(self.device, UseCase.TX_REVIEW, approve=True)
-        self._navigate_with_scenario(scenario, path, custom_screen_text, test_name, do_comparison)
+        self._navigate_with_scenario(scenario, path, test_name, custom_screen_text, do_comparison)
 
     def review_reject(self,
                       path: Optional[Path] = None,
@@ -93,7 +93,7 @@ class NavigateWithScenario():
                       custom_screen_text: Optional[str] = None,
                       do_comparison: bool = True):
         scenario = NavigationScenarioData(self.device, UseCase.TX_REVIEW, approve=False)
-        self._navigate_with_scenario(scenario, path, custom_screen_text, test_name, do_comparison)
+        self._navigate_with_scenario(scenario, path, test_name, custom_screen_text, do_comparison)
 
     def address_review_approve(self,
                                path: Optional[Path] = None,
@@ -101,7 +101,7 @@ class NavigateWithScenario():
                                custom_screen_text: Optional[str] = None,
                                do_comparison: bool = True):
         scenario = NavigationScenarioData(self.device, UseCase.ADDRESS_CONFIRMATION, approve=True)
-        self._navigate_with_scenario(scenario, path, custom_screen_text, test_name, do_comparison)
+        self._navigate_with_scenario(scenario, path, test_name, custom_screen_text, do_comparison)
 
     def address_review_reject(self,
                               path: Optional[Path] = None,
@@ -109,4 +109,4 @@ class NavigateWithScenario():
                               custom_screen_text: Optional[str] = None,
                               do_comparison: bool = True):
         scenario = NavigationScenarioData(self.device, UseCase.ADDRESS_CONFIRMATION, approve=False)
-        self._navigate_with_scenario(scenario, path, custom_screen_text, test_name, do_comparison)
+        self._navigate_with_scenario(scenario, path, test_name, custom_screen_text, do_comparison)
