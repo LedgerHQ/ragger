@@ -211,7 +211,7 @@ class SpeculosBackend(BackendInterface):
         self._client.press_and_release("both")
 
     def finger_touch(self, x: int = 0, y: int = 0, delay: float = 0.1) -> None:
-        self._client.finger_touch(x, y, delay)
+        self._client.finger_touch(x, y, delay=delay)
 
     def _save_screen_snapshot(self, snap: BytesIO, path: Path) -> None:
         self.logger.info(f"Saving screenshot to image '{path}'")
