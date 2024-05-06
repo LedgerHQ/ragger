@@ -63,7 +63,7 @@ doc = [
     "docutils==0.16",
 ]
 speculos = [
-    "speculos>=0.8.5",
+    "speculos>=0.9.0",
     "mnemonic",
 ]
 ledgercomm = [

@@ -18,6 +18,8 @@ from typing import Dict, Tuple
 from ragger.backend import BackendInterface
 from ragger.firmware import Firmware
 
+from .element import Center
+
 from .layouts import CancelFooter, CenteredFooter, ChoiceList, ExitFooter, ExitHeader, \
     FullKeyboardLetters, FullKeyboardSpecialCharacters1, FullKeyboardSpecialCharacters2, \
     InfoFooter, InfoHeader, LeftHeader, LetterOnlyKeyboard, NavigationHeader, RightHeader, \
@@ -26,6 +28,7 @@ from .layouts import CancelFooter, CenteredFooter, ChoiceList, ExitFooter, ExitH
 from .use_cases import UseCaseHome, UseCaseSettings, UseCaseSubSettings, UseCaseChoice, \
     UseCaseStatus, UseCaseReview, UseCaseViewDetails, UseCaseAddressConfirmation
 
+ELEMENT_PREFIX = "element_"
 LAYOUT_PREFIX = "layout_"
 USE_CASE_PREFIX = "use_case_"
 
@@ -78,6 +81,10 @@ class MetaScreen(type):
     """
 
     def __new__(cls, name: str, parents: Tuple, namespace: Dict):
+        elements = {
+            key.split(ELEMENT_PREFIX)[1]: namespace.pop(key)
+            for key in list(namespace.keys()) if key.startswith(ELEMENT_PREFIX)
+        }
         layouts = {
             key.split(LAYOUT_PREFIX)[1]: namespace.pop(key)
             for key in list(namespace.keys()) if key.startswith(LAYOUT_PREFIX)
@@ -89,6 +96,8 @@ class MetaScreen(type):
         original_init = namespace.pop("__init__", lambda *args, **kwargs: None)
 
         def init(self, client: BackendInterface, firmware: Firmware, *args, **kwargs):
+            for attribute, cls in elements.items():
+                setattr(self, attribute, cls(client, firmware))
             for attribute, cls in layouts.items():
                 setattr(self, attribute, cls(client, firmware))
             for attribute, cls in use_cases.items():
@@ -111,6 +120,7 @@ class FullScreen(metaclass=MetaScreen):
         pass
 
     # Type declaration to please mypy checks
+    center: Center
     right_header: RightHeader
     exit_header: ExitHeader
     info_header: InfoHeader
@@ -137,6 +147,7 @@ class FullScreen(metaclass=MetaScreen):
     view_details: UseCaseViewDetails
     address_confirmation: UseCaseAddressConfirmation
 
+    element_center = Center
     # possible headers
     layout_right_header = RightHeader
     layout_exit_header = ExitHeader

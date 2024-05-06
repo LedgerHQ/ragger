@@ -55,6 +55,10 @@ STAX_BUTTON_ABOVE_LOWER_MIDDLE = Position(200, 515)
 FLEX_BUTTON_ABOVE_LOWER_MIDDLE = Position(240, 435)
 
 POSITIONS = {
+    "Center": {
+        Firmware.STAX: STAX_CENTER,
+        Firmware.FLEX: FLEX_CENTER,
+    },
     "ChoiceList": {
         Firmware.STAX: {
             # Up to 6 (5?) choice in a list

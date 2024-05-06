@@ -66,6 +66,13 @@ class StubBackend(BackendInterface):
     def finger_touch(self, x: int = 0, y: int = 0, delay: float = 0.5) -> None:
         pass
 
+    def finger_swipe(self,
+                     x: int = 0,
+                     y: int = 0,
+                     direction: str = "left",
+                     delay: float = 0.5) -> None:
+        pass
+
     def compare_screen_with_snapshot(self,
                                      golden_snap_path: Path,
                                      crop: Optional[Crop] = None,

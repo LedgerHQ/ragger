@@ -36,6 +36,9 @@ class TouchNavigator(Navigator):
             NavInsID.WAIT_FOR_TEXT_ON_SCREEN: backend.wait_for_text_on_screen,
             NavInsID.WAIT_FOR_TEXT_NOT_ON_SCREEN: backend.wait_for_text_not_on_screen,
             NavInsID.TOUCH: backend.finger_touch,
+            NavInsID.SWIPE: backend.finger_swipe,
+            NavInsID.SWIPE_CENTER_TO_LEFT: screen.center.swipe_left,
+            NavInsID.SWIPE_CENTER_TO_RIGHT: screen.center.swipe_right,
             # possible headers
             NavInsID.RIGHT_HEADER_TAP: screen.right_header.tap,
             NavInsID.EXIT_HEADER_TAP: screen.exit_header.tap,

@@ -30,6 +30,10 @@ class NavInsID(BaseNavInsID):
 
     # Navigation instructions for Stax devices
     TOUCH = auto()
+    SWIPE = auto()
+    SWIPE_CENTER_TO_LEFT = auto()
+    SWIPE_CENTER_TO_RIGHT = auto()
+
     # possible headers
     RIGHT_HEADER_TAP = auto()
     EXIT_HEADER_TAP = auto()
