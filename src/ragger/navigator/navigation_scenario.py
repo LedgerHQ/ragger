@@ -23,8 +23,12 @@ class NavigationScenarioData:
             self.pattern = "^Approve$" if approve else "^Reject$"
 
         elif device in [Firmware.STAX, Firmware.FLEX]:
-            if use_case == UseCase.ADDRESS_CONFIRMATION:
+            if device == Firmware.STAX:
                 self.navigation = NavInsID.USE_CASE_REVIEW_TAP
+            else:
+                self.navigation = NavInsID.SWIPE_CENTER_TO_LEFT
+
+            if use_case == UseCase.ADDRESS_CONFIRMATION:
                 if approve:
                     self.validation = [NavInsID.USE_CASE_ADDRESS_CONFIRMATION_CONFIRM]
                 else:
@@ -32,10 +36,6 @@ class NavigationScenarioData:
                 self.pattern = "^Confirm$"
 
             elif use_case == UseCase.TX_REVIEW:
-                if device == Firmware.STAX:
-                    self.navigation = NavInsID.USE_CASE_REVIEW_TAP
-                else:
-                    self.navigation = NavInsID.SWIPE_CENTER_TO_LEFT
                 if approve:
                     self.validation = [NavInsID.USE_CASE_REVIEW_CONFIRM]
                 else:
