@@ -213,6 +213,13 @@ class SpeculosBackend(BackendInterface):
     def finger_touch(self, x: int = 0, y: int = 0, delay: float = 0.1) -> None:
         self._client.finger_touch(x, y, delay=delay)
 
+    def finger_swipe(self,
+                     x: int = 0,
+                     y: int = 0,
+                     direction: str = "left",
+                     delay: float = 0.1) -> None:
+        self._client.finger_swipe(x, y, direction=direction, delay=delay)
+
     def _save_screen_snapshot(self, snap: BytesIO, path: Path) -> None:
         self.logger.info(f"Saving screenshot to image '{path}'")
         img = Image.open(snap)

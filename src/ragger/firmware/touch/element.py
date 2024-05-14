@@ -35,3 +35,12 @@ class Element:
     @property
     def positions(self):
         return POSITIONS[str(self.__class__.__name__)][self.firmware]
+
+
+class Center(Element):
+
+    def swipe_left(self):
+        self.client.finger_swipe(*self.positions, direction="left")
+
+    def swipe_right(self):
+        self.client.finger_swipe(*self.positions, direction="right")

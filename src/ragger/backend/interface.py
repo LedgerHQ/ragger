@@ -344,6 +344,37 @@ class BackendInterface(ABC):
         raise NotImplementedError
 
     @abstractmethod
+    def finger_swipe(self,
+                     x: int = 0,
+                     y: int = 0,
+                     direction: str = "left",
+                     delay: float = 0.5) -> None:
+        """
+        Performs a finger swipe on the device screen.
+
+        This method may be left void on backends connecting to physical devices,
+        where a physical interaction must be performed instead.
+        This will prevent the instrumentation to fail (the void method won't
+        raise `NotImplementedError`), but the instrumentation flow will probably
+        get stuck (on further call to `receive` for instance) until the expected
+        action is performed on the device.
+
+        :param x: The x coordinate of the initial finger touch.
+        :type x: int
+        :param y: The y coordinate of the initial finger touch.
+        :type y: int
+        :param direction: The direction where to orientate the swipe. Must be in: ['up', 'down',
+                          'left', 'right]
+        :type direction: str
+        :param delay: Delay between finger touch press and release actions.
+        :type delay: float
+
+        :return: None
+        :rtype: NoneType
+        """
+        raise NotImplementedError
+
+    @abstractmethod
     def compare_screen_with_snapshot(self,
                                      golden_snap_path: Path,
                                      crop: Optional[Crop] = None,

@@ -73,6 +73,15 @@ class PhysicalBackend(BackendInterface):
         self.init_gui()
         self._ui.ask_for_touch_action(x, y)
 
+    def finger_swipe(self,
+                     x: int = 0,
+                     y: int = 0,
+                     direction: str = "left",
+                     delay: float = 0.5) -> None:
+        if self._ui is None:
+            return
+        raise NotImplementedError
+
     def compare_screen_with_snapshot(self,
                                      golden_snap_path: Path,
                                      crop: Optional[Crop] = None,

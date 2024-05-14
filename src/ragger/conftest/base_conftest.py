@@ -1,10 +1,10 @@
 import pytest
-from typing import Optional
+from typing import Generator, Optional
 from pathlib import Path
 from ledgered.manifest import Manifest
 from ragger.firmware import Firmware
-from ragger.backend import SpeculosBackend, LedgerCommBackend, LedgerWalletBackend
-from ragger.navigator import NanoNavigator, TouchNavigator, NavigateWithScenario
+from ragger.backend import BackendInterface, SpeculosBackend, LedgerCommBackend, LedgerWalletBackend
+from ragger.navigator import Navigator, NanoNavigator, TouchNavigator, NavigateWithScenario
 from ragger.utils import find_project_root_dir, find_library_application, find_application
 from ragger.utils.misc import get_current_app_name_and_version, exit_current_app, open_app_from_dashboard
 from ragger.logger import get_default_logger
@@ -69,18 +69,18 @@ def cli_user_seed(pytestconfig):
 
 
 @pytest.fixture(scope="session")
-def root_pytest_dir(request):
+def root_pytest_dir(request) -> Path:
     return Path(request.config.rootpath).resolve()
 
 
 @pytest.fixture(autouse="session")
-def default_screenshot_path(root_pytest_dir):
+def default_screenshot_path(root_pytest_dir: Path) -> Path:
     # Alias reflecting the use case to avoid exposing internal helper fixtures
     return root_pytest_dir
 
 
 @pytest.fixture
-def test_name(request):
+def test_name(request) -> str:
     # Get the name of current pytest test
     test_name = request.node.name
 
@@ -175,7 +175,7 @@ def prepare_speculos_args(root_pytest_dir: Path, firmware: Firmware, display: bo
 # instantiated, and the tests will either run on Speculos or on a physical
 # device depending on the backend
 def create_backend(root_pytest_dir: Path, backend_name: str, firmware: Firmware, display: bool,
-                   log_apdu_file: Optional[Path], cli_user_seed: str):
+                   log_apdu_file: Optional[Path], cli_user_seed: str) -> BackendInterface:
     if backend_name.lower() == "ledgercomm":
         return LedgerCommBackend(firmware=firmware,
                                  interface="hid",
@@ -196,7 +196,9 @@ def create_backend(root_pytest_dir: Path, backend_name: str, firmware: Firmware,
 
 # Backend scope can be configured by the user
 @pytest.fixture(scope=conf.OPTIONAL.BACKEND_SCOPE)
-def backend(root_pytest_dir, backend_name, firmware, display, log_apdu_file, cli_user_seed):
+def backend(root_pytest_dir: Path, backend_name: str, firmware: Firmware, display: bool,
+            log_apdu_file: Optional[Path],
+            cli_user_seed: str) -> Generator[BackendInterface, None, None]:
     with create_backend(root_pytest_dir, backend_name, firmware, display, log_apdu_file,
                         cli_user_seed) as b:
         if backend_name.lower() != "speculos" and conf.OPTIONAL.APP_NAME:
@@ -214,7 +216,7 @@ def backend(root_pytest_dir, backend_name, firmware, display, log_apdu_file, cli
 
 
 @pytest.fixture(scope=conf.OPTIONAL.BACKEND_SCOPE)
-def navigator(backend, firmware, golden_run):
+def navigator(backend: BackendInterface, firmware: Firmware, golden_run: bool):
     if firmware.is_nano:
         return NanoNavigator(backend, firmware, golden_run)
     else:
@@ -224,8 +226,9 @@ def navigator(backend, firmware, golden_run):
 
 
 @pytest.fixture(scope="function")
-def scenario_navigator(navigator, firmware, test_name, default_screenshot_path):
-    return NavigateWithScenario(navigator, firmware.device, test_name, default_screenshot_path)
+def scenario_navigator(navigator: Navigator, firmware: Firmware, test_name: str,
+                       default_screenshot_path: Path):
+    return NavigateWithScenario(navigator, firmware, test_name, default_screenshot_path)
 
 
 @pytest.fixture(autouse=True)
