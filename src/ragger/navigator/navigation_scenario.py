@@ -1,8 +1,9 @@
 from pathlib import Path
-from typing import Optional, List
+from typing import Optional, Sequence
 from enum import Enum, auto
 
-from .navigator import NavInsID
+from ragger.firmware import Firmware
+from .navigator import InstructionType, Navigator, NavInsID
 
 
 class UseCase(Enum):
@@ -12,16 +13,16 @@ class UseCase(Enum):
 
 class NavigationScenarioData:
     navigation: NavInsID
-    validation: List[NavInsID]
+    validation: Sequence[InstructionType]
     pattern: str
 
-    def __init__(self, device: str, use_case: UseCase, approve: bool):
-        if device.startswith("nano"):
+    def __init__(self, device: Firmware, use_case: UseCase, approve: bool):
+        if device.is_nano:
             self.navigation = NavInsID.RIGHT_CLICK
             self.validation = [NavInsID.BOTH_CLICK]
             self.pattern = "^Approve$" if approve else "^Reject$"
 
-        elif device.startswith("stax") or device.startswith("flex"):
+        elif device in [Firmware.STAX, Firmware.FLEX]:
             if use_case == UseCase.ADDRESS_CONFIRMATION:
                 self.navigation = NavInsID.USE_CASE_REVIEW_TAP
                 if approve:
@@ -31,7 +32,7 @@ class NavigationScenarioData:
                 self.pattern = "^Confirm$"
 
             elif use_case == UseCase.TX_REVIEW:
-                if device.startswith("stax"):
+                if device == Firmware.STAX:
                     self.navigation = NavInsID.USE_CASE_REVIEW_TAP
                 else:
                     self.navigation = NavInsID.SWIPE_CENTER_TO_LEFT
@@ -53,9 +54,10 @@ class NavigationScenarioData:
             raise NotImplementedError("Unknown device")
 
 
-class NavigateWithScenario():
+class NavigateWithScenario:
 
-    def __init__(self, navigator, device, test_name, screenshot_path):
+    def __init__(self, navigator: Navigator, device: Firmware, test_name: str,
+                 screenshot_path: Path):
         self.navigator = navigator
         self.device = device
         self.test_name = test_name

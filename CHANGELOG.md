@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - firmware/navigation: Adding swipe capabilities for Flex
 
+### Changed
+- navigation: scenarios now use `Firmware` enum rather than strings
+
 ## [1.18.2] - 2024-05-06
 
 ### Fixed
