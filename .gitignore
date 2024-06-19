@@ -7,8 +7,7 @@ build/
 dist/
 __version__.py
 
-tests/elfs/
-snapshots-tmp/
+tests/snapshots-tmp/
 ledger_app.toml
 
 # doc
