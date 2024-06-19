@@ -29,6 +29,7 @@ class Position:
 
 # Stax resolution is 400x670
 STAX_CENTER = Position(200, 335)
+STAX_CENTER_LEFT = Position(200, 40)
 # Flex resolution is 480x600
 FLEX_CENTER = Position(240, 300)
 
@@ -468,7 +469,7 @@ POSITIONS = {
     },
     "UseCaseReview": {
         Firmware.STAX: {
-            "tap": STAX_CENTER,
+            "tap": STAX_CENTER_LEFT,
             "previous": STAX_BUTTON_UPPER_LEFT,
             "confirm": STAX_BUTTON_ABOVE_LOWER_MIDDLE,
             "reject": STAX_BUTTON_LOWER_MIDDLE,
