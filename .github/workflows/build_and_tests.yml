@@ -48,7 +48,7 @@ jobs:
     - name: Build & install
       run: |
         pip install -U .[tests,all_backends]
-        pip install -U click>=8
+        pip install -U "click>=8"
 
     - name: Download app binaries
       uses: actions/download-artifact@v4
