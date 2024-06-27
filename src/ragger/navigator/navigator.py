@@ -56,6 +56,9 @@ class Navigator(ABC):
         self._callbacks = callbacks
         self._golden_run = golden_run
 
+    def get_sdk_graphic(self) -> str:
+        return self._backend.graphics
+
     def _get_snaps_dir_path(self, path: Path, test_case_name: Union[Path, str],
                             is_golden: bool) -> Path:
         if is_golden:

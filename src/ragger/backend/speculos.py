@@ -25,6 +25,7 @@ from typing import Optional, Generator, List, Type, TypeVar
 from time import time, sleep
 from re import match
 
+from ledgered import binary
 from speculos.client import SpeculosClient, screenshot_equal, ApduResponse, ApduException
 from speculos.mcu.seproxyhal import TICKER_DELAY
 
@@ -103,7 +104,13 @@ class SpeculosBackend(BackendInterface):
         speculos_args.extend(args)
         kwargs[self._ARGS_KEY] = speculos_args
 
+        self.graphics: str = "Unknown"
+        if Path(application).is_file():
+            bin_data = binary.LedgerBinaryApp(application)
+            self.graphics = bin_data.sections.sdk_graphics
+
         self.logger.info("Speculos binary: '%s'", application)
+        self.logger.info("  SDK Library: '%s'", self.graphics)
         self.logger.info("Speculos options: '%s'", " ".join(kwargs[self._ARGS_KEY]))
         self._client: SpeculosClient = SpeculosClient(app=str(application),
                                                       api_url=self.url,
