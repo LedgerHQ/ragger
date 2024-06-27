@@ -46,6 +46,8 @@ class BackendInterface(ABC):
         self._firmware = firmware
         self._last_async_response: Optional[RAPDU] = None
         self.raise_policy = RaisePolicy.RAISE_ALL_BUT_0x9000
+        self.graphics: str = "Unknown"
+        self.api_level: int = 0
 
         if log_apdu_file:
             set_apdu_logger_file(log_apdu_file=log_apdu_file)
