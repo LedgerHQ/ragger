@@ -129,7 +129,7 @@ def pytest_generate_tests(metafunc):
 
 def prepare_speculos_args(root_pytest_dir: Path, firmware: Firmware, display: bool,
                           cli_user_seed: str, additional_args: List[str]):
-    speculos_args = additional_args
+    speculos_args = additional_args.copy()
 
     if display:
         speculos_args += ["--display", "qt"]
