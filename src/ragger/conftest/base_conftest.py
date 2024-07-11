@@ -116,8 +116,8 @@ def pytest_generate_tests(metafunc):
         backend_name = metafunc.config.getoption("backend")
 
         # Get supported devices list from manifest
-        manifest = Manifest.from_path(
-            Path(metafunc.config.rootpath).parent.resolve() / "ledger_app.toml")
+        project_root_dir = find_project_root_dir(Path(metafunc.config.rootpath).resolve())
+        manifest = Manifest.from_path(project_root_dir / "ledger_app.toml")
         dev_list = ["nanosp" if d == "nanos+" else d for d in manifest.app.devices.json]
 
         # Enable firmware for requested devices
