@@ -29,11 +29,10 @@ class Position:
 
 # Stax resolution is 400x670
 STAX_CENTER = Position(200, 335)
-STAX_CENTER_LEFT = Position(200, 40)
 # Flex resolution is 480x600
 FLEX_CENTER = Position(240, 300)
 
-# Used for Flex keyboard 'validation' button, which is not vertically centered, contrary to Stax
+STAX_BUTTON_UPPER_CENTER_MIDDLE = Position(200, 280)
 FLEX_BUTTON_UPPER_CENTER_MIDDLE = Position(240, 250)
 
 STAX_BUTTON_UPPER_LEFT = Position(36, 36)
@@ -49,8 +48,9 @@ STAX_BUTTON_LOWER_MIDDLE = Position(200, 606)
 FLEX_BUTTON_LOWER_MIDDLE = Position(240, 550)
 
 STAX_BUTTON_LOWER_RIGHT = Position(342, 606)
-FLEX_BUTTON_LOWER_MIDDLE_RIGHT = Position(320, 550)
 FLEX_BUTTON_LOWER_RIGHT = Position(430, 550)
+STAX_BUTTON_LOWER_MIDDLE_RIGHT = Position(266, 615)
+FLEX_BUTTON_LOWER_MIDDLE_RIGHT = Position(320, 550)
 
 STAX_BUTTON_ABOVE_LOWER_MIDDLE = Position(200, 515)
 FLEX_BUTTON_ABOVE_LOWER_MIDDLE = Position(240, 435)
@@ -374,7 +374,7 @@ POSITIONS = {
         Firmware.FLEX: FLEX_CENTER,
     },
     "KeyboardConfirmationButton": {
-        Firmware.STAX: STAX_CENTER,
+        Firmware.STAX: STAX_BUTTON_UPPER_CENTER_MIDDLE,
         Firmware.FLEX: FLEX_BUTTON_UPPER_CENTER_MIDDLE,
     },
     "RightHeader": {
@@ -394,7 +394,7 @@ POSITIONS = {
         Firmware.FLEX: FLEX_BUTTON_LOWER_LEFT
     },
     "CancelFooter": {
-        Firmware.STAX: STAX_BUTTON_LOWER_MIDDLE,
+        Firmware.STAX: STAX_BUTTON_LOWER_LEFT,
         Firmware.FLEX: FLEX_BUTTON_LOWER_LEFT
     },
     "UseCaseHome": {
@@ -427,7 +427,7 @@ POSITIONS = {
         Firmware.STAX: {
             "single_page_exit": STAX_BUTTON_UPPER_LEFT,
             "multi_page_exit": STAX_BUTTON_UPPER_LEFT,
-            "previous": STAX_BUTTON_LOWER_LEFT,
+            "previous": STAX_BUTTON_LOWER_MIDDLE_RIGHT,
             "next": STAX_BUTTON_LOWER_RIGHT,
         },
         Firmware.FLEX: {
@@ -452,7 +452,7 @@ POSITIONS = {
     "UseCaseChoice": {
         Firmware.STAX: {
             "confirm": STAX_BUTTON_ABOVE_LOWER_MIDDLE,
-            "reject": STAX_BUTTON_LOWER_MIDDLE,
+            "reject": STAX_BUTTON_LOWER_LEFT,
         },
         Firmware.FLEX: {
             "confirm": FLEX_BUTTON_ABOVE_LOWER_MIDDLE,
@@ -469,10 +469,10 @@ POSITIONS = {
     },
     "UseCaseReview": {
         Firmware.STAX: {
-            "tap": STAX_CENTER_LEFT,
-            "previous": STAX_BUTTON_UPPER_LEFT,
+            "tap": STAX_BUTTON_LOWER_RIGHT,
+            "previous": STAX_BUTTON_LOWER_MIDDLE,
             "confirm": STAX_BUTTON_ABOVE_LOWER_MIDDLE,
-            "reject": STAX_BUTTON_LOWER_MIDDLE,
+            "reject": STAX_BUTTON_LOWER_LEFT,
         },
         Firmware.FLEX: {
             "tap": FLEX_BUTTON_LOWER_RIGHT,
@@ -498,7 +498,7 @@ POSITIONS = {
             "tap": STAX_BUTTON_ABOVE_LOWER_MIDDLE,
             "exit_qr": STAX_BUTTON_LOWER_MIDDLE,
             "confirm": STAX_BUTTON_ABOVE_LOWER_MIDDLE,
-            "cancel": STAX_BUTTON_LOWER_MIDDLE,
+            "cancel": STAX_BUTTON_LOWER_LEFT,
         },
         Firmware.FLEX: {
             "tap": FLEX_BUTTON_ABOVE_LOWER_MIDDLE,
