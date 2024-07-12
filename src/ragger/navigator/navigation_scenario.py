@@ -16,14 +16,16 @@ class NavigationScenarioData:
     validation: Sequence[InstructionType]
     pattern: str
 
-    def __init__(self, device: Firmware, use_case: UseCase, approve: bool):
-        if device.is_nano:
+    def __init__(self, firmware: Firmware, sdk_graphic: str, use_case: UseCase, approve: bool):
+        if firmware.is_nano:
             self.navigation = NavInsID.RIGHT_CLICK
             self.validation = [NavInsID.BOTH_CLICK]
+            if sdk_graphic == "nbgl":
+                self.validation.append(NavInsID.BOTH_CLICK)
             self.pattern = "^Approve$" if approve else "^Reject$"
 
-        elif device in [Firmware.STAX, Firmware.FLEX]:
-            if device == Firmware.STAX:
+        else:
+            if firmware == Firmware.STAX:
                 self.navigation = NavInsID.USE_CASE_REVIEW_TAP
             else:
                 self.navigation = NavInsID.SWIPE_CENTER_TO_LEFT
@@ -50,18 +52,16 @@ class NavigationScenarioData:
             # Dismiss the result modal in all cases
             self.validation += [NavInsID.USE_CASE_STATUS_DISMISS]
 
-        else:
-            raise NotImplementedError("Unknown device")
-
 
 class NavigateWithScenario:
 
-    def __init__(self, navigator: Navigator, device: Firmware, test_name: str,
+    def __init__(self, navigator: Navigator, firmware: Firmware, test_name: str,
                  screenshot_path: Path):
         self.navigator = navigator
-        self.device = device
+        self.firmware = firmware
         self.test_name = test_name
         self.screenshot_path = screenshot_path
+        self.sdk_graphic = navigator.get_sdk_graphic()
 
     def _navigate_with_scenario(self,
                                 scenario: NavigationScenarioData,
@@ -89,7 +89,7 @@ class NavigateWithScenario:
                        test_name: Optional[str] = None,
                        custom_screen_text: Optional[str] = None,
                        do_comparison: bool = True):
-        scenario = NavigationScenarioData(self.device, UseCase.TX_REVIEW, approve=True)
+        scenario = NavigationScenarioData(self.firmware, self.sdk_graphic, UseCase.TX_REVIEW, True)
         self._navigate_with_scenario(scenario, path, test_name, custom_screen_text, do_comparison)
 
     def review_reject(self,
@@ -97,7 +97,7 @@ class NavigateWithScenario:
                       test_name: Optional[str] = None,
                       custom_screen_text: Optional[str] = None,
                       do_comparison: bool = True):
-        scenario = NavigationScenarioData(self.device, UseCase.TX_REVIEW, approve=False)
+        scenario = NavigationScenarioData(self.firmware, self.sdk_graphic, UseCase.TX_REVIEW, False)
         self._navigate_with_scenario(scenario, path, test_name, custom_screen_text, do_comparison)
 
     def address_review_approve(self,
@@ -105,7 +105,8 @@ class NavigateWithScenario:
                                test_name: Optional[str] = None,
                                custom_screen_text: Optional[str] = None,
                                do_comparison: bool = True):
-        scenario = NavigationScenarioData(self.device, UseCase.ADDRESS_CONFIRMATION, approve=True)
+        scenario = NavigationScenarioData(self.firmware, self.sdk_graphic,
+                                          UseCase.ADDRESS_CONFIRMATION, True)
         self._navigate_with_scenario(scenario, path, test_name, custom_screen_text, do_comparison)
 
     def address_review_reject(self,
@@ -113,5 +114,6 @@ class NavigateWithScenario:
                               test_name: Optional[str] = None,
                               custom_screen_text: Optional[str] = None,
                               do_comparison: bool = True):
-        scenario = NavigationScenarioData(self.device, UseCase.ADDRESS_CONFIRMATION, approve=False)
+        scenario = NavigationScenarioData(self.firmware, self.sdk_graphic,
+                                          UseCase.ADDRESS_CONFIRMATION, False)
         self._navigate_with_scenario(scenario, path, test_name, custom_screen_text, do_comparison)
