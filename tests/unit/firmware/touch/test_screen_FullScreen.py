@@ -24,10 +24,10 @@ class TestFullScreen(TestCase):
             (self.screen.navigation_header, POSITIONS["LeftHeader"][self.firmware]),
             (self.screen.tappable_center, POSITIONS["TappableCenter"][self.firmware]),
             (self.screen.centered_footer, POSITIONS["CenteredFooter"][self.firmware]),
-            (self.screen.cancel_footer, POSITIONS["CenteredFooter"][self.firmware]),
-            (self.screen.exit_footer, POSITIONS["CenteredFooter"][self.firmware]),
-            (self.screen.info_footer, POSITIONS["CenteredFooter"][self.firmware]),
-            (self.screen.settings_footer, POSITIONS["CenteredFooter"][self.firmware]),
+            (self.screen.cancel_footer, POSITIONS["CancelFooter"][self.firmware]),
+            (self.screen.exit_footer, POSITIONS["CancelFooter"][self.firmware]),
+            (self.screen.info_footer, POSITIONS["CancelFooter"][self.firmware]),
+            (self.screen.settings_footer, POSITIONS["CancelFooter"][self.firmware]),
         ]
         call_number = 0
         self.assertEqual(self.backend.finger_touch.call_count, call_number)
