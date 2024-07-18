@@ -83,10 +83,16 @@ POSITIONS = {
         Firmware.STAX: {
             # 4 suggestions max, 2 rows of 2
             # indexes for left to right, from up to down
-            1: Position(100, 310),
-            2: Position(290, 310),
-            3: Position(110, 380),
-            4: Position(290, 380),
+            1: Position(100, 280),
+            2: Position(290, 280),
+            3: Position(110, 350),
+            4: Position(290, 350),
+        },
+        Firmware.FLEX: {
+            # On Flex, suggestions are on a single line, which can be swiped to access the last
+            # ones. At start, only 2 suggestions are clickable
+            1: Position(140, 300),
+            2: Position(350, 300),
         },
     },
     "LetterOnlyKeyboard": {
@@ -132,7 +138,7 @@ POSITIONS = {
             "y": Position(264, 415),
             "u": Position(312, 415),
             "i": Position(360, 415),
-            "o": Position(108, 415),
+            "o": Position(308, 415),
             "p": Position(456, 415),
             # second line
             "a": Position(48, 490),
