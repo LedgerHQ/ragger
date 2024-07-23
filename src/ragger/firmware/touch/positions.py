@@ -138,7 +138,7 @@ POSITIONS = {
             "y": Position(264, 415),
             "u": Position(312, 415),
             "i": Position(360, 415),
-            "o": Position(308, 415),
+            "o": Position(408, 415),
             "p": Position(456, 415),
             # second line
             "a": Position(48, 490),
