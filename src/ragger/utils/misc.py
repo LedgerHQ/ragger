@@ -17,6 +17,8 @@ import toml
 from typing import Optional, Tuple, List
 from pathlib import Path
 from ragger.error import ExceptionRAPDU
+import subprocess
+import json
 
 ERROR_BOLOS_DEVICE_LOCKED = 0x5515
 ERROR_DENIED_BY_USER = 0x5501
@@ -72,7 +74,11 @@ def find_application(base_dir: Path, device: str, sdk: str) -> Path:
         if device == "nanos2":
             device = "nanosplus"
         app_name = toml.load(base_dir / "Cargo.toml")["package"]["name"]
-        app = app / "target" / device / "release" / app_name
+        cmd = ["cargo", "metadata", "--no-deps"]
+        output = subprocess.check_output(cmd)
+        metadata = json.loads(output)
+        target = Path(metadata["target_directory"])
+        app = target / device / "release" / app_name
     else:
         app = app / "build" / device / "bin" / "app.elf"
     if not app.is_file():
