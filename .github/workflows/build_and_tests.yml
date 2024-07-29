@@ -29,7 +29,6 @@ jobs:
     with:
       app_repository: LedgerHQ/app-boilerplate
       app_branch_name: nanos_baseline
-      run_for_devices: '["nanos"]'
       upload_app_binaries_artifact: boilerplate_binaries_nanos
 
   build_install_test:
