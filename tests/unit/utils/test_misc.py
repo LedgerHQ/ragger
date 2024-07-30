@@ -1,4 +1,5 @@
 import os
+import subprocess
 from pathlib import Path
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
@@ -40,13 +41,14 @@ class TestMisc(TestCase):
     def test_find_application_ok_rust(self):
         device, sdk, appname = "device", "rust", "rustapp"
         with temporary_directory() as dir_path:
-            tmp_dir = (dir_path / "target" / device / "release")
+            cmd = ["cargo", "new", appname]
+            subprocess.check_output(cmd, cwd=dir_path)
+            app_path = dir_path / appname
+            tmp_dir = (app_path / "target" / device / "release")
             tmp_dir.mkdir(parents=True, exist_ok=True)
             expected = tmp_dir / appname
             expected.touch()
-            with patch("ragger.utils.misc.toml") as toml_patch:
-                toml_patch.load.return_value = {"package": {"name": appname}}
-                result = misc.find_application(dir_path, device, sdk)
+            result = misc.find_application(app_path, device, sdk)
             self.assertEqual(result, expected)
 
     def test_find_application_nok_not_dir(self):

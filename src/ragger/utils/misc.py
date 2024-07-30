@@ -17,6 +17,8 @@ import toml
 from typing import Optional, Tuple, List
 from pathlib import Path
 from ragger.error import ExceptionRAPDU
+import subprocess
+import json
 
 ERROR_BOLOS_DEVICE_LOCKED = 0x5515
 ERROR_DENIED_BY_USER = 0x5501
@@ -69,10 +71,23 @@ def find_application(base_dir: Path, device: str, sdk: str) -> Path:
         raise AssertionError(f"{base_dir} is not a directory")
     app = base_dir.resolve()
     if sdk.lower() == "rust":
+        """
+        When building a Rust app, the resulting binary is located in a target
+        directory target/<device>/release/<app_name>. app is the Path to the
+        build directory, where is stored the app's Cargo.toml file.
+        If the app repository is organized as a workspace crate (several packages,
+        each package in its own directory with its own Cargo.toml), the binaries are
+        all stored in the same target directory. 'cargo metadata' is used to get the
+        target directory full path.
+        """
         if device == "nanos2":
             device = "nanosplus"
         app_name = toml.load(base_dir / "Cargo.toml")["package"]["name"]
-        app = app / "target" / device / "release" / app_name
+        cmd = ["cargo", "metadata", "--no-deps"]
+        output = subprocess.check_output(cmd, cwd=base_dir)
+        metadata = json.loads(output)
+        target = Path(metadata["target_directory"])
+        app = target / device / "release" / app_name
     else:
         app = app / "build" / device / "bin" / "app.elf"
     if not app.is_file():
