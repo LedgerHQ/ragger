@@ -75,7 +75,7 @@ def find_application(base_dir: Path, device: str, sdk: str) -> Path:
         When building a Rust app, the resulting binary is located in a target
         directory target/<device>/release/<app_name>. app is the Path to the
         build directory, where is stored the app's Cargo.toml file.
-        If the app respository is organized as a workspace crate (several packages,
+        If the app repository is organized as a workspace crate (several packages,
         each package in its own directory with its own Cargo.toml), the binaries are
         all stored in the same target directory. 'cargo metadata' is used to get the
         target directory full path.
