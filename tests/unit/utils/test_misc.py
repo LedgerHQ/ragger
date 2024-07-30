@@ -48,7 +48,6 @@ class TestMisc(TestCase):
             tmp_dir.mkdir(parents=True, exist_ok=True)
             expected = tmp_dir / appname
             expected.touch()
-            os.chdir(app_path)
             result = misc.find_application(app_path, device, sdk)
             self.assertEqual(result, expected)
 

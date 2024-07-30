@@ -84,7 +84,7 @@ def find_application(base_dir: Path, device: str, sdk: str) -> Path:
             device = "nanosplus"
         app_name = toml.load(base_dir / "Cargo.toml")["package"]["name"]
         cmd = ["cargo", "metadata", "--no-deps"]
-        output = subprocess.check_output(cmd)
+        output = subprocess.check_output(cmd, cwd=base_dir)
         metadata = json.loads(output)
         target = Path(metadata["target_directory"])
         app = target / device / "release" / app_name
