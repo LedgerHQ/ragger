@@ -71,6 +71,15 @@ def find_application(base_dir: Path, device: str, sdk: str) -> Path:
         raise AssertionError(f"{base_dir} is not a directory")
     app = base_dir.resolve()
     if sdk.lower() == "rust":
+        """
+        When building a Rust app, the resulting binary is located in a target
+        directory target/<device>/release/<app_name>. app is the Path to the
+        build directory, where is stored the app's Cargo.toml file.
+        If the app respository is organized as a workspace crate (several packages,
+        each package in its own directory with its own Cargo.toml), the binaries are
+        all stored in the same target directory. 'cargo metadata' is used to get the
+        target directory full path.
+        """
         if device == "nanos2":
             device = "nanosplus"
         app_name = toml.load(base_dir / "Cargo.toml")["package"]["name"]
