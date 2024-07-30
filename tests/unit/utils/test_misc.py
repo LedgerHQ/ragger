@@ -41,11 +41,9 @@ class TestMisc(TestCase):
     def test_find_application_ok_rust(self):
         device, sdk, appname = "device", "rust", "rustapp"
         with temporary_directory() as dir_path:
-            os.chdir(dir_path)
             cmd = ["cargo", "new", appname]
-            subprocess.check_output(cmd)
+            subprocess.check_output(cmd, cwd=dir_path)
             app_path = dir_path / appname
-            os.chdir(app_path)
             tmp_dir = (app_path / "target" / device / "release")
             tmp_dir.mkdir(parents=True, exist_ok=True)
             expected = tmp_dir / appname
