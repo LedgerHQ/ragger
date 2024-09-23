@@ -63,7 +63,7 @@ POSITIONS = {
     "ChoiceList": {
         Firmware.STAX: {
             # Up to 6 (5?) choice in a list
-            1: Position(200, 190),
+            1: Position(200, 180),
             2: Position(200, 260),
             3: Position(200, 340),
             4: Position(200, 410),
