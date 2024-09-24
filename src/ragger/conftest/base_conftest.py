@@ -14,7 +14,7 @@ from . import configuration as conf
 
 BACKENDS = ["speculos", "ledgercomm", "ledgerwallet"]
 
-DEVICES = ["nanos", "nanox", "nanosp", "stax", "flex", "all", "all_nano"]
+DEVICES = ["nanos", "nanox", "nanosp", "stax", "flex", "all", "all_nano", "all_eink"]
 
 FIRMWARES = [
     Firmware.NANOS,
@@ -130,7 +130,9 @@ def pytest_generate_tests(metafunc):
 
         # Enable firmware for requested devices
         for fw in FIRMWARES:
-            if device == fw.name or device == "all" or (device == "all_nano" and fw.is_nano):
+            if device == fw.name or device == "all" or (device == "all_nano"
+                                                        and fw.is_nano) or (device == "all_eink"
+                                                                            and not fw.is_nano):
                 fw_list.append(fw)
                 ids.append(fw.name)
 

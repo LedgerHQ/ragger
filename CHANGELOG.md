@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.24.0] - 2024-09-24
 
 ### Added
+- conftest: Added a all_eink device option to target Stax and Flex
 - conftest: Added a autouse fixture to skip unsupported devices
 
 ## [1.23.0] - 2024-07-25
