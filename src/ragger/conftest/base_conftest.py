@@ -14,7 +14,7 @@ from . import configuration as conf
 
 BACKENDS = ["speculos", "ledgercomm", "ledgerwallet"]
 
-DEVICES = ["nanos", "nanox", "nanosp", "stax", "flex", "all", "all_nano"]
+DEVICES = ["nanos", "nanox", "nanosp", "stax", "flex", "all", "all_nano", "all_eink"]
 
 FIRMWARES = [
     Firmware.NANOS,
@@ -73,6 +73,19 @@ def root_pytest_dir(request) -> Path:
     return Path(request.config.rootpath).resolve()
 
 
+@pytest.fixture(scope="session")
+def supported_devices(root_pytest_dir: Path) -> List[str]:
+    project_root_dir = find_project_root_dir(root_pytest_dir)
+    manifest = Manifest.from_path(project_root_dir / "ledger_app.toml")
+    return ["nanosp" if d == "nanos+" else d for d in manifest.app.devices.json]
+
+
+@pytest.fixture(scope="session")
+def skip_tests_for_unsupported_devices(supported_devices: List[str], firmware: Firmware):
+    if firmware.name not in supported_devices:
+        pytest.skip(f"Device {firmware.name} is not supported according to the manifest")
+
+
 @pytest.fixture(autouse="session")
 def default_screenshot_path(root_pytest_dir: Path) -> Path:
     # Alias reflecting the use case to avoid exposing internal helper fixtures
@@ -117,7 +130,9 @@ def pytest_generate_tests(metafunc):
 
         # Enable firmware for requested devices
         for fw in FIRMWARES:
-            if device == fw.name or device == "all" or (device == "all_nano" and fw.is_nano):
+            if device == fw.name or device == "all" or (device == "all_nano"
+                                                        and fw.is_nano) or (device == "all_eink"
+                                                                            and not fw.is_nano):
                 fw_list.append(fw)
                 ids.append(fw.name)
 
@@ -213,9 +228,11 @@ def create_backend(root_pytest_dir: Path, backend_name: str, firmware: Firmware,
 
 
 # Backend scope can be configured by the user
+# fixture skip_tests_for_unsupported_devices is a dependency because we want to skip the test
+# before trying to find the binary
 @pytest.fixture(scope=conf.OPTIONAL.BACKEND_SCOPE)
-def backend(root_pytest_dir: Path, backend_name: str, firmware: Firmware, display: bool,
-            log_apdu_file: Optional[Path], cli_user_seed: str,
+def backend(skip_tests_for_unsupported_devices, root_pytest_dir: Path, backend_name: str,
+            firmware: Firmware, display: bool, log_apdu_file: Optional[Path], cli_user_seed: str,
             additional_speculos_arguments: List[str]) -> Generator[BackendInterface, None, None]:
     with create_backend(root_pytest_dir, backend_name, firmware, display, log_apdu_file,
                         cli_user_seed, additional_speculos_arguments) as b:
