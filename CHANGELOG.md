@@ -5,11 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.24.0] - 2024-09-24
+## [1.24.0] - 2024-10-03
 
 ### Added
 - conftest: Added a all_eink device option to target Stax and Flex
 - conftest: Added a autouse fixture to skip unsupported devices
+
+### Fixed
+
+- firmware/stax: Choice List positions were no longer correct compared to latest NBGL evolutions
 
 ## [1.23.0] - 2024-07-25
 
