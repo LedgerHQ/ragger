@@ -264,8 +264,8 @@ class Navigator(ABC):
                               test_case_name=test_case_name,
                               snap_idx=snap_start_idx)
 
-        for idx, instruction in enumerate(instructions):
-            if idx + 1 != len(instructions) or screen_change_after_last_instruction:
+        for idx, instruction in enumerate(instructions, start=1):
+            if idx != len(instructions) or screen_change_after_last_instruction:
                 # Nominal case, either:
                 # - middle instruction
                 # - last instruction but with screen_change_after_last_instruction=True
@@ -276,7 +276,7 @@ class Navigator(ABC):
                                       wait_for_screen_change=True,
                                       path=path,
                                       test_case_name=test_case_name,
-                                      snap_idx=snap_start_idx + idx + 1)
+                                      snap_idx=snap_start_idx + idx)
             else:
                 # Last instruction case with screen_change_after_last_instruction=False
                 # => no wait_for_screen_change()
@@ -284,7 +284,7 @@ class Navigator(ABC):
                 self._run_instruction(instruction,
                                       timeout,
                                       wait_for_screen_change=False,
-                                      snap_idx=snap_start_idx + idx + 1)
+                                      snap_idx=snap_start_idx + idx)
 
         self._backend.resume_ticker()
 
@@ -355,10 +355,10 @@ class Navigator(ABC):
         :type path: Path
         :param test_case_name: Relative path to the test case snapshots directory (from path).
         :type test_case_name: Union[Path, str]
-        :param start_img_name: Index of the first snapshot of the navigation flow.
-        :type start_img_name: int
-        :param last_img_name: Index of the snapshot to look for when navigating.
-        :type last_img_name: int
+        :param start_img_name: Name of the first snapshot of the navigation flow.
+        :type start_img_name: str
+        :param last_img_name: Name of the snapshot to look for when navigating.
+        :type last_img_name: str
         :param take_snaps: Take temporary snapshots of the screen displayed when navigating.
         :type take_snaps: bool
         :param timeout: Timeout of the navigation loop if last snapshot is not found.
@@ -444,7 +444,8 @@ class Navigator(ABC):
                                         test_case_name: Optional[Union[Path, str]] = None,
                                         timeout: int = 300,
                                         screen_change_before_first_instruction: bool = True,
-                                        screen_change_after_last_instruction: bool = True) -> None:
+                                        screen_change_after_last_instruction: bool = True,
+                                        snap_start_idx: int = 0) -> None:
         """
         Navigate until some text is found on the screen content displayed then
         compare each step snapshot with "golden images".
@@ -474,13 +475,15 @@ class Navigator(ABC):
         :type screen_change_before_first_instruction: bool
         :param screen_change_after_last_instruction: Wait for a screen change after last instruction.
         :type screen_change_after_last_instruction: bool
+        :param snap_start_idx: Index of the first snap for this navigation.
+        :type snap_start_idx: int
 
         :raises TimeoutError: If the text is not found.
 
         :return: None
         :rtype: NoneType
         """
-        idx = 0
+        idx = snap_start_idx
         start = time()
         if not isinstance(self._backend, SpeculosBackend):
             # Update timeout default value for other backends. User needs time to
@@ -543,7 +546,8 @@ class Navigator(ABC):
                             text: str,
                             timeout: int = 300,
                             screen_change_before_first_instruction: bool = True,
-                            screen_change_after_last_instruction: bool = True) -> None:
+                            screen_change_after_last_instruction: bool = True,
+                            snap_start_idx: int = 0) -> None:
         """
         Navigate until some text is found on the screen content displayed.
 
@@ -568,13 +572,20 @@ class Navigator(ABC):
         :type screen_change_before_first_instruction: bool
         :param screen_change_after_last_instruction: Wait for a screen change after last instruction.
         :type screen_change_after_last_instruction: bool
+        :param snap_start_idx: Index of the first snap for this navigation.
+        :type snap_start_idx: int
 
         :raises TimeoutError: If the text is not found.
 
         :return: None
         :rtype: NoneType
         """
-        self.navigate_until_text_and_compare(navigate_instruction, validation_instructions, text,
-                                             None, None, timeout,
+        self.navigate_until_text_and_compare(navigate_instruction,
+                                             validation_instructions,
+                                             text,
+                                             None,
+                                             None,
+                                             timeout,
                                              screen_change_before_first_instruction,
-                                             screen_change_after_last_instruction)
+                                             screen_change_after_last_instruction,
+                                             snap_start_idx=snap_start_idx)
