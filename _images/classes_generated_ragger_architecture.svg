@@ -12,60 +12,60 @@
 <!-- ragger.backend.interface.BackendInterface -->
 <g id="node1" class="node">
 <title>ragger.backend.interface.BackendInterface</title>
-<polygon fill="#99ddff" stroke="#99ddff" points="7264.5,-1315.6 7264.5,-1780.6 8237.5,-1780.6 8237.5,-1315.6 7264.5,-1315.6"/>
-<text text-anchor="start" x="7688" y="-1765.4" font-family="Times,serif" font-size="14.00">BackendInterface</text>
-<polyline fill="none" stroke="#99ddff" points="7264.5,-1757.6 8237.5,-1757.6 "/>
-<text text-anchor="start" x="7612.5" y="-1742.4" font-family="Times,serif" font-size="14.00">apdu_logger : NoneType, RootLogger</text>
-<text text-anchor="start" x="7612.5" y="-1727.4" font-family="Times,serif" font-size="14.00">firmware</text>
-<text text-anchor="start" x="7612.5" y="-1712.4" font-family="Times,serif" font-size="14.00">last_async_response</text>
-<text text-anchor="start" x="7612.5" y="-1697.4" font-family="Times,serif" font-size="14.00">logger : NoneType, RootLogger</text>
-<text text-anchor="start" x="7612.5" y="-1682.4" font-family="Times,serif" font-size="14.00">raise_policy : RAISE_ALL_BUT_0x9000</text>
-<text text-anchor="start" x="7612.5" y="-1667.4" font-family="Times,serif" font-size="14.00">whitelisted_status : Iterable</text>
-<polyline fill="none" stroke="#99ddff" points="7264.5,-1659.6 8237.5,-1659.6 "/>
-<text text-anchor="start" x="7272.5" y="-1645.4" font-family="Times,serif" font-style="italic" font-size="14.00">both_click</text>
-<text text-anchor="start" x="7344.5" y="-1645.4" font-family="Times,serif" font-size="14.00">(): None</text>
-<text text-anchor="start" x="7272.5" y="-1631.4" font-family="Times,serif" font-style="italic" font-size="14.00">compare_screen_with_snapshot</text>
-<text text-anchor="start" x="7498.5" y="-1631.4" font-family="Times,serif" font-size="14.00">(golden_snap_path: Path, crop: Optional[Crop], tmp_snap_path: Optional[Path], golden_run: bool): bool</text>
-<text text-anchor="start" x="7272.5" y="-1617.4" font-family="Times,serif" font-style="italic" font-size="14.00">compare_screen_with_text</text>
-<text text-anchor="start" x="7462.5" y="-1617.4" font-family="Times,serif" font-size="14.00">(text: str): bool</text>
-<text text-anchor="start" x="7272.5" y="-1603.4" font-family="Times,serif" font-size="14.00">exchange(cla: int, ins: int, p1: int, p2: int, data: bytes, tick_timeout: int): RAPDU</text>
-<text text-anchor="start" x="7272.5" y="-1589.4" font-family="Times,serif" font-size="14.00">exchange_async(cla: int, ins: int, p1: int, p2: int, data: bytes): Generator[None, None, None]</text>
-<text text-anchor="start" x="7272.5" y="-1575.4" font-family="Times,serif" font-style="italic" font-size="14.00">exchange_async_raw</text>
-<text text-anchor="start" x="7421.5" y="-1575.4" font-family="Times,serif" font-size="14.00">(data: bytes): Generator[None, None, None]</text>
-<text text-anchor="start" x="7272.5" y="-1561.4" font-family="Times,serif" font-style="italic" font-size="14.00">exchange_raw</text>
-<text text-anchor="start" x="7374.5" y="-1561.4" font-family="Times,serif" font-size="14.00">(data: bytes, tick_timeout: int): RAPDU</text>
-<text text-anchor="start" x="7272.5" y="-1547.4" font-family="Times,serif" font-style="italic" font-size="14.00">finger_swipe</text>
-<text text-anchor="start" x="7363.5" y="-1547.4" font-family="Times,serif" font-size="14.00">(x: int, y: int, direction: str, delay: float): None</text>
-<text text-anchor="start" x="7272.5" y="-1533.4" font-family="Times,serif" font-style="italic" font-size="14.00">finger_touch</text>
-<text text-anchor="start" x="7361.5" y="-1533.4" font-family="Times,serif" font-size="14.00">(x: int, y: int, delay: float): None</text>
-<text text-anchor="start" x="7272.5" y="-1519.4" font-family="Times,serif" font-style="italic" font-size="14.00">get_current_screen_content</text>
-<text text-anchor="start" x="7471.5" y="-1519.4" font-family="Times,serif" font-size="14.00">(): Any</text>
-<text text-anchor="start" x="7272.5" y="-1505.4" font-family="Times,serif" font-style="italic" font-size="14.00">handle_usb_reset</text>
-<text text-anchor="start" x="7396.5" y="-1505.4" font-family="Times,serif" font-size="14.00">(): None</text>
-<text text-anchor="start" x="7272.5" y="-1491.4" font-family="Times,serif" font-size="14.00">is_raise_required(rapdu: RAPDU): bool</text>
-<text text-anchor="start" x="7272.5" y="-1477.4" font-family="Times,serif" font-style="italic" font-size="14.00">left_click</text>
-<text text-anchor="start" x="7336.5" y="-1477.4" font-family="Times,serif" font-size="14.00">(): None</text>
-<text text-anchor="start" x="7272.5" y="-1463.4" font-family="Times,serif" font-style="italic" font-size="14.00">pause_ticker</text>
-<text text-anchor="start" x="7363.5" y="-1463.4" font-family="Times,serif" font-size="14.00">(): None</text>
-<text text-anchor="start" x="7272.5" y="-1449.4" font-family="Times,serif" font-style="italic" font-size="14.00">receive</text>
-<text text-anchor="start" x="7324.5" y="-1449.4" font-family="Times,serif" font-size="14.00">(): RAPDU</text>
-<text text-anchor="start" x="7272.5" y="-1435.4" font-family="Times,serif" font-style="italic" font-size="14.00">resume_ticker</text>
-<text text-anchor="start" x="7374.5" y="-1435.4" font-family="Times,serif" font-size="14.00">(): None</text>
-<text text-anchor="start" x="7272.5" y="-1421.4" font-family="Times,serif" font-style="italic" font-size="14.00">right_click</text>
-<text text-anchor="start" x="7347.5" y="-1421.4" font-family="Times,serif" font-size="14.00">(): None</text>
-<text text-anchor="start" x="7272.5" y="-1407.4" font-family="Times,serif" font-size="14.00">send(cla: int, ins: int, p1: int, p2: int, data: bytes): None</text>
-<text text-anchor="start" x="7272.5" y="-1393.4" font-family="Times,serif" font-style="italic" font-size="14.00">send_raw</text>
-<text text-anchor="start" x="7340.5" y="-1393.4" font-family="Times,serif" font-size="14.00">(data: bytes): None</text>
-<text text-anchor="start" x="7272.5" y="-1379.4" font-family="Times,serif" font-style="italic" font-size="14.00">send_tick</text>
-<text text-anchor="start" x="7339.5" y="-1379.4" font-family="Times,serif" font-size="14.00">(): None</text>
-<text text-anchor="start" x="7272.5" y="-1365.4" font-family="Times,serif" font-style="italic" font-size="14.00">wait_for_home_screen</text>
-<text text-anchor="start" x="7430.5" y="-1365.4" font-family="Times,serif" font-size="14.00">(timeout: float): None</text>
-<text text-anchor="start" x="7272.5" y="-1351.4" font-family="Times,serif" font-style="italic" font-size="14.00">wait_for_screen_change</text>
-<text text-anchor="start" x="7442.5" y="-1351.4" font-family="Times,serif" font-size="14.00">(timeout: float): None</text>
-<text text-anchor="start" x="7272.5" y="-1337.4" font-family="Times,serif" font-style="italic" font-size="14.00">wait_for_text_not_on_screen</text>
-<text text-anchor="start" x="7474.5" y="-1337.4" font-family="Times,serif" font-size="14.00">(text: str, timeout: float): None</text>
-<text text-anchor="start" x="7272.5" y="-1323.4" font-family="Times,serif" font-style="italic" font-size="14.00">wait_for_text_on_screen</text>
-<text text-anchor="start" x="7444.5" y="-1323.4" font-family="Times,serif" font-size="14.00">(text: str, timeout: float): None</text>
+<polygon fill="#99ddff" stroke="#99ddff" points="7272.5,-1315.6 7272.5,-1780.6 8245.5,-1780.6 8245.5,-1315.6 7272.5,-1315.6"/>
+<text text-anchor="start" x="7696" y="-1765.4" font-family="Times,serif" font-size="14.00">BackendInterface</text>
+<polyline fill="none" stroke="#99ddff" points="7272.5,-1757.6 8245.5,-1757.6 "/>
+<text text-anchor="start" x="7620.5" y="-1742.4" font-family="Times,serif" font-size="14.00">apdu_logger : NoneType, RootLogger</text>
+<text text-anchor="start" x="7620.5" y="-1727.4" font-family="Times,serif" font-size="14.00">firmware</text>
+<text text-anchor="start" x="7620.5" y="-1712.4" font-family="Times,serif" font-size="14.00">last_async_response</text>
+<text text-anchor="start" x="7620.5" y="-1697.4" font-family="Times,serif" font-size="14.00">logger : NoneType, RootLogger</text>
+<text text-anchor="start" x="7620.5" y="-1682.4" font-family="Times,serif" font-size="14.00">raise_policy : RAISE_ALL_BUT_0x9000</text>
+<text text-anchor="start" x="7620.5" y="-1667.4" font-family="Times,serif" font-size="14.00">whitelisted_status : Iterable</text>
+<polyline fill="none" stroke="#99ddff" points="7272.5,-1659.6 8245.5,-1659.6 "/>
+<text text-anchor="start" x="7280.5" y="-1645.4" font-family="Times,serif" font-style="italic" font-size="14.00">both_click</text>
+<text text-anchor="start" x="7352.5" y="-1645.4" font-family="Times,serif" font-size="14.00">(): None</text>
+<text text-anchor="start" x="7280.5" y="-1631.4" font-family="Times,serif" font-style="italic" font-size="14.00">compare_screen_with_snapshot</text>
+<text text-anchor="start" x="7506.5" y="-1631.4" font-family="Times,serif" font-size="14.00">(golden_snap_path: Path, crop: Optional[Crop], tmp_snap_path: Optional[Path], golden_run: bool): bool</text>
+<text text-anchor="start" x="7280.5" y="-1617.4" font-family="Times,serif" font-style="italic" font-size="14.00">compare_screen_with_text</text>
+<text text-anchor="start" x="7470.5" y="-1617.4" font-family="Times,serif" font-size="14.00">(text: str): bool</text>
+<text text-anchor="start" x="7280.5" y="-1603.4" font-family="Times,serif" font-size="14.00">exchange(cla: int, ins: int, p1: int, p2: int, data: bytes, tick_timeout: int): RAPDU</text>
+<text text-anchor="start" x="7280.5" y="-1589.4" font-family="Times,serif" font-size="14.00">exchange_async(cla: int, ins: int, p1: int, p2: int, data: bytes): Generator[None, None, None]</text>
+<text text-anchor="start" x="7280.5" y="-1575.4" font-family="Times,serif" font-style="italic" font-size="14.00">exchange_async_raw</text>
+<text text-anchor="start" x="7429.5" y="-1575.4" font-family="Times,serif" font-size="14.00">(data: bytes): Generator[None, None, None]</text>
+<text text-anchor="start" x="7280.5" y="-1561.4" font-family="Times,serif" font-style="italic" font-size="14.00">exchange_raw</text>
+<text text-anchor="start" x="7382.5" y="-1561.4" font-family="Times,serif" font-size="14.00">(data: bytes, tick_timeout: int): RAPDU</text>
+<text text-anchor="start" x="7280.5" y="-1547.4" font-family="Times,serif" font-style="italic" font-size="14.00">finger_swipe</text>
+<text text-anchor="start" x="7371.5" y="-1547.4" font-family="Times,serif" font-size="14.00">(x: int, y: int, direction: str, delay: float): None</text>
+<text text-anchor="start" x="7280.5" y="-1533.4" font-family="Times,serif" font-style="italic" font-size="14.00">finger_touch</text>
+<text text-anchor="start" x="7369.5" y="-1533.4" font-family="Times,serif" font-size="14.00">(x: int, y: int, delay: float): None</text>
+<text text-anchor="start" x="7280.5" y="-1519.4" font-family="Times,serif" font-style="italic" font-size="14.00">get_current_screen_content</text>
+<text text-anchor="start" x="7479.5" y="-1519.4" font-family="Times,serif" font-size="14.00">(): Any</text>
+<text text-anchor="start" x="7280.5" y="-1505.4" font-family="Times,serif" font-style="italic" font-size="14.00">handle_usb_reset</text>
+<text text-anchor="start" x="7404.5" y="-1505.4" font-family="Times,serif" font-size="14.00">(): None</text>
+<text text-anchor="start" x="7280.5" y="-1491.4" font-family="Times,serif" font-size="14.00">is_raise_required(rapdu: RAPDU): bool</text>
+<text text-anchor="start" x="7280.5" y="-1477.4" font-family="Times,serif" font-style="italic" font-size="14.00">left_click</text>
+<text text-anchor="start" x="7344.5" y="-1477.4" font-family="Times,serif" font-size="14.00">(): None</text>
+<text text-anchor="start" x="7280.5" y="-1463.4" font-family="Times,serif" font-style="italic" font-size="14.00">pause_ticker</text>
+<text text-anchor="start" x="7371.5" y="-1463.4" font-family="Times,serif" font-size="14.00">(): None</text>
+<text text-anchor="start" x="7280.5" y="-1449.4" font-family="Times,serif" font-style="italic" font-size="14.00">receive</text>
+<text text-anchor="start" x="7332.5" y="-1449.4" font-family="Times,serif" font-size="14.00">(): RAPDU</text>
+<text text-anchor="start" x="7280.5" y="-1435.4" font-family="Times,serif" font-style="italic" font-size="14.00">resume_ticker</text>
+<text text-anchor="start" x="7382.5" y="-1435.4" font-family="Times,serif" font-size="14.00">(): None</text>
+<text text-anchor="start" x="7280.5" y="-1421.4" font-family="Times,serif" font-style="italic" font-size="14.00">right_click</text>
+<text text-anchor="start" x="7355.5" y="-1421.4" font-family="Times,serif" font-size="14.00">(): None</text>
+<text text-anchor="start" x="7280.5" y="-1407.4" font-family="Times,serif" font-size="14.00">send(cla: int, ins: int, p1: int, p2: int, data: bytes): None</text>
+<text text-anchor="start" x="7280.5" y="-1393.4" font-family="Times,serif" font-style="italic" font-size="14.00">send_raw</text>
+<text text-anchor="start" x="7348.5" y="-1393.4" font-family="Times,serif" font-size="14.00">(data: bytes): None</text>
+<text text-anchor="start" x="7280.5" y="-1379.4" font-family="Times,serif" font-style="italic" font-size="14.00">send_tick</text>
+<text text-anchor="start" x="7347.5" y="-1379.4" font-family="Times,serif" font-size="14.00">(): None</text>
+<text text-anchor="start" x="7280.5" y="-1365.4" font-family="Times,serif" font-style="italic" font-size="14.00">wait_for_home_screen</text>
+<text text-anchor="start" x="7438.5" y="-1365.4" font-family="Times,serif" font-size="14.00">(timeout: float): None</text>
+<text text-anchor="start" x="7280.5" y="-1351.4" font-family="Times,serif" font-style="italic" font-size="14.00">wait_for_screen_change</text>
+<text text-anchor="start" x="7450.5" y="-1351.4" font-family="Times,serif" font-size="14.00">(timeout: float): None</text>
+<text text-anchor="start" x="7280.5" y="-1337.4" font-family="Times,serif" font-style="italic" font-size="14.00">wait_for_text_not_on_screen</text>
+<text text-anchor="start" x="7482.5" y="-1337.4" font-family="Times,serif" font-size="14.00">(text: str, timeout: float): None</text>
+<text text-anchor="start" x="7280.5" y="-1323.4" font-family="Times,serif" font-style="italic" font-size="14.00">wait_for_text_on_screen</text>
+<text text-anchor="start" x="7452.5" y="-1323.4" font-family="Times,serif" font-size="14.00">(text: str, timeout: float): None</text>
 </g>
 <!-- ragger.firmware.touch.element.Element -->
 <g id="node10" class="node">
@@ -82,33 +82,33 @@
 <!-- ragger.backend.interface.BackendInterface&#45;&gt;ragger.firmware.touch.element.Element -->
 <g id="edge94" class="edge">
 <title>ragger.backend.interface.BackendInterface&#45;&gt;ragger.firmware.touch.element.Element</title>
-<path fill="none" stroke="black" d="M7542.67,-1780.67C7441.58,-1872.87 7311.64,-1965.03 7171,-1998.6 6901.25,-2062.98 6018.16,-2094.42 5792.75,-2101.52"/>
-<polygon fill="none" stroke="black" points="5792.67,-2101.52 5786.8,-2105.71 5780.68,-2101.9 5786.55,-2097.71 5792.67,-2101.52"/>
-<text text-anchor="middle" x="7232.5" y="-1987.4" font-family="Times,serif" font-size="14.00" fill="green">_client</text>
+<path fill="none" stroke="black" d="M7513.39,-1780.77C7435.67,-1846.3 7346.79,-1913.81 7258,-1965.6 7222.28,-1986.44 7211.38,-1989.67 7171,-1998.6 6900.22,-2058.5 6017.89,-2093.26 5792.7,-2101.29"/>
+<polygon fill="none" stroke="black" points="5792.63,-2101.3 5786.78,-2105.51 5780.64,-2101.72 5786.49,-2097.51 5792.63,-2101.3"/>
+<text text-anchor="middle" x="7247.5" y="-1987.4" font-family="Times,serif" font-size="14.00" fill="green">_client</text>
 </g>
 <!-- ragger.navigator.navigator.Navigator -->
 <g id="node29" class="node">
 <title>ragger.navigator.navigator.Navigator</title>
-<polygon fill="#ee8866" stroke="#ee8866" points="7149.5,-2017.1 7149.5,-2191.1 9368.5,-2191.1 9368.5,-2017.1 7149.5,-2017.1"/>
-<text text-anchor="start" x="8223" y="-2175.9" font-family="Times,serif" font-size="14.00">Navigator</text>
-<polyline fill="none" stroke="#ee8866" points="7149.5,-2168.1 9368.5,-2168.1 "/>
-<text text-anchor="start" x="8040.5" y="-2152.9" font-family="Times,serif" font-size="14.00">GOLDEN_INSTRUCTION_SLEEP_MULTIPLIER_FIRST : int</text>
-<text text-anchor="start" x="8040.5" y="-2137.9" font-family="Times,serif" font-size="14.00">GOLDEN_INSTRUCTION_SLEEP_MULTIPLIER_LAST : int</text>
-<text text-anchor="start" x="8040.5" y="-2122.9" font-family="Times,serif" font-size="14.00">GOLDEN_INSTRUCTION_SLEEP_MULTIPLIER_MIDDLE : int</text>
-<polyline fill="none" stroke="#ee8866" points="7149.5,-2115.1 9368.5,-2115.1 "/>
-<text text-anchor="start" x="7157.5" y="-2099.9" font-family="Times,serif" font-size="14.00">add_callback(ins_id: BaseNavInsID, callback: Callable, override: bool): None</text>
-<text text-anchor="start" x="7157.5" y="-2084.9" font-family="Times,serif" font-size="14.00">navigate(instructions: Sequence[InstructionType], timeout: float, screen_change_before_first_instruction: bool, screen_change_after_last_instruction: bool): None</text>
-<text text-anchor="start" x="7157.5" y="-2069.9" font-family="Times,serif" font-size="14.00">navigate_and_compare(path: Optional[Path], test_case_name: Optional[Union[Path, str]], instructions: Sequence[InstructionType], timeout: float, screen_change_before_first_instruction: bool, screen_change_after_last_instruction: bool, snap_start_idx: int): None</text>
-<text text-anchor="start" x="7157.5" y="-2054.9" font-family="Times,serif" font-size="14.00">navigate_until_snap(navigate_instruction: InstructionType, validation_instruction: InstructionType, path: Path, test_case_name: Union[Path, str], start_img_name: str, last_img_name: str, take_snaps: bool, timeout: int, crop_first: Optional[Crop], crop_last: Optional[Crop]): int</text>
-<text text-anchor="start" x="7157.5" y="-2039.9" font-family="Times,serif" font-size="14.00">navigate_until_text(navigate_instruction: InstructionType, validation_instructions: Sequence[InstructionType], text: str, timeout: int, screen_change_before_first_instruction: bool, screen_change_after_last_instruction: bool): None</text>
-<text text-anchor="start" x="7157.5" y="-2024.9" font-family="Times,serif" font-size="14.00">navigate_until_text_and_compare(navigate_instruction: InstructionType, validation_instructions: Sequence[InstructionType], text: str, path: Optional[Path], test_case_name: Optional[Union[Path, str]], timeout: int, screen_change_before_first_instruction: bool, screen_change_after_last_instruction: bool): None</text>
+<polygon fill="#ee8866" stroke="#ee8866" points="7149,-2017.1 7149,-2191.1 9509,-2191.1 9509,-2017.1 7149,-2017.1"/>
+<text text-anchor="start" x="8293" y="-2175.9" font-family="Times,serif" font-size="14.00">Navigator</text>
+<polyline fill="none" stroke="#ee8866" points="7149,-2168.1 9509,-2168.1 "/>
+<text text-anchor="start" x="8110.5" y="-2152.9" font-family="Times,serif" font-size="14.00">GOLDEN_INSTRUCTION_SLEEP_MULTIPLIER_FIRST : int</text>
+<text text-anchor="start" x="8110.5" y="-2137.9" font-family="Times,serif" font-size="14.00">GOLDEN_INSTRUCTION_SLEEP_MULTIPLIER_LAST : int</text>
+<text text-anchor="start" x="8110.5" y="-2122.9" font-family="Times,serif" font-size="14.00">GOLDEN_INSTRUCTION_SLEEP_MULTIPLIER_MIDDLE : int</text>
+<polyline fill="none" stroke="#ee8866" points="7149,-2115.1 9509,-2115.1 "/>
+<text text-anchor="start" x="7157" y="-2099.9" font-family="Times,serif" font-size="14.00">add_callback(ins_id: BaseNavInsID, callback: Callable, override: bool): None</text>
+<text text-anchor="start" x="7157" y="-2084.9" font-family="Times,serif" font-size="14.00">navigate(instructions: Sequence[InstructionType], timeout: float, screen_change_before_first_instruction: bool, screen_change_after_last_instruction: bool): None</text>
+<text text-anchor="start" x="7157" y="-2069.9" font-family="Times,serif" font-size="14.00">navigate_and_compare(path: Optional[Path], test_case_name: Optional[Union[Path, str]], instructions: Sequence[InstructionType], timeout: float, screen_change_before_first_instruction: bool, screen_change_after_last_instruction: bool, snap_start_idx: int): None</text>
+<text text-anchor="start" x="7157" y="-2054.9" font-family="Times,serif" font-size="14.00">navigate_until_snap(navigate_instruction: InstructionType, validation_instruction: InstructionType, path: Path, test_case_name: Union[Path, str], start_img_name: str, last_img_name: str, take_snaps: bool, timeout: int, crop_first: Optional[Crop], crop_last: Optional[Crop]): int</text>
+<text text-anchor="start" x="7157" y="-2039.9" font-family="Times,serif" font-size="14.00">navigate_until_text(navigate_instruction: InstructionType, validation_instructions: Sequence[InstructionType], text: str, timeout: int, screen_change_before_first_instruction: bool, screen_change_after_last_instruction: bool, snap_start_idx: int): None</text>
+<text text-anchor="start" x="7157" y="-2024.9" font-family="Times,serif" font-size="14.00">navigate_until_text_and_compare(navigate_instruction: InstructionType, validation_instructions: Sequence[InstructionType], text: str, path: Optional[Path], test_case_name: Optional[Union[Path, str]], timeout: int, screen_change_before_first_instruction: bool, screen_change_after_last_instruction: bool, snap_start_idx: int): None</text>
 </g>
 <!-- ragger.backend.interface.BackendInterface&#45;&gt;ragger.navigator.navigator.Navigator -->
 <g id="edge95" class="edge">
 <title>ragger.backend.interface.BackendInterface&#45;&gt;ragger.navigator.navigator.Navigator</title>
-<path fill="none" stroke="black" d="M7963.49,-1780.84C8036.57,-1860.53 8114.36,-1945.36 8171.78,-2007.98"/>
-<polygon fill="none" stroke="black" points="8171.99,-2008.21 8178.99,-2009.92 8180.1,-2017.05 8173.09,-2015.33 8171.99,-2008.21"/>
-<text text-anchor="middle" x="8195.5" y="-1987.4" font-family="Times,serif" font-size="14.00" fill="green">_backend</text>
+<path fill="none" stroke="black" d="M7997.43,-1780.84C8079.59,-1860.69 8167.07,-1945.71 8231.53,-2008.36"/>
+<polygon fill="none" stroke="black" points="8231.86,-2008.69 8238.95,-2010 8240.47,-2017.05 8233.37,-2015.74 8231.86,-2008.69"/>
+<text text-anchor="middle" x="8253.5" y="-1987.4" font-family="Times,serif" font-size="14.00" fill="green">_backend</text>
 </g>
 <!-- ragger.navigator.instruction.BaseNavInsID -->
 <g id="node2" class="node">
@@ -427,9 +427,9 @@
 <!-- ragger.firmware.structs.Firmware&#45;&gt;ragger.backend.interface.BackendInterface -->
 <g id="edge96" class="edge">
 <title>ragger.firmware.structs.Firmware&#45;&gt;ragger.backend.interface.BackendInterface</title>
-<path fill="none" stroke="black" d="M7128.08,-968.05C7134.98,-1002.05 7148.21,-1046.96 7173,-1079.6 7197.83,-1112.29 7217.06,-1106.11 7250,-1130.6 7324.17,-1185.74 7402.03,-1248.11 7473.67,-1307.48"/>
-<polygon fill="none" stroke="black" points="7474.04,-1307.79 7481.22,-1308.54 7483.28,-1315.45 7476.11,-1314.7 7474.04,-1307.79"/>
-<text text-anchor="middle" x="7254" y="-1101.4" font-family="Times,serif" font-size="14.00" fill="green">_firmware</text>
+<path fill="none" stroke="black" d="M7127.57,-968.03C7134.23,-1002.24 7147.4,-1047.41 7173,-1079.6 7186.71,-1096.84 7240.03,-1117.85 7258,-1130.6 7334.53,-1184.89 7414.06,-1247.72 7486.62,-1307.87"/>
+<polygon fill="none" stroke="black" points="7486.66,-1307.9 7493.84,-1308.66 7495.9,-1315.57 7488.72,-1314.81 7486.66,-1307.9"/>
+<text text-anchor="middle" x="7261" y="-1101.4" font-family="Times,serif" font-size="14.00" fill="green">_firmware</text>
 </g>
 <!-- ragger.firmware.structs.Firmware&#45;&gt;ragger.firmware.touch.element.Element -->
 <g id="edge97" class="edge">
@@ -464,9 +464,9 @@
 <!-- ragger.firmware.structs.Firmware&#45;&gt;ragger.navigator.navigator.Navigator -->
 <g id="edge99" class="edge">
 <title>ragger.firmware.structs.Firmware&#45;&gt;ragger.navigator.navigator.Navigator</title>
-<path fill="none" stroke="black" d="M7125.14,-968.02C7128.1,-1003.86 7132.07,-1053.74 7135,-1097.6 7141.7,-1197.72 7115.92,-1938.13 7196,-1998.6 7202.88,-2003.8 7214.38,-2008.79 7229.79,-2013.59"/>
-<polygon fill="none" stroke="black" points="7230.17,-2013.7 7237.05,-2011.53 7241.69,-2017.04 7234.82,-2019.21 7230.17,-2013.7"/>
-<text text-anchor="middle" x="7212" y="-1544.4" font-family="Times,serif" font-size="14.00" fill="green">_firmware</text>
+<path fill="none" stroke="black" d="M7125.02,-968.03C7127.92,-1003.87 7131.87,-1053.75 7135,-1097.6 7142.16,-1197.68 7123.01,-1929.75 7196,-1998.6 7201.24,-2003.54 7209.56,-2008.26 7220.6,-2012.77"/>
+<polygon fill="none" stroke="black" points="7220.76,-2012.83 7227.78,-2011.18 7232,-2017.02 7224.98,-2018.67 7220.76,-2012.83"/>
+<text text-anchor="middle" x="7215" y="-1544.4" font-family="Times,serif" font-size="14.00" fill="green">_firmware</text>
 </g>
 <!-- ragger.firmware.touch.layouts.FullKeyboardLetters -->
 <g id="node13" class="node">
@@ -576,17 +576,17 @@
 <!-- ragger.firmware.touch.layouts.KeyboardConfirmationButton -->
 <g id="node17" class="node">
 <title>ragger.firmware.touch.layouts.KeyboardConfirmationButton</title>
-<polygon fill="#aaaa00" stroke="#aaaa00" points="8547,-1512.7 8547,-1583.5 8773,-1583.5 8773,-1512.7 8547,-1512.7"/>
-<text text-anchor="start" x="8555" y="-1568.3" font-family="Times,serif" font-size="14.00">KeyboardConfirmationButton</text>
-<polyline fill="none" stroke="#aaaa00" points="8547,-1560.5 8773,-1560.5 "/>
-<polyline fill="none" stroke="#aaaa00" points="8547,-1535.7 8773,-1535.7 "/>
-<text text-anchor="start" x="8627.5" y="-1520.5" font-family="Times,serif" font-size="14.00">confirm()</text>
+<polygon fill="#aaaa00" stroke="#aaaa00" points="8555,-1512.7 8555,-1583.5 8781,-1583.5 8781,-1512.7 8555,-1512.7"/>
+<text text-anchor="start" x="8563" y="-1568.3" font-family="Times,serif" font-size="14.00">KeyboardConfirmationButton</text>
+<polyline fill="none" stroke="#aaaa00" points="8555,-1560.5 8781,-1560.5 "/>
+<polyline fill="none" stroke="#aaaa00" points="8555,-1535.7 8781,-1535.7 "/>
+<text text-anchor="start" x="8635.5" y="-1520.5" font-family="Times,serif" font-size="14.00">confirm()</text>
 </g>
 <!-- ragger.firmware.touch.layouts.KeyboardConfirmationButton&#45;&gt;ragger.firmware.touch.element.Element -->
 <g id="edge13" class="edge">
 <title>ragger.firmware.touch.layouts.KeyboardConfirmationButton&#45;&gt;ragger.firmware.touch.element.Element</title>
-<path fill="none" stroke="black" d="M8661.58,-1583.54C8663.22,-1664.57 8654.87,-1867.8 8538,-1965.6 8433.44,-2053.1 8369.08,-1990.14 8233,-1998.6 7748.09,-2028.76 7625.47,-1997.61 7140,-2016.6 6611.88,-2037.25 5972.97,-2085.06 5790.72,-2099.13"/>
-<polygon fill="none" stroke="black" points="5790.33,-2095.65 5780.63,-2099.92 5790.87,-2102.63 5790.33,-2095.65"/>
+<path fill="none" stroke="black" d="M8669.45,-1583.68C8670.77,-1664.56 8661.69,-1866.71 8546,-1965.6 8459.13,-2039.85 8404.98,-1990.36 8291,-1998.6 7780.71,-2035.49 7651.24,-1996.82 7140,-2016.6 6611.87,-2037.03 5972.97,-2084.99 5790.72,-2099.12"/>
+<polygon fill="none" stroke="black" points="5790.32,-2095.64 5780.63,-2099.9 5790.87,-2102.62 5790.32,-2095.64"/>
 </g>
 <!-- ragger.backend.ledgercomm.LedgerCommBackend -->
 <g id="node18" class="node">
@@ -761,17 +761,17 @@
 <!-- ragger.navigator.nano_navigator.NanoNavigator -->
 <g id="node24" class="node">
 <title>ragger.navigator.nano_navigator.NanoNavigator</title>
-<polygon fill="#ee8866" stroke="#ee8866" points="8255.5,-1512.7 8255.5,-1583.5 8380.5,-1583.5 8380.5,-1512.7 8255.5,-1512.7"/>
-<text text-anchor="start" x="8263.5" y="-1568.3" font-family="Times,serif" font-size="14.00">NanoNavigator</text>
-<polyline fill="none" stroke="#ee8866" points="8255.5,-1560.5 8380.5,-1560.5 "/>
-<polyline fill="none" stroke="#ee8866" points="8255.5,-1535.7 8380.5,-1535.7 "/>
-<text text-anchor="start" x="8315.5" y="-1520.5" font-family="Times,serif" font-size="14.00"> </text>
+<polygon fill="#ee8866" stroke="#ee8866" points="8263.5,-1512.7 8263.5,-1583.5 8388.5,-1583.5 8388.5,-1512.7 8263.5,-1512.7"/>
+<text text-anchor="start" x="8271.5" y="-1568.3" font-family="Times,serif" font-size="14.00">NanoNavigator</text>
+<polyline fill="none" stroke="#ee8866" points="8263.5,-1560.5 8388.5,-1560.5 "/>
+<polyline fill="none" stroke="#ee8866" points="8263.5,-1535.7 8388.5,-1535.7 "/>
+<text text-anchor="start" x="8323.5" y="-1520.5" font-family="Times,serif" font-size="14.00"> </text>
 </g>
 <!-- ragger.navigator.nano_navigator.NanoNavigator&#45;&gt;ragger.navigator.navigator.Navigator -->
 <g id="edge34" class="edge">
 <title>ragger.navigator.nano_navigator.NanoNavigator&#45;&gt;ragger.navigator.navigator.Navigator</title>
-<path fill="none" stroke="black" d="M8314.31,-1583.76C8305.43,-1667.13 8282.62,-1881.3 8269.23,-2007.04"/>
-<polygon fill="none" stroke="black" points="8265.74,-2006.74 8268.16,-2017.06 8272.7,-2007.48 8265.74,-2006.74"/>
+<path fill="none" stroke="black" d="M8326.19,-1583.76C8326.64,-1667.13 8327.8,-1881.3 8328.48,-2007.04"/>
+<polygon fill="none" stroke="black" points="8324.98,-2007.08 8328.53,-2017.06 8331.98,-2007.04 8324.98,-2007.08"/>
 </g>
 <!-- ragger.navigator.instruction.NavInsID -->
 <g id="node26" class="node">
@@ -804,9 +804,9 @@
 <!-- ragger.navigator.navigator.Navigator&#45;&gt;ragger.navigator.navigation_scenario.NavigateWithScenario -->
 <g id="edge102" class="edge">
 <title>ragger.navigator.navigator.Navigator&#45;&gt;ragger.navigator.navigation_scenario.NavigateWithScenario</title>
-<path fill="none" stroke="black" d="M7813.14,-2191.13C7728.31,-2207.5 7639.82,-2224.58 7555.87,-2240.78"/>
-<polygon fill="none" stroke="black" points="7555.83,-2240.78 7550.7,-2245.85 7544.05,-2243.06 7549.18,-2237.99 7555.83,-2240.78"/>
-<text text-anchor="middle" x="7732.5" y="-2213.4" font-family="Times,serif" font-size="14.00" fill="green">navigator</text>
+<path fill="none" stroke="black" d="M7855.32,-2191.13C7765.02,-2207.53 7670.8,-2224.65 7581.45,-2240.88"/>
+<polygon fill="none" stroke="black" points="7581.25,-2240.91 7576.06,-2245.92 7569.45,-2243.06 7574.63,-2238.05 7581.25,-2240.91"/>
+<text text-anchor="middle" x="7767.5" y="-2213.4" font-family="Times,serif" font-size="14.00" fill="green">navigator</text>
 </g>
 <!-- ragger.conftest.configuration.OptionalOptions -->
 <g id="node30" class="node">
@@ -826,8 +826,8 @@
 <!-- ragger.backend.physical_backend.PhysicalBackend&#45;&gt;ragger.backend.interface.BackendInterface -->
 <g id="edge3" class="edge">
 <title>ragger.backend.physical_backend.PhysicalBackend&#45;&gt;ragger.backend.interface.BackendInterface</title>
-<path fill="none" stroke="black" d="M7685.45,-1051.21C7695.19,-1124.9 7707.63,-1219.01 7719.05,-1305.39"/>
-<polygon fill="none" stroke="black" points="7715.59,-1305.89 7720.37,-1315.35 7722.52,-1304.97 7715.59,-1305.89"/>
+<path fill="none" stroke="black" d="M7687.13,-1051.21C7697.81,-1124.9 7711.45,-1219.01 7723.97,-1305.39"/>
+<polygon fill="none" stroke="black" points="7720.51,-1305.95 7725.41,-1315.35 7727.44,-1304.95 7720.51,-1305.95"/>
 </g>
 <!-- ragger.firmware.touch.positions.Position -->
 <g id="node32" class="node">
@@ -1049,8 +1049,8 @@
 <!-- ragger.backend.speculos.SpeculosBackend&#45;&gt;ragger.backend.interface.BackendInterface -->
 <g id="edge4" class="edge">
 <title>ragger.backend.speculos.SpeculosBackend&#45;&gt;ragger.backend.interface.BackendInterface</title>
-<path fill="none" stroke="black" d="M8188.19,-738.51C8190.09,-864.11 8186.96,-1019.5 8163,-1079.6 8130.01,-1162.33 8075.63,-1240.2 8017.03,-1307.78"/>
-<polygon fill="none" stroke="black" points="8014.19,-1305.71 8010.24,-1315.54 8019.46,-1310.32 8014.19,-1305.71"/>
+<path fill="none" stroke="black" d="M8188.01,-738.45C8189.84,-864.01 8186.67,-1019.39 8163,-1079.6 8130.6,-1162.03 8077.07,-1239.92 8019.41,-1307.62"/>
+<polygon fill="none" stroke="black" points="8016.59,-1305.54 8012.73,-1315.41 8021.9,-1310.1 8016.59,-1305.54"/>
 </g>
 <!-- ragger.backend.stub.StubBackend -->
 <g id="node40" class="node">
@@ -1094,8 +1094,8 @@
 <!-- ragger.backend.stub.StubBackend&#45;&gt;ragger.backend.interface.BackendInterface -->
 <g id="edge5" class="edge">
 <title>ragger.backend.stub.StubBackend&#45;&gt;ragger.backend.interface.BackendInterface</title>
-<path fill="none" stroke="black" d="M8333.49,-1079.22C8303.35,-1095.6 8273.81,-1112.8 8246,-1130.6 8164.77,-1182.59 8082.34,-1246.56 8008.65,-1308.63"/>
-<polygon fill="none" stroke="black" points="8006.01,-1306.28 8000.63,-1315.41 8010.53,-1311.63 8006.01,-1306.28"/>
+<path fill="none" stroke="black" d="M8340.58,-1079.26C8310.76,-1095.66 8281.52,-1112.85 8254,-1130.6 8173.06,-1182.8 8090.81,-1246.76 8017.2,-1308.74"/>
+<polygon fill="none" stroke="black" points="8014.57,-1306.39 8009.19,-1315.51 8019.09,-1311.73 8014.57,-1306.39"/>
 </g>
 <!-- ragger.firmware.touch.layouts.Suggestions -->
 <g id="node41" class="node">
@@ -1158,17 +1158,17 @@
 <!-- ragger.navigator.touch_navigator.TouchNavigator -->
 <g id="node43" class="node">
 <title>ragger.navigator.touch_navigator.TouchNavigator</title>
-<polygon fill="#ee8866" stroke="#ee8866" points="8399,-1512.7 8399,-1583.5 8529,-1583.5 8529,-1512.7 8399,-1512.7"/>
-<text text-anchor="start" x="8407" y="-1568.3" font-family="Times,serif" font-size="14.00">TouchNavigator</text>
-<polyline fill="none" stroke="#ee8866" points="8399,-1560.5 8529,-1560.5 "/>
-<polyline fill="none" stroke="#ee8866" points="8399,-1535.7 8529,-1535.7 "/>
-<text text-anchor="start" x="8461.5" y="-1520.5" font-family="Times,serif" font-size="14.00"> </text>
+<polygon fill="#ee8866" stroke="#ee8866" points="8407,-1512.7 8407,-1583.5 8537,-1583.5 8537,-1512.7 8407,-1512.7"/>
+<text text-anchor="start" x="8415" y="-1568.3" font-family="Times,serif" font-size="14.00">TouchNavigator</text>
+<polyline fill="none" stroke="#ee8866" points="8407,-1560.5 8537,-1560.5 "/>
+<polyline fill="none" stroke="#ee8866" points="8407,-1535.7 8537,-1535.7 "/>
+<text text-anchor="start" x="8469.5" y="-1520.5" font-family="Times,serif" font-size="14.00"> </text>
 </g>
 <!-- ragger.navigator.touch_navigator.TouchNavigator&#45;&gt;ragger.navigator.navigator.Navigator -->
 <g id="edge35" class="edge">
 <title>ragger.navigator.touch_navigator.TouchNavigator&#45;&gt;ragger.navigator.navigator.Navigator</title>
-<path fill="none" stroke="black" d="M8464.3,-1583.55C8463.59,-1657.61 8454.59,-1835.75 8389,-1965.6 8381.38,-1980.67 8371.59,-1995.24 8360.79,-2008.89"/>
-<polygon fill="none" stroke="black" points="8357.93,-2006.86 8354.32,-2016.82 8363.35,-2011.28 8357.93,-2006.86"/>
+<path fill="none" stroke="black" d="M8469.09,-1583.64C8462.27,-1656.04 8442.3,-1828.32 8397,-1965.6 8392.42,-1979.47 8386.69,-1993.71 8380.5,-2007.52"/>
+<polygon fill="none" stroke="black" points="8377.14,-2006.45 8376.15,-2017 8383.5,-2009.37 8377.14,-2006.45"/>
 </g>
 <!-- ragger.navigator.navigation_scenario.UseCase -->
 <g id="node44" class="node">

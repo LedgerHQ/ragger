@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Using and understanding the basis of Ragger testing capabilities &mdash; Ragger 1.24.0 documentation</title>
+  <title>Using and understanding the basis of Ragger testing capabilities &mdash; Ragger 1.24.1.dev2 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
@@ -187,7 +187,7 @@ capabilities in it. A minimal <code class="docutils literal notranslate"><span c
 <div class="code-block-caption"><span class="caption-text">tests/conftest.py</span><a class="headerlink" href="#id1" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="c1"># This line includes the default `Ragger` configuration.</span>
 <span class="linenos">2</span><span class="c1"># It can be modified to suit local needs</span>
-<span class="linenos">3</span><span class="kn">from</span> <span class="nn">ragger.conftest</span> <span class="kn">import</span> <span class="n">configuration</span>
+<span class="linenos">3</span><span class="kn">from</span><span class="w"> </span><span class="nn">ragger.conftest</span><span class="w"> </span><span class="kn">import</span> <span class="n">configuration</span>
 <span class="linenos">4</span>
 <span class="linenos">5</span><span class="c1"># This line will be interpreted by `pytest` which will load the code from the</span>
 <span class="linenos">6</span><span class="c1"># given modules, in this case `ragger.conftest.base_conftest`.</span>
@@ -206,7 +206,7 @@ allow to use our newly generated fixtures:</p>
 <span class="linenos">3</span><span class="c1"># define an instruction of your application here</span>
 <span class="linenos">4</span><span class="n">INS</span> <span class="o">=</span> <span class="mh">0x01</span>
 <span class="linenos">5</span>
-<span class="linenos">6</span><span class="k">def</span> <span class="nf">test_communicate</span><span class="p">(</span><span class="n">backend</span><span class="p">):</span>
+<span class="linenos">6</span><span class="k">def</span><span class="w"> </span><span class="nf">test_communicate</span><span class="p">(</span><span class="n">backend</span><span class="p">):</span>
 <span class="linenos">7</span>    <span class="nb">print</span><span class="p">(</span><span class="n">backend</span><span class="o">.</span><span class="n">exchange</span><span class="p">(</span><span class="n">cla</span><span class="o">=</span><span class="n">CLA</span><span class="p">,</span> <span class="n">ins</span><span class="o">=</span><span class="n">INS</span><span class="p">))</span>
 </pre></div>
 </div>
@@ -293,9 +293,9 @@ fixture comes into play.</p>
 <p>All the interactions described before can be implemented with this code:</p>
 <div class="literal-block-wrapper docutils container" id="id3">
 <div class="code-block-caption"><span class="caption-text">tests/test_interface.py</span><a class="headerlink" href="#id3" title="Permalink to this code"></a></div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span> <span class="nn">ragger.navigator</span> <span class="kn">import</span> <span class="n">NavInsID</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span><span class="w"> </span><span class="nn">ragger.navigator</span><span class="w"> </span><span class="kn">import</span> <span class="n">NavInsID</span>
 <span class="linenos"> 2</span>
-<span class="linenos"> 3</span><span class="k">def</span> <span class="nf">test_settings</span><span class="p">(</span><span class="n">navigator</span><span class="p">):</span>
+<span class="linenos"> 3</span><span class="k">def</span><span class="w"> </span><span class="nf">test_settings</span><span class="p">(</span><span class="n">navigator</span><span class="p">):</span>
 <span class="linenos"> 4</span>    <span class="n">instructions</span> <span class="o">=</span> <span class="p">[</span>
 <span class="linenos"> 5</span>        <span class="n">NavInsID</span><span class="o">.</span><span class="n">RIGHT_CLICK</span><span class="p">,</span>
 <span class="linenos"> 6</span>        <span class="n">NavInsID</span><span class="o">.</span><span class="n">BOTH_CLICK</span><span class="p">,</span>
@@ -343,13 +343,13 @@ snapshots can be automatically generated.</p>
 <p>First, we have to modify our test file to use this method:</p>
 <div class="literal-block-wrapper docutils container" id="id4">
 <div class="code-block-caption"><span class="caption-text">tests/test_interface.py</span><a class="headerlink" href="#id4" title="Permalink to this code"></a></div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="linenos"> 2</span><span class="kn">from</span> <span class="nn">ragger.navigator</span> <span class="kn">import</span> <span class="n">NavInsID</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="linenos"> 2</span><span class="kn">from</span><span class="w"> </span><span class="nn">ragger.navigator</span><span class="w"> </span><span class="kn">import</span> <span class="n">NavInsID</span>
 <span class="linenos"> 3</span>
 <span class="linenos"> 4</span><span class="c1"># this will point to the `tests/` directory</span>
 <span class="linenos"> 5</span><span class="n">TEST_DIRECTORY</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span>
 <span class="linenos"> 6</span>
-<span class="linenos"> 7</span><span class="k">def</span> <span class="nf">test_settings</span><span class="p">(</span><span class="n">navigator</span><span class="p">):</span>
+<span class="linenos"> 7</span><span class="k">def</span><span class="w"> </span><span class="nf">test_settings</span><span class="p">(</span><span class="n">navigator</span><span class="p">):</span>
 <span class="linenos"> 8</span>    <span class="n">instructions</span> <span class="o">=</span> <span class="p">[</span>
 <span class="linenos"> 9</span>        <span class="n">NavInsID</span><span class="o">.</span><span class="n">RIGHT_CLICK</span><span class="p">,</span>
 <span class="linenos">10</span>        <span class="n">NavInsID</span><span class="o">.</span><span class="n">BOTH_CLICK</span><span class="p">,</span>
@@ -578,7 +578,7 @@ or access runtime information:</p>
 <code class="docutils literal notranslate"><span class="pre">pytest</span></code> marker allowing to execute test only on the specified backend:</p>
 <div class="literal-block-wrapper docutils container" id="id5">
 <div class="code-block-caption"><span class="caption-text">tests/test_first.py</span><a class="headerlink" href="#id5" title="Permalink to this code"></a></div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">pytest</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="n">CLA</span> <span class="o">=</span> <span class="mh">0xB0</span>
 <span class="linenos"> 4</span><span class="n">INS</span> <span class="o">=</span> <span class="mh">0x01</span>
@@ -586,7 +586,7 @@ or access runtime information:</p>
 <span class="linenos"> 6</span><span class="c1"># this will prevent this test from running,</span>
 <span class="linenos"> 7</span><span class="c1"># except with the ``--backend ledgercomm`` argument</span>
 <span class="linenos"> 8</span><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">use_on_backend</span><span class="p">(</span><span class="s2">&quot;ledgercomm&quot;</span><span class="p">)</span>
-<span class="linenos"> 9</span><span class="k">def</span> <span class="nf">test_communicate</span><span class="p">(</span><span class="n">backend</span><span class="p">):</span>
+<span class="linenos"> 9</span><span class="k">def</span><span class="w"> </span><span class="nf">test_communicate</span><span class="p">(</span><span class="n">backend</span><span class="p">):</span>
 <span class="linenos">10</span>  <span class="nb">print</span><span class="p">(</span><span class="n">backend</span><span class="o">.</span><span class="n">exchange</span><span class="p">(</span><span class="n">cla</span><span class="o">=</span><span class="n">CLA</span><span class="p">,</span> <span class="n">ins</span><span class="o">=</span><span class="n">INS</span><span class="p">))</span>
 </pre></div>
 </div>
