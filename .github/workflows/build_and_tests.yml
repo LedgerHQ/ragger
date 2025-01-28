@@ -38,7 +38,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python_version: ['3.8', '3.9', '3.10', '3.11']
+        python_version: ['3.9', '3.10', '3.11', '3.12']
 
     steps:
     - name: Clone
@@ -105,6 +105,10 @@ jobs:
 
     - name: Build Ragger Python package
       run: |
+        # Needed to workaround this bug https://github.com/pypa/setuptools/issues/4759
+        # To be removed when it's fixed
+        pip install -U packaging
+
         pip install --upgrade pip build twine
         python -m build
         pip install .

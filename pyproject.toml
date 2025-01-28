@@ -1,6 +1,6 @@
 [build-system]
 requires = [
-    "setuptools>=61.2",
+    "setuptools>=75",
     "setuptools_scm[toml]>=6.2",
     "wheel"
 ]
@@ -12,19 +12,19 @@ authors = [{name = "Ledger", email = "hello@ledger.fr"}]
 description = "Testing framework using Speculos and LedgerComm as backends"
 classifiers = [
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "License :: OSI Approved :: Apache Software License",
     "Operating System :: POSIX :: Linux",
     "Operating System :: MacOS :: MacOS X",
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 dependencies = [
     "bip_utils>=2.4.0",
     "py-sr25519-bindings>=0.2.0,<0.3.0",
-    "ledgered>=0.6.3",
+    "ledgered>=0.7.1",
 ]
 dynamic = ["version"]
 
@@ -63,7 +63,7 @@ doc = [
     "docutils==0.16",
 ]
 speculos = [
-    "speculos>=0.9.1",
+    "speculos>=0.13.1",
     "mnemonic",
 ]
 ledgercomm = [
