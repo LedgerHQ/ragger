@@ -42,6 +42,8 @@ class RaggerMainWindow(QMainWindow):
         super().__init__()
         self._devicebody: QLabel
         self._touch: QLabel
+        self._swipe_left: QLabel
+        self._swipe_right: QLabel
         self._lb: QLabel
         self._rb: QLabel
         self.logger = get_gui_logger().getChild("QWindow")
@@ -97,10 +99,16 @@ class RaggerMainWindow(QMainWindow):
         self._actionhint.show()
 
     def _show_button(self, widget: QWidget, show: bool, x: int = 0, y: int = 0):
-        if widget.objectName in [self._lb.objectName, self._rb.objectName, self._touch.objectName]:
+        if widget.objectName in [
+                self._lb.objectName, self._rb.objectName, self._touch.objectName,
+                self._swipe_left.objectName, self._swipe_right.objectName
+        ]:
             if show:
-                if widget.objectName == self._touch.objectName:
-                    margin_left = 65 - self._touch.width() // 2
+                if widget.objectName in [
+                        self._touch.objectName, self._swipe_left.objectName,
+                        self._swipe_right.objectName
+                ]:
+                    margin_left = 65 - widget.width() // 2
                     margin_top = 25  # Tip of finger
                     widget.move(x + margin_left, y + margin_top)
                 widget.show()
@@ -145,6 +153,23 @@ class RaggerMainWindow(QMainWindow):
         self._touch.setPixmap(touch_pix)
         self._touch.hide()
 
+        self._swipe_left = QLabel(self._central_widget)
+        self._swipe_left.setScaledContents(False)
+        self._swipe_left.setObjectName("swipe_left")
+        swipe_left_pix = QPixmap(str(Path(__file__).parent / "assets/swipe_left_action.png"))
+        self._swipe_left.setGeometry(QRect(0, 0, swipe_left_pix.width(), swipe_left_pix.height()))
+        self._swipe_left.setPixmap(swipe_left_pix)
+        self._swipe_left.hide()
+
+        self._swipe_right = QLabel(self._central_widget)
+        self._swipe_right.setScaledContents(False)
+        self._swipe_right.setObjectName("swipe_right")
+        swipe_right_pix = QPixmap(str(Path(__file__).parent / "assets/swipe_right_action.png"))
+        self._swipe_right.setGeometry(QRect(0, 0, swipe_right_pix.width(),
+                                            swipe_right_pix.height()))
+        self._swipe_right.setPixmap(swipe_right_pix)
+        self._swipe_right.hide()
+
     def _init_device_buttons_effect(self) -> None:
         self.effects = []
         effect = QGraphicsOpacityEffect()
@@ -157,6 +182,14 @@ class RaggerMainWindow(QMainWindow):
 
         effect = QGraphicsOpacityEffect()
         self._touch.setGraphicsEffect(effect)
+        self.effects.append(effect)
+
+        effect = QGraphicsOpacityEffect()
+        self._swipe_left.setGraphicsEffect(effect)
+        self.effects.append(effect)
+
+        effect = QGraphicsOpacityEffect()
+        self._swipe_right.setGraphicsEffect(effect)
         self.effects.append(effect)
 
         effect = QGraphicsOpacityEffect()
@@ -197,6 +230,8 @@ class RaggerMainWindow(QMainWindow):
         if self._device in ["stax", "flex"]:
             self._devicebody.raise_()
             self._touch.raise_()
+            self._swipe_left.raise_()
+            self._swipe_right.raise_()
 
         layout = QGridLayout()
         layout.addWidget(self._devicebody, 0, 0)
@@ -214,6 +249,8 @@ class RaggerMainWindow(QMainWindow):
         self._show_button(self._lb, False)
         self._show_button(self._rb, False)
         self._show_button(self._touch, False)
+        self._show_button(self._swipe_left, False)
+        self._show_button(self._swipe_right, False)
 
     def close(self) -> bool:
         """
@@ -287,6 +324,12 @@ class RaggerMainWindow(QMainWindow):
         elif action == "touch":
             self._show_button(self._touch, True, x, y)
             self._actionhint.setText(f"Please {action} device screen where indicated")
+        elif action == "swipe_left":
+            self._show_button(self._swipe_left, True, x, y)
+            self._actionhint.setText("Please swipe device screen to the left")
+        elif action == "swipe_right":
+            self._show_button(self._swipe_right, True, x, y)
+            self._actionhint.setText("Please swipe device screen to the right")
 
         self._yes.setText("Okay, I've performed the action")
         self._no.setText("Cancel the process")

@@ -80,7 +80,8 @@ class PhysicalBackend(BackendInterface):
                      delay: float = 0.5) -> None:
         if self._ui is None:
             return
-        raise NotImplementedError
+        self.init_gui()
+        self._ui.ask_for_swipe_action(x, y, direction)
 
     def compare_screen_with_snapshot(self,
                                      golden_snap_path: Path,

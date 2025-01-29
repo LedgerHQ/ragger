@@ -56,19 +56,25 @@ class ProcessCommunicationWorker(QObject):
             if command == "screenshot":
                 self.logger.debug("Image received")
                 self._main_window.display_screenshot(argument)
-            if command == "text_search":
+            elif command == "text_search":
                 self.logger.debug(f"Text search received : '{argument}'")
                 self._main_window.display_text_search(argument)
-            if command == "click_action":
+            elif command == "click_action":
                 self.logger.debug("Click action required")
                 self._main_window.display_action(NAVIGATION_ACTIONS[argument])
-            if command == "touch_action":
+            elif command == "touch_action":
                 self.logger.debug("Touch action required")
                 self._main_window.display_action("touch", *argument)
-            if command == "action_done":
+            elif command == "swipe_left_action":
+                self.logger.debug("Swipe left action required")
+                self._main_window.display_action("swipe_left", *argument)
+            elif command == "swipe_right_action":
+                self.logger.debug("Swipe right action required")
+                self._main_window.display_action("swipe_right", *argument)
+            elif command == "action_done":
                 self.logger.debug("Action done")
                 self._main_window.action_done()
-            if command == "kill":
+            elif command == "kill":
                 self.logger.debug("Kill object")
                 self._main_window.close()
 
@@ -118,6 +124,13 @@ class RaggerGUI(Process):
 
     def ask_for_touch_action(self, x: int = 0, y: int = 0):
         self._send(("touch_action", (x, y)))
+        return self._receive()
+
+    def ask_for_swipe_action(self, x: int = 0, y: int = 0, direction: str = "left"):
+        if direction == "left":
+            self._send(("swipe_left_action", (x, y)))
+        else:
+            self._send(("swipe_right_action", (x, y)))
         return self._receive()
 
     def _configure_worker(self):
