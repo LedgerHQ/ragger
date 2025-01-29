@@ -237,10 +237,10 @@ class RaggerMainWindow(QMainWindow):
         layout.addWidget(self._devicebody, 0, 0)
         layout.addWidget(self._lb, 0, 0)
         layout.addWidget(self._rb, 0, 0)
-        layout.addWidget(self._actionhint, 0, 0)
+        layout.addWidget(self._actionhint, 1, 0)
         layout.addWidget(self._screenshot, 0, 0)
-        layout.addWidget(self._yes, 1, 0)
-        layout.addWidget(self._no, 2, 0)
+        layout.addWidget(self._yes, 2, 0)
+        layout.addWidget(self._no, 3, 0)
 
         self._central_widget.setLayout(layout)
         self.setCentralWidget(self._central_widget)
