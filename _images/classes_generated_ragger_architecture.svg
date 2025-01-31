@@ -855,32 +855,33 @@
 <!-- ragger.gui.process.RaggerGUI -->
 <g id="node35" class="node">
 <title>ragger.gui.process.RaggerGUI</title>
-<polygon fill="#eedd88" stroke="#eedd88" points="10780,-831.2 10780,-1005.2 11064,-1005.2 11064,-831.2 10780,-831.2"/>
-<text text-anchor="start" x="10881.5" y="-990" font-family="Times,serif" font-size="14.00">RaggerGUI</text>
-<polyline fill="none" stroke="#eedd88" points="10780,-982.2 11064,-982.2 "/>
-<text text-anchor="start" x="10896.5" y="-967" font-family="Times,serif" font-size="14.00">logger</text>
-<text text-anchor="start" x="10896.5" y="-952" font-family="Times,serif" font-size="14.00">thread</text>
-<text text-anchor="start" x="10896.5" y="-937" font-family="Times,serif" font-size="14.00">worker</text>
-<polyline fill="none" stroke="#eedd88" points="10780,-929.2 11064,-929.2 "/>
-<text text-anchor="start" x="10788" y="-914" font-family="Times,serif" font-size="14.00">ask_for_click_action(ins_id: NavInsID)</text>
-<text text-anchor="start" x="10788" y="-899" font-family="Times,serif" font-size="14.00">ask_for_touch_action(x: int, y: int)</text>
-<text text-anchor="start" x="10788" y="-884" font-family="Times,serif" font-size="14.00">check_screenshot(image: Path)</text>
-<text text-anchor="start" x="10788" y="-869" font-family="Times,serif" font-size="14.00">check_text(text: str)</text>
-<text text-anchor="start" x="10788" y="-854" font-family="Times,serif" font-size="14.00">kill()</text>
-<text text-anchor="start" x="10788" y="-839" font-family="Times,serif" font-size="14.00">run()</text>
+<polygon fill="#eedd88" stroke="#eedd88" points="10741.5,-823.7 10741.5,-1012.7 11102.5,-1012.7 11102.5,-823.7 10741.5,-823.7"/>
+<text text-anchor="start" x="10881.5" y="-997.5" font-family="Times,serif" font-size="14.00">RaggerGUI</text>
+<polyline fill="none" stroke="#eedd88" points="10741.5,-989.7 11102.5,-989.7 "/>
+<text text-anchor="start" x="10896.5" y="-974.5" font-family="Times,serif" font-size="14.00">logger</text>
+<text text-anchor="start" x="10896.5" y="-959.5" font-family="Times,serif" font-size="14.00">thread</text>
+<text text-anchor="start" x="10896.5" y="-944.5" font-family="Times,serif" font-size="14.00">worker</text>
+<polyline fill="none" stroke="#eedd88" points="10741.5,-936.7 11102.5,-936.7 "/>
+<text text-anchor="start" x="10749.5" y="-921.5" font-family="Times,serif" font-size="14.00">ask_for_click_action(ins_id: NavInsID)</text>
+<text text-anchor="start" x="10749.5" y="-906.5" font-family="Times,serif" font-size="14.00">ask_for_swipe_action(x: int, y: int, direction: str)</text>
+<text text-anchor="start" x="10749.5" y="-891.5" font-family="Times,serif" font-size="14.00">ask_for_touch_action(x: int, y: int)</text>
+<text text-anchor="start" x="10749.5" y="-876.5" font-family="Times,serif" font-size="14.00">check_screenshot(image: Path)</text>
+<text text-anchor="start" x="10749.5" y="-861.5" font-family="Times,serif" font-size="14.00">check_text(text: str)</text>
+<text text-anchor="start" x="10749.5" y="-846.5" font-family="Times,serif" font-size="14.00">kill()</text>
+<text text-anchor="start" x="10749.5" y="-831.5" font-family="Times,serif" font-size="14.00">run()</text>
 </g>
 <!-- ragger.gui.process.ProcessCommunicationWorker&#45;&gt;ragger.gui.process.RaggerGUI -->
 <g id="edge89" class="edge">
 <title>ragger.gui.process.ProcessCommunicationWorker&#45;&gt;ragger.gui.process.RaggerGUI</title>
-<path fill="none" stroke="black" d="M10842.06,-341.67C10833.32,-424.32 10820.9,-596.79 10849,-738.8 10854.35,-765.82 10863.8,-793.91 10874.17,-819.59"/>
-<polygon fill="black" stroke="black" points="10874.23,-819.74 10880.22,-823.75 10878.83,-830.82 10872.83,-826.81 10874.23,-819.74"/>
+<path fill="none" stroke="black" d="M10842.06,-341.67C10833.32,-424.32 10820.9,-596.79 10849,-738.8 10853.83,-763.2 10862.01,-788.48 10871.18,-812.06"/>
+<polygon fill="black" stroke="black" points="10871.3,-812.35 10877.24,-816.43 10875.76,-823.49 10869.82,-819.4 10871.3,-812.35"/>
 <text text-anchor="middle" x="10874.5" y="-553.6" font-family="Times,serif" font-size="14.00" fill="green">worker</text>
 </g>
 <!-- ragger.gui.process.ProcessCommunicationWorker&#45;&gt;ragger.gui.process.RaggerGUI -->
 <g id="edge90" class="edge">
 <title>ragger.gui.process.ProcessCommunicationWorker&#45;&gt;ragger.gui.process.RaggerGUI</title>
-<path fill="none" stroke="black" d="M10884.36,-341.71C10890.68,-352.45 10896.38,-364.12 10900,-375.8 10924.75,-455.69 10925.73,-685.82 10924.02,-818.92"/>
-<polygon fill="black" stroke="black" points="10924.02,-819.1 10927.94,-825.15 10923.86,-831.1 10919.94,-825.04 10924.02,-819.1"/>
+<path fill="none" stroke="black" d="M10884.36,-341.71C10890.68,-352.45 10896.38,-364.12 10900,-375.8 10924.28,-454.17 10925.69,-677.09 10924.12,-811.2"/>
+<polygon fill="black" stroke="black" points="10924.11,-811.49 10928.04,-817.54 10923.96,-823.49 10920.04,-817.44 10924.11,-811.49"/>
 <text text-anchor="middle" x="10950.5" y="-553.6" font-family="Times,serif" font-size="14.00" fill="green">worker</text>
 </g>
 <!-- ragger.utils.structs.RAPDU -->
@@ -975,8 +976,8 @@
 <!-- ragger.gui.interface.RaggerMainWindow&#45;&gt;ragger.gui.process.RaggerGUI -->
 <g id="edge88" class="edge">
 <title>ragger.gui.interface.RaggerMainWindow&#45;&gt;ragger.gui.process.RaggerGUI</title>
-<path fill="none" stroke="black" d="M10982.35,-174.52C10984.58,-180.65 10986.5,-186.85 10988,-193 10989.57,-199.48 10988.05,-201.33 10988,-208 10986.22,-443.93 11018.68,-506.05 10980,-738.8 10975.58,-765.41 10967.95,-793.47 10959.65,-819.26"/>
-<polygon fill="black" stroke="black" points="10959.55,-819.54 10961.47,-826.49 10955.79,-830.94 10953.88,-823.99 10959.55,-819.54"/>
+<path fill="none" stroke="black" d="M10982.35,-174.52C10984.58,-180.65 10986.5,-186.85 10988,-193 10989.57,-199.48 10988.05,-201.33 10988,-208 10986.22,-443.93 11018.68,-506.05 10980,-738.8 10975.98,-762.96 10969.32,-788.32 10961.92,-812.09"/>
+<polygon fill="black" stroke="black" points="10961.89,-812.18 10963.87,-819.12 10958.23,-823.61 10956.25,-816.68 10961.89,-812.18"/>
 <text text-anchor="middle" x="11043" y="-288.2" font-family="Times,serif" font-size="14.00" fill="green">_main_window</text>
 </g>
 <!-- ragger.backend.interface.RaisePolicy -->
