@@ -14,8 +14,6 @@
    limitations under the License.
 """
 from pathlib import Path
-from PIL import Image, ImageOps
-from pytesseract import image_to_data, Output
 from types import TracebackType
 from typing import List, Optional, Type
 
@@ -104,6 +102,16 @@ class PhysicalBackend(BackendInterface):
             return False
 
     def compare_screen_with_text(self, text: str) -> bool:
+        # Only this method needs these dependencies, which needs at least one physical backend to
+        # be installed. By postponing the imports, we avoid an import error when using only Speculos
+        try:
+            from PIL import Image, ImageOps
+            from pytesseract import image_to_data, Output
+        except ImportError as error:
+            raise ImportError(
+                "This feature needs at least one physical backend. "
+                "Please install ragger[ledgercomm] or ragger[ledgerwallet]") from error
+
         if self._ui is None:
             return True
         self.init_gui()

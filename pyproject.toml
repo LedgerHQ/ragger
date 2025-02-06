@@ -71,11 +71,13 @@ ledgercomm = [
     "ledgercomm[hid]>=1.2.1",
     "pyqt5",
     "pytesseract",
+    "pillow",
 ]
 ledgerwallet = [
     "ledgerwallet>=0.4.0",
     "pyqt5",
     "pytesseract",
+    "pillow",
 ]
 all_backends = [
     "ragger[speculos]",
