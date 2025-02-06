@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.26.0] - 2025-??-??
+## [1.26.0] - 2025-02-06
 
 ### Added
 
@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - `_actionhint` element location (covered previously by the snapshot image)
+- Physical backend -specific imports (`PIL`, `tesseract`) are postponed to avoid raising when using
+  Speculos only
 
 ## [1.25.0] - 2024-12-20
 
