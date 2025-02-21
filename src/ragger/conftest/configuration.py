@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, List
 
 
 @dataclass
@@ -10,6 +10,7 @@ class OptionalOptions:
     SIDELOADED_APPS_DIR: str
     BACKEND_SCOPE: str
     CUSTOM_SEED: str
+    ALLOWED_SETUPS: List[str]
 
 
 OPTIONAL = OptionalOptions(
@@ -48,4 +49,15 @@ OPTIONAL = OptionalOptions(
     # This would result in speculos being launched with --seed <CUSTOM_SEED>
     # If a seed is provided through the "--seed" pytest command line option, it will override this one.
     CUSTOM_SEED=str(),
+
+    # Use this parameter if you want ragger to handle running different test suites depending on setup
+    # Useful when some tests need certain build options and other tests need other build options, or a
+    # different Speculos command line
+    # Adding a setup <name> will allow you to decorate your tests with it using the following syntax
+    # @pytest.mark.needs_setup('<name>')
+    # And run marked tests and only them using the --setup <name>
+    #
+    # "default" setup is always allowed, all tests without explicit decoration depend on default
+    # and the --setup option defaults to "default"
+    ALLOWED_SETUPS=["default"],
 )

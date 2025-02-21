@@ -40,6 +40,15 @@ def pytest_addoption(parser):
                      "ones. Will only work with 'speculos' as the backend")
     parser.addoption("--log_apdu_file", action="store", default=None, help="Log the APDU in a file")
     parser.addoption("--seed", action="store", default=None, help="Set a custom seed")
+    # Always allow "default" even if application conftest does not define it
+    allowed_setups = conf.OPTIONAL.ALLOWED_SETUPS
+    if "default" not in allowed_setups:
+        allowed_setups.insert(0, "default")
+    parser.addoption("--setup",
+                     action="store",
+                     default="default",
+                     help="Specify the setup fixture (e.g., 'prod_build')",
+                     choices=allowed_setups)
 
 
 @pytest.fixture(scope="session")
@@ -275,10 +284,34 @@ def use_only_on_backend(request, backend_name):
             pytest.skip(f'skipped on this backend: "{current_backend}"')
 
 
+# This fixture looks for the 'needs_setup' marker. Example:
+# @pytest.mark.needs_setup('prod_build')
+@pytest.fixture(scope="function", autouse=True)
+def skip_needs_setup(request):
+    if request.node.get_closest_marker('needs_setup'):
+        needed_setup = request.node.get_closest_marker('needs_setup').args[0]
+    else:
+        needed_setup = "default"
+    current_setup = request.config.getoption("--setup")
+    if needed_setup != current_setup:
+        pytest.skip(f"Skip test requiring setup {needed_setup} as current setup is {current_setup}")
+
+
 def pytest_configure(config):
     config.addinivalue_line(
         "markers",
         "use_on_backend(backend): skip test if not on the specified backend",
+    )
+
+    # fixture with parameter, use with the following syntax
+    # # @pytest.mark.needs_setup('prod_build')
+    # if not decorated, defaults to
+    # # @pytest.mark.needs_setup('default')
+    # will apply a skip filter against the "--setup <setup_name>" command line argument
+    # Update configuration.OPTIONAL.ALLOWED_SETUPS when adding new setups to allow the command line to accept them
+    config.addinivalue_line(
+        "markers",
+        "needs_setup(setup_name): skip test if not on the specified setup",
     )
 
 
