@@ -811,17 +811,18 @@
 <!-- ragger.conftest.configuration.OptionalOptions -->
 <g id="node30" class="node">
 <title>ragger.conftest.configuration.OptionalOptions</title>
-<polygon fill="#bbcc33" stroke="#bbcc33" points="10392.5,-15.5 10392.5,-159.5 10625.5,-159.5 10625.5,-15.5 10392.5,-15.5"/>
-<text text-anchor="start" x="10450.5" y="-144.3" font-family="Times,serif" font-size="14.00">OptionalOptions</text>
-<polyline fill="none" stroke="#bbcc33" points="10392.5,-136.5 10625.5,-136.5 "/>
-<text text-anchor="start" x="10400.5" y="-121.3" font-family="Times,serif" font-size="14.00">APP_NAME : str</text>
-<text text-anchor="start" x="10400.5" y="-106.3" font-family="Times,serif" font-size="14.00">BACKEND_SCOPE : str</text>
-<text text-anchor="start" x="10400.5" y="-91.3" font-family="Times,serif" font-size="14.00">CUSTOM_SEED : str</text>
-<text text-anchor="start" x="10400.5" y="-76.3" font-family="Times,serif" font-size="14.00">MAIN_APP_DIR : Optional[str]</text>
-<text text-anchor="start" x="10400.5" y="-61.3" font-family="Times,serif" font-size="14.00">SIDELOADED_APPS : dict</text>
-<text text-anchor="start" x="10400.5" y="-46.3" font-family="Times,serif" font-size="14.00">SIDELOADED_APPS_DIR : str</text>
-<polyline fill="none" stroke="#bbcc33" points="10392.5,-38.5 10625.5,-38.5 "/>
-<text text-anchor="start" x="10506.5" y="-23.3" font-family="Times,serif" font-size="14.00"> </text>
+<polygon fill="#bbcc33" stroke="#bbcc33" points="10392.5,-8 10392.5,-167 10625.5,-167 10625.5,-8 10392.5,-8"/>
+<text text-anchor="start" x="10450.5" y="-151.8" font-family="Times,serif" font-size="14.00">OptionalOptions</text>
+<polyline fill="none" stroke="#bbcc33" points="10392.5,-144 10625.5,-144 "/>
+<text text-anchor="start" x="10400.5" y="-128.8" font-family="Times,serif" font-size="14.00">ALLOWED_SETUPS : List[str]</text>
+<text text-anchor="start" x="10400.5" y="-113.8" font-family="Times,serif" font-size="14.00">APP_NAME : str</text>
+<text text-anchor="start" x="10400.5" y="-98.8" font-family="Times,serif" font-size="14.00">BACKEND_SCOPE : str</text>
+<text text-anchor="start" x="10400.5" y="-83.8" font-family="Times,serif" font-size="14.00">CUSTOM_SEED : str</text>
+<text text-anchor="start" x="10400.5" y="-68.8" font-family="Times,serif" font-size="14.00">MAIN_APP_DIR : Optional[str]</text>
+<text text-anchor="start" x="10400.5" y="-53.8" font-family="Times,serif" font-size="14.00">SIDELOADED_APPS : dict</text>
+<text text-anchor="start" x="10400.5" y="-38.8" font-family="Times,serif" font-size="14.00">SIDELOADED_APPS_DIR : str</text>
+<polyline fill="none" stroke="#bbcc33" points="10392.5,-31 10625.5,-31 "/>
+<text text-anchor="start" x="10506.5" y="-15.8" font-family="Times,serif" font-size="14.00"> </text>
 </g>
 <!-- ragger.backend.physical_backend.PhysicalBackend&#45;&gt;ragger.backend.interface.BackendInterface -->
 <g id="edge3" class="edge">
