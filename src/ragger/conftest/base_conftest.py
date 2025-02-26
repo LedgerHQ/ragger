@@ -284,17 +284,17 @@ def use_only_on_backend(request, backend_name):
             pytest.skip(f'skipped on this backend: "{current_backend}"')
 
 
-# This fixture looks for the 'needs_setup' marker. Example:
+# This function will look for the 'needs_setup' marker. Example:
 # @pytest.mark.needs_setup('prod_build')
-@pytest.fixture(scope="function", autouse=True)
-def skip_needs_setup(request):
-    if request.node.get_closest_marker('needs_setup'):
-        needed_setup = request.node.get_closest_marker('needs_setup').args[0]
-    else:
-        needed_setup = "default"
-    current_setup = request.config.getoption("--setup")
-    if needed_setup != current_setup:
-        pytest.skip(f"Skip test requiring setup {needed_setup} as current setup is {current_setup}")
+# If the needed setup is not the one requested, a skip marker will be added
+def pytest_collection_modifyitems(config, items):
+    current = config.getoption("--setup")
+    for item in items:
+        marker = item.get_closest_marker('needs_setup')
+        needed = marker.args[0] if marker else "default"
+        if needed != current:
+            item.add_marker(
+                pytest.mark.skip(reason=f"Test requires setup '{needed}' but setup is '{current}'"))
 
 
 def pytest_configure(config):
