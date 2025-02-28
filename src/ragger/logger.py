@@ -19,7 +19,8 @@ import logging
 from pathlib import Path
 from typing import Optional
 
-DEFAULT_FORMAT = '[%(asctime)s][%(levelname)s] %(name)s - %(message)s'
+SHORT_FORMAT = '[%(levelname)s] %(name)s - %(message)s'
+LONG_FORMAT = '[%(asctime)s][%(levelname)s] %(name)s - %(message)s'
 
 
 def get_default_logger():
@@ -35,7 +36,7 @@ def get_gui_logger():
 
 
 def _init_logger(logger: logging.Logger, format: Optional[str]):
-    format = format or DEFAULT_FORMAT
+    format = format or LONG_FORMAT
     logger.handlers.clear()
     logger.setLevel(level=logging.DEBUG)
     handler = logging.StreamHandler()
