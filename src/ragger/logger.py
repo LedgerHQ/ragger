@@ -19,6 +19,7 @@ import logging
 from pathlib import Path
 from typing import Optional
 
+SHORT_FORMAT = '[%(levelname)s] %(name)s - %(message)s'
 DEFAULT_FORMAT = '[%(asctime)s][%(levelname)s] %(name)s - %(message)s'
 
 
