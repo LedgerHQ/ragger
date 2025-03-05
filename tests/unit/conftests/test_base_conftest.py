@@ -48,9 +48,18 @@ class TestBaseConftest(TestCase):
             app_path, _ = prepare_base_dir(temp_dir)
             with patch("ragger.conftest.base_conftest.Manifest", ManifestMock):
                 result_app, result_args = bc.prepare_speculos_args(temp_dir, Firmware.STAX, False,
-                                                                   self.seed, [])
+                                                                   False, self.seed, [])
             self.assertEqual(result_app, app_path)
             self.assertEqual(result_args, {"args": ["--seed", self.seed]})
+
+    def test_prepare_speculos_args_with_prod_pki(self):
+        with temporary_directory() as temp_dir:
+            app_path, _ = prepare_base_dir(temp_dir)
+            with patch("ragger.conftest.base_conftest.Manifest", ManifestMock):
+                result_app, result_args = bc.prepare_speculos_args(temp_dir, Firmware.STAX, False,
+                                                                   True, self.seed, [])
+            self.assertEqual(result_app, app_path)
+            self.assertEqual(result_args, {"args": ["-p", "--seed", self.seed]})
 
     def test_prepare_speculos_args_with_custom_args(self):
         arg = "whatever"
@@ -58,7 +67,7 @@ class TestBaseConftest(TestCase):
             app_path, _ = prepare_base_dir(temp_dir)
             with patch("ragger.conftest.base_conftest.Manifest", ManifestMock):
                 result_app, result_args = bc.prepare_speculos_args(temp_dir, Firmware.STAX, False,
-                                                                   self.seed, [arg])
+                                                                   False, self.seed, [arg])
             self.assertEqual(result_app, app_path)
             self.assertEqual(result_args, {"args": [arg, "--seed", self.seed]})
 
@@ -67,7 +76,7 @@ class TestBaseConftest(TestCase):
             app_path, _ = prepare_base_dir(temp_dir)
             with patch("ragger.conftest.base_conftest.Manifest", ManifestMock):
                 result_app, result_args = bc.prepare_speculos_args(temp_dir, Firmware.STAX, True,
-                                                                   self.seed, [])
+                                                                   False, self.seed, [])
             self.assertEqual(result_app, app_path)
             self.assertEqual(result_args, {"args": ["--display", "qt", "--seed", self.seed]})
 
@@ -77,7 +86,7 @@ class TestBaseConftest(TestCase):
             with patch("ragger.conftest.base_conftest.conf.OPTIONAL.MAIN_APP_DIR", "./deps"):
                 with patch("ragger.conftest.base_conftest.Manifest", ManifestMock) as manifest:
                     result_app, result_args = bc.prepare_speculos_args(
-                        temp_dir, Firmware.STAX, False, self.seed, [])
+                        temp_dir, Firmware.STAX, False, False, self.seed, [])
             self.assertEqual(result_app, dep_path)
             self.assertEqual(result_args, {"args": [f"-l{app_path}", "--seed", self.seed]})
 
@@ -88,7 +97,8 @@ class TestBaseConftest(TestCase):
                        ["more than 1 elt"]):
                 with patch("ragger.conftest.base_conftest.Manifest", ManifestMock):
                     with self.assertRaises(ValueError):
-                        bc.prepare_speculos_args(temp_dir, Firmware.STAX, False, self.seed, [])
+                        bc.prepare_speculos_args(temp_dir, Firmware.STAX, False, False, self.seed,
+                                                 [])
 
     def test_prepare_speculos_args_sideloaded_apps_ok(self):
         lib1_bin, lib1_name, lib2_bin, lib2_name = "lib1", "name1", "lib2", "name2"
@@ -109,7 +119,7 @@ class TestBaseConftest(TestCase):
 
                     with patch("ragger.conftest.base_conftest.Manifest", ManifestMock):
                         result_app, result_args = bc.prepare_speculos_args(
-                            temp_dir, Firmware.STAX, False, self.seed, [])
+                            temp_dir, Firmware.STAX, False, False, self.seed, [])
                     self.assertEqual(result_app, app_path)
                     self.assertEqual(
                         result_args, {
@@ -121,25 +131,25 @@ class TestBaseConftest(TestCase):
 
     def test_create_backend_nok(self):
         with self.assertRaises(ValueError):
-            bc.create_backend(None, "does not exist", None, None, None, None, [])
+            bc.create_backend(None, "does not exist", None, None, None, None, None, [])
 
     def test_create_backend_speculos(self):
         with patch("ragger.conftest.base_conftest.SpeculosBackend") as backend:
             with temporary_directory() as temp_dir:
                 prepare_base_dir(temp_dir)
                 with patch("ragger.conftest.base_conftest.Manifest", ManifestMock):
-                    result = bc.create_backend(temp_dir, "Speculos", Firmware.STAX, False, None,
-                                               self.seed, [])
+                    result = bc.create_backend(temp_dir, "Speculos", Firmware.STAX, False, False,
+                                               None, self.seed, [])
                 self.assertEqual(result, backend())
 
     def test_create_backend_ledgercomm(self):
         with patch("ragger.conftest.base_conftest.LedgerWalletBackend") as backend:
-            result = bc.create_backend(None, "ledgerWALLET", Firmware.STAX, False, None, self.seed,
-                                       [])
+            result = bc.create_backend(None, "ledgerWALLET", Firmware.STAX, False, False, None,
+                                       self.seed, [])
             self.assertEqual(result, backend())
 
     def test_create_backend_ledgerwallet(self):
         with patch("ragger.conftest.base_conftest.LedgerCommBackend") as backend:
-            result = bc.create_backend(None, "LedgerComm", Firmware.STAX, False, None, self.seed,
-                                       [])
+            result = bc.create_backend(None, "LedgerComm", Firmware.STAX, False, False, None,
+                                       self.seed, [])
             self.assertEqual(result, backend())

@@ -38,6 +38,10 @@ def pytest_addoption(parser):
                      default=False,
                      help="Do not compare the snapshots during testing, but instead save the live "
                      "ones. Will only work with 'speculos' as the backend")
+    parser.addoption("--pki_prod",
+                     action="store_true",
+                     default=False,
+                     help="Have Speculos accept prod PKI certificates instead of test")
     parser.addoption("--log_apdu_file", action="store", default=None, help="Log the APDU in a file")
     parser.addoption("--seed", action="store", default=None, help="Set a custom seed")
     # Always allow "default" even if application conftest does not define it
@@ -75,6 +79,11 @@ def log_apdu_file(pytestconfig):
 @pytest.fixture(scope="session")
 def cli_user_seed(pytestconfig):
     return pytestconfig.getoption("seed")
+
+
+@pytest.fixture(scope="session")
+def pki_prod(pytestconfig):
+    return pytestconfig.getoption("pki_prod")
 
 
 @pytest.fixture(scope="session")
@@ -151,12 +160,14 @@ def pytest_generate_tests(metafunc):
         metafunc.parametrize("firmware", fw_list, ids=ids, scope="session")
 
 
-def prepare_speculos_args(root_pytest_dir: Path, firmware: Firmware, display: bool,
+def prepare_speculos_args(root_pytest_dir: Path, firmware: Firmware, display: bool, pki_prod: bool,
                           cli_user_seed: str, additional_args: List[str]):
     speculos_args = additional_args.copy()
 
     if display:
         speculos_args += ["--display", "qt"]
+    if pki_prod:
+        speculos_args += ["-p"]
 
     device = firmware.name
     if device == "nanosp":
@@ -215,7 +226,7 @@ def prepare_speculos_args(root_pytest_dir: Path, firmware: Firmware, display: bo
 # instantiated, and the tests will either run on Speculos or on a physical
 # device depending on the backend
 def create_backend(root_pytest_dir: Path, backend_name: str, firmware: Firmware, display: bool,
-                   log_apdu_file: Optional[Path], cli_user_seed: str,
+                   pki_prod: bool, log_apdu_file: Optional[Path], cli_user_seed: str,
                    additional_speculos_arguments: List[str]) -> BackendInterface:
     if backend_name.lower() == "ledgercomm":
         return LedgerCommBackend(firmware=firmware,
@@ -226,7 +237,7 @@ def create_backend(root_pytest_dir: Path, backend_name: str, firmware: Firmware,
         return LedgerWalletBackend(firmware=firmware, log_apdu_file=log_apdu_file, with_gui=display)
     elif backend_name.lower() == "speculos":
         main_app_path, speculos_args = prepare_speculos_args(root_pytest_dir, firmware, display,
-                                                             cli_user_seed,
+                                                             pki_prod, cli_user_seed,
                                                              additional_speculos_arguments)
         return SpeculosBackend(main_app_path,
                                firmware=firmware,
@@ -241,9 +252,10 @@ def create_backend(root_pytest_dir: Path, backend_name: str, firmware: Firmware,
 # before trying to find the binary
 @pytest.fixture(scope=conf.OPTIONAL.BACKEND_SCOPE)
 def backend(skip_tests_for_unsupported_devices, root_pytest_dir: Path, backend_name: str,
-            firmware: Firmware, display: bool, log_apdu_file: Optional[Path], cli_user_seed: str,
+            firmware: Firmware, display: bool, pki_prod: bool, log_apdu_file: Optional[Path],
+            cli_user_seed: str,
             additional_speculos_arguments: List[str]) -> Generator[BackendInterface, None, None]:
-    with create_backend(root_pytest_dir, backend_name, firmware, display, log_apdu_file,
+    with create_backend(root_pytest_dir, backend_name, firmware, display, pki_prod, log_apdu_file,
                         cli_user_seed, additional_speculos_arguments) as b:
         if backend_name.lower() != "speculos" and conf.OPTIONAL.APP_NAME:
             # Make sure the app is restarted as this is what is requested by the fixture scope
