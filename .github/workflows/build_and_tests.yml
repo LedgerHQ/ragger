@@ -99,6 +99,7 @@ jobs:
     permissions:
       id-token: write
       attestations: write
+      deployments: write
     steps:
 
     - name: Clone
@@ -187,4 +188,5 @@ jobs:
         prerelease: false
         files: |
           LICENSE
+          CHANGELOG.md
           dist/
