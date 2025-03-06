@@ -5,15 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.29.0] - 2025-03-06
+
+### Changed
+
+- Use `--Verbose` option to increase `pytest` verbosity. It adds log timestamps, some test-specific
+  logs, and the verbose option is forwarded to Speculos.
+
 ## [1.28.0] - 2025-03-05
 
 ### Added
 
 - Added --pki_prod option that can be forwarded to Speculos upon usage
-
-### Changed
-
-- Use `--Verbose` option to increase `pytest` verbosity. It add log timestamps, some test-specific logs, and the verbose option is forwarded to Speculos.
 
 ## [1.27.1] - 2025-02-26
 
