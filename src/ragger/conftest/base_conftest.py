@@ -7,7 +7,7 @@ from ragger.backend import BackendInterface, SpeculosBackend, LedgerCommBackend,
 from ragger.navigator import Navigator, NanoNavigator, TouchNavigator, NavigateWithScenario
 from ragger.utils import find_project_root_dir, find_library_application, find_application
 from ragger.utils.misc import get_current_app_name_and_version, exit_current_app, open_app_from_dashboard
-from ragger.logger import get_default_logger
+from ragger.logger import get_default_logger, init_loggers, SHORT_FORMAT, LONG_FORMAT
 from dataclasses import fields
 
 from . import configuration as conf
@@ -53,6 +53,12 @@ def pytest_addoption(parser):
                      default="default",
                      help="Specify the setup fixture (e.g., 'prod_build')",
                      choices=allowed_setups)
+    parser.addoption('--Verbose', action='store_true', default=False, help='Increase verbosity')
+
+
+@pytest.fixture(scope="session")
+def verbose(pytestconfig):
+    return pytestconfig.getoption("Verbose")
 
 
 @pytest.fixture(scope="session")
@@ -160,14 +166,22 @@ def pytest_generate_tests(metafunc):
         metafunc.parametrize("firmware", fw_list, ids=ids, scope="session")
 
 
-def prepare_speculos_args(root_pytest_dir: Path, firmware: Firmware, display: bool, pki_prod: bool,
-                          cli_user_seed: str, additional_args: List[str]):
+def prepare_speculos_args(root_pytest_dir: Path,
+                          firmware: Firmware,
+                          display: bool,
+                          pki_prod: bool,
+                          cli_user_seed: str,
+                          additional_args: List[str],
+                          verbose_speculos: bool = False):
     speculos_args = additional_args.copy()
 
     if display:
         speculos_args += ["--display", "qt"]
     if pki_prod:
         speculos_args += ["-p"]
+
+    if verbose_speculos:
+        speculos_args += [SpeculosBackend.ARGS_VERBOSE]
 
     device = firmware.name
     if device == "nanosp":
@@ -225,9 +239,15 @@ def prepare_speculos_args(root_pytest_dir: Path, firmware: Firmware, display: bo
 # Depending on the "--backend" option value, a different backend is
 # instantiated, and the tests will either run on Speculos or on a physical
 # device depending on the backend
-def create_backend(root_pytest_dir: Path, backend_name: str, firmware: Firmware, display: bool,
-                   pki_prod: bool, log_apdu_file: Optional[Path], cli_user_seed: str,
-                   additional_speculos_arguments: List[str]) -> BackendInterface:
+def create_backend(root_pytest_dir: Path,
+                   backend_name: str,
+                   firmware: Firmware,
+                   display: bool,
+                   pki_prod: bool,
+                   log_apdu_file: Optional[Path],
+                   cli_user_seed: str,
+                   additional_speculos_arguments: List[str],
+                   verbose_speculos: bool = False) -> BackendInterface:
     if backend_name.lower() == "ledgercomm":
         return LedgerCommBackend(firmware=firmware,
                                  interface="hid",
@@ -238,7 +258,8 @@ def create_backend(root_pytest_dir: Path, backend_name: str, firmware: Firmware,
     elif backend_name.lower() == "speculos":
         main_app_path, speculos_args = prepare_speculos_args(root_pytest_dir, firmware, display,
                                                              pki_prod, cli_user_seed,
-                                                             additional_speculos_arguments)
+                                                             additional_speculos_arguments,
+                                                             verbose_speculos)
         return SpeculosBackend(main_app_path,
                                firmware=firmware,
                                log_apdu_file=log_apdu_file,
@@ -253,10 +274,12 @@ def create_backend(root_pytest_dir: Path, backend_name: str, firmware: Firmware,
 @pytest.fixture(scope=conf.OPTIONAL.BACKEND_SCOPE)
 def backend(skip_tests_for_unsupported_devices, root_pytest_dir: Path, backend_name: str,
             firmware: Firmware, display: bool, pki_prod: bool, log_apdu_file: Optional[Path],
-            cli_user_seed: str,
-            additional_speculos_arguments: List[str]) -> Generator[BackendInterface, None, None]:
+            cli_user_seed: str, additional_speculos_arguments: List[str],
+            verbose: bool) -> Generator[BackendInterface, None, None]:
+    # to separate the test name and its following logs
+    print("")
     with create_backend(root_pytest_dir, backend_name, firmware, display, pki_prod, log_apdu_file,
-                        cli_user_seed, additional_speculos_arguments) as b:
+                        cli_user_seed, additional_speculos_arguments, verbose) as b:
         if backend_name.lower() != "speculos" and conf.OPTIONAL.APP_NAME:
             # Make sure the app is restarted as this is what is requested by the fixture scope
             app_name, version = get_current_app_name_and_version(b)
@@ -326,8 +349,12 @@ def pytest_configure(config):
         "needs_setup(setup_name): skip test if not on the specified setup",
     )
 
+    if config.getoption("--Verbose"):
+        init_loggers(LONG_FORMAT)
+
 
 def log_full_conf():
+    init_loggers(SHORT_FORMAT)
     logger = get_default_logger()
     logger.debug("Running Ragger with the following conf:")
     for field in fields(conf.OPTIONAL):

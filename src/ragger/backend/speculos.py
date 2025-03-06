@@ -74,6 +74,7 @@ class SpeculosBackend(BackendInterface):
     _ARGS_KEY = 'args'
     _ARGS_API_PORT_KEY = '--api-port'
     _ARGS_APDU_PORT_KEY = '--apdu-port'
+    ARGS_VERBOSE = '--verbose'
 
     def __init__(self,
                  application: Path,
@@ -93,6 +94,8 @@ class SpeculosBackend(BackendInterface):
         else:
             self._api_port = _get_unused_port_from(self._DEFAULT_API_PORT)
             args.extend([self._ARGS_API_PORT_KEY, str(self._api_port)])
+        # Verbose flag
+        self._verbose = self.ARGS_VERBOSE in speculos_args
         # Inferring the APDU port
         if self._ARGS_APDU_PORT_KEY in speculos_args:
             index = speculos_args.index(self._ARGS_APDU_PORT_KEY)
@@ -221,7 +224,8 @@ class SpeculosBackend(BackendInterface):
         self._client.finger_swipe(x, y, direction=direction, delay=delay)
 
     def _save_screen_snapshot(self, snap: BytesIO, path: Path) -> None:
-        self.logger.info(f"Saving screenshot to image '{path}'")
+        if self._verbose:
+            self.logger.info(f"Saving screenshot to image '{path}'")
         img = Image.open(snap)
         img.save(path)
 

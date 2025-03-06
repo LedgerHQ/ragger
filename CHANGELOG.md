@@ -11,11 +11,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added --pki_prod option that can be forwarded to Speculos upon usage
 
+### Changed
+
+- Use `--Verbose` option to increase `pytest` verbosity. It add log timestamps, some test-specific logs, and the verbose option is forwarded to Speculos.
+
 ## [1.27.1] - 2025-02-26
 
 ### Fixed
 
-- Fixed backend being instantiated even when the test needs a different setup 
+- Fixed backend being instantiated even when the test needs a different setup
 
 ## [1.27.0] - 2025-02-21
 
