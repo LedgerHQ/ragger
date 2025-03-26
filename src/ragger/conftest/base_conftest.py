@@ -181,7 +181,7 @@ def prepare_speculos_args(root_pytest_dir: Path,
         speculos_args += ["-p"]
 
     if verbose_speculos:
-        speculos_args += [SpeculosBackend.ARGS_VERBOSE]
+        speculos_args += ["--verbose"]
 
     device = firmware.name
     if device == "nanosp":
