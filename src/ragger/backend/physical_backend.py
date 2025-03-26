@@ -130,6 +130,9 @@ class PhysicalBackend(BackendInterface):
         else:
             return self._ui.check_text(text)
 
+    def wait_for_home_screen(self, timeout: float = 10.0) -> None:
+        return
+
     def wait_for_screen_change(self, timeout: float = 10.0) -> None:
         return
 
