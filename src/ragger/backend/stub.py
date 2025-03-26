@@ -80,6 +80,9 @@ class StubBackend(BackendInterface):
                                      golden_run: bool = False) -> bool:
         return True
 
+    def wait_for_home_screen(self, timeout: float = 10.0) -> None:
+        return
+
     def wait_for_screen_change(self, timeout: float = 10.0) -> None:
         pass
 

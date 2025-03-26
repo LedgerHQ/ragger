@@ -422,6 +422,7 @@ class BackendInterface(ABC):
         """
         raise NotImplementedError
 
+    @abstractmethod
     def wait_for_home_screen(self, timeout: float = 10.0) -> None:
         """
         Wait until the screen content is equal to the app home screen.
