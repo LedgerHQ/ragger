@@ -217,6 +217,12 @@ class RaggerMainWindow(QMainWindow):
         self._no.setGeometry(QRect(WIDTH // 2, SCREENSHOT_MAX_HEIGHT, WIDTH // 2, BUTTON_HEIGHT))
         self._no.setObjectName("invalid_button")
 
+    def keyPressEvent(self, event):
+        if event.text().lower() == 'y':
+            self._yes.click()
+        elif event.text().lower() == 'n':
+            self._no.click()
+
     def _init_gui_widgets(self) -> None:
         self._central_widget = QWidget(self)
         self._central_widget.setObjectName("central_widget")
