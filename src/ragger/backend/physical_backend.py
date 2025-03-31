@@ -105,7 +105,7 @@ class PhysicalBackend(BackendInterface):
         # Only this method needs these dependencies, which needs at least one physical backend to
         # be installed. By postponing the imports, we avoid an import error when using only Speculos
         try:
-            from PIL import Image, ImageOps
+            from PIL import Image, ImageOps, ImageFilter
             from pytesseract import image_to_data, Output
         except ImportError as error:
             raise ImportError(
@@ -122,6 +122,7 @@ class PhysicalBackend(BackendInterface):
             # dark text on white background.
             if self.device.is_nano:
                 image = ImageOps.invert(image)
+            image = image.filter(ImageFilter.SHARPEN)
             data = image_to_data(image, output_type=Output.DICT)
             for item in range(len(data["text"])):
                 if text in data["text"][item]:
