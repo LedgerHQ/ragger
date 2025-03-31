@@ -16,8 +16,8 @@
 import sys
 from multiprocessing import Process, Queue
 from pathlib import Path
-from PyQt5.QtCore import QObject, QThread, pyqtSignal
-from PyQt5.QtWidgets import QApplication
+from PyQt6.QtCore import QObject, QThread, pyqtSignal
+from PyQt6.QtWidgets import QApplication
 from typing import Tuple, Any
 
 from .interface import RaggerMainWindow

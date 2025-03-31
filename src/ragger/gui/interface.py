@@ -15,10 +15,10 @@
 """
 from functools import partial
 from pathlib import Path
-from PyQt5.QtCore import QRect, Qt, QVariantAnimation
-from PyQt5.QtWidgets import QWidget, QDesktopWidget, \
-    QMainWindow, QAction, qApp, QLabel, QPushButton, QSizePolicy, QGridLayout, QGraphicsOpacityEffect
-from PyQt5.QtGui import QIcon, QPixmap, QFont
+from PyQt6.QtCore import QRect, QCoreApplication, Qt, QVariantAnimation
+from PyQt6.QtWidgets import QWidget, QMainWindow, \
+        QLabel, QPushButton, QSizePolicy, QGridLayout, QGraphicsOpacityEffect
+from PyQt6.QtGui import QAction, QIcon, QPixmap, QFont
 from typing import Callable
 
 from ragger.logger import get_gui_logger
@@ -55,13 +55,13 @@ class RaggerMainWindow(QMainWindow):
         exitAct = QAction(QIcon('exit.png'), '&Exit', self)
         exitAct.setShortcut('Ctrl+Q')
         exitAct.setStatusTip('Exit application')
-        exitAct.triggered.connect(qApp.quit)
+        exitAct.triggered.connect(QCoreApplication.quit)
         menubar = self.menuBar()
         fileMenu = menubar.addMenu('&Menu')
         fileMenu.addAction(exitAct)
         self.resize(WIDTH, HEIGHT)
         qr = self.frameGeometry()
-        cp = QDesktopWidget().availableGeometry().center()
+        cp = self.screen().availableGeometry().center()
         qr.moveCenter(cp)
         self.move(qr.topLeft())
         self.setWindowTitle('Ragger - Ledger Nano app automation framework')
@@ -77,8 +77,8 @@ class RaggerMainWindow(QMainWindow):
         self._screenshot = QLabel(self._central_widget)
         self._screenshot.setScaledContents(False)
         self._screenshot.setObjectName("screenshot")
-        self._screenshot.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        self._screenshot.setAlignment(Qt.AlignVCenter)
+        self._screenshot.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        self._screenshot.setAlignment(Qt.AlignmentFlag.AlignVCenter)
         dict_margin = {"nanos": 75, "nanox": 90, "nanosp": 55, "stax": 65, "flex": 65}
         margin = dict_margin[self._device]
         self._screenshot.setStyleSheet(f"QLabel {{margin-left: {margin}px;}}")
@@ -88,8 +88,8 @@ class RaggerMainWindow(QMainWindow):
         self._actionhint.setGeometry(QRect(0, 0, SCREENSHOT_MAX_WIDTH, SCREENSHOT_MAX_HEIGHT))
         self._actionhint.setScaledContents(False)
         self._actionhint.setObjectName("action_hint")
-        self._actionhint.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        self._actionhint.setAlignment(Qt.AlignCenter)
+        self._actionhint.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        self._actionhint.setAlignment(Qt.AlignmentFlag.AlignCenter)
         custom_font = QFont()
         custom_font.setWeight(30)
         self._actionhint.setFont(custom_font)
@@ -126,15 +126,15 @@ class RaggerMainWindow(QMainWindow):
 
         self._devicebody.setPixmap(bodypix)
         self._devicebody.setMinimumHeight(bodypix.height())
-        self._devicebody.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        self._devicebody.setAlignment(Qt.AlignCenter)
+        self._devicebody.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        self._devicebody.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self._lb = QLabel(self._central_widget)
         self._lb.setScaledContents(False)
         self._lb.setObjectName("left_button")
         self._lb.setPixmap(
             QPixmap(str(Path(__file__).parent / "assets" / f"{self._device}_leftbutton.png")))
-        self._lb.setAlignment(Qt.AlignCenter)
+        self._lb.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self._lb.hide()
 
         self._rb = QLabel(self._central_widget)
@@ -142,7 +142,7 @@ class RaggerMainWindow(QMainWindow):
         self._rb.setObjectName("right_button")
         self._rb.setPixmap(
             QPixmap(str(Path(__file__).parent / "assets" / f"{self._device}_rightbutton.png")))
-        self._rb.setAlignment(Qt.AlignCenter)
+        self._rb.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self._rb.hide()
 
         self._touch = QLabel(self._central_widget)
@@ -257,7 +257,7 @@ class RaggerMainWindow(QMainWindow):
         Stop the Qt application
         """
         self.logger.info("Closing")
-        qApp.quit()
+        QCoreApplication.quit()
         return True
 
     def set_button_cb(self, callback: Callable[[bool], None]) -> None:
