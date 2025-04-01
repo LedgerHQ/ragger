@@ -52,7 +52,7 @@ jobs:
         python-version: ${{ matrix.python_version }}
 
     - name: Speculos dependencies
-      run: sudo apt-get update && sudo apt-get install -y qemu-user-static tesseract-ocr libtesseract-dev
+      run: sudo apt-get update && sudo apt-get install -y qemu-user-static tesseract-ocr libtesseract-dev python3-pyqt6
 
     - name: Build & install
       run: |
@@ -87,8 +87,10 @@ jobs:
     - name: Run functional tests and generate coverage
       run: pytest -v --tb=short tests/functional --cov ragger --cov-report xml --cov-append --device all
 
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v1
+    - name: Upload to codecov.io
+      uses: codecov/codecov-action@v5
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       with:
         name: codecov-ragger
 

@@ -50,7 +50,6 @@ checkers = [
     "mypy",
     "types-toml",
     "bandit",
-    "pyqt5-stubs",
 ]
 doc = [
     # embeds pyreverse
@@ -70,13 +69,13 @@ speculos = [
 ledgercomm = [
     "ledgercomm>=1.2.1",
     "ledgercomm[hid]>=1.2.1",
-    "pyqt5",
+    "pyqt6",
     "pytesseract",
     "pillow",
 ]
 ledgerwallet = [
     "ledgerwallet>=0.4.0",
-    "pyqt5",
+    "pyqt6",
     "pytesseract",
     "pillow",
 ]
