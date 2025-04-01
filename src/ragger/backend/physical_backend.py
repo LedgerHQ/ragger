@@ -16,6 +16,7 @@
 from pathlib import Path
 from types import TracebackType
 from typing import List, Optional, Type
+from re import match
 
 from ragger.firmware import Firmware
 from ragger.gui import RaggerGUI
@@ -124,8 +125,8 @@ class PhysicalBackend(BackendInterface):
                 image = ImageOps.invert(image)
             image = image.filter(ImageFilter.SHARPEN)
             data = image_to_data(image, output_type=Output.DICT)
-            for item in range(len(data["text"])):
-                if text in data["text"][item]:
+            for item in data["text"]:
+                if text in item or match(text, item):
                     return True
             return False
         else:
