@@ -17,6 +17,7 @@ from ledgered.devices import Device
 from pathlib import Path
 from types import TracebackType
 from typing import List, Optional, Type
+from re import match, search
 
 from ragger.gui import RaggerGUI
 from ragger.navigator.instruction import NavInsID
@@ -124,9 +125,10 @@ class PhysicalBackend(BackendInterface):
                 image = ImageOps.invert(image)
             image = image.filter(ImageFilter.SHARPEN)
             data = image_to_data(image, output_type=Output.DICT)
-            for item in range(len(data["text"])):
-                if text in data["text"][item]:
-                    return True
+            if search(text.strip("^").strip("$"), " ".join(data["text"])):
+                return True
+            if any(text in item or match(text, item) for item in data["text"]):
+                return True
             return False
         else:
             return self._ui.check_text(text)
