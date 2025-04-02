@@ -87,6 +87,13 @@ class PhysicalBackend(BackendInterface):
                                      crop: Optional[Crop] = None,
                                      tmp_snap_path: Optional[Path] = None,
                                      golden_run: bool = False) -> bool:
+
+        # If the file has no size, it's because we are within a NamedTemporaryFile
+        # We do nothing and return False to exit the while loop of
+        # NavInsID.USE_CASE_REVIEW_CONFIRM
+        if isinstance(golden_snap_path, Path) and golden_snap_path.stat().st_size == 0:
+            return False
+
         if self._ui is None:
             return True
         self.init_gui()
