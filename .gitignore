@@ -6,6 +6,7 @@ coverage.xml
 build/
 dist/
 __version__.py
+.python-version
 
 tests/snapshots-tmp/
 ledger_app.toml
