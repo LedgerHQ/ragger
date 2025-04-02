@@ -18,7 +18,7 @@ from pathlib import Path
 from PyQt6.QtCore import QRect, Qt, QVariantAnimation
 from PyQt6.QtWidgets import QApplication, QWidget, QMainWindow, QLabel, QPushButton, QSizePolicy, \
     QGridLayout, QGraphicsOpacityEffect
-from PyQt6.QtGui import QAction, QGuiApplication, QIcon, QPixmap, QFont
+from PyQt6.QtGui import QAction, QGuiApplication, QIcon, QPixmap, QFont, QKeyEvent
 from typing import Callable
 
 from ragger.logger import get_gui_logger
@@ -217,7 +217,7 @@ class RaggerMainWindow(QMainWindow):
         self._no.setGeometry(QRect(WIDTH // 2, SCREENSHOT_MAX_HEIGHT, WIDTH // 2, BUTTON_HEIGHT))
         self._no.setObjectName("invalid_button")
 
-    def keyPressEvent(self, event):
+    def keyPressEvent(self, event: QKeyEvent):
         if event.text().lower() == 'y':
             self._yes.click()
         elif event.text().lower() == 'n':
