@@ -2,6 +2,8 @@ import pytest
 from typing import Generator, List, Optional
 from pathlib import Path
 from ledgered.manifest import Manifest
+from unittest.mock import MagicMock
+
 from ragger.firmware import Firmware
 from ragger.backend import BackendInterface, SpeculosBackend, LedgerCommBackend, LedgerWalletBackend
 from ragger.navigator import Navigator, NanoNavigator, TouchNavigator, NavigateWithScenario
@@ -28,6 +30,7 @@ FIRMWARES = [
 def pytest_addoption(parser):
     parser.addoption("--device", choices=DEVICES, required=True)
     parser.addoption("--backend", choices=BACKENDS, default="speculos")
+    parser.addoption("--no-nav", action="store_true", default=False, help="Disable the navigation")
     parser.addoption("--display",
                      action="store_true",
                      default=False,
@@ -59,6 +62,11 @@ def pytest_addoption(parser):
 @pytest.fixture(scope="session")
 def verbose(pytestconfig):
     return pytestconfig.getoption("Verbose")
+
+
+@pytest.fixture(scope="session")
+def navigation(pytestconfig):
+    return not pytestconfig.getoption("no_nav")
 
 
 @pytest.fixture(scope="session")
@@ -295,7 +303,11 @@ def backend(skip_tests_for_unsupported_devices, root_pytest_dir: Path, backend_n
 
 
 @pytest.fixture(scope=conf.OPTIONAL.BACKEND_SCOPE)
-def navigator(backend: BackendInterface, firmware: Firmware, golden_run: bool):
+def navigator(backend: BackendInterface, firmware: Firmware, golden_run: bool, display: bool,
+              navigation: bool):
+    if not navigation:
+        return MagicMock()
+
     if firmware.is_nano:
         return NanoNavigator(backend, firmware, golden_run)
     else:
