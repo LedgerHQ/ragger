@@ -73,6 +73,7 @@ class TouchNavigator(Navigator):
             NavInsID.USE_CASE_CHOICE_REJECT: screen.choice.reject,
             NavInsID.USE_CASE_STATUS_DISMISS: screen.status.dismiss,
             NavInsID.USE_CASE_REVIEW_TAP: screen.review.tap,
+            NavInsID.USE_CASE_REVIEW_NEXT: screen.center.swipe_left,
             NavInsID.USE_CASE_REVIEW_PREVIOUS: screen.review.previous,
             NavInsID.USE_CASE_REVIEW_REJECT: screen.review.reject,
             NavInsID.USE_CASE_REVIEW_CONFIRM: screen.review.confirm,

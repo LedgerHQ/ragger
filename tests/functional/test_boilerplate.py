@@ -79,7 +79,7 @@ def test_waiting_screen(backend, firmware, navigator):
     backend.exchange_raw(prep_tx_apdu)
     with backend.exchange_async_raw(sign_tx_apdu):
         navigator.navigate_until_text_and_compare(
-            NavInsID.USE_CASE_REVIEW_TAP,
+            NavInsID.USE_CASE_REVIEW_NEXT,
             [NavInsID.USE_CASE_REVIEW_CONFIRM, NavInsID.USE_CASE_STATUS_DISMISS], "Hold to sign",
             ROOT_SCREENSHOT_PATH, "waiting_screen")
 
@@ -87,14 +87,14 @@ def test_waiting_screen(backend, firmware, navigator):
     backend.exchange_raw(prep_tx_apdu)
     with backend.exchange_async_raw(sign_tx_apdu):
         navigator.navigate_until_text_and_compare(
-            NavInsID.USE_CASE_REVIEW_TAP,
+            NavInsID.USE_CASE_REVIEW_NEXT,
             [NavInsID.USE_CASE_REVIEW_CONFIRM, NavInsID.WAIT_FOR_HOME_SCREEN], "Hold to sign",
             ROOT_SCREENSHOT_PATH, "waiting_screen")
 
     # Using WAIT_FOR_TEXT_ON_SCREEN instruction
     backend.exchange_raw(prep_tx_apdu)
     with backend.exchange_async_raw(sign_tx_apdu):
-        navigator.navigate_until_text_and_compare(NavInsID.USE_CASE_REVIEW_TAP, [
+        navigator.navigate_until_text_and_compare(NavInsID.USE_CASE_REVIEW_NEXT, [
             NavInsID.USE_CASE_REVIEW_CONFIRM,
             NavIns(NavInsID.WAIT_FOR_TEXT_ON_SCREEN, ("This app enables signing", ))
         ], "Hold to sign", ROOT_SCREENSHOT_PATH, "waiting_screen")
@@ -102,7 +102,7 @@ def test_waiting_screen(backend, firmware, navigator):
     # Using WAIT_FOR_TEXT_NOT_ON_SCREEN instruction
     backend.exchange_raw(prep_tx_apdu)
     with backend.exchange_async_raw(sign_tx_apdu):
-        navigator.navigate_until_text_and_compare(NavInsID.USE_CASE_REVIEW_TAP, [
+        navigator.navigate_until_text_and_compare(NavInsID.USE_CASE_REVIEW_NEXT, [
             NavInsID.USE_CASE_REVIEW_CONFIRM,
             NavIns(NavInsID.WAIT_FOR_TEXT_NOT_ON_SCREEN, ("Transaction", ))
         ], "Hold to sign", ROOT_SCREENSHOT_PATH, "waiting_screen")
@@ -111,7 +111,7 @@ def test_waiting_screen(backend, firmware, navigator):
     backend.exchange_raw(prep_tx_apdu)
     with backend.exchange_async_raw(sign_tx_apdu):
         with pytest.raises(TimeoutError) as error:
-            navigator.navigate_until_text_and_compare(NavInsID.USE_CASE_REVIEW_TAP, [
+            navigator.navigate_until_text_and_compare(NavInsID.USE_CASE_REVIEW_NEXT, [
                 NavInsID.USE_CASE_REVIEW_CONFIRM,
                 NavIns(NavInsID.WAIT_FOR_TEXT_ON_SCREEN, ("WILL NOT BE FOUND", ))
             ], "Hold to sign", ROOT_SCREENSHOT_PATH, "waiting_screen")
@@ -121,7 +121,7 @@ def test_waiting_screen(backend, firmware, navigator):
     backend.exchange_raw(prep_tx_apdu)
     with backend.exchange_async_raw(sign_tx_apdu):
         with pytest.raises(TimeoutError) as error:
-            navigator.navigate_until_text_and_compare(NavInsID.USE_CASE_REVIEW_TAP, [
+            navigator.navigate_until_text_and_compare(NavInsID.USE_CASE_REVIEW_NEXT, [
                 NavInsID.USE_CASE_REVIEW_CONFIRM,
                 NavIns(NavInsID.WAIT_FOR_TEXT_NOT_ON_SCREEN, ("T", ))
             ], "Hold to sign", ROOT_SCREENSHOT_PATH, "waiting_screen")
