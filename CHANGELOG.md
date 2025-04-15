@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Reviews navigation on touchable devices (Flex, Stax) no longer 'taps', but 'swipes'
+## [1.33.0] - 2025-??-??
+
+### Added
+
+- conftest: '--no-nav' option to completely disable the navigation during the tests.
 
 ## [1.32.0] - 2025-03-31
 
@@ -86,7 +91,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.24.0] - 2024-10-03
 
 ### Added
-- conftest: Added a all_eink device option to target Stax and Flex
+- conftest: Added 'all_eink' option for the `--device` argument to target Stax + Flex
 - conftest: Added a autouse fixture to skip unsupported devices
 
 ### Fixed
