@@ -32,6 +32,24 @@ class RaisePolicy(Enum):
     RAISE_CUSTOM = auto()
 
 
+class GraphicalLibrary(Enum):
+    BAGL = auto()
+    NBGL = auto()
+
+    @classmethod
+    def from_string(cls, graphic_str: str) -> "GraphicalLibrary":
+        lookup = {
+            "bagl": cls.BAGL,
+            "nbgl": cls.NBGL,
+        }
+        if graphic_str in lookup:
+            return lookup[graphic_str.lower()]
+        raise ValueError(f"Unknown graphical library: {graphic_str}")
+
+    def __str__(self) -> str:
+        return self.name.lower()
+
+
 class BackendInterface(ABC):
 
     def __init__(self,
@@ -46,6 +64,8 @@ class BackendInterface(ABC):
         self._firmware = firmware
         self._last_async_response: Optional[RAPDU] = None
         self.raise_policy = RaisePolicy.RAISE_ALL_BUT_0x9000
+        # SDK graphic library
+        self.sdk_graphics: Optional[GraphicalLibrary] = None
 
         if log_apdu_file:
             set_apdu_logger_file(log_apdu_file=log_apdu_file)
