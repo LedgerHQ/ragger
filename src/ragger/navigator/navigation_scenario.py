@@ -17,7 +17,7 @@ class NavigationScenarioData:
     navigation: NavInsID
     validation: Sequence[InstructionType]
     dismiss_warning: Sequence[InstructionType]
-    pattern: str
+    pattern: str = ""
 
     def __init__(self, device: Firmware, backend: BackendInterface, use_case: UseCase,
                  approve: bool):
