@@ -25,6 +25,7 @@ from typing import Optional, Generator, List, Type, TypeVar
 from time import time, sleep
 from re import match
 
+from ledgered import binary
 from speculos.client import SpeculosClient, screenshot_equal, ApduResponse, ApduException
 from speculos.mcu.seproxyhal import TICKER_DELAY
 
@@ -32,7 +33,7 @@ from ragger.error import ExceptionRAPDU
 from ragger.firmware import Firmware
 from ragger.logger import get_default_logger
 from ragger.utils import RAPDU, Crop
-from .interface import BackendInterface
+from .interface import BackendInterface, GraphicalLibrary
 
 STARTING_RANGE = 7000
 T = TypeVar("T", bound="SpeculosBackend")
@@ -103,7 +104,16 @@ class SpeculosBackend(BackendInterface):
         speculos_args.extend(args)
         kwargs[self._ARGS_KEY] = speculos_args
 
+        # SDK graphic library used by the App, retrieved from the elf sections
+        self.sdk_graphics: Optional[GraphicalLibrary] = None
+        if Path(application).is_file():
+            # test just for the unit-test to pass.
+            # In real life, the application is the path to the elf file, always present
+            bin_data = binary.LedgerBinaryApp(application)
+            self.sdk_graphics = GraphicalLibrary.from_string(bin_data.sections.sdk_graphics)
+
         self.logger.info("Speculos binary: '%s'", application)
+        self.logger.info("SDK Library: '%s'", self.sdk_graphics)
         self.logger.info("Speculos options: '%s'", " ".join(kwargs[self._ARGS_KEY]))
         self._client: SpeculosClient = SpeculosClient(app=str(application),
                                                       api_url=self.url,

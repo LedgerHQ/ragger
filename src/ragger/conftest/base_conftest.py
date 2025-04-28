@@ -317,9 +317,9 @@ def navigator(backend: BackendInterface, firmware: Firmware, golden_run: bool, d
 
 
 @pytest.fixture(scope="function")
-def scenario_navigator(navigator: Navigator, firmware: Firmware, test_name: str,
-                       default_screenshot_path: Path):
-    return NavigateWithScenario(navigator, firmware, test_name, default_screenshot_path)
+def scenario_navigator(backend: BackendInterface, navigator: Navigator, firmware: Firmware,
+                       test_name: str, default_screenshot_path: Path):
+    return NavigateWithScenario(backend, navigator, firmware, test_name, default_screenshot_path)
 
 
 @pytest.fixture(autouse=True)

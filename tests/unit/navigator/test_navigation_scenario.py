@@ -15,8 +15,9 @@ class TestNavigationScenario(TestCase):
         self.firmware = Firmware.NANOS
         self.callbacks = dict()
         self.navigator = MagicMock()
-        self.navigate_with_scenario = NavigateWithScenario(self.navigator, self.firmware,
-                                                           "test_name", self.directory)
+        self.navigate_with_scenario = NavigateWithScenario(self.backend, self.navigator,
+                                                           self.firmware, "test_name",
+                                                           self.directory)
 
     def tearDown(self):
         self.directory.cleanup()
