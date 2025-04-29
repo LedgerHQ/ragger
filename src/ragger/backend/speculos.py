@@ -265,8 +265,12 @@ class SpeculosBackend(BackendInterface):
         return self._retrieve_client_screen_content()
 
     def compare_screen_with_text(self, text: str) -> bool:
+        logger = get_default_logger()
+        logger.debug(f"Looking for pattern '{text}' in current screen")
         for event in self._retrieve_client_screen_content()["events"]:
-            if match(text, event.get("text", "")):
+            event_text = event.get("text", "")
+            logger.debug(f"Candidate event text '{event_text}'")
+            if match(text, event_text):
                 return True
         return False
 

@@ -134,7 +134,7 @@ class TestBackendInterfaceLogging(TestCase):
             self.backend = DummyBackend(firmware=self.firmware, log_apdu_file=test_file)
             ref_lines = ["Test logging", "hello world", "Lorem Ipsum"]
             for l in ref_lines:
-                self.backend.apdu_logger.debug(l)
+                self.backend.apdu_logger.info(l)
             with open(test_file, mode='r') as fp:
                 read_lines = [l.strip() for l in fp.readlines()]
                 self.assertEqual(read_lines, ref_lines)

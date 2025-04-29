@@ -116,7 +116,7 @@ class Navigator(ABC):
 
         assert self._backend.compare_screen_with_snapshot(
             golden, tmp_snap_path=tmp,
-            golden_run=self._golden_run), f"Screen does not match golden {tmp}."
+            golden_run=self._golden_run), f"Screen does not match golden '{tmp}'"
 
     def add_callback(self, ins_id: BaseNavInsID, callback: Callable, override: bool = True) -> None:
         """

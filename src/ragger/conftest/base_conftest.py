@@ -1,4 +1,5 @@
 import pytest
+import logging
 from typing import Generator, List, Optional
 from pathlib import Path
 from ledgered.manifest import Manifest
@@ -9,7 +10,7 @@ from ragger.backend import BackendInterface, SpeculosBackend, LedgerCommBackend,
 from ragger.navigator import Navigator, NanoNavigator, TouchNavigator, NavigateWithScenario
 from ragger.utils import find_project_root_dir, find_library_application, find_application
 from ragger.utils.misc import get_current_app_name_and_version, exit_current_app, open_app_from_dashboard
-from ragger.logger import get_default_logger, init_loggers, SHORT_FORMAT, LONG_FORMAT
+from ragger.logger import init_loggers, standalone_conf_logger
 from dataclasses import fields
 
 from . import configuration as conf
@@ -56,12 +57,6 @@ def pytest_addoption(parser):
                      default="default",
                      help="Specify the setup fixture (e.g., 'prod_build')",
                      choices=allowed_setups)
-    parser.addoption('--Verbose', action='store_true', default=False, help='Increase verbosity')
-
-
-@pytest.fixture(scope="session")
-def verbose(pytestconfig):
-    return pytestconfig.getoption("Verbose")
 
 
 @pytest.fixture(scope="session")
@@ -283,11 +278,11 @@ def create_backend(root_pytest_dir: Path,
 def backend(skip_tests_for_unsupported_devices, root_pytest_dir: Path, backend_name: str,
             firmware: Firmware, display: bool, pki_prod: bool, log_apdu_file: Optional[Path],
             cli_user_seed: str, additional_speculos_arguments: List[str],
-            verbose: bool) -> Generator[BackendInterface, None, None]:
+            verbose_speculos: bool) -> Generator[BackendInterface, None, None]:
     # to separate the test name and its following logs
     print("")
     with create_backend(root_pytest_dir, backend_name, firmware, display, pki_prod, log_apdu_file,
-                        cli_user_seed, additional_speculos_arguments, verbose) as b:
+                        cli_user_seed, additional_speculos_arguments, verbose_speculos) as b:
         if backend_name.lower() != "speculos" and conf.OPTIONAL.APP_NAME:
             # Make sure the app is restarted as this is what is requested by the fixture scope
             app_name, version = get_current_app_name_and_version(b)
@@ -344,6 +339,16 @@ def pytest_collection_modifyitems(config, items):
                 pytest.mark.skip(reason=f"Test requires setup '{needed}' but setup is '{current}'"))
 
 
+# Fixture like function that will configure the ragger log level
+# Called by pytest_configure and not a fixture to ensure it always runs first
+def _setup_log_level(config):
+    level_name = (config.getoption("--log-level") or "INFO").upper()
+    level = getattr(logging, level_name, logging.INFO)
+    # Force new init of logger module with the requested level
+    init_loggers(level)
+    config._log_level = level
+
+
 def pytest_configure(config):
     config.addinivalue_line(
         "markers",
@@ -361,16 +366,20 @@ def pytest_configure(config):
         "needs_setup(setup_name): skip test if not on the specified setup",
     )
 
-    if config.getoption("--Verbose"):
-        init_loggers(LONG_FORMAT)
+    _setup_log_level(config)
+
+
+# TODO: forward robust log level instead of boolean to Speculos
+@pytest.fixture(scope="session")
+def verbose_speculos(request):
+    return request.config._log_level == logging.DEBUG
 
 
 def log_full_conf():
-    init_loggers(SHORT_FORMAT)
-    logger = get_default_logger()
-    logger.debug("Running Ragger with the following conf:")
+    logger = standalone_conf_logger()
+    logger.info("Running Ragger with the following conf:")
     for field in fields(conf.OPTIONAL):
-        logger.debug(f"\t{field.name} = '{getattr(conf.OPTIONAL, field.name)}'")
+        logger.info(f"\t{field.name} = '{getattr(conf.OPTIONAL, field.name)}'")
 
 
 # RUN ON IMPORT
