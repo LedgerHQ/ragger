@@ -17,7 +17,6 @@
 import atexit
 import logging
 from pathlib import Path
-from typing import Optional
 
 SHORT_FORMAT = '[%(levelname)s] %(name)s - %(message)s'
 LONG_FORMAT = '[%(asctime)s][%(levelname)s] %(name)s - %(message)s'
@@ -25,6 +24,10 @@ LONG_FORMAT = '[%(asctime)s][%(levelname)s] %(name)s - %(message)s'
 
 def get_default_logger():
     return logging.getLogger("ragger.logger")
+
+
+def get_conf_logger():
+    return logging.getLogger("ragger.configuration")
 
 
 def get_apdu_logger():
@@ -35,18 +38,27 @@ def get_gui_logger():
     return logging.getLogger("ragger.gui")
 
 
-def _init_logger(logger: logging.Logger, format: Optional[str]):
-    format = format or LONG_FORMAT
+def _init_logger(logger: logging.Logger, level, format: str):
     logger.handlers.clear()
-    logger.setLevel(level=logging.DEBUG)
+    logger.setLevel(level=level)
     handler = logging.StreamHandler()
     handler.setFormatter(logging.Formatter(format))
     logger.addHandler(handler)
 
 
-def init_loggers(format: Optional[str] = None):
+def init_loggers(level):
+    if level == logging.DEBUG:
+        display_format = LONG_FORMAT
+    else:
+        display_format = SHORT_FORMAT
     for logger in [get_default_logger(), get_apdu_logger(), get_gui_logger()]:
-        _init_logger(logger, format)
+        _init_logger(logger, level, display_format)
+
+
+def standalone_conf_logger():
+    logger = get_conf_logger()
+    _init_logger(logger, logging.DEBUG, SHORT_FORMAT)
+    return logger
 
 
 def set_apdu_logger_file(log_apdu_file: Path):
@@ -67,3 +79,7 @@ def set_apdu_logger_file(log_apdu_file: Path):
                 handler.close()
 
     atexit.register(cleanup)
+
+
+# Runs on import of logger module to enable the default log template
+init_loggers(logging.INFO)
