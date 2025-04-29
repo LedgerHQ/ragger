@@ -28,17 +28,28 @@ class NavigationScenarioData:
             if backend.sdk_graphics == GraphicalLibrary.BAGL:
                 self.dismiss_warning = [NavInsID.RIGHT_CLICK]
                 # Legacy navigation scenario when running an App compiled with bagl sdk library
-                self.pattern = r"^(Sign|Approve|Accept)" if approve else r"^Reject$"
+                self.pattern = r"^(Accept risk|Accept|Approve|Sign|Confirm)$" if approve else r"^(Cancel|Reject)$"
             else:
                 self.dismiss_warning = [NavInsID.BOTH_CLICK]
                 # navigation scenario when running an App compiled with nbgl sdk library
                 if use_case == UseCase.ADDRESS_CONFIRMATION:
-                    self.pattern = r"^Confirm$" if approve else r"^Cancel$"
+                    self.pattern = r"^(Accept risk|Accept|Approve|Sign|Confirm)$" if approve else r"^(Cancel|Reject)$"
                 elif use_case == UseCase.TX_REVIEW:
                     if approve:
-                        self.pattern = r"^(Sign (transaction|message|operation)|Accept risk)"
+                        # Matches:
+                        #  - "Accept risk and "
+                        #  - "Accept risk and sign [transaction/message/operation]"
+                        #  - "Sign [transaction/message/operation]"
+                        blind_sign_pattern = r"(Accept risk and (sign (transaction|message|operation))?)"
+                        clear_sign_pattern = r"(Sign (transaction|message|operation))"
+                        self.pattern = rf"^({blind_sign_pattern}|{clear_sign_pattern})$"
                     else:
-                        self.pattern = r"^Reject"
+                        # Matches:
+                        # "Reject"
+                        # "Reject transaction"
+                        # "Reject message"
+                        # "Reject operation"
+                        self.pattern = r"^(Reject( (transaction|message|operation))?)$"
                 else:
                     raise NotImplementedError("Unknown use case")
 
