@@ -1,8 +1,8 @@
+from ledgered.devices import Devices, DeviceType
+from pathlib import Path
 from unittest import TestCase
 from unittest.mock import patch
-from pathlib import Path
 
-from ragger.firmware import Firmware
 from ragger.backend import SpeculosBackend
 from ragger.navigator import NavInsID, NavIns, NanoNavigator
 
@@ -33,9 +33,9 @@ class TestNavigator(TestCase):
     """
 
     def setUp(self):
-        self.firmware = Firmware.NANOS
-        self.backend = SpeculosBackend("some app", self.firmware)
-        self.navigator = NanoNavigator(self.backend, self.firmware)
+        self.device = Devices.get_by_type(DeviceType.NANOS)
+        self.backend = SpeculosBackend("some app", self.device)
+        self.navigator = NanoNavigator(self.backend, self.device)
 
     def test_navigate_and_compare(self):
         with patch("speculos.client.subprocess"):

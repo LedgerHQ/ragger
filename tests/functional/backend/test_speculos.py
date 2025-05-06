@@ -1,3 +1,4 @@
+from ledgered.devices import Devices, DeviceType
 from pathlib import Path
 from typing import Optional
 from unittest import TestCase
@@ -5,7 +6,6 @@ from unittest.mock import patch
 
 from ragger.backend import SpeculosBackend, RaisePolicy
 from ragger.error import ExceptionRAPDU
-from ragger.firmware import Firmware
 from ragger.utils import RAPDU
 
 from tests.stubs import SpeculosServerStub, EndPoint, APDUStatus
@@ -41,8 +41,8 @@ class TestbackendSpeculos(TestCase):
         self.assertEqual(rapdu.data, expected)
 
     def setUp(self):
-        self.firmware = Firmware.NANOS
-        self.backend = SpeculosBackend("some app", self.firmware)
+        self.device = Devices.get_by_type(DeviceType.NANOS)
+        self.backend = SpeculosBackend("some app", self.device)
 
     def test_exchange_raw(self):
         with patch("speculos.client.subprocess"):

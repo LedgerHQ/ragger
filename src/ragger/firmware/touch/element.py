@@ -13,28 +13,29 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
+from ledgered.devices import Device
+
 from ragger.backend import BackendInterface
-from ragger.firmware import Firmware
 from .positions import POSITIONS
 
 
 class Element:
 
-    def __init__(self, client: BackendInterface, firmware: Firmware):
+    def __init__(self, client: BackendInterface, device: Device):
         self._client = client
-        self._firmware = firmware
+        self._device = device
 
     @property
     def client(self) -> BackendInterface:
         return self._client
 
     @property
-    def firmware(self) -> Firmware:
-        return self._firmware
+    def device(self) -> Device:
+        return self._device
 
     @property
     def positions(self):
-        return POSITIONS[str(self.__class__.__name__)][self.firmware]
+        return POSITIONS[str(self.__class__.__name__)][self.device.type]
 
 
 class Center(Element):

@@ -1,9 +1,9 @@
+from ledgered.devices import DeviceType, Devices
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest import TestCase
 from unittest.mock import MagicMock
 
-from ragger.firmware import Firmware
 from ragger.navigator import NavigateWithScenario
 
 
@@ -12,12 +12,11 @@ class TestNavigationScenario(TestCase):
     def setUp(self):
         self.directory = TemporaryDirectory()
         self.backend = MagicMock()
-        self.firmware = Firmware.NANOS
+        self.device = Devices.get_by_type(DeviceType.NANOS)
         self.callbacks = dict()
         self.navigator = MagicMock()
         self.navigate_with_scenario = NavigateWithScenario(self.backend, self.navigator,
-                                                           self.firmware, "test_name",
-                                                           self.directory)
+                                                           self.device, "test_name", self.directory)
 
     def tearDown(self):
         self.directory.cleanup()

@@ -1,9 +1,9 @@
 from pathlib import Path
 from typing import Optional, Sequence
 from enum import Enum, auto
+from ledgered.devices import Device
 
 from ragger.backend import BackendInterface
-from ragger.firmware import Firmware
 from .navigator import InstructionType, Navigator, NavInsID
 from ragger.backend.interface import GraphicalLibrary
 
@@ -19,8 +19,7 @@ class NavigationScenarioData:
     dismiss_warning: Sequence[InstructionType]
     pattern: str = ""
 
-    def __init__(self, device: Firmware, backend: BackendInterface, use_case: UseCase,
-                 approve: bool):
+    def __init__(self, device: Device, backend: BackendInterface, use_case: UseCase, approve: bool):
         if device.is_nano:
             self.navigation = NavInsID.RIGHT_CLICK
             self.validation = [NavInsID.BOTH_CLICK]
@@ -53,7 +52,7 @@ class NavigationScenarioData:
                 else:
                     raise NotImplementedError("Unknown use case")
 
-        elif device in [Firmware.STAX, Firmware.FLEX]:
+        elif device.touchable:
             self.navigation = NavInsID.SWIPE_CENTER_TO_LEFT
             self.dismiss_warning = [NavInsID.USE_CASE_CHOICE_REJECT]
 
@@ -85,7 +84,7 @@ class NavigationScenarioData:
 
 class NavigateWithScenario:
 
-    def __init__(self, backend: BackendInterface, navigator: Navigator, device: Firmware,
+    def __init__(self, backend: BackendInterface, navigator: Navigator, device: Device,
                  test_name: str, screenshot_path: Path):
         self.navigator = navigator
         self.device = device
