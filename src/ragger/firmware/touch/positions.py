@@ -14,8 +14,7 @@
    limitations under the License.
 """
 from dataclasses import astuple, dataclass
-
-from ragger.firmware import Firmware
+from ledgered.devices import DeviceType, Devices, Resolution
 
 
 @dataclass(frozen=True)
@@ -27,13 +26,19 @@ class Position:
         return iter(astuple(self))
 
 
-# Stax resolution is 400x670
-STAX_CENTER = Position(200, 335)
-# Flex resolution is 480x600
-FLEX_CENTER = Position(240, 300)
+_stax_res: Resolution = Devices.get_by_type(DeviceType.STAX).resolution
+_flex_res: Resolution = Devices.get_by_type(DeviceType.FLEX).resolution
 
-STAX_BUTTON_UPPER_CENTER_MIDDLE = Position(200, 280)
-FLEX_BUTTON_UPPER_CENTER_MIDDLE = Position(240, 250)
+# Floor division '//' required, else the result will be a float, which can lead to issues when
+# using Speculos, which performs actions such as `var.to_bytes()` which does not work with a float.
+STAX_X_CENTER = _stax_res.x // 2
+FLEX_X_CENTER = _flex_res.x // 2
+
+STAX_CENTER = Position(STAX_X_CENTER, _stax_res.y // 2)
+FLEX_CENTER = Position(FLEX_X_CENTER, _flex_res.y // 2)
+
+STAX_BUTTON_UPPER_CENTER_MIDDLE = Position(STAX_X_CENTER, 280)
+FLEX_BUTTON_UPPER_CENTER_MIDDLE = Position(FLEX_X_CENTER, 250)
 
 STAX_BUTTON_UPPER_LEFT = Position(36, 36)
 FLEX_BUTTON_UPPER_LEFT = Position(45, 45)
@@ -44,8 +49,8 @@ FLEX_BUTTON_UPPER_RIGHT = Position(405, 75)
 STAX_BUTTON_LOWER_LEFT = Position(36, 606)
 FLEX_BUTTON_LOWER_LEFT = Position(55, 530)
 
-STAX_BUTTON_LOWER_MIDDLE = Position(200, 606)
-FLEX_BUTTON_LOWER_MIDDLE = Position(240, 550)
+STAX_BUTTON_LOWER_MIDDLE = Position(STAX_X_CENTER, 606)
+FLEX_BUTTON_LOWER_MIDDLE = Position(FLEX_X_CENTER, 550)
 
 STAX_BUTTON_LOWER_RIGHT = Position(342, 606)
 FLEX_BUTTON_LOWER_RIGHT = Position(430, 550)
@@ -57,29 +62,29 @@ FLEX_BUTTON_ABOVE_LOWER_MIDDLE = Position(240, 435)
 
 POSITIONS = {
     "Center": {
-        Firmware.STAX: STAX_CENTER,
-        Firmware.FLEX: FLEX_CENTER,
+        DeviceType.STAX: STAX_CENTER,
+        DeviceType.FLEX: FLEX_CENTER,
     },
     "ChoiceList": {
-        Firmware.STAX: {
+        DeviceType.STAX: {
             # Up to 5 choices in a list
-            1: Position(200, 140),
-            2: Position(200, 235),
-            3: Position(200, 330),
-            4: Position(200, 425),
-            5: Position(200, 520),
+            1: Position(STAX_X_CENTER, 140),
+            2: Position(STAX_X_CENTER, 235),
+            3: Position(STAX_X_CENTER, 330),
+            4: Position(STAX_X_CENTER, 425),
+            5: Position(STAX_X_CENTER, 520),
         },
-        Firmware.FLEX: {
+        DeviceType.FLEX: {
             # Up to 5 choices in a list
-            1: Position(240, 150),
-            2: Position(240, 240),
-            3: Position(240, 330),
-            4: Position(240, 420),
-            5: Position(240, 510),
+            1: Position(FLEX_X_CENTER, 150),
+            2: Position(FLEX_X_CENTER, 240),
+            3: Position(FLEX_X_CENTER, 330),
+            4: Position(FLEX_X_CENTER, 420),
+            5: Position(FLEX_X_CENTER, 510),
         }
     },
     "Suggestions": {
-        Firmware.STAX: {
+        DeviceType.STAX: {
             # 4 suggestions max, 2 rows of 2
             # indexes for left to right, from up to down
             1: Position(100, 280),
@@ -87,7 +92,7 @@ POSITIONS = {
             3: Position(110, 350),
             4: Position(290, 350),
         },
-        Firmware.FLEX: {
+        DeviceType.FLEX: {
             # On Flex, suggestions are on a single line, which can be swiped to access the last
             # ones. At start, only 2 suggestions are clickable
             1: Position(140, 300),
@@ -95,7 +100,7 @@ POSITIONS = {
         },
     },
     "LetterOnlyKeyboard": {
-        Firmware.STAX: {
+        DeviceType.STAX: {
             # first line
             "q": Position(20, 470),
             "w": Position(60, 470),
@@ -127,7 +132,7 @@ POSITIONS = {
             "m": Position(260, 580),
             "back": Position(340, 580),
         },
-        Firmware.FLEX: {
+        DeviceType.FLEX: {
             # first line
             "q": Position(24, 415),
             "w": Position(72, 415),
@@ -161,7 +166,7 @@ POSITIONS = {
         }
     },
     "FullKeyboardLetters": {
-        Firmware.STAX: {
+        DeviceType.STAX: {
             # first line
             "q": Position(20, 415),
             "w": Position(60, 415),
@@ -197,7 +202,7 @@ POSITIONS = {
             " ": Position(250, 580),
             "change_layout": Position(70, 580),
         },
-        Firmware.FLEX: {
+        DeviceType.FLEX: {
             # first line
             "q": Position(24, 350),
             "w": Position(72, 350),
@@ -235,7 +240,7 @@ POSITIONS = {
         }
     },
     "FullKeyboardSpecialCharacters1": {
-        Firmware.STAX: {
+        DeviceType.STAX: {
             # first line
             "1": Position(20, 415),
             "2": Position(60, 415),
@@ -269,7 +274,7 @@ POSITIONS = {
             "change_layout": Position(70, 580),
             " ": Position(250, 580),
         },
-        Firmware.FLEX: {
+        DeviceType.FLEX: {
             # first line
             "1": Position(24, 350),
             "2": Position(72, 350),
@@ -305,7 +310,7 @@ POSITIONS = {
         }
     },
     "FullKeyboardSpecialCharacters2": {
-        Firmware.STAX: {
+        DeviceType.STAX: {
             # first line
             "[": Position(20, 415),
             "]": Position(60, 415),
@@ -339,7 +344,7 @@ POSITIONS = {
             "change_layout": Position(70, 580),
             " ": Position(250, 580),
         },
-        Firmware.FLEX: {
+        DeviceType.FLEX: {
             # first line
             "[": Position(24, 350),
             "]": Position(72, 350),
@@ -375,53 +380,53 @@ POSITIONS = {
         }
     },
     "TappableCenter": {
-        Firmware.STAX: STAX_CENTER,
-        Firmware.FLEX: FLEX_CENTER,
+        DeviceType.STAX: STAX_CENTER,
+        DeviceType.FLEX: FLEX_CENTER,
     },
     "KeyboardConfirmationButton": {
-        Firmware.STAX: STAX_BUTTON_UPPER_CENTER_MIDDLE,
-        Firmware.FLEX: FLEX_BUTTON_UPPER_CENTER_MIDDLE,
+        DeviceType.STAX: STAX_BUTTON_UPPER_CENTER_MIDDLE,
+        DeviceType.FLEX: FLEX_BUTTON_UPPER_CENTER_MIDDLE,
     },
     "RightHeader": {
-        Firmware.STAX: STAX_BUTTON_UPPER_RIGHT,
-        Firmware.FLEX: FLEX_BUTTON_UPPER_RIGHT
+        DeviceType.STAX: STAX_BUTTON_UPPER_RIGHT,
+        DeviceType.FLEX: FLEX_BUTTON_UPPER_RIGHT
     },
     "LeftHeader": {
-        Firmware.STAX: STAX_BUTTON_UPPER_LEFT,
-        Firmware.FLEX: FLEX_BUTTON_UPPER_LEFT
+        DeviceType.STAX: STAX_BUTTON_UPPER_LEFT,
+        DeviceType.FLEX: FLEX_BUTTON_UPPER_LEFT
     },
     "CenteredFooter": {
-        Firmware.STAX: STAX_BUTTON_LOWER_MIDDLE,
-        Firmware.FLEX: FLEX_BUTTON_LOWER_MIDDLE
+        DeviceType.STAX: STAX_BUTTON_LOWER_MIDDLE,
+        DeviceType.FLEX: FLEX_BUTTON_LOWER_MIDDLE
     },
     "LeftFooter": {
-        Firmware.STAX: STAX_BUTTON_LOWER_LEFT,
-        Firmware.FLEX: FLEX_BUTTON_LOWER_LEFT
+        DeviceType.STAX: STAX_BUTTON_LOWER_LEFT,
+        DeviceType.FLEX: FLEX_BUTTON_LOWER_LEFT
     },
     "CancelFooter": {
-        Firmware.STAX: STAX_BUTTON_LOWER_LEFT,
-        Firmware.FLEX: FLEX_BUTTON_LOWER_LEFT
+        DeviceType.STAX: STAX_BUTTON_LOWER_LEFT,
+        DeviceType.FLEX: FLEX_BUTTON_LOWER_LEFT
     },
     "UseCaseHome": {
-        Firmware.STAX: {
+        DeviceType.STAX: {
             "info": STAX_BUTTON_UPPER_RIGHT,
             "settings": STAX_BUTTON_UPPER_RIGHT,
             "quit": STAX_BUTTON_LOWER_MIDDLE
         },
-        Firmware.FLEX: {
+        DeviceType.FLEX: {
             "info": FLEX_BUTTON_UPPER_RIGHT,
             "settings": FLEX_BUTTON_UPPER_RIGHT,
             "quit": FLEX_BUTTON_LOWER_MIDDLE
         }
     },
     "UseCaseHomeExt": {
-        Firmware.STAX: {
+        DeviceType.STAX: {
             "info": STAX_BUTTON_UPPER_RIGHT,
             "settings": STAX_BUTTON_UPPER_RIGHT,
             "action": STAX_BUTTON_ABOVE_LOWER_MIDDLE,
             "quit": STAX_BUTTON_LOWER_MIDDLE
         },
-        Firmware.FLEX: {
+        DeviceType.FLEX: {
             "info": FLEX_BUTTON_UPPER_RIGHT,
             "settings": FLEX_BUTTON_UPPER_RIGHT,
             "action": FLEX_BUTTON_ABOVE_LOWER_MIDDLE,
@@ -429,13 +434,13 @@ POSITIONS = {
         }
     },
     "UseCaseSettings": {
-        Firmware.STAX: {
+        DeviceType.STAX: {
             "single_page_exit": STAX_BUTTON_UPPER_LEFT,
             "multi_page_exit": STAX_BUTTON_UPPER_LEFT,
             "previous": STAX_BUTTON_LOWER_MIDDLE_RIGHT,
             "next": STAX_BUTTON_LOWER_RIGHT,
         },
-        Firmware.FLEX: {
+        DeviceType.FLEX: {
             "single_page_exit": FLEX_BUTTON_UPPER_LEFT,
             "multi_page_exit": FLEX_BUTTON_UPPER_LEFT,
             "previous": FLEX_BUTTON_LOWER_MIDDLE_RIGHT,
@@ -443,43 +448,43 @@ POSITIONS = {
         }
     },
     "UseCaseSubSettings": {
-        Firmware.STAX: {
+        DeviceType.STAX: {
             "exit": STAX_BUTTON_UPPER_LEFT,
             "previous": STAX_BUTTON_LOWER_LEFT,
             "next": STAX_BUTTON_LOWER_RIGHT,
         },
-        Firmware.FLEX: {
+        DeviceType.FLEX: {
             "exit": FLEX_BUTTON_UPPER_LEFT,
             "previous": FLEX_BUTTON_LOWER_LEFT,
             "next": FLEX_BUTTON_LOWER_RIGHT,
         }
     },
     "UseCaseChoice": {
-        Firmware.STAX: {
+        DeviceType.STAX: {
             "confirm": STAX_BUTTON_ABOVE_LOWER_MIDDLE,
             "reject": STAX_BUTTON_LOWER_LEFT,
         },
-        Firmware.FLEX: {
+        DeviceType.FLEX: {
             "confirm": FLEX_BUTTON_ABOVE_LOWER_MIDDLE,
             "reject": FLEX_BUTTON_LOWER_LEFT,
         }
     },
     "UseCaseStatus": {
-        Firmware.STAX: {
+        DeviceType.STAX: {
             "dismiss": STAX_CENTER,
         },
-        Firmware.FLEX: {
+        DeviceType.FLEX: {
             "dismiss": FLEX_CENTER,
         }
     },
     "UseCaseReview": {
-        Firmware.STAX: {
+        DeviceType.STAX: {
             "tap": STAX_BUTTON_LOWER_RIGHT,
             "previous": STAX_BUTTON_LOWER_MIDDLE,
             "confirm": STAX_BUTTON_ABOVE_LOWER_MIDDLE,
             "reject": STAX_BUTTON_LOWER_LEFT,
         },
-        Firmware.FLEX: {
+        DeviceType.FLEX: {
             "tap": FLEX_BUTTON_LOWER_RIGHT,
             "previous": FLEX_BUTTON_LOWER_MIDDLE,
             "confirm": FLEX_BUTTON_ABOVE_LOWER_MIDDLE,
@@ -487,25 +492,25 @@ POSITIONS = {
         }
     },
     "UseCaseViewDetails": {
-        Firmware.STAX: {
+        DeviceType.STAX: {
             "exit": STAX_BUTTON_LOWER_LEFT,
             "previous": STAX_BUTTON_LOWER_MIDDLE,
             "next": STAX_BUTTON_LOWER_RIGHT,
         },
-        Firmware.FLEX: {
+        DeviceType.FLEX: {
             "exit": FLEX_BUTTON_LOWER_LEFT,
             "previous": FLEX_BUTTON_LOWER_MIDDLE,
             "next": FLEX_BUTTON_LOWER_RIGHT,
         }
     },
     "UseCaseAddressConfirmation": {
-        Firmware.STAX: {
+        DeviceType.STAX: {
             "tap": STAX_BUTTON_ABOVE_LOWER_MIDDLE,
             "exit_qr": STAX_BUTTON_LOWER_MIDDLE,
             "confirm": STAX_BUTTON_ABOVE_LOWER_MIDDLE,
             "cancel": STAX_BUTTON_LOWER_LEFT,
         },
-        Firmware.FLEX: {
+        DeviceType.FLEX: {
             "tap": FLEX_BUTTON_ABOVE_LOWER_MIDDLE,
             "exit_qr": FLEX_BUTTON_LOWER_MIDDLE,
             "confirm": FLEX_BUTTON_ABOVE_LOWER_MIDDLE,

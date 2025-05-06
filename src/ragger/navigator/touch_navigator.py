@@ -15,9 +15,9 @@
 """
 from time import sleep
 from typing import Callable, Dict
+from ledgered.devices import Device
 
 from ragger.backend import BackendInterface
-from ragger.firmware import Firmware
 from ragger.firmware.touch import FullScreen
 from .navigator import Navigator
 from .instruction import BaseNavInsID, NavInsID
@@ -25,10 +25,10 @@ from .instruction import BaseNavInsID, NavInsID
 
 class TouchNavigator(Navigator):
 
-    def __init__(self, backend: BackendInterface, firmware: Firmware, golden_run: bool = False):
-        if firmware not in [Firmware.STAX, Firmware.FLEX]:
-            raise ValueError(f"'{self.__class__.__name__}' only works on Stax or Flex")
-        screen = FullScreen(backend, firmware)
+    def __init__(self, backend: BackendInterface, device: Device, golden_run: bool = False):
+        if not device.touchable:
+            raise ValueError(f"'{self.__class__.__name__}' only works with touchable devices")
+        screen = FullScreen(backend, device)
         callbacks: Dict[BaseNavInsID, Callable] = {
             NavInsID.WAIT: sleep,
             NavInsID.WAIT_FOR_SCREEN_CHANGE: backend.wait_for_screen_change,
@@ -85,4 +85,4 @@ class TouchNavigator(Navigator):
             NavInsID.USE_CASE_ADDRESS_CONFIRMATION_CONFIRM: screen.address_confirmation.confirm,
             NavInsID.USE_CASE_ADDRESS_CONFIRMATION_CANCEL: screen.address_confirmation.cancel,
         }
-        super().__init__(backend, firmware, callbacks, golden_run)
+        super().__init__(backend, device, callbacks, golden_run)

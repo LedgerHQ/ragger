@@ -15,17 +15,17 @@
 """
 from time import sleep
 from typing import Callable, Dict
+from ledgered.devices import Device
 
 from ragger.backend import BackendInterface
-from ragger.firmware import Firmware
 from .navigator import BaseNavInsID, Navigator, NavInsID
 
 
 class NanoNavigator(Navigator):
 
-    def __init__(self, backend: BackendInterface, firmware: Firmware, golden_run: bool = False):
-        if firmware in [Firmware.STAX, Firmware.FLEX]:
-            raise ValueError(f"'{self.__class__.__name__}' does not work on Stax/Flex")
+    def __init__(self, backend: BackendInterface, device: Device, golden_run: bool = False):
+        if device.touchable:
+            raise ValueError(f"'{self.__class__.__name__}' does not work on touchable devices")
         callbacks: Dict[BaseNavInsID, Callable] = {
             NavInsID.WAIT: sleep,
             NavInsID.WAIT_FOR_SCREEN_CHANGE: backend.wait_for_screen_change,
@@ -36,4 +36,4 @@ class NanoNavigator(Navigator):
             NavInsID.LEFT_CLICK: backend.left_click,
             NavInsID.BOTH_CLICK: backend.both_click
         }
-        super().__init__(backend, firmware, callbacks, golden_run)
+        super().__init__(backend, device, callbacks, golden_run)

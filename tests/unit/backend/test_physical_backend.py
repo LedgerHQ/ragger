@@ -1,4 +1,5 @@
 from contextlib import contextmanager
+from ledgered.devices import DeviceType, Devices
 from typing import Generator
 from unittest import TestCase
 from unittest.mock import MagicMock
@@ -6,7 +7,6 @@ from unittest.mock import MagicMock
 from ragger.backend import BackendInterface
 from ragger.backend.physical_backend import PhysicalBackend
 from ragger.gui import RaggerGUI
-from ragger.firmware import Firmware
 from ragger.navigator.instruction import NavInsID
 from ragger.utils.structs import RAPDU
 
@@ -33,13 +33,13 @@ class StubPhysicalBackend(PhysicalBackend):
 class TestPhysicalBackend(TestCase):
 
     def setUp(self):
-        self.firmware = Firmware.NANOS
-        self.backend = StubPhysicalBackend(self.firmware, with_gui=True)
+        self.device = Devices.get_by_type(DeviceType.NANOS)
+        self.backend = StubPhysicalBackend(self.device, with_gui=True)
         # patching the `start` function to avoid triggering a real interface
         self.backend._ui.start = MagicMock()
 
     def test___init__no_gui(self):
-        backend = StubPhysicalBackend(self.firmware)
+        backend = StubPhysicalBackend(self.device)
         self.assertIsInstance(backend, BackendInterface)
         self.assertIsNone(backend._ui)
 
@@ -48,7 +48,7 @@ class TestPhysicalBackend(TestCase):
         self.assertFalse(self.backend._ui.is_alive())
 
     def test_init_gui_no_ui(self):
-        backend = StubPhysicalBackend(self.firmware)
+        backend = StubPhysicalBackend(self.device)
         with self.assertRaises(AssertionError):
             backend.init_gui()
 
@@ -57,7 +57,7 @@ class TestPhysicalBackend(TestCase):
         self.assertTrue(self.backend._ui.start.called)
 
     def test_navigation_methods_no_gui_None(self):
-        backend = StubPhysicalBackend(self.firmware)
+        backend = StubPhysicalBackend(self.device)
         for method in [
                 backend.right_click, backend.left_click, backend.both_click, backend.finger_touch
         ]:
@@ -84,7 +84,7 @@ class TestPhysicalBackend(TestCase):
         self.assertEqual(self.backend._ui.ask_for_touch_action.call_args, ((x, y), ))
 
     def test_compare_methods_no_gui_bool(self):
-        backend = StubPhysicalBackend(self.firmware)
+        backend = StubPhysicalBackend(self.device)
         self.assertTrue(backend.compare_screen_with_snapshot(None))
         self.assertTrue(backend.compare_screen_with_text(None))
 

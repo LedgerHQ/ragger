@@ -19,8 +19,8 @@ from time import sleep
 from typing import Optional, Generator
 
 from ledgercomm import Transport
+from ledgered.devices import Device
 
-from ragger.firmware import Firmware
 from ragger.utils import RAPDU
 from ragger.error import ExceptionRAPDU
 from .physical_backend import PhysicalBackend
@@ -44,7 +44,7 @@ def raise_policy_enforcer(function):
 class LedgerCommBackend(PhysicalBackend):
 
     def __init__(self,
-                 firmware: Firmware,
+                 device: Device,
                  *args,
                  host: str = "127.0.0.1",
                  port: int = 9999,
@@ -52,7 +52,7 @@ class LedgerCommBackend(PhysicalBackend):
                  log_apdu_file: Optional[Path] = None,
                  with_gui: bool = False,
                  **kwargs):
-        super().__init__(firmware, *args, log_apdu_file=log_apdu_file, with_gui=with_gui, **kwargs)
+        super().__init__(device, *args, log_apdu_file=log_apdu_file, with_gui=with_gui, **kwargs)
         self._host = host
         self._port = port
         self._client: Optional[Transport] = None

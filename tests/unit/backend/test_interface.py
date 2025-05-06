@@ -1,5 +1,6 @@
 import struct
 import tempfile
+from ledgered.devices import DeviceType, Devices
 from pathlib import Path
 from unittest import TestCase
 from unittest.mock import MagicMock
@@ -7,7 +8,6 @@ from unittest.mock import MagicMock
 from ragger.error import ExceptionRAPDU
 from ragger.backend import BackendInterface
 from ragger.backend import RaisePolicy
-from ragger.firmware.structs import Firmware
 
 
 class DummyBackend(BackendInterface):
@@ -86,13 +86,13 @@ class DummyBackend(BackendInterface):
 class TestBackendInterface(TestCase):
 
     def setUp(self):
-        self.firmware = Firmware.NANOS
+        self.device = Devices.get_by_type(DeviceType.NANOS)
         self.errors = (ExceptionRAPDU(0x8888, "ERROR1"), ExceptionRAPDU(0x7777, "ERROR2"))
         self.valid_statuses = (0x9000, 0x9001, 0x9002)
-        self.backend = DummyBackend(firmware=self.firmware)
+        self.backend = DummyBackend(device=self.device)
 
     def test_init(self):
-        self.assertEqual(self.backend.firmware, self.firmware)
+        self.assertEqual(self.backend.device, self.device)
         self.assertIsNone(self.backend.last_async_response)
 
         # Default value
@@ -128,10 +128,10 @@ class TestBackendInterface(TestCase):
 class TestBackendInterfaceLogging(TestCase):
 
     def test_log_apdu(self):
-        self.firmware = Firmware.NANOS
+        self.device = Devices.get_by_type(DeviceType.NANOS)
         with tempfile.TemporaryDirectory() as td:
             test_file = (Path(td) / "test_log_file.log").resolve()
-            self.backend = DummyBackend(firmware=self.firmware, log_apdu_file=test_file)
+            self.backend = DummyBackend(device=self.device, log_apdu_file=test_file)
             ref_lines = ["Test logging", "hello world", "Lorem Ipsum"]
             for l in ref_lines:
                 self.backend.apdu_logger.info(l)

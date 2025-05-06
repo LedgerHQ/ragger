@@ -26,11 +26,11 @@ from time import time, sleep
 from re import match
 
 from ledgered import binary
+from ledgered.devices import Device
 from speculos.client import SpeculosClient, screenshot_equal, ApduResponse, ApduException
 from speculos.mcu.seproxyhal import TICKER_DELAY
 
 from ragger.error import ExceptionRAPDU
-from ragger.firmware import Firmware
 from ragger.logger import get_default_logger
 from ragger.utils import RAPDU, Crop
 from .interface import BackendInterface, GraphicalLibrary
@@ -78,12 +78,12 @@ class SpeculosBackend(BackendInterface):
 
     def __init__(self,
                  application: Path,
-                 firmware: Firmware,
+                 device: Device,
                  log_apdu_file: Optional[Path] = None,
                  **kwargs):
-        super().__init__(firmware=firmware, log_apdu_file=log_apdu_file)
+        super().__init__(device=device, log_apdu_file=log_apdu_file)
         # crafting Speculos arguments
-        args = ["--model", firmware.name]
+        args = ["--model", device.name]
         speculos_args: List = kwargs.get(self._ARGS_KEY, list())
         assert isinstance(speculos_args, list), \
             f"'{self._ARGS_KEY}' ({speculos_args}) keyword argument must be a list of arguments"
@@ -337,7 +337,7 @@ class SpeculosBackend(BackendInterface):
     @classmethod
     def batch(cls: Type[T],
               application: Path,
-              firmware: Firmware,
+              device: Device,
               number: int,
               *args,
               different_seeds: bool = True,
@@ -371,5 +371,5 @@ class SpeculosBackend(BackendInterface):
                 additional_args = existing_args + additional_args
             tmp_kwargs["args"] = additional_args
             logger.info("Args: %s", tmp_kwargs["args"])
-            result.append(cls(application, firmware, *args, **tmp_kwargs))
+            result.append(cls(application, device, *args, **tmp_kwargs))
         return result
