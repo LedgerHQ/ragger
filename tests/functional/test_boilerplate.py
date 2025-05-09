@@ -29,12 +29,12 @@ def test_error_raises_not_returns(backend):
 
 
 @pytest.mark.use_on_backend("speculos")
-def test_quit_app(backend, firmware, navigator):
-    if firmware.is_nano:
+def test_quit_app(backend, device, navigator):
+    if not device.touchable:
         right_clicks = {'nanos': 3, 'nanox': 3, 'nanosp': 3}
         backend.get_current_screen_content()
 
-        for _ in range(right_clicks[firmware.name]):
+        for _ in range(right_clicks[device.name]):
             backend.right_click()
             backend.wait_for_screen_change()
 
@@ -61,8 +61,8 @@ def test_quit_app(backend, firmware, navigator):
 
 
 @pytest.mark.use_on_backend("speculos")
-def test_waiting_screen(backend, firmware, navigator):
-    if firmware.is_nano:
+def test_waiting_screen(backend, device, navigator):
+    if not device.touchable:
         pytest.skip("Don't apply")
 
     prep_tx_apdu = bytes.fromhex("e006008015058000002c800000008000"

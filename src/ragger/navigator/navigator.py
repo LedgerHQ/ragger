@@ -18,9 +18,9 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 from time import time
 from typing import Callable, Dict, Optional, Sequence, Union
+from ledgered.devices import Device
 
 from ragger.backend import BackendInterface, SpeculosBackend
-from ragger.firmware import Firmware
 from ragger.utils import Crop
 
 from .instruction import BaseNavInsID, NavIns, NavInsID
@@ -37,22 +37,22 @@ class Navigator(ABC):
 
     def __init__(self,
                  backend: BackendInterface,
-                 firmware: Firmware,
+                 device: Device,
                  callbacks: Dict[BaseNavInsID, Callable],
                  golden_run: bool = False):
         """Initializes the Backend
 
-        :param firmware: Which Backend will be managed
-        :type firmware: Backend
-        :param firmware: Which Firmware will be managed
-        :type firmware: Firmware
+        :param backend: Which Backend will be managed
+        :type backend: BackendInterface
+        :param device: Which Device will be managed
+        :type device: Device
         :param callbacks: Callbacks to use to navigate
-        :type callbacks: Firmware
+        :type callbacks: Device
         :param golden_run: Allows to generate golden snapshots
         :type golden_run: bool
         """
         self._backend = backend
-        self._firmware = firmware
+        self._device = device
         self._callbacks = callbacks
         self._golden_run = golden_run
 
@@ -62,7 +62,7 @@ class Navigator(ABC):
             subdir = "snapshots"
         else:
             subdir = "snapshots-tmp"
-        return path / subdir / self._firmware.name / test_case_name
+        return path / subdir / self._device.name / test_case_name
 
     def _check_snaps_dir_path(self, path: Path, test_case_name: Union[Path, str],
                               is_golden: bool) -> Path:

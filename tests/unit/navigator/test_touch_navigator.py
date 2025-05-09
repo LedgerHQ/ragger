@@ -1,9 +1,9 @@
 from functools import partial
+from ledgered.devices import DeviceType, Devices
 from unittest import TestCase
 
 from ragger.navigator.touch_navigator import TouchNavigator
 from ragger.backend import LedgerCommBackend, LedgerWalletBackend, SpeculosBackend
-from ragger.firmware import Firmware
 
 
 class TestTouchNavigator(TestCase):
@@ -12,9 +12,9 @@ class TestTouchNavigator(TestCase):
         for backend_cls in [
                 partial(SpeculosBackend, "some app"), LedgerCommBackend, LedgerWalletBackend
         ]:
-            backend = backend_cls(Firmware.STAX)
-            TouchNavigator(backend, Firmware.STAX)
+            backend = backend_cls(Devices.get_by_type(DeviceType.STAX))
+            TouchNavigator(backend, Devices.get_by_type(DeviceType.STAX))
 
     def test___init__nok(self):
         with self.assertRaises(ValueError):
-            TouchNavigator("whatever", Firmware.NANOS)
+            TouchNavigator("whatever", Devices.get_by_type(DeviceType.NANOS))

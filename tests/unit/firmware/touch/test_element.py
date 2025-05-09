@@ -8,10 +8,10 @@ class TestElement(TestCase):
 
     def test___init__(self):
         client = MagicMock()
-        firmware = MagicMock()
+        device = MagicMock()
         positions = MagicMock()
         with patch("ragger.firmware.touch.element.POSITIONS", {Element.__name__: positions}):
-            element = Element(client, firmware)
-            self.assertEqual(element.firmware, firmware)
+            element = Element(client, device)
+            self.assertEqual(element.device, device)
             self.assertEqual(element.client, client)
-            self.assertEqual(element.positions, positions[firmware])
+            self.assertEqual(element.positions, positions[device.type])

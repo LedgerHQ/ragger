@@ -12,7 +12,7 @@ class TestMetaScreen(TestCase):
         class Test(metaclass=MetaScreen):
             layout_one = self.layout
 
-            def __init__(self, client, firmware, some_argument, other=None):
+            def __init__(self, client, device, some_argument, other=None):
                 self.some = some_argument
                 self.other = other
 
@@ -20,11 +20,11 @@ class TestMetaScreen(TestCase):
         self.assertEqual(self.layout.call_count, 0)
 
     def test___init__(self):
-        client, firmware = MagicMock(), MagicMock()
-        args = (client, firmware, "some")
+        client, device = MagicMock(), MagicMock()
+        args = (client, device, "some")
         test = self.cls(*args)
         self.assertEqual(self.layout.call_count, 1)
-        self.assertEqual(self.layout.call_args, ((client, firmware), ))
+        self.assertEqual(self.layout.call_args, ((client, device), ))
         self.assertEqual(test.one, self.layout())
         self.assertEqual(test.some, args[-1])
         self.assertIsNone(test.other)
