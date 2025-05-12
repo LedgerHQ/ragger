@@ -20,9 +20,11 @@ from pathlib import Path
 from types import TracebackType
 from typing import Optional, Type, Generator, Any, Iterable
 from ledgered.devices import Device
+from warnings import warn
 
-from ragger.utils import pack_APDU, RAPDU, Crop
+from ragger.firmware import DEPRECATION_MESSAGE, Firmware
 from ragger.logger import get_default_logger, get_apdu_logger, set_apdu_logger_file
+from ragger.utils import pack_APDU, RAPDU, Crop
 
 
 class RaisePolicy(Enum):
@@ -82,6 +84,15 @@ class BackendInterface(ABC):
         :rtype: Device
         """
         return self._device
+
+    @property
+    def firmware(self) -> Firmware:
+        """
+        :return: The currently managed Device.
+        :rtype: Device
+        """
+        warn(DEPRECATION_MESSAGE)
+        return Firmware(self._device.type)
 
     @property
     def last_async_response(self) -> Optional[RAPDU]:

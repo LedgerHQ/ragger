@@ -1,17 +1,18 @@
 import pytest
 import logging
-from typing import Generator, List, Optional
-from pathlib import Path
+from dataclasses import fields
 from ledgered.devices import Device, Devices
 from ledgered.manifest import Manifest
+from pathlib import Path
+from typing import Generator, List, Optional
 from unittest.mock import MagicMock
 
 from ragger.backend import BackendInterface, SpeculosBackend, LedgerCommBackend, LedgerWalletBackend
+from ragger.firmware import Firmware
+from ragger.logger import init_loggers, standalone_conf_logger
 from ragger.navigator import Navigator, NanoNavigator, TouchNavigator, NavigateWithScenario
 from ragger.utils import find_project_root_dir, find_library_application, find_application
 from ragger.utils.misc import get_current_app_name_and_version, exit_current_app, open_app_from_dashboard
-from ragger.logger import init_loggers, standalone_conf_logger
-from dataclasses import fields
 
 from . import configuration as conf
 
@@ -141,7 +142,7 @@ def additional_speculos_arguments() -> List[str]:
 # Glue to call every test that depends on the device once for each required firmware
 def pytest_generate_tests(metafunc):
     if "device" in metafunc.fixturenames:
-        fw_list = []
+        device_list = []
         ids = []
 
         device = metafunc.config.getoption("device")
@@ -152,13 +153,33 @@ def pytest_generate_tests(metafunc):
             if device == fw.name or device == "all" or (device == "all_nano"
                                                         and fw.is_nano) or (device == "all_eink"
                                                                             and not fw.is_nano):
-                fw_list.append(fw)
+                device_list.append(fw)
                 ids.append(fw.name)
 
-        if len(fw_list) > 1 and backend_name != "speculos":
+        if len(device_list) > 1 and backend_name != "speculos":
             raise ValueError("Invalid device parameter on this backend")
 
-        metafunc.parametrize("device", fw_list, ids=ids, scope="session")
+        metafunc.parametrize("device", device_list, ids=ids, scope="session")
+
+    if "firmware" in metafunc.fixturenames:
+        firmware_list = []
+        ids = []
+
+        device = metafunc.config.getoption("device")
+        backend_name = metafunc.config.getoption("backend")
+
+        # Enable firmware for requested devices
+        for fw in Firmware:
+            if device == fw.name or device == "all" or (device == "all_nano"
+                                                        and fw.is_nano) or (device == "all_eink"
+                                                                            and not fw.is_nano):
+                firmware_list.append(fw)
+                ids.append(fw.name)
+
+        if len(firmware_list) > 1 and backend_name != "speculos":
+            raise ValueError("Invalid device parameter on this backend")
+
+        metafunc.parametrize("firmware", firmware_list, ids=ids, scope="session")
 
 
 def prepare_speculos_args(root_pytest_dir: Path,
