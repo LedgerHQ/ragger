@@ -13,11 +13,11 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
+from ledgered.devices import Device
 from pathlib import Path
 from types import TracebackType
 from typing import List, Optional, Type
 
-from ragger.firmware import Firmware
 from ragger.gui import RaggerGUI
 from ragger.navigator.instruction import NavInsID
 from ragger.utils import Crop
@@ -26,9 +26,9 @@ from .interface import BackendInterface
 
 class PhysicalBackend(BackendInterface):
 
-    def __init__(self, firmware: Firmware, *args, with_gui: bool = False, **kwargs):
-        super().__init__(firmware, *args, **kwargs)
-        self._ui: Optional[RaggerGUI] = RaggerGUI(device=firmware.name) if with_gui else None
+    def __init__(self, device: Device, *args, with_gui: bool = False, **kwargs):
+        super().__init__(device, *args, **kwargs)
+        self._ui: Optional[RaggerGUI] = RaggerGUI(device=device.name) if with_gui else None
         self._last_valid_snap_path: Optional[Path] = None
 
     def __exit__(self,
@@ -120,7 +120,7 @@ class PhysicalBackend(BackendInterface):
             # Nano (s,sp,x) snapshots are white/blue text on black background,
             # tesseract cannot do OCR on these. Invert image so it has
             # dark text on white background.
-            if self.firmware.is_nano:
+            if self.device.is_nano:
                 image = ImageOps.invert(image)
             data = image_to_data(image, output_type=Output.DICT)
             for item in range(len(data["text"])):

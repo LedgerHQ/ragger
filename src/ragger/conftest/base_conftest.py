@@ -1,31 +1,24 @@
 import pytest
 import logging
-from typing import Generator, List, Optional
-from pathlib import Path
+from dataclasses import fields
+from ledgered.devices import Device, Devices
 from ledgered.manifest import Manifest
+from pathlib import Path
+from typing import Generator, List, Optional
 from unittest.mock import MagicMock
 
-from ragger.firmware import Firmware
 from ragger.backend import BackendInterface, SpeculosBackend, LedgerCommBackend, LedgerWalletBackend
+from ragger.firmware import Firmware
+from ragger.logger import init_loggers, standalone_conf_logger
 from ragger.navigator import Navigator, NanoNavigator, TouchNavigator, NavigateWithScenario
 from ragger.utils import find_project_root_dir, find_library_application, find_application
 from ragger.utils.misc import get_current_app_name_and_version, exit_current_app, open_app_from_dashboard
-from ragger.logger import init_loggers, standalone_conf_logger
-from dataclasses import fields
 
 from . import configuration as conf
 
 BACKENDS = ["speculos", "ledgercomm", "ledgerwallet"]
 
-DEVICES = ["nanos", "nanox", "nanosp", "stax", "flex", "all", "all_nano", "all_eink"]
-
-FIRMWARES = [
-    Firmware.NANOS,
-    Firmware.NANOSP,
-    Firmware.NANOX,
-    Firmware.STAX,
-    Firmware.FLEX,
-]
+DEVICES = [device.name for device in Devices()] + ["all", "all_nano", "all_eink"]
 
 
 def pytest_addoption(parser):
@@ -108,9 +101,9 @@ def supported_devices(root_pytest_dir: Path) -> List[str]:
 
 
 @pytest.fixture(scope="session")
-def skip_tests_for_unsupported_devices(supported_devices: List[str], firmware: Firmware):
-    if firmware.name not in supported_devices:
-        pytest.skip(f"Device {firmware.name} is not supported according to the manifest")
+def skip_tests_for_unsupported_devices(supported_devices: List[str], device: Device):
+    if device.name not in supported_devices:
+        pytest.skip(f"Device {device.name} is not supported according to the manifest")
 
 
 @pytest.fixture(autouse="session")
@@ -124,7 +117,7 @@ def test_name(request) -> str:
     # Get the name of current pytest test
     test_name = request.node.name
 
-    # Remove firmware suffix:
+    # Remove device suffix:
     # -  test_xxx_transaction_ok[nanox]
     # => test_xxx_transaction_ok
     return test_name.split("[")[0]
@@ -146,31 +139,51 @@ def additional_speculos_arguments() -> List[str]:
     return []
 
 
-# Glue to call every test that depends on the firmware once for each required firmware
+# Glue to call every test that depends on the device once for each required firmware
 def pytest_generate_tests(metafunc):
-    if "firmware" in metafunc.fixturenames:
-        fw_list = []
+    if "device" in metafunc.fixturenames:
+        device_list = []
         ids = []
 
         device = metafunc.config.getoption("device")
         backend_name = metafunc.config.getoption("backend")
 
         # Enable firmware for requested devices
-        for fw in FIRMWARES:
+        for fw in Devices():
             if device == fw.name or device == "all" or (device == "all_nano"
                                                         and fw.is_nano) or (device == "all_eink"
                                                                             and not fw.is_nano):
-                fw_list.append(fw)
+                device_list.append(fw)
                 ids.append(fw.name)
 
-        if len(fw_list) > 1 and backend_name != "speculos":
+        if len(device_list) > 1 and backend_name != "speculos":
             raise ValueError("Invalid device parameter on this backend")
 
-        metafunc.parametrize("firmware", fw_list, ids=ids, scope="session")
+        metafunc.parametrize("device", device_list, ids=ids, scope="session")
+
+    if "firmware" in metafunc.fixturenames:
+        firmware_list = []
+        ids = []
+
+        device = metafunc.config.getoption("device")
+        backend_name = metafunc.config.getoption("backend")
+
+        # Enable firmware for requested devices
+        for fw in Firmware:
+            if device == fw.name or device == "all" or (device == "all_nano"
+                                                        and fw.is_nano) or (device == "all_eink"
+                                                                            and not fw.is_nano):
+                firmware_list.append(fw)
+                ids.append(fw.name)
+
+        if len(firmware_list) > 1 and backend_name != "speculos":
+            raise ValueError("Invalid device parameter on this backend")
+
+        metafunc.parametrize("firmware", firmware_list, ids=ids, scope="session")
 
 
 def prepare_speculos_args(root_pytest_dir: Path,
-                          firmware: Firmware,
+                          device: Device,
                           display: bool,
                           pki_prod: bool,
                           cli_user_seed: str,
@@ -186,9 +199,9 @@ def prepare_speculos_args(root_pytest_dir: Path,
     if verbose_speculos:
         speculos_args += ["--verbose"]
 
-    device = firmware.name
-    if device == "nanosp":
-        device = "nanos2"
+    device_name = device.name
+    if device_name == "nanosp":
+        device_name = "nanos2"
 
     # Find the project root repository
     project_root_dir = find_project_root_dir(root_pytest_dir)
@@ -206,16 +219,16 @@ def prepare_speculos_args(root_pytest_dir: Path,
             raise ValueError(
                 f"Expected a single folder in {manifest.app.build_directory}, found {len(app_dir_subdirectories)}"
             )
-        main_app_path = find_application(app_dir_subdirectories[0], device, "c")
+        main_app_path = find_application(app_dir_subdirectories[0], device_name, "c")
     # If the app is standalone, the main app should be located in project_root_dir / manifest.app.build_directory
     else:
-        main_app_path = find_application(project_root_dir / manifest.app.build_directory, device,
-                                         manifest.app.sdk)
+        main_app_path = find_application(project_root_dir / manifest.app.build_directory,
+                                         device_name, manifest.app.sdk)
 
     # Find all libraries that have to be sideloaded
     if conf.OPTIONAL.MAIN_APP_DIR is not None:
         # This repo holds the library, not the standalone app: search in root_dir/build
-        lib_path = find_application(project_root_dir, device, manifest.app.sdk)
+        lib_path = find_application(project_root_dir, device_name, manifest.app.sdk)
         speculos_args.append(f"-l{lib_path}")
 
     elif len(conf.OPTIONAL.SIDELOADED_APPS) != 0:
@@ -226,7 +239,7 @@ def prepare_speculos_args(root_pytest_dir: Path,
         libs_dir = Path(project_root_dir / conf.OPTIONAL.SIDELOADED_APPS_DIR)
         # Add "-l Appname:filepath" to Speculos command line for every required lib app
         for coin_name, lib_name in conf.OPTIONAL.SIDELOADED_APPS.items():
-            lib_path = find_library_application(libs_dir, coin_name, device)
+            lib_path = find_library_application(libs_dir, coin_name, device_name)
             speculos_args.append(f"-l{lib_name}:{lib_path}")
 
     # Check if custom user seed has been provided through CLI or optional configuration.
@@ -244,7 +257,7 @@ def prepare_speculos_args(root_pytest_dir: Path,
 # device depending on the backend
 def create_backend(root_pytest_dir: Path,
                    backend_name: str,
-                   firmware: Firmware,
+                   device: Device,
                    display: bool,
                    pki_prod: bool,
                    log_apdu_file: Optional[Path],
@@ -252,19 +265,19 @@ def create_backend(root_pytest_dir: Path,
                    additional_speculos_arguments: List[str],
                    verbose_speculos: bool = False) -> BackendInterface:
     if backend_name.lower() == "ledgercomm":
-        return LedgerCommBackend(firmware=firmware,
+        return LedgerCommBackend(device=device,
                                  interface="hid",
                                  log_apdu_file=log_apdu_file,
                                  with_gui=display)
     elif backend_name.lower() == "ledgerwallet":
-        return LedgerWalletBackend(firmware=firmware, log_apdu_file=log_apdu_file, with_gui=display)
+        return LedgerWalletBackend(device=device, log_apdu_file=log_apdu_file, with_gui=display)
     elif backend_name.lower() == "speculos":
-        main_app_path, speculos_args = prepare_speculos_args(root_pytest_dir, firmware, display,
+        main_app_path, speculos_args = prepare_speculos_args(root_pytest_dir, device, display,
                                                              pki_prod, cli_user_seed,
                                                              additional_speculos_arguments,
                                                              verbose_speculos)
         return SpeculosBackend(main_app_path,
-                               firmware=firmware,
+                               device=device,
                                log_apdu_file=log_apdu_file,
                                **speculos_args)
     else:
@@ -276,12 +289,12 @@ def create_backend(root_pytest_dir: Path,
 # before trying to find the binary
 @pytest.fixture(scope=conf.OPTIONAL.BACKEND_SCOPE)
 def backend(skip_tests_for_unsupported_devices, root_pytest_dir: Path, backend_name: str,
-            firmware: Firmware, display: bool, pki_prod: bool, log_apdu_file: Optional[Path],
+            device: Device, display: bool, pki_prod: bool, log_apdu_file: Optional[Path],
             cli_user_seed: str, additional_speculos_arguments: List[str],
             verbose_speculos: bool) -> Generator[BackendInterface, None, None]:
     # to separate the test name and its following logs
     print("")
-    with create_backend(root_pytest_dir, backend_name, firmware, display, pki_prod, log_apdu_file,
+    with create_backend(root_pytest_dir, backend_name, device, display, pki_prod, log_apdu_file,
                         cli_user_seed, additional_speculos_arguments, verbose_speculos) as b:
         if backend_name.lower() != "speculos" and conf.OPTIONAL.APP_NAME:
             # Make sure the app is restarted as this is what is requested by the fixture scope
@@ -298,23 +311,21 @@ def backend(skip_tests_for_unsupported_devices, root_pytest_dir: Path, backend_n
 
 
 @pytest.fixture(scope=conf.OPTIONAL.BACKEND_SCOPE)
-def navigator(backend: BackendInterface, firmware: Firmware, golden_run: bool, display: bool,
+def navigator(backend: BackendInterface, device: Device, golden_run: bool, display: bool,
               navigation: bool):
     if not navigation:
         return MagicMock()
 
-    if firmware.is_nano:
-        return NanoNavigator(backend, firmware, golden_run)
+    if device.is_nano:
+        return NanoNavigator(backend, device, golden_run)
     else:
-        # `firmware` fixture is generated by `pytest_generate_tests`, which controls it against the
-        # `FIRMWARES` list. So by design, if the firmware is not a Nano, it is either Stax or Flex
-        return TouchNavigator(backend, firmware, golden_run)
+        return TouchNavigator(backend, device, golden_run)
 
 
 @pytest.fixture(scope="function")
-def scenario_navigator(backend: BackendInterface, navigator: Navigator, firmware: Firmware,
+def scenario_navigator(backend: BackendInterface, navigator: Navigator, device: Device,
                        test_name: str, default_screenshot_path: Path):
-    return NavigateWithScenario(backend, navigator, firmware, test_name, default_screenshot_path)
+    return NavigateWithScenario(backend, navigator, device, test_name, default_screenshot_path)
 
 
 @pytest.fixture(autouse=True)

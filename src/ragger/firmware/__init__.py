@@ -13,6 +13,6 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-from .structs import Firmware
+from .structs import DEPRECATION_MESSAGE, Firmware
 
-__all__ = ["Firmware"]
+__all__ = ["DEPRECATION_MESSAGE", "Firmware"]

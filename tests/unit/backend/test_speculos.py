@@ -1,10 +1,10 @@
 from io import BytesIO
+from ledgered.devices import DeviceType, Devices
+from typing import List
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
-from typing import List
 
 from ragger.backend import SpeculosBackend
-from ragger.firmware import Firmware
 
 APPNAME = "some app"
 
@@ -18,40 +18,43 @@ class TestSpeculosBackend(TestCase):
 
     maxDiff = None
 
+    def setUp(self):
+        self.nanos = Devices.get_by_type(DeviceType.NANOS)
+
     def test___init__ok(self):
-        b = SpeculosBackend(APPNAME, Firmware.NANOS)
+        b = SpeculosBackend(APPNAME, self.nanos)
         self.assertEqual(b._api_port, b._DEFAULT_API_PORT)
         self.assertEqual(b._apdu_port, b._DEFAULT_API_PORT + 1)
 
     def test___init__ports_ok(self):
         api_port, apdu_port = 4567, 9876
         b1 = SpeculosBackend(APPNAME,
-                             Firmware.NANOS,
+                             self.nanos,
                              args=["--api-port",
                                    str(api_port), "--apdu-port",
                                    str(apdu_port)])
         self.assertEqual(b1._api_port, api_port)
         self.assertEqual(b1._apdu_port, apdu_port)
 
-        b2 = SpeculosBackend(APPNAME, Firmware.NANOS, args=["--api-port", str(api_port)])
+        b2 = SpeculosBackend(APPNAME, self.nanos, args=["--api-port", str(api_port)])
         self.assertEqual(b2._api_port, api_port)
         self.assertEqual(b2._apdu_port, api_port + 1)
 
-        b3 = SpeculosBackend(APPNAME, Firmware.NANOS, args=["--apdu-port", str(apdu_port)])
+        b3 = SpeculosBackend(APPNAME, self.nanos, args=["--apdu-port", str(apdu_port)])
         self.assertEqual(b3._api_port, b3._DEFAULT_API_PORT)
         self.assertEqual(b3._apdu_port, apdu_port)
 
     def test___init__args_ok(self):
-        SpeculosBackend(APPNAME, Firmware.NANOS, args=["some", "specific", "arguments"])
+        SpeculosBackend(APPNAME, self.nanos, args=["some", "specific", "arguments"])
 
     def test___init__args_nok(self):
         with self.assertRaises(AssertionError):
-            SpeculosBackend(APPNAME, Firmware.NANOS, args="not a list")
+            SpeculosBackend(APPNAME, self.nanos, args="not a list")
 
     def test_context_manager(self):
         expected_image = b"1234"
         with patch("ragger.backend.speculos.SpeculosClient"):
-            backend = SpeculosBackend(APPNAME, Firmware.NANOS)
+            backend = SpeculosBackend(APPNAME, self.nanos)
         self.assertIsNone(backend._last_screenshot)
         self.assertIsNone(backend._home_screenshot)
         # patching SpeculosClient.get_screenshot
@@ -75,7 +78,7 @@ class TestSpeculosBackend(TestCase):
 
             clients = SpeculosBackend.batch(
                 APPNAME,
-                Firmware.NANOS,
+                self.nanos,
                 client_number,
                 different_attestation=True,
                 args=['--apdu-port', arg_apdu_port, '--api-port', arg_api_port])

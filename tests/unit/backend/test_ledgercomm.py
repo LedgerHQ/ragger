@@ -1,7 +1,7 @@
+from ledgered.devices import DeviceType, Devices
 from unittest import TestCase
 from unittest.mock import patch
 
-from ragger.firmware import Firmware
 from ragger.error import ExceptionRAPDU
 from ragger.utils import RAPDU
 from ragger.backend import LedgerCommBackend
@@ -24,8 +24,8 @@ class TestLedgerCommbackend(TestCase):
     """
 
     def setUp(self):
-        self.firmware = Firmware.NANOS
-        self.backend = LedgerCommBackend(self.firmware)
+        self.device = Devices.get_by_type(DeviceType.NANOS)
+        self.backend = LedgerCommBackend(self.device)
 
     def check_rapdu(self, rapdu: RAPDU, status: int = 0x9000, payload: bytes = None):
         self.assertIsInstance(rapdu, RAPDU)

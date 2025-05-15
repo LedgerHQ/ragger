@@ -19,10 +19,12 @@ from enum import Enum, auto
 from pathlib import Path
 from types import TracebackType
 from typing import Optional, Type, Generator, Any, Iterable
+from ledgered.devices import Device
+from warnings import warn
 
-from ragger.firmware import Firmware
-from ragger.utils import pack_APDU, RAPDU, Crop
+from ragger.firmware import DEPRECATION_MESSAGE, Firmware
 from ragger.logger import get_default_logger, get_apdu_logger, set_apdu_logger_file
+from ragger.utils import pack_APDU, RAPDU, Crop
 
 
 class RaisePolicy(Enum):
@@ -53,15 +55,15 @@ class GraphicalLibrary(Enum):
 class BackendInterface(ABC):
 
     def __init__(self,
-                 firmware: Firmware,
+                 device: Device,
                  log_apdu_file: Optional[Path] = None,
                  whitelisted_status: Iterable = ()):
         """Initializes the Backend
 
-        :param firmware: Which Firmware will be managed
-        :type firmware: Firmware
+        :param device: Which Device will be managed
+        :type device: Device
         """
-        self._firmware = firmware
+        self._device = device
         self._last_async_response: Optional[RAPDU] = None
         self.raise_policy = RaisePolicy.RAISE_ALL_BUT_0x9000
         # SDK graphic library
@@ -76,12 +78,21 @@ class BackendInterface(ABC):
         self.whitelisted_status = whitelisted_status
 
     @property
+    def device(self) -> Device:
+        """
+        :return: The currently managed Device.
+        :rtype: Device
+        """
+        return self._device
+
+    @property
     def firmware(self) -> Firmware:
         """
-        :return: The currently managed Firmware.
-        :rtype: Firmware
+        :return: The currently managed Device.
+        :rtype: Device
         """
-        return self._firmware
+        warn(DEPRECATION_MESSAGE)
+        return Firmware(self._device.type)
 
     @property
     def last_async_response(self) -> Optional[RAPDU]:

@@ -13,15 +13,33 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-from enum import IntEnum, auto
+from enum import IntEnum
+from ledgered.devices import Devices, DeviceType
+from warnings import warn
+
+
+DEPRECATION_MESSAGE = "`ragger.firmware.Firmware` is deprecated, use `ledgered.devices.Devices` " \
+    "or `ledgered.devices.DeviceType` instead"
 
 
 class Firmware(IntEnum):
-    NANOS = auto()
-    NANOSP = auto()
-    NANOX = auto()
-    STAX = auto()
-    FLEX = auto()
+    NANOS = DeviceType.NANOS
+    NANOSP = DeviceType.NANOSP
+    NANOX = DeviceType.NANOX
+    STAX = DeviceType.STAX
+    FLEX = DeviceType.FLEX
+
+    @staticmethod
+    def deprec_warning() -> None:
+        warn(DEPRECATION_MESSAGE)
+
+    @property
+    def name(self) -> str:
+        """
+        Returns the name of the current firmware's device
+        """
+        self.deprec_warning()
+        return Devices.get_by_type(self).name
 
     @property
     def device(self) -> str:
@@ -29,18 +47,13 @@ class Firmware(IntEnum):
         A proxy property for :attr:`.Firmware.name`.
         This property is deprecated. It is advise to not use it.
         """
+        self.deprec_warning()
         return self.name
-
-    @property
-    def name(self) -> str:
-        """
-        Returns the name of the current firmware's device
-        """
-        return super().name.lower()
 
     @property
     def is_nano(self):
         """
         States if the firmware's name starts with 'nano' or not.
         """
-        return self.name.startswith("nano")
+        self.deprec_warning()
+        return Devices.get_by_type(self).is_nano

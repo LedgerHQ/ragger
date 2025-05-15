@@ -14,9 +14,9 @@
    limitations under the License.
 """
 from typing import Dict, Tuple
+from ledgered.devices import Device
 
 from ragger.backend import BackendInterface
-from ragger.firmware import Firmware
 
 from .element import Center
 
@@ -64,7 +64,7 @@ class MetaScreen(type):
 
     .. code-block:: python
 
-        screen = Screen(client, firmware)
+        screen = Screen(client, device)
 
         screen.header.tap()             # entering the 'info' view
         screen.footer.tap()             # going out the 'info' view
@@ -95,14 +95,14 @@ class MetaScreen(type):
         }
         original_init = namespace.pop("__init__", lambda *args, **kwargs: None)
 
-        def init(self, client: BackendInterface, firmware: Firmware, *args, **kwargs):
+        def init(self, client: BackendInterface, device: Device, *args, **kwargs):
             for attribute, cls in elements.items():
-                setattr(self, attribute, cls(client, firmware))
+                setattr(self, attribute, cls(client, device))
             for attribute, cls in layouts.items():
-                setattr(self, attribute, cls(client, firmware))
+                setattr(self, attribute, cls(client, device))
             for attribute, cls in use_cases.items():
-                setattr(self, attribute, cls(client, firmware))
-            original_init(self, client, firmware, *args, **kwargs)
+                setattr(self, attribute, cls(client, device))
+            original_init(self, client, device, *args, **kwargs)
 
         namespace["__init__"] = init
         return super().__new__(cls, name, parents, namespace)
@@ -116,7 +116,7 @@ class FullScreen(metaclass=MetaScreen):
     application's screen. Still, it could prove handy for fast testing.
     """
 
-    def __init__(self, backend: BackendInterface, firmware: Firmware):
+    def __init__(self, backend: BackendInterface, device: Device):
         pass
 
     # Type declaration to please mypy checks

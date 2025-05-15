@@ -1,11 +1,11 @@
 from dataclasses import dataclass
+from ledgered.devices import DeviceType, Devices
 from pathlib import Path
 from typing import Tuple
 from unittest import TestCase
 from unittest.mock import patch
 
 from ragger.conftest import base_conftest as bc
-from ragger.firmware import Firmware
 
 from ..helpers import temporary_directory
 
@@ -42,12 +42,13 @@ class TestBaseConftest(TestCase):
 
     def setUp(self):
         self.seed = "some seed"
+        self.stax = Devices.get_by_type(DeviceType.STAX)
 
     def test_prepare_speculos_args_simplest(self):
         with temporary_directory() as temp_dir:
             app_path, _ = prepare_base_dir(temp_dir)
             with patch("ragger.conftest.base_conftest.Manifest", ManifestMock):
-                result_app, result_args = bc.prepare_speculos_args(temp_dir, Firmware.STAX, False,
+                result_app, result_args = bc.prepare_speculos_args(temp_dir, self.stax, False,
                                                                    False, self.seed, [])
             self.assertEqual(result_app, app_path)
             self.assertEqual(result_args, {"args": ["--seed", self.seed]})
@@ -56,8 +57,8 @@ class TestBaseConftest(TestCase):
         with temporary_directory() as temp_dir:
             app_path, _ = prepare_base_dir(temp_dir)
             with patch("ragger.conftest.base_conftest.Manifest", ManifestMock):
-                result_app, result_args = bc.prepare_speculos_args(temp_dir, Firmware.STAX, False,
-                                                                   True, self.seed, [])
+                result_app, result_args = bc.prepare_speculos_args(temp_dir, self.stax, False, True,
+                                                                   self.seed, [])
             self.assertEqual(result_app, app_path)
             self.assertEqual(result_args, {"args": ["-p", "--seed", self.seed]})
 
@@ -66,7 +67,7 @@ class TestBaseConftest(TestCase):
         with temporary_directory() as temp_dir:
             app_path, _ = prepare_base_dir(temp_dir)
             with patch("ragger.conftest.base_conftest.Manifest", ManifestMock):
-                result_app, result_args = bc.prepare_speculos_args(temp_dir, Firmware.STAX, False,
+                result_app, result_args = bc.prepare_speculos_args(temp_dir, self.stax, False,
                                                                    False, self.seed, [arg])
             self.assertEqual(result_app, app_path)
             self.assertEqual(result_args, {"args": [arg, "--seed", self.seed]})
@@ -75,8 +76,8 @@ class TestBaseConftest(TestCase):
         with temporary_directory() as temp_dir:
             app_path, _ = prepare_base_dir(temp_dir)
             with patch("ragger.conftest.base_conftest.Manifest", ManifestMock):
-                result_app, result_args = bc.prepare_speculos_args(temp_dir, Firmware.STAX, True,
-                                                                   False, self.seed, [])
+                result_app, result_args = bc.prepare_speculos_args(temp_dir, self.stax, True, False,
+                                                                   self.seed, [])
             self.assertEqual(result_app, app_path)
             self.assertEqual(result_args, {"args": ["--display", "qt", "--seed", self.seed]})
 
@@ -86,7 +87,7 @@ class TestBaseConftest(TestCase):
             with patch("ragger.conftest.base_conftest.conf.OPTIONAL.MAIN_APP_DIR", "./deps"):
                 with patch("ragger.conftest.base_conftest.Manifest", ManifestMock) as manifest:
                     result_app, result_args = bc.prepare_speculos_args(
-                        temp_dir, Firmware.STAX, False, False, self.seed, [])
+                        temp_dir, self.stax, False, False, self.seed, [])
             self.assertEqual(result_app, dep_path)
             self.assertEqual(result_args, {"args": [f"-l{app_path}", "--seed", self.seed]})
 
@@ -97,8 +98,7 @@ class TestBaseConftest(TestCase):
                        ["more than 1 elt"]):
                 with patch("ragger.conftest.base_conftest.Manifest", ManifestMock):
                     with self.assertRaises(ValueError):
-                        bc.prepare_speculos_args(temp_dir, Firmware.STAX, False, False, self.seed,
-                                                 [])
+                        bc.prepare_speculos_args(temp_dir, self.stax, False, False, self.seed, [])
 
     def test_prepare_speculos_args_sideloaded_apps_ok(self):
         lib1_bin, lib1_name, lib2_bin, lib2_name = "lib1", "name1", "lib2", "name2"
@@ -119,7 +119,7 @@ class TestBaseConftest(TestCase):
 
                     with patch("ragger.conftest.base_conftest.Manifest", ManifestMock):
                         result_app, result_args = bc.prepare_speculos_args(
-                            temp_dir, Firmware.STAX, False, False, self.seed, [])
+                            temp_dir, self.stax, False, False, self.seed, [])
                     self.assertEqual(result_app, app_path)
                     self.assertEqual(
                         result_args, {
@@ -138,18 +138,18 @@ class TestBaseConftest(TestCase):
             with temporary_directory() as temp_dir:
                 prepare_base_dir(temp_dir)
                 with patch("ragger.conftest.base_conftest.Manifest", ManifestMock):
-                    result = bc.create_backend(temp_dir, "Speculos", Firmware.STAX, False, False,
-                                               None, self.seed, [])
+                    result = bc.create_backend(temp_dir, "Speculos", self.stax, False, False, None,
+                                               self.seed, [])
                 self.assertEqual(result, backend())
 
     def test_create_backend_ledgercomm(self):
         with patch("ragger.conftest.base_conftest.LedgerWalletBackend") as backend:
-            result = bc.create_backend(None, "ledgerWALLET", Firmware.STAX, False, False, None,
+            result = bc.create_backend(None, "ledgerWALLET", self.stax, False, False, None,
                                        self.seed, [])
             self.assertEqual(result, backend())
 
     def test_create_backend_ledgerwallet(self):
         with patch("ragger.conftest.base_conftest.LedgerCommBackend") as backend:
-            result = bc.create_backend(None, "LedgerComm", Firmware.STAX, False, False, None,
-                                       self.seed, [])
+            result = bc.create_backend(None, "LedgerComm", self.stax, False, False, None, self.seed,
+                                       [])
             self.assertEqual(result, backend())
