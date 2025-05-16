@@ -28,6 +28,8 @@ class Firmware(IntEnum):
     NANOX = DeviceType.NANOX
     STAX = DeviceType.STAX
     FLEX = DeviceType.FLEX
+    APEX_P = DeviceType.APEX_P
+    APEX_M = DeviceType.APEX_M
 
     @staticmethod
     def deprec_warning() -> None:
