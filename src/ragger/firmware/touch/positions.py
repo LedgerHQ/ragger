@@ -28,42 +28,62 @@ class Position:
 
 _stax_res: Resolution = Devices.get_by_type(DeviceType.STAX).resolution
 _flex_res: Resolution = Devices.get_by_type(DeviceType.FLEX).resolution
+_apex_p_res: Resolution = Devices.get_by_type(DeviceType.APEX_P).resolution
+_apex_m_res: Resolution = Devices.get_by_type(DeviceType.APEX_M).resolution
 
 # Floor division '//' required, else the result will be a float, which can lead to issues when
 # using Speculos, which performs actions such as `var.to_bytes()` which does not work with a float.
 STAX_X_CENTER = _stax_res.x // 2
 FLEX_X_CENTER = _flex_res.x // 2
+APEX_P_X_CENTER = _apex_p_res.x // 2
+APEX_M_X_CENTER = _apex_m_res.x // 2
 
 STAX_CENTER = Position(STAX_X_CENTER, _stax_res.y // 2)
 FLEX_CENTER = Position(FLEX_X_CENTER, _flex_res.y // 2)
-
-STAX_BUTTON_UPPER_CENTER_MIDDLE = Position(STAX_X_CENTER, 280)
-FLEX_BUTTON_UPPER_CENTER_MIDDLE = Position(FLEX_X_CENTER, 250)
+APEX_P_CENTER = Position(APEX_P_X_CENTER, _apex_p_res.y // 2)
+APEX_M_CENTER = Position(APEX_M_X_CENTER, _apex_m_res.y // 2)
 
 STAX_BUTTON_UPPER_LEFT = Position(36, 36)
 FLEX_BUTTON_UPPER_LEFT = Position(45, 45)
+APEX_P_BUTTON_UPPER_LEFT = Position(30, 30)
+APEX_M_BUTTON_UPPER_LEFT = Position(30, 30)
 
 STAX_BUTTON_UPPER_RIGHT = Position(342, 55)
 FLEX_BUTTON_UPPER_RIGHT = Position(405, 75)
+APEX_P_BUTTON_UPPER_RIGHT = Position(256, 43)
+APEX_M_BUTTON_UPPER_RIGHT = Position(256, 43)
 
 STAX_BUTTON_LOWER_LEFT = Position(36, 606)
 FLEX_BUTTON_LOWER_LEFT = Position(55, 530)
+APEX_P_BUTTON_LOWER_LEFT = Position(56, 370)
+APEX_M_BUTTON_LOWER_LEFT = Position(56, 370)
 
 STAX_BUTTON_LOWER_MIDDLE = Position(STAX_X_CENTER, 606)
 FLEX_BUTTON_LOWER_MIDDLE = Position(FLEX_X_CENTER, 550)
+APEX_P_BUTTON_LOWER_MIDDLE = Position(APEX_P_X_CENTER, 370)
+APEX_M_BUTTON_LOWER_MIDDLE = Position(APEX_M_X_CENTER, 370)
 
 STAX_BUTTON_LOWER_RIGHT = Position(342, 606)
 FLEX_BUTTON_LOWER_RIGHT = Position(430, 550)
+APEX_P_BUTTON_LOWER_RIGHT = Position(270, 370)
+APEX_M_BUTTON_LOWER_RIGHT = Position(270, 370)
+
 STAX_BUTTON_LOWER_MIDDLE_RIGHT = Position(266, 615)
 FLEX_BUTTON_LOWER_MIDDLE_RIGHT = Position(320, 550)
+APEX_P_BUTTON_LOWER_MIDDLE_RIGHT = Position(207, 370)
+APEX_M_BUTTON_LOWER_MIDDLE_RIGHT = Position(207, 370)
 
-STAX_BUTTON_ABOVE_LOWER_MIDDLE = Position(200, 515)
-FLEX_BUTTON_ABOVE_LOWER_MIDDLE = Position(240, 435)
+STAX_BUTTON_ABOVE_LOWER_MIDDLE = Position(STAX_X_CENTER, 515)
+FLEX_BUTTON_ABOVE_LOWER_MIDDLE = Position(FLEX_X_CENTER, 435)
+APEX_P_BUTTON_ABOVE_LOWER_MIDDLE = Position(APEX_P_X_CENTER, 312)
+APEX_M_BUTTON_ABOVE_LOWER_MIDDLE = Position(APEX_M_X_CENTER, 312)
 
 POSITIONS = {
     "Center": {
         DeviceType.STAX: STAX_CENTER,
         DeviceType.FLEX: FLEX_CENTER,
+        DeviceType.APEX_P: APEX_P_CENTER,
+        DeviceType.APEX_M: APEX_M_CENTER,
     },
     "ChoiceList": {
         DeviceType.STAX: {
@@ -81,7 +101,23 @@ POSITIONS = {
             3: Position(FLEX_X_CENTER, 330),
             4: Position(FLEX_X_CENTER, 420),
             5: Position(FLEX_X_CENTER, 510),
-        }
+        },
+        DeviceType.APEX_P: {
+            # Up to 5 choices in a list
+            1: Position(APEX_P_X_CENTER, 90),
+            2: Position(APEX_P_X_CENTER, 160),
+            3: Position(APEX_P_X_CENTER, 230),
+            4: Position(APEX_P_X_CENTER, 300),
+            5: Position(APEX_P_X_CENTER, 370),
+        },
+        DeviceType.APEX_M: {
+            # Up to 5 choices in a list
+            1: Position(APEX_M_X_CENTER, 90),
+            2: Position(APEX_M_X_CENTER, 160),
+            3: Position(APEX_M_X_CENTER, 230),
+            4: Position(APEX_M_X_CENTER, 300),
+            5: Position(APEX_M_X_CENTER, 370),
+        },
     },
     "Suggestions": {
         DeviceType.STAX: {
@@ -382,30 +418,38 @@ POSITIONS = {
     "TappableCenter": {
         DeviceType.STAX: STAX_CENTER,
         DeviceType.FLEX: FLEX_CENTER,
-    },
-    "KeyboardConfirmationButton": {
-        DeviceType.STAX: STAX_BUTTON_UPPER_CENTER_MIDDLE,
-        DeviceType.FLEX: FLEX_BUTTON_UPPER_CENTER_MIDDLE,
+        DeviceType.APEX_P: APEX_P_CENTER,
+        DeviceType.APEX_M: APEX_M_CENTER
     },
     "RightHeader": {
         DeviceType.STAX: STAX_BUTTON_UPPER_RIGHT,
-        DeviceType.FLEX: FLEX_BUTTON_UPPER_RIGHT
+        DeviceType.FLEX: FLEX_BUTTON_UPPER_RIGHT,
+        DeviceType.APEX_P: APEX_P_BUTTON_UPPER_RIGHT,
+        DeviceType.APEX_M: APEX_M_BUTTON_UPPER_RIGHT
     },
     "LeftHeader": {
         DeviceType.STAX: STAX_BUTTON_UPPER_LEFT,
-        DeviceType.FLEX: FLEX_BUTTON_UPPER_LEFT
+        DeviceType.FLEX: FLEX_BUTTON_UPPER_LEFT,
+        DeviceType.APEX_P: APEX_P_BUTTON_UPPER_LEFT,
+        DeviceType.APEX_M: APEX_M_BUTTON_UPPER_LEFT
     },
     "CenteredFooter": {
         DeviceType.STAX: STAX_BUTTON_LOWER_MIDDLE,
-        DeviceType.FLEX: FLEX_BUTTON_LOWER_MIDDLE
+        DeviceType.FLEX: FLEX_BUTTON_LOWER_MIDDLE,
+        DeviceType.APEX_P: APEX_P_BUTTON_LOWER_MIDDLE,
+        DeviceType.APEX_M: APEX_M_BUTTON_LOWER_MIDDLE
     },
     "LeftFooter": {
         DeviceType.STAX: STAX_BUTTON_LOWER_LEFT,
-        DeviceType.FLEX: FLEX_BUTTON_LOWER_LEFT
+        DeviceType.FLEX: FLEX_BUTTON_LOWER_LEFT,
+        DeviceType.APEX_P: APEX_P_BUTTON_LOWER_LEFT,
+        DeviceType.APEX_M: APEX_M_BUTTON_LOWER_LEFT
     },
     "CancelFooter": {
         DeviceType.STAX: STAX_BUTTON_LOWER_LEFT,
-        DeviceType.FLEX: FLEX_BUTTON_LOWER_LEFT
+        DeviceType.FLEX: FLEX_BUTTON_LOWER_LEFT,
+        DeviceType.APEX_P: APEX_P_BUTTON_LOWER_LEFT,
+        DeviceType.APEX_M: APEX_M_BUTTON_LOWER_LEFT
     },
     "UseCaseHome": {
         DeviceType.STAX: {
@@ -417,6 +461,16 @@ POSITIONS = {
             "info": FLEX_BUTTON_UPPER_RIGHT,
             "settings": FLEX_BUTTON_UPPER_RIGHT,
             "quit": FLEX_BUTTON_LOWER_MIDDLE
+        },
+        DeviceType.APEX_P: {
+            "info": APEX_P_BUTTON_UPPER_RIGHT,
+            "settings": APEX_P_BUTTON_UPPER_RIGHT,
+            "quit": APEX_P_BUTTON_LOWER_MIDDLE
+        },
+        DeviceType.APEX_M: {
+            "info": APEX_M_BUTTON_UPPER_RIGHT,
+            "settings": APEX_M_BUTTON_UPPER_RIGHT,
+            "quit": APEX_M_BUTTON_LOWER_MIDDLE
         }
     },
     "UseCaseHomeExt": {
@@ -431,6 +485,18 @@ POSITIONS = {
             "settings": FLEX_BUTTON_UPPER_RIGHT,
             "action": FLEX_BUTTON_ABOVE_LOWER_MIDDLE,
             "quit": FLEX_BUTTON_LOWER_MIDDLE
+        },
+        DeviceType.APEX_P: {
+            "info": APEX_P_BUTTON_UPPER_RIGHT,
+            "settings": APEX_P_BUTTON_UPPER_RIGHT,
+            "action": APEX_P_BUTTON_ABOVE_LOWER_MIDDLE,
+            "quit": APEX_P_BUTTON_LOWER_MIDDLE
+        },
+        DeviceType.APEX_M: {
+            "info": APEX_M_BUTTON_UPPER_RIGHT,
+            "settings": APEX_M_BUTTON_UPPER_RIGHT,
+            "action": APEX_M_BUTTON_ABOVE_LOWER_MIDDLE,
+            "quit": APEX_M_BUTTON_LOWER_MIDDLE
         }
     },
     "UseCaseSettings": {
@@ -445,6 +511,18 @@ POSITIONS = {
             "multi_page_exit": FLEX_BUTTON_UPPER_LEFT,
             "previous": FLEX_BUTTON_LOWER_MIDDLE_RIGHT,
             "next": FLEX_BUTTON_LOWER_RIGHT,
+        },
+        DeviceType.APEX_P: {
+            "single_page_exit": APEX_P_BUTTON_UPPER_LEFT,
+            "multi_page_exit": APEX_P_BUTTON_UPPER_LEFT,
+            "previous": APEX_P_BUTTON_LOWER_MIDDLE_RIGHT,
+            "next": APEX_P_BUTTON_LOWER_RIGHT,
+        },
+        DeviceType.APEX_M: {
+            "single_page_exit": APEX_M_BUTTON_UPPER_LEFT,
+            "multi_page_exit": APEX_M_BUTTON_UPPER_LEFT,
+            "previous": APEX_M_BUTTON_LOWER_MIDDLE_RIGHT,
+            "next": APEX_M_BUTTON_LOWER_RIGHT,
         }
     },
     "UseCaseSubSettings": {
@@ -457,6 +535,16 @@ POSITIONS = {
             "exit": FLEX_BUTTON_UPPER_LEFT,
             "previous": FLEX_BUTTON_LOWER_LEFT,
             "next": FLEX_BUTTON_LOWER_RIGHT,
+        },
+        DeviceType.APEX_P: {
+            "exit": APEX_P_BUTTON_UPPER_LEFT,
+            "previous": APEX_P_BUTTON_LOWER_LEFT,
+            "next": APEX_P_BUTTON_LOWER_RIGHT,
+        },
+        DeviceType.APEX_M: {
+            "exit": APEX_M_BUTTON_UPPER_LEFT,
+            "previous": APEX_M_BUTTON_LOWER_LEFT,
+            "next": APEX_M_BUTTON_LOWER_RIGHT,
         }
     },
     "UseCaseChoice": {
@@ -467,6 +555,14 @@ POSITIONS = {
         DeviceType.FLEX: {
             "confirm": FLEX_BUTTON_ABOVE_LOWER_MIDDLE,
             "reject": FLEX_BUTTON_LOWER_LEFT,
+        },
+        DeviceType.APEX_P: {
+            "confirm": APEX_P_BUTTON_ABOVE_LOWER_MIDDLE,
+            "reject": APEX_P_BUTTON_LOWER_LEFT,
+        },
+        DeviceType.APEX_M: {
+            "confirm": APEX_M_BUTTON_ABOVE_LOWER_MIDDLE,
+            "reject": APEX_M_BUTTON_LOWER_LEFT,
         }
     },
     "UseCaseStatus": {
@@ -475,6 +571,12 @@ POSITIONS = {
         },
         DeviceType.FLEX: {
             "dismiss": FLEX_CENTER,
+        },
+        DeviceType.APEX_P: {
+            "dismiss": APEX_P_CENTER,
+        },
+        DeviceType.APEX_M: {
+            "dismiss": APEX_M_CENTER,
         }
     },
     "UseCaseReview": {
@@ -489,6 +591,18 @@ POSITIONS = {
             "previous": FLEX_BUTTON_LOWER_MIDDLE,
             "confirm": FLEX_BUTTON_ABOVE_LOWER_MIDDLE,
             "reject": FLEX_BUTTON_LOWER_LEFT,
+        },
+        DeviceType.APEX_P: {
+            "tap": APEX_P_BUTTON_LOWER_RIGHT,
+            "previous": APEX_P_BUTTON_LOWER_MIDDLE,
+            "confirm": APEX_P_BUTTON_ABOVE_LOWER_MIDDLE,
+            "reject": APEX_P_BUTTON_LOWER_LEFT,
+        },
+        DeviceType.APEX_M: {
+            "tap": APEX_M_BUTTON_LOWER_RIGHT,
+            "previous": APEX_M_BUTTON_LOWER_MIDDLE,
+            "confirm": APEX_M_BUTTON_ABOVE_LOWER_MIDDLE,
+            "reject": APEX_M_BUTTON_LOWER_LEFT,
         }
     },
     "UseCaseViewDetails": {
@@ -501,6 +615,16 @@ POSITIONS = {
             "exit": FLEX_BUTTON_LOWER_LEFT,
             "previous": FLEX_BUTTON_LOWER_MIDDLE,
             "next": FLEX_BUTTON_LOWER_RIGHT,
+        },
+        DeviceType.APEX_P: {
+            "exit": APEX_P_BUTTON_LOWER_LEFT,
+            "previous": APEX_P_BUTTON_LOWER_MIDDLE,
+            "next": APEX_P_BUTTON_LOWER_RIGHT,
+        },
+        DeviceType.APEX_M: {
+            "exit": APEX_M_BUTTON_LOWER_LEFT,
+            "previous": APEX_M_BUTTON_LOWER_MIDDLE,
+            "next": APEX_M_BUTTON_LOWER_RIGHT,
         }
     },
     "UseCaseAddressConfirmation": {
@@ -515,6 +639,18 @@ POSITIONS = {
             "exit_qr": FLEX_BUTTON_LOWER_MIDDLE,
             "confirm": FLEX_BUTTON_ABOVE_LOWER_MIDDLE,
             "cancel": FLEX_BUTTON_LOWER_LEFT,
+        },
+        DeviceType.APEX_P: {
+            "tap": APEX_P_BUTTON_ABOVE_LOWER_MIDDLE,
+            "exit_qr": APEX_P_BUTTON_LOWER_MIDDLE,
+            "confirm": APEX_P_BUTTON_ABOVE_LOWER_MIDDLE,
+            "cancel": APEX_P_BUTTON_LOWER_LEFT,
+        },
+        DeviceType.APEX_M: {
+            "tap": APEX_M_BUTTON_ABOVE_LOWER_MIDDLE,
+            "exit_qr": APEX_M_BUTTON_LOWER_MIDDLE,
+            "confirm": APEX_M_BUTTON_ABOVE_LOWER_MIDDLE,
+            "cancel": APEX_M_BUTTON_LOWER_LEFT,
         }
     },
 }
