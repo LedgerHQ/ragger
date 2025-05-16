@@ -12,7 +12,7 @@ It mainly consists of an interface which is implemented by three backends:
 
 - an emulator-only backend, `SpeculosBackend`, which uses
   [`SpeculosClient`](https://github.com/LedgerHQ/speculos/blob/master/speculos/client.py)
-  to run an app on a Speculos emulator. With this backend, APDU can be send directly,
+  to run an app on a Speculos emulator. With this backend, APDU can be sent directly,
   without having to connect a device, start a docker or anything.
 
 - two physical backends (although technically they are agnostic, but the
@@ -67,7 +67,7 @@ different backends and that allow to interact with a device (either a real devic
 
 * `send`: send a formatted APDU.
 * `send_raw`: send a raw APDU.
-* `receive`: receive a response ADPU.
+* `receive`: receive a response APDU.
 * `exchange`: send a formatted APDU and wait for a response (synchronous).
 * `exchange_raw`: send a raw APDU and wait for a response (synchronous).
 * `exchange_async`: send a formatted APDU and give back the control to the caller (asynchronous).
