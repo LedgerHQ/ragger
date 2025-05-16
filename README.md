@@ -8,7 +8,7 @@
 This library aims at reducing the cost of running code on both Speculos emulator
 or on a real device.
 
-It mainly consists on an interface which is implemented by three backends:
+It mainly consists of an interface which is implemented by three backends:
 
 - an emulator-only backend, `SpeculosBackend`, which uses
   [`SpeculosClient`](https://github.com/LedgerHQ/speculos/blob/master/speculos/client.py)
@@ -17,7 +17,7 @@ It mainly consists on an interface which is implemented by three backends:
 
 - two physical backends (although technically they are agnostic, but the
   `SpeculosClient` is superior with an emulator), `LedgerCommBackend` and
-  `LedgewWalletbackend`, which use respectively the
+  `LedgerWalletbackend`, which use respectively the
   [`LedgerComm` library](https://github.com/LedgerHQ/ledgercomm) or the
   [`LedgerWallet` library](https://github.com/LedgerHQ/ledgerctl/) to discuss
   with a physical device. In these cases, the physical device must be started,
