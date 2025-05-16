@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Align libraries loading for swap standalone tests with library loading for eth plugin tests
+## [1.39.0] - 2025-07-17
+
+### Changed
+
+- Add two new devices: Apex_p and Apex_m
 
 ## [1.38.0] - 2025-07-16
 
@@ -48,6 +53,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Enable to use both MAIN_APP_DIR and SIDELOADED_APPS options (required to perform Swap tests) 
+ 
 
 ## [1.35.0] - 2025-05-14
 
