@@ -103,7 +103,7 @@ Dealing with UI and user interaction is never simple. Nano devices has only two
 user physical inputs, through the two buttons, which already allows some
 elaborate combinations that could be challenging to test automatically.
 
-With the touchable screens of Stax or Flex devices, the number of possibilities
+With the touchable screens devices, the number of possibilities
 drastically increases.
 
 ``Ragger`` embeds tools allowing to ease the development and the maintenance of
