@@ -231,7 +231,7 @@ def prepare_speculos_args(root_pytest_dir: Path,
         lib_path = find_application(project_root_dir, device_name, manifest.app.sdk)
         speculos_args.append(f"-l{lib_path}")
 
-    elif len(conf.OPTIONAL.SIDELOADED_APPS) != 0:
+    if len(conf.OPTIONAL.SIDELOADED_APPS) != 0:
         # We are testing a a standalone app that needs libraries: search in SIDELOADED_APPS_DIR
         if conf.OPTIONAL.SIDELOADED_APPS_DIR == "":
             raise ValueError("Configuration \"SIDELOADED_APPS_DIR\" is mandatory if "
