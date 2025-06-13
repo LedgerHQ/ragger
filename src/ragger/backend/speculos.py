@@ -376,7 +376,7 @@ class SpeculosBackend(BackendInterface):
         return result
 
 
-def has_data_available(response: RAPDU, timeout: float = 0) -> bool:
+def has_data_available(response: ApduResponse, timeout: float = 0) -> bool:
     """Check if data is available without blocking by peeking at the socket"""
     sock = response.response.raw._original_response.fp.raw._sock
     if sock:
