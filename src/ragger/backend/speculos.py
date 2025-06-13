@@ -13,6 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
+import select
 import socket
 from contextlib import contextmanager
 from copy import deepcopy
@@ -201,14 +202,14 @@ class SpeculosBackend(BackendInterface):
         return RAPDU(0x9000, response.receive())
 
     @contextmanager
-    def exchange_async_raw(self, data: bytes = b"") -> Generator[None, None, None]:
+    def exchange_async_raw(self, data: bytes = b"") -> Generator[bool, None, None]:
         self.apdu_logger.info("=> %s", data.hex())
         with self._client.apdu_exchange_nowait(cla=data[0],
                                                ins=data[1],
                                                p1=data[2],
                                                p2=data[3],
                                                data=data[5:]) as response:
-            yield
+            yield has_data_available(response, timeout=0.2)
             self._last_async_response = self._get_last_async_response(response)
 
     def right_click(self) -> None:
@@ -373,3 +374,12 @@ class SpeculosBackend(BackendInterface):
             logger.info("Args: %s", tmp_kwargs["args"])
             result.append(cls(application, device, *args, **tmp_kwargs))
         return result
+
+
+def has_data_available(response: ApduResponse, timeout: float = 0) -> bool:
+    """Check if data is available without blocking by peeking at the socket"""
+    sock = response.response.raw._original_response.fp.raw._sock
+    if sock:
+        ready, _, _ = select.select([sock], [], [], timeout)
+        return len(ready) > 0
+    return False
