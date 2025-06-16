@@ -123,10 +123,19 @@ class SpeculosBackend(BackendInterface):
         self._last_screenshot: Optional[BytesIO] = None
         self._home_screenshot: Optional[BytesIO] = None
         self._ticker_paused_count = 0
+        self._apdu_timeout = 0.3
 
     @property
     def url(self) -> str:
         return f"http://127.0.0.1:{self._api_port}"
+
+    @property
+    def apdu_timeout(self) -> float:
+        return self._apdu_timeout
+
+    @apdu_timeout.setter
+    def apdu_timeout(self, value: float) -> None:
+        self._apdu_timeout = value
 
     def _retrieve_client_screen_content(self) -> dict:
         raw_content = self._client.get_current_screen_content()
@@ -209,7 +218,7 @@ class SpeculosBackend(BackendInterface):
                                                p1=data[2],
                                                p2=data[3],
                                                data=data[5:]) as response:
-            yield has_data_available(response, timeout=0.2)
+            yield has_data_available(response, timeout=self.apdu_timeout)
             self._last_async_response = self._get_last_async_response(response)
 
     def right_click(self) -> None:
