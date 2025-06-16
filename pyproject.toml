@@ -26,6 +26,7 @@ dependencies = [
     "bip_utils>=2.4.0",
     "py-sr25519-bindings>=0.2.0,<0.3.0",
     "ledgered>=0.10.1",
+    "toml"
 ]
 dynamic = ["version"]
 
