@@ -18,7 +18,7 @@ from contextlib import contextmanager
 from enum import Enum, auto
 from pathlib import Path
 from types import TracebackType
-from typing import Optional, Type, Generator, Any, Iterable
+from typing import Optional, Type, Generator, Any, Iterable, Union
 from ledgered.devices import Device
 from warnings import warn
 
@@ -279,7 +279,7 @@ class BackendInterface(ABC):
 
     @contextmanager
     @abstractmethod
-    def exchange_async_raw(self, data: bytes = b"") -> Generator[None, None, None]:
+    def exchange_async_raw(self, data: bytes = b"") -> Generator[Union[bool, None], None, None]:
         """
         Sends the given APDU to the backend, then gives the control back to the
         caller.
