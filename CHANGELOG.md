@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.37.1] - 2025-05-16
+
+### Fixed
+
+- minor bug fixes on the PhysicalDevice navigation flow
+- OCR enhancements on physical backend to detect words
+
+### Added
+- Key presses shortcuts (y/n) to navigate through the ragger GUI with a physical backend
+
 ## [1.37.0] - 2025-05-16
 
 ### Changed

@@ -17,6 +17,7 @@ from ledgered.devices import Device
 from pathlib import Path
 from types import TracebackType
 from typing import List, Optional, Type
+from re import match, search
 
 from ragger.gui import RaggerGUI
 from ragger.navigator.instruction import NavInsID
@@ -86,6 +87,13 @@ class PhysicalBackend(BackendInterface):
                                      crop: Optional[Crop] = None,
                                      tmp_snap_path: Optional[Path] = None,
                                      golden_run: bool = False) -> bool:
+
+        # If the file has no size, it's because we are within a NamedTemporaryFile
+        # We do nothing and return False to exit the while loop of
+        # NavInsID.USE_CASE_REVIEW_CONFIRM
+        if isinstance(golden_snap_path, Path) and golden_snap_path.stat().st_size == 0:
+            return False
+
         if self._ui is None:
             return True
         self.init_gui()
@@ -105,7 +113,7 @@ class PhysicalBackend(BackendInterface):
         # Only this method needs these dependencies, which needs at least one physical backend to
         # be installed. By postponing the imports, we avoid an import error when using only Speculos
         try:
-            from PIL import Image, ImageOps
+            from PIL import Image, ImageOps, ImageFilter
             from pytesseract import image_to_data, Output
         except ImportError as error:
             raise ImportError(
@@ -122,10 +130,12 @@ class PhysicalBackend(BackendInterface):
             # dark text on white background.
             if self.device.is_nano:
                 image = ImageOps.invert(image)
+            image = image.filter(ImageFilter.SHARPEN)
             data = image_to_data(image, output_type=Output.DICT)
-            for item in range(len(data["text"])):
-                if text in data["text"][item]:
-                    return True
+            if search(text.strip("^").strip("$"), " ".join(data["text"])):
+                return True
+            if any(text in item or match(text, item) for item in data["text"]):
+                return True
             return False
         else:
             return self._ui.check_text(text)
