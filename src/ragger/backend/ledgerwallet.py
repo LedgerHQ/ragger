@@ -98,7 +98,7 @@ class LedgerWalletBackend(PhysicalBackend):
         return result
 
     @contextmanager
-    def exchange_async_raw(self, data: bytes = b"") -> Generator[None, None, None]:
+    def exchange_async_raw(self, data: bytes = b"") -> Generator[bool, None, None]:
         self.send_raw(data)
-        yield
+        yield True
         self._last_async_response = self.receive()
