@@ -585,15 +585,15 @@
 <!-- ragger.backend.ledgercomm.LedgerCommBackend -->
 <g id="node19" class="node">
 <title>ragger.backend.ledgercomm.LedgerCommBackend</title>
-<polygon fill="#99ddff" stroke="#99ddff" points="7035,-241.5 7035,-372.3 7513,-372.3 7513,-241.5 7035,-241.5"/>
-<text text-anchor="start" x="7195.5" y="-357.1" font-family="Times,serif" font-size="14.00">LedgerCommBackend</text>
-<polyline fill="none" stroke="#99ddff" points="7035,-349.3 7513,-349.3 "/>
-<polyline fill="none" stroke="#99ddff" points="7035,-324.5 7513,-324.5 "/>
-<text text-anchor="start" x="7043" y="-309.3" font-family="Times,serif" font-size="14.00">exchange_async_raw(data: bytes): Generator[None, None, None]</text>
-<text text-anchor="start" x="7043" y="-294.3" font-family="Times,serif" font-size="14.00">exchange_raw(data: bytes, tick_timeout: int): RAPDU</text>
-<text text-anchor="start" x="7043" y="-279.3" font-family="Times,serif" font-size="14.00">handle_usb_reset(): None</text>
-<text text-anchor="start" x="7043" y="-264.3" font-family="Times,serif" font-size="14.00">receive(): RAPDU</text>
-<text text-anchor="start" x="7043" y="-249.3" font-family="Times,serif" font-size="14.00">send_raw(data: bytes): None</text>
+<polygon fill="#99ddff" stroke="#99ddff" points="7051,-241.5 7051,-372.3 7521,-372.3 7521,-241.5 7051,-241.5"/>
+<text text-anchor="start" x="7207.5" y="-357.1" font-family="Times,serif" font-size="14.00">LedgerCommBackend</text>
+<polyline fill="none" stroke="#99ddff" points="7051,-349.3 7521,-349.3 "/>
+<polyline fill="none" stroke="#99ddff" points="7051,-324.5 7521,-324.5 "/>
+<text text-anchor="start" x="7059" y="-309.3" font-family="Times,serif" font-size="14.00">exchange_async_raw(data: bytes): Generator[bool, None, None]</text>
+<text text-anchor="start" x="7059" y="-294.3" font-family="Times,serif" font-size="14.00">exchange_raw(data: bytes, tick_timeout: int): RAPDU</text>
+<text text-anchor="start" x="7059" y="-279.3" font-family="Times,serif" font-size="14.00">handle_usb_reset(): None</text>
+<text text-anchor="start" x="7059" y="-264.3" font-family="Times,serif" font-size="14.00">receive(): RAPDU</text>
+<text text-anchor="start" x="7059" y="-249.3" font-family="Times,serif" font-size="14.00">send_raw(data: bytes): None</text>
 </g>
 <!-- ragger.backend.physical_backend.PhysicalBackend -->
 <g id="node32" class="node">
@@ -625,27 +625,27 @@
 <!-- ragger.backend.ledgercomm.LedgerCommBackend&#45;&gt;ragger.backend.physical_backend.PhysicalBackend -->
 <g id="edge1" class="edge">
 <title>ragger.backend.ledgercomm.LedgerCommBackend&#45;&gt;ragger.backend.physical_backend.PhysicalBackend</title>
-<path fill="none" stroke="black" d="M7298.33,-372.51C7337.15,-475.61 7414.1,-679.99 7467.04,-820.59"/>
-<polygon fill="none" stroke="black" points="7463.85,-822.05 7470.65,-830.17 7470.4,-819.58 7463.85,-822.05"/>
+<path fill="none" stroke="black" d="M7309.16,-372.51C7346.1,-475.61 7419.35,-679.99 7469.74,-820.59"/>
+<polygon fill="none" stroke="black" points="7466.51,-821.94 7473.18,-830.17 7473.1,-819.58 7466.51,-821.94"/>
 </g>
 <!-- ragger.backend.ledgerwallet.LedgerWalletBackend -->
 <g id="node20" class="node">
 <title>ragger.backend.ledgerwallet.LedgerWalletBackend</title>
-<polygon fill="#99ddff" stroke="#99ddff" points="7531,-241.5 7531,-372.3 8009,-372.3 8009,-241.5 7531,-241.5"/>
-<text text-anchor="start" x="7691.5" y="-357.1" font-family="Times,serif" font-size="14.00">LedgerWalletBackend</text>
-<polyline fill="none" stroke="#99ddff" points="7531,-349.3 8009,-349.3 "/>
-<polyline fill="none" stroke="#99ddff" points="7531,-324.5 8009,-324.5 "/>
-<text text-anchor="start" x="7539" y="-309.3" font-family="Times,serif" font-size="14.00">exchange_async_raw(data: bytes): Generator[None, None, None]</text>
-<text text-anchor="start" x="7539" y="-294.3" font-family="Times,serif" font-size="14.00">exchange_raw(data: bytes, tick_timeout: int): RAPDU</text>
-<text text-anchor="start" x="7539" y="-279.3" font-family="Times,serif" font-size="14.00">handle_usb_reset(): None</text>
-<text text-anchor="start" x="7539" y="-264.3" font-family="Times,serif" font-size="14.00">receive(): RAPDU</text>
-<text text-anchor="start" x="7539" y="-249.3" font-family="Times,serif" font-size="14.00">send_raw(data: bytes): None</text>
+<polygon fill="#99ddff" stroke="#99ddff" points="7539,-241.5 7539,-372.3 8009,-372.3 8009,-241.5 7539,-241.5"/>
+<text text-anchor="start" x="7695.5" y="-357.1" font-family="Times,serif" font-size="14.00">LedgerWalletBackend</text>
+<polyline fill="none" stroke="#99ddff" points="7539,-349.3 8009,-349.3 "/>
+<polyline fill="none" stroke="#99ddff" points="7539,-324.5 8009,-324.5 "/>
+<text text-anchor="start" x="7547" y="-309.3" font-family="Times,serif" font-size="14.00">exchange_async_raw(data: bytes): Generator[bool, None, None]</text>
+<text text-anchor="start" x="7547" y="-294.3" font-family="Times,serif" font-size="14.00">exchange_raw(data: bytes, tick_timeout: int): RAPDU</text>
+<text text-anchor="start" x="7547" y="-279.3" font-family="Times,serif" font-size="14.00">handle_usb_reset(): None</text>
+<text text-anchor="start" x="7547" y="-264.3" font-family="Times,serif" font-size="14.00">receive(): RAPDU</text>
+<text text-anchor="start" x="7547" y="-249.3" font-family="Times,serif" font-size="14.00">send_raw(data: bytes): None</text>
 </g>
 <!-- ragger.backend.ledgerwallet.LedgerWalletBackend&#45;&gt;ragger.backend.physical_backend.PhysicalBackend -->
 <g id="edge2" class="edge">
 <title>ragger.backend.ledgerwallet.LedgerWalletBackend&#45;&gt;ragger.backend.physical_backend.PhysicalBackend</title>
-<path fill="none" stroke="black" d="M7559.99,-372.54C7554.16,-378.13 7548.79,-384.2 7544,-390.8 7454.65,-513.93 7463.64,-693.72 7485.9,-820.09"/>
-<polygon fill="none" stroke="black" points="7482.51,-821.02 7487.74,-830.23 7489.4,-819.77 7482.51,-821.02"/>
+<path fill="none" stroke="black" d="M7560.29,-372.31C7554.35,-377.97 7548.88,-384.11 7544,-390.8 7454.3,-513.67 7463.36,-693.51 7485.73,-819.96"/>
+<polygon fill="none" stroke="black" points="7482.34,-820.9 7487.57,-830.12 7489.23,-819.65 7482.34,-820.9"/>
 </g>
 <!-- ragger.firmware.touch.layouts.LeftFooter -->
 <g id="node21" class="node">
@@ -884,28 +884,28 @@
 <!-- ragger.utils.structs.RAPDU -->
 <g id="node35" class="node">
 <title>ragger.utils.structs.RAPDU</title>
-<polygon fill="#ffaabb" stroke="#ffaabb" points="7719.5,-45.5 7719.5,-144.5 7820.5,-144.5 7820.5,-45.5 7719.5,-45.5"/>
-<text text-anchor="start" x="7743" y="-129.3" font-family="Times,serif" font-size="14.00">RAPDU</text>
-<polyline fill="none" stroke="#ffaabb" points="7719.5,-121.5 7820.5,-121.5 "/>
-<text text-anchor="start" x="7727.5" y="-106.3" font-family="Times,serif" font-size="14.00">data : bytes</text>
-<text text-anchor="start" x="7727.5" y="-91.3" font-family="Times,serif" font-size="14.00">raw</text>
-<text text-anchor="start" x="7727.5" y="-76.3" font-family="Times,serif" font-size="14.00">status : int</text>
-<polyline fill="none" stroke="#ffaabb" points="7719.5,-68.5 7820.5,-68.5 "/>
-<text text-anchor="start" x="7767.5" y="-53.3" font-family="Times,serif" font-size="14.00"> </text>
+<polygon fill="#ffaabb" stroke="#ffaabb" points="7723.5,-45.5 7723.5,-144.5 7824.5,-144.5 7824.5,-45.5 7723.5,-45.5"/>
+<text text-anchor="start" x="7747" y="-129.3" font-family="Times,serif" font-size="14.00">RAPDU</text>
+<polyline fill="none" stroke="#ffaabb" points="7723.5,-121.5 7824.5,-121.5 "/>
+<text text-anchor="start" x="7731.5" y="-106.3" font-family="Times,serif" font-size="14.00">data : bytes</text>
+<text text-anchor="start" x="7731.5" y="-91.3" font-family="Times,serif" font-size="14.00">raw</text>
+<text text-anchor="start" x="7731.5" y="-76.3" font-family="Times,serif" font-size="14.00">status : int</text>
+<polyline fill="none" stroke="#ffaabb" points="7723.5,-68.5 7824.5,-68.5 "/>
+<text text-anchor="start" x="7771.5" y="-53.3" font-family="Times,serif" font-size="14.00"> </text>
 </g>
 <!-- ragger.utils.structs.RAPDU&#45;&gt;ragger.backend.ledgercomm.LedgerCommBackend -->
 <g id="edge91" class="edge">
 <title>ragger.utils.structs.RAPDU&#45;&gt;ragger.backend.ledgercomm.LedgerCommBackend</title>
-<path fill="none" stroke="black" d="M7719.25,-117.48C7653.46,-145.32 7535.54,-195.22 7437.57,-236.68"/>
-<polygon fill="black" stroke="black" points="7437.39,-236.75 7433.43,-242.78 7426.34,-241.43 7430.31,-235.41 7437.39,-236.75"/>
-<text text-anchor="middle" x="7569" y="-211.8" font-family="Times,serif" font-size="14.00" fill="green">_last_async_response</text>
+<path fill="none" stroke="black" d="M7723.16,-117.87C7658.29,-145.77 7543,-195.36 7447.1,-236.61"/>
+<polygon fill="black" stroke="black" points="7446.83,-236.72 7442.9,-242.77 7435.8,-241.47 7439.74,-235.42 7446.83,-236.72"/>
+<text text-anchor="middle" x="7577" y="-211.8" font-family="Times,serif" font-size="14.00" fill="green">_last_async_response</text>
 </g>
 <!-- ragger.utils.structs.RAPDU&#45;&gt;ragger.backend.ledgerwallet.LedgerWalletBackend -->
 <g id="edge92" class="edge">
 <title>ragger.utils.structs.RAPDU&#45;&gt;ragger.backend.ledgerwallet.LedgerWalletBackend</title>
-<path fill="none" stroke="black" d="M7770,-144.68C7770,-169.69 7770,-200.74 7770,-228.89"/>
-<polygon fill="black" stroke="black" points="7770,-229.17 7774,-235.17 7770,-241.17 7766,-235.17 7770,-229.17"/>
-<text text-anchor="middle" x="7846" y="-211.8" font-family="Times,serif" font-size="14.00" fill="green">_last_async_response</text>
+<path fill="none" stroke="black" d="M7774,-144.68C7774,-169.69 7774,-200.74 7774,-228.89"/>
+<polygon fill="black" stroke="black" points="7774,-229.17 7778,-235.17 7774,-241.17 7770,-235.17 7774,-229.17"/>
+<text text-anchor="middle" x="7850" y="-211.8" font-family="Times,serif" font-size="14.00" fill="green">_last_async_response</text>
 </g>
 <!-- ragger.backend.speculos.SpeculosBackend -->
 <g id="node40" class="node">
@@ -944,8 +944,8 @@
 <!-- ragger.utils.structs.RAPDU&#45;&gt;ragger.backend.speculos.SpeculosBackend -->
 <g id="edge93" class="edge">
 <title>ragger.utils.structs.RAPDU&#45;&gt;ragger.backend.speculos.SpeculosBackend</title>
-<path fill="none" stroke="black" d="M7820.71,-109.77C7879.5,-128.68 7973.93,-168.86 8018,-241 8042.96,-281.86 8054.21,-330.76 8057.87,-378.74"/>
-<polygon fill="black" stroke="black" points="8057.89,-378.94 8062.26,-384.67 8058.65,-390.91 8054.27,-385.18 8057.89,-378.94"/>
+<path fill="none" stroke="black" d="M7824.69,-110.27C7882.6,-129.52 7974.91,-169.88 8018,-241 8042.81,-281.95 8054.01,-330.89 8057.67,-378.87"/>
+<polygon fill="black" stroke="black" points="8057.68,-379.07 8062.05,-384.8 8058.44,-391.04 8054.07,-385.31 8057.68,-379.07"/>
 <text text-anchor="middle" x="8079" y="-211.8" font-family="Times,serif" font-size="14.00" fill="green">_last_async_response</text>
 </g>
 <!-- ragger.gui.interface.RaggerMainWindow -->
