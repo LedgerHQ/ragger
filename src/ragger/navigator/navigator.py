@@ -20,7 +20,8 @@ from time import time
 from typing import Callable, Dict, Optional, Sequence, Union
 from ledgered.devices import Device
 
-from ragger.backend import BackendInterface, SpeculosBackend
+from ragger.backend import BackendInterface
+from ragger.backend.speculos import SpeculosBackend
 from ragger.utils import Crop
 
 from .instruction import BaseNavInsID, NavIns, NavInsID
