@@ -9,7 +9,6 @@ __version__.py
 .python-version
 
 tests/snapshots-tmp/
-ledger_app.toml
 
 # doc
 doc/images/*generated*
