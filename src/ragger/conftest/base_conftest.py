@@ -39,7 +39,12 @@ def pytest_addoption(parser):
                      action="store_true",
                      default=False,
                      help="Have Speculos accept prod PKI certificates instead of test")
-    parser.addoption("--log_apdu_file", action="store", default=None, help="Log the APDU in a file")
+    parser.addoption("--log_apdu_file",
+                     action="store",
+                     default=None,
+                     nargs="?",
+                     const="apdu.log",
+                     help="Log the APDU in a file. If no pattern provided, uses 'apdu_xxx.log'.")
     parser.addoption("--seed", action="store", default=None, help="Set a custom seed")
     # Always allow "default" even if application conftest does not define it
     allowed_setups = conf.OPTIONAL.ALLOWED_SETUPS
@@ -72,10 +77,23 @@ def golden_run(pytestconfig):
     return pytestconfig.getoption("golden_run")
 
 
-@pytest.fixture(scope="session")
-def log_apdu_file(pytestconfig):
+@pytest.fixture(scope=conf.OPTIONAL.BACKEND_SCOPE)
+def log_apdu_file(request, pytestconfig, full_test_name: str):
     filename = pytestconfig.getoption("log_apdu_file")
-    return Path(filename).resolve() if filename is not None else None
+    if filename is None:
+        return None
+
+    path = Path(filename)
+    # Get nb of collected tests to be executed
+    collected_items = len(request.session.items)
+    if collected_items == 1:
+        # Single test - use filename directly
+        return path.resolve()
+    # Multiple tests - create a file per test
+    MAX_TEST_NAME_LENGTH = 100  # Define a safe maximum length for test names
+    truncated_test_name = full_test_name[:MAX_TEST_NAME_LENGTH]  # Truncate if necessary
+    new_filename = f"{path.stem}_{truncated_test_name}{path.suffix}"
+    return Path(new_filename).resolve()
 
 
 @pytest.fixture(scope="session")
@@ -110,6 +128,37 @@ def skip_tests_for_unsupported_devices(supported_devices: List[str], device: Dev
 def default_screenshot_path(root_pytest_dir: Path) -> Path:
     # Alias reflecting the use case to avoid exposing internal helper fixtures
     return root_pytest_dir
+
+
+@pytest.fixture(scope=conf.OPTIONAL.BACKEND_SCOPE)
+def full_test_name(request) -> str:
+    # Get the name of current pytest test
+    test_name = request.node.name
+
+    if '[' in test_name:
+        # Split all parameters
+        base_name, params = test_name.rsplit('[', 1)
+        params = params.rstrip(']')
+
+        # Split parameters by '-' and filter out device names
+        param_list = [p for p in params.split('-') if p not in DEVICES]
+
+        # Rebuild test name with remaining parameters
+        if param_list:
+            test_name = f"{base_name}[{'-'.join(param_list)}]"
+        else:
+            test_name = base_name
+
+    # Clean up for filename friendliness by replacing special characters with underscores
+    translation_table = str.maketrans({
+        '[': '_',
+        ']': '',
+        '-': '_',
+        '/': '_',
+        "'": '',
+    })
+    clean_name = test_name.translate(translation_table)
+    return clean_name
 
 
 @pytest.fixture
