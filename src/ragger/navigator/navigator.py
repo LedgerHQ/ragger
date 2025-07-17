@@ -39,7 +39,8 @@ class Navigator(ABC):
                  backend: BackendInterface,
                  device: Device,
                  callbacks: Dict[BaseNavInsID, Callable],
-                 golden_run: bool = False):
+                 golden_run: bool = False,
+                 rm_snap: bool = False):
         """Initializes the Backend
 
         :param backend: Which Backend will be managed
@@ -50,11 +51,14 @@ class Navigator(ABC):
         :type callbacks: Device
         :param golden_run: Allows to generate golden snapshots
         :type golden_run: bool
+        :param rm_snap: Starts by erasing to existing golden snapshots
+        :type rm_snap: bool
         """
         self._backend = backend
         self._device = device
         self._callbacks = callbacks
         self._golden_run = golden_run
+        self._rm_snap = rm_snap
 
     def _get_snaps_dir_path(self, path: Path, test_case_name: Union[Path, str],
                             is_golden: bool) -> Path:
@@ -72,6 +76,12 @@ class Navigator(ABC):
                 dir_path.mkdir(parents=True)
             else:
                 raise ValueError(f"Golden snapshots directory ({dir_path}) does not exist.")
+        elif self._rm_snap and isinstance(self._backend, SpeculosBackend):
+            # Remove all files in the directory if rm_snap is True
+            self._backend.logger.info(f"Removing snapshot from {dir_path.name}")
+            for file in dir_path.iterdir():
+                if file.is_file():
+                    file.unlink()
         return dir_path
 
     def _init_snaps_temp_dir(self,
