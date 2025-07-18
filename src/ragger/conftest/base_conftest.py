@@ -1,3 +1,4 @@
+import os
 import pytest
 import logging
 from dataclasses import fields
@@ -274,15 +275,16 @@ def prepare_speculos_args(root_pytest_dir: Path,
         main_app_path = find_application(project_root_dir / manifest.app.build_directory,
                                          device_name, manifest.app.sdk)
 
-    # Find all libraries that have to be sideloaded
+    # If this repository does not hold the main app, then we need to load this repository's application as a library
     if conf.OPTIONAL.MAIN_APP_DIR is not None:
         # This repo holds the library, not the standalone app: search in root_dir/build
         lib_path = find_application(project_root_dir, device_name, manifest.app.sdk)
         speculos_args.append(f"-l{lib_path}")
 
+    # Legacy lib method, remove once exchange is ported
     if len(conf.OPTIONAL.SIDELOADED_APPS) != 0:
         # We are testing a a standalone app that needs libraries: search in SIDELOADED_APPS_DIR
-        if conf.OPTIONAL.SIDELOADED_APPS_DIR == "":
+        if conf.OPTIONAL.SIDELOADED_APPS_DIR is None:
             raise ValueError("Configuration \"SIDELOADED_APPS_DIR\" is mandatory if "
                              "\"SIDELOADED_APPS\" is used")
         libs_dir = Path(project_root_dir / conf.OPTIONAL.SIDELOADED_APPS_DIR)
@@ -290,6 +292,16 @@ def prepare_speculos_args(root_pytest_dir: Path,
         for coin_name, lib_name in conf.OPTIONAL.SIDELOADED_APPS.items():
             lib_path = find_library_application(libs_dir, coin_name, device_name)
             speculos_args.append(f"-l{lib_name}:{lib_path}")
+    else:
+        # Keep this method instead
+        # Find all external libraries that have to be sideloaded
+        if conf.OPTIONAL.SIDELOADED_APPS_DIR is not None:
+            sideloaded_dir = project_root_dir / conf.OPTIONAL.SIDELOADED_APPS_DIR
+            subdirs = sorted(
+                filter(lambda d: (sideloaded_dir / d).is_dir(), os.listdir(sideloaded_dir)))
+            for subdir in subdirs:
+                lib_path = find_application(sideloaded_dir / subdir, device_name, manifest.app.sdk)
+                speculos_args.append(f"-l{lib_path}")
 
     # Check if custom user seed has been provided through CLI or optional configuration.
     # CLI user seed has priority over the optional configuration seed.
