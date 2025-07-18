@@ -144,8 +144,8 @@ class BackendInterface(ABC):
         :type ins: int
         :param p1: First instruction parameter, defaults to 0
         :type p1: int
-        :param p1: Second instruction parameter, defaults to 0
-        :type p1: int
+        :param p2: Second instruction parameter, defaults to 0
+        :type p2: int
         :param data: Command data
         :type data: bytes
 
@@ -205,8 +205,8 @@ class BackendInterface(ABC):
         :type ins: int
         :param p1: First instruction parameter, defaults to 0
         :type p1: int
-        :param p1: Second instruction parameter, defaults to 0
-        :type p1: int
+        :param p2: Second instruction parameter, defaults to 0
+        :type p2: int
         :param data: Command data
         :type data: bytes
 
@@ -262,8 +262,8 @@ class BackendInterface(ABC):
         :type ins: int
         :param p1: First instruction parameter, defaults to 0
         :type p1: int
-        :param p1: Second instruction parameter, defaults to 0
-        :type p1: int
+        :param p2: Second instruction parameter, defaults to 0
+        :type p2: int
         :param data: Command data
         :type data: bytes
 
@@ -292,7 +292,7 @@ class BackendInterface(ABC):
 
         :raises ExceptionRAPDU: If the `raises` attribute is True, this method
                                   will raise if the backend returns a status code
-                                  not registered a a `valid_statuses`
+                                  not registered as a `valid_statuses`
 
         :return: None
         :rtype: NoneType

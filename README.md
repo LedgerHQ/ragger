@@ -17,7 +17,7 @@ It mainly consists of an interface which is implemented by three backends:
 
 - two physical backends (although technically they are agnostic, but the
   `SpeculosClient` is superior with an emulator), `LedgerCommBackend` and
-  `LedgerWalletbackend`, which use respectively the
+  `LedgerWalletBackend`, which use respectively the
   [`LedgerComm` library](https://github.com/LedgerHQ/ledgercomm) or the
   [`LedgerWallet` library](https://github.com/LedgerHQ/ledgerctl/) to discuss
   with a physical device. In these cases, the physical device must be started,
