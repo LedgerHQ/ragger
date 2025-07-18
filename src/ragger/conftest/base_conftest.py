@@ -6,6 +6,7 @@ from ledgered.manifest import Manifest
 from pathlib import Path
 from typing import Generator, List, Optional
 from unittest.mock import MagicMock
+import warnings
 
 from ragger.backend import BackendInterface, SpeculosBackend, LedgerCommBackend, LedgerWalletBackend
 from ragger.firmware import Firmware
@@ -33,8 +34,13 @@ def pytest_addoption(parser):
     parser.addoption("--golden_run",
                      action="store_true",
                      default=False,
-                     help="Do not compare the snapshots during testing, but instead save the live "
-                     "ones. Will only work with 'speculos' as the backend")
+                     help="Force saving the live snapshots. "
+                     "Will only work with 'speculos' as the backend")
+    parser.addoption("--rm",
+                     action="store_true",
+                     default=False,
+                     help="Force to remove the already existing snapshots before running test. "
+                     "Only valid when `golden_run` is provided")
     parser.addoption("--pki_prod",
                      action="store_true",
                      default=False,
@@ -75,6 +81,20 @@ def display(pytestconfig):
 @pytest.fixture(scope="session")
 def golden_run(pytestconfig):
     return pytestconfig.getoption("golden_run")
+
+
+@pytest.fixture(scope="session")
+def rm_snap(pytestconfig):
+    if not pytestconfig.getoption("rm"):
+        return False
+    # If rm_snap is True, it means we want to remove existing snapshots
+    # before taking new ones. This is only relevant if golden_run is True.
+    if not pytestconfig.getoption("golden_run"):
+        # warnings.warn("--rm option is ignored when golden_run is not set.")
+        warnings.warn_explicit("--rm option is ignored when golden_run is not set.", UserWarning,
+                               __file__, 0)
+        return False
+    return True
 
 
 @pytest.fixture(scope=conf.OPTIONAL.BACKEND_SCOPE)
@@ -360,15 +380,15 @@ def backend(skip_tests_for_unsupported_devices, root_pytest_dir: Path, backend_n
 
 
 @pytest.fixture(scope=conf.OPTIONAL.BACKEND_SCOPE)
-def navigator(backend: BackendInterface, device: Device, golden_run: bool, display: bool,
-              navigation: bool):
+def navigator(backend: BackendInterface, device: Device, golden_run: bool, rm_snap: bool,
+              display: bool, navigation: bool):
     if not navigation:
         return MagicMock()
 
     if device.is_nano:
-        return NanoNavigator(backend, device, golden_run)
+        return NanoNavigator(backend, device, golden_run, rm_snap)
     else:
-        return TouchNavigator(backend, device, golden_run)
+        return TouchNavigator(backend, device, golden_run, rm_snap)
 
 
 @pytest.fixture(scope="function")
