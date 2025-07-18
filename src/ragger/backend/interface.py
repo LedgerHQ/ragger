@@ -145,7 +145,7 @@ class BackendInterface(ABC):
         :param p1: First instruction parameter, defaults to 0
         :type p1: int
         :param p2: Second instruction parameter, defaults to 0
-        :type p1: int
+        :type p2: int
         :param data: Command data
         :type data: bytes
 
@@ -206,7 +206,7 @@ class BackendInterface(ABC):
         :param p1: First instruction parameter, defaults to 0
         :type p1: int
         :param p2: Second instruction parameter, defaults to 0
-        :type p1: int
+        :type p2: int
         :param data: Command data
         :type data: bytes
 
@@ -263,7 +263,7 @@ class BackendInterface(ABC):
         :param p1: First instruction parameter, defaults to 0
         :type p1: int
         :param p2: Second instruction parameter, defaults to 0
-        :type p1: int
+        :type p2: int
         :param data: Command data
         :type data: bytes
 
