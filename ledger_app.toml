@@ -1,0 +1,5 @@
+# Fake boilerplate application manifest for ragger tests
+[app]
+build_directory = "./"
+sdk = "C"
+devices =  ["nanos", "nanos+", "nanox", "stax", "flex"]

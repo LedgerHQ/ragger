@@ -12,22 +12,6 @@ from ..helpers import temporary_directory
 
 class TestMisc(TestCase):
 
-    def test_app_path_from_app_name_ok(self):
-        with temporary_directory() as dir_path:
-            app_name, device = "some_name", "some_device"
-            expected = (dir_path / f"{app_name}_{device}.elf")
-            expected.touch()
-            self.assertEqual(expected, misc.find_library_application(dir_path, app_name, device))
-
-    def test_app_path_from_app_name_nok_no_directory(self):
-        with self.assertRaises(AssertionError):
-            misc.find_library_application(Path("/this/does/not/exists/"), "a", "b")
-
-    def test_app_path_from_app_name_nok_no_file(self):
-        with temporary_directory() as dir_path:
-            with self.assertRaises(AssertionError):
-                misc.find_library_application(dir_path, "a", "b")
-
     def test_find_application_ok_c(self):
         device, sdk = "device", "sdk"
         with temporary_directory() as dir_path:

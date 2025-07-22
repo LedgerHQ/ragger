@@ -76,13 +76,6 @@ jobs:
         name: boilerplate_binaries_nanos
         path: ./build/
 
-    - name: Create boilerplate manifest
-      run: |
-        echo """[app]
-        build_directory = \"./\"
-        sdk = \"C\"
-        devices =  [\"nanos\", \"nanos+\", \"nanox\", \"stax\", \"flex\"]""" > ledger_app.toml
-
     - name: Check the downloaded files
       run: tree .
 
