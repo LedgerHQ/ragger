@@ -5,16 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.40.0] - 2025-08-01
+
+### Added
+
+- Add two new devices: Apex_p and Apex_m
+
 ## [1.39.0] - 2025-07-22
 
 ### Added
 
 - Align libraries loading for swap standalone tests with library loading for eth plugin tests
-## [1.39.0] - 2025-07-17
-
-### Changed
-
-- Add two new devices: Apex_p and Apex_m
 
 ## [1.38.0] - 2025-07-16
 
