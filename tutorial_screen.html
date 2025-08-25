@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Complex UI management - Flex / Stax &mdash; Ragger 1.38.0 documentation</title>
+  <title>Complex UI management - touchable screen devices &mdash; Ragger 1.39.1.dev3 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
@@ -47,7 +47,7 @@
             Ragger
           </a>
               <div class="version">
-                1.38
+                1.39
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -64,7 +64,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="tutorial.html">Tutorials</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="tutorial_installation.html"><code class="docutils literal notranslate"><span class="pre">Ragger</span></code> installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorial_conftest.html">Using and understanding the basis of <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> testing capabilities</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Complex UI management - Flex / Stax</a><ul>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Complex UI management - touchable screen devices</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#study-case">Study case</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#layouts">Layouts</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#use-cases">Use cases</a></li>
@@ -96,7 +96,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="tutorial.html">Tutorials</a></li>
-      <li class="breadcrumb-item active">Complex UI management - Flex / Stax</li>
+      <li class="breadcrumb-item active">Complex UI management - touchable screen devices</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/tutorial_screen.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -106,8 +106,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="complex-ui-management-flex-stax">
-<span id="tutorial-screen"></span><h1>Complex UI management - Flex / Stax<a class="headerlink" href="#complex-ui-management-flex-stax" title="Permalink to this heading"></a></h1>
+  <div class="section" id="complex-ui-management-touchable-screen-devices">
+<span id="tutorial-screen"></span><h1>Complex UI management - touchable screen devices<a class="headerlink" href="#complex-ui-management-touchable-screen-devices" title="Permalink to this heading"></a></h1>
 <p>Interacting programmatically with an application tends to be a non-trivial
 thing, as complex processes (like performing a complete transaction) have to be
 implemented through low-level actions on the device: forging bytes payloads (the
@@ -118,7 +118,7 @@ ones, …</p>
 specifically about the UI, we saw <a class="reference internal" href="tutorial_conftest.html#tutorial-conftest-navigation"><span class="std std-ref">previously</span></a> that <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> had some capabilities allowing
 to cope with simple physical interactions (like on the Nano devices: only two
 buttons). But what to do with more complex interfaces?</p>
-<p>In particular, interacting with the touch screen devices (Stax or Flex) can be
+<p>In particular, interacting with the touch screen devices can be
 bothersome. It is hard to track of button positions, pages layouts and such.</p>
 <div class="section" id="study-case">
 <h2>Study case<a class="headerlink" href="#study-case" title="Permalink to this heading"></a></h2>
@@ -170,7 +170,7 @@ this code does. This is a guaranteed path to hard to maintain code.</p>
 to change some button position, or if higher-level graphic objects (such as
 <code class="docutils literal notranslate"><span class="pre">Pages</span></code> or <code class="docutils literal notranslate"><span class="pre">UseCase</span></code>) changes the position - nothing prevents them to move
 the “info” button to the top left -, all this code becomes deprecated.</p>
-<p>That’s why <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> mimics the Flex/Stax SDK graphics library and provides
+<p>That’s why <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> mimics the SDK graphics library and provides
 <a class="reference internal" href="glossary.html#term-Layout"><span class="xref std std-term">Layout</span></a> and <a class="reference internal" href="glossary.html#term-Use-Case"><span class="xref std std-term">Use Case</span></a> (<a class="reference internal" href="glossary.html#term-Page"><span class="xref std std-term">Page</span></a> will also come soon) classes
 that keep track of every interactive screen elements and expose meaningful
 methods to interact with them.</p>
@@ -223,7 +223,7 @@ way than if positions were still necessary:</p>
 <code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y)</span></code> positions, so why bother declaring them twice?</p>
 <p>First of all, the buttons may be at the same place, but they don’t carry the
 same purpose, and it is a good idea to reflect that on the code.</p>
-<p>Second, if in a future version the Flex/Stax design changes and one of these
+<p>Second, if in a future version the devices design changes and one of these
 button moves somewhere else on the screen’s footer, <strong>the layouts will be
 updated accordingly</strong> in <code class="docutils literal notranslate"><span class="pre">Ragger</span></code>, and the <code class="docutils literal notranslate"><span class="pre">CancelFooter</span></code> or <code class="docutils literal notranslate"><span class="pre">ExitFooter</span></code>
 will still be valid, hence all code using this class remains valid too.</p>
