@@ -429,6 +429,9 @@ Running the tests on specific device is automatically integrated with the
 - ``--device nanox``,
 - ``--device nanosp``,
 - ``--device stax``,
+- ``--device flex``,
+- ``--device apex_p``,
+- ``--device apex_m``,
 - ``--device all``.
 
 This last option can only work with the :class:`SpeculosBackend

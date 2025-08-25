@@ -1,6 +1,6 @@
 .. _tutorial_screen:
 
-Complex UI management - Flex / Stax
+Complex UI management - touchable screen devices
 ===================================
 
 Interacting programmatically with an application tends to be a non-trivial
@@ -16,7 +16,7 @@ specifically about the UI, we saw :ref:`previously
 to cope with simple physical interactions (like on the Nano devices: only two
 buttons). But what to do with more complex interfaces?
 
-In particular, interacting with the touch screen devices (Stax or Flex) can be
+In particular, interacting with the touch screen devices can be
 bothersome. It is hard to track of button positions, pages layouts and such.
 
 Study case
@@ -66,7 +66,7 @@ to change some button position, or if higher-level graphic objects (such as
 the "info" button to the top left -, all this code becomes deprecated.
 
 
-That's why ``Ragger`` mimics the Flex/Stax SDK graphics library and provides
+That's why ``Ragger`` mimics the SDK graphics library and provides
 :term:`Layout` and :term:`Use Case` (:term:`Page` will also come soon) classes
 that keep track of every interactive screen elements and expose meaningful
 methods to interact with them.
@@ -131,7 +131,7 @@ way than if positions were still necessary:
    First of all, the buttons may be at the same place, but they don't carry the
    same purpose, and it is a good idea to reflect that on the code.
 
-   Second, if in a future version the Flex/Stax design changes and one of these
+   Second, if in a future version the devices design changes and one of these
    button moves somewhere else on the screen's footer, **the layouts will be
    updated accordingly** in ``Ragger``, and the ``CancelFooter`` or ``ExitFooter``
    will still be valid, hence all code using this class remains valid too.

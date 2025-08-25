@@ -79,7 +79,15 @@ class RaggerMainWindow(QMainWindow):
         self._screenshot.setObjectName("screenshot")
         self._screenshot.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self._screenshot.setAlignment(Qt.AlignmentFlag.AlignVCenter)
-        dict_margin = {"nanos": 75, "nanox": 90, "nanosp": 55, "stax": 65, "flex": 65}
+        dict_margin = {
+            "nanos": 75,
+            "nanox": 90,
+            "nanosp": 55,
+            "stax": 65,
+            "flex": 65,
+            "apex_p": 65,
+            "apex_m": 65
+        }
         margin = dict_margin[self._device]
         self._screenshot.setStyleSheet(f"QLabel {{margin-left: {margin}px;}}")
 
@@ -233,7 +241,7 @@ class RaggerMainWindow(QMainWindow):
         self._init_screenshot()
         self._init_validation_buttons()
 
-        if self._device in ["stax", "flex"]:
+        if self._device in ["stax", "flex", "apex_p", "apex_m"]:
             self._devicebody.raise_()
             self._touch.raise_()
             self._swipe_left.raise_()

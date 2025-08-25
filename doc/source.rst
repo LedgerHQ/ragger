@@ -74,6 +74,9 @@ should expect. This is declared with this class:
 
    .. autoattribute:: FLEX
 
+   .. autoattribute:: APEX_P
+      
+   .. autoattribute:: APEX_M      
 
 ``ragger.firmware.touch``
 ++++++++++++++++++++++++

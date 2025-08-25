@@ -88,18 +88,6 @@ class TappableCenter(_TappableElement):
     pass
 
 
-class KeyboardConfirmationButton(Element):
-    """
-    This layout is to be used as the confirmation button when coupled with a keyboard.
-
-    On Stax devices, the screen is high enough that this is equivalent to TappableCenter, however
-    on Flex, this button is not centered, but slightly closer to the top of the screen.
-    """
-
-    def confirm(self):
-        self.client.finger_touch(*self.positions)
-
-
 # Headers
 #########
 class RightHeader(_TappableElement):
