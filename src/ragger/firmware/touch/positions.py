@@ -125,7 +125,7 @@ POSITIONS = {
             # indexes for left to right, from up to down
             1: Position(100, 280),
             2: Position(290, 280),
-            3: Position(110, 350),
+            3: Position(100, 350),
             4: Position(290, 350),
         },
         DeviceType.FLEX: {
@@ -133,6 +133,16 @@ POSITIONS = {
             # ones. At start, only 2 suggestions are clickable
             1: Position(140, 300),
             2: Position(350, 300),
+        },
+        DeviceType.APEX_P: {
+            # On Apex, suggestions are on a single line
+            1: Position(80, 190),
+            2: Position(220, 300),
+        },
+        DeviceType.APEX_M: {
+            # On Apex, suggestions are on a single line
+            1: Position(80, 190),
+            2: Position(220, 300),
         },
     },
     "LetterOnlyKeyboard": {
@@ -199,7 +209,71 @@ POSITIONS = {
             "n": Position(264, 565),
             "m": Position(312, 565),
             "back": Position(400, 565),
-        }
+        },
+        DeviceType.APEX_P: {
+            # first line
+            "q": Position(15, 270),
+            "w": Position(45, 270),
+            "e": Position(75, 270),
+            "r": Position(105, 270),
+            "t": Position(135, 270),
+            "y": Position(165, 270),
+            "u": Position(195, 270),
+            "i": Position(225, 270),
+            "o": Position(255, 270),
+            "p": Position(285, 270),
+            # second line
+            "a": Position(30, 320),
+            "s": Position(60, 320),
+            "d": Position(90, 320),
+            "f": Position(120, 320),
+            "g": Position(150, 320),
+            "h": Position(180, 320),
+            "j": Position(210, 320),
+            "k": Position(240, 320),
+            "l": Position(270, 320),
+            # third and last line
+            "z": Position(15, 370),
+            "x": Position(45, 370),
+            "c": Position(75, 370),
+            "v": Position(105, 370),
+            "b": Position(135, 370),
+            "n": Position(165, 370),
+            "m": Position(195, 370),
+            "back": Position(255, 370),
+        },
+        DeviceType.APEX_M: {
+            # first line
+            "q": Position(15, 270),
+            "w": Position(45, 270),
+            "e": Position(75, 270),
+            "r": Position(105, 270),
+            "t": Position(135, 270),
+            "y": Position(165, 270),
+            "u": Position(195, 270),
+            "i": Position(225, 270),
+            "o": Position(255, 270),
+            "p": Position(285, 270),
+            # second line
+            "a": Position(30, 320),
+            "s": Position(60, 320),
+            "d": Position(90, 320),
+            "f": Position(120, 320),
+            "g": Position(150, 320),
+            "h": Position(180, 320),
+            "j": Position(210, 320),
+            "k": Position(240, 320),
+            "l": Position(270, 320),
+            # third and last line
+            "z": Position(15, 370),
+            "x": Position(45, 370),
+            "c": Position(75, 370),
+            "v": Position(105, 370),
+            "b": Position(135, 370),
+            "n": Position(165, 370),
+            "m": Position(195, 370),
+            "back": Position(255, 370),
+        },
     },
     "FullKeyboardLetters": {
         DeviceType.STAX: {
@@ -273,7 +347,79 @@ POSITIONS = {
             # fourth and last line
             "change_layout": Position(72, 560),
             " ": Position(312, 560),
-        }
+        },
+        DeviceType.APEX_P: {
+            # first line
+            "q": Position(15, 225),
+            "w": Position(45, 225),
+            "e": Position(75, 225),
+            "r": Position(105, 225),
+            "t": Position(135, 225),
+            "y": Position(165, 225),
+            "u": Position(195, 225),
+            "i": Position(225, 225),
+            "o": Position(255, 225),
+            "p": Position(285, 225),
+            # second line
+            "a": Position(30, 270),
+            "s": Position(60, 270),
+            "d": Position(90, 270),
+            "f": Position(120, 270),
+            "g": Position(150, 270),
+            "h": Position(180, 270),
+            "j": Position(210, 270),
+            "k": Position(240, 270),
+            "l": Position(270, 270),
+            # third and last line
+            "z": Position(60, 325),
+            "x": Position(90, 325),
+            "c": Position(120, 325),
+            "v": Position(150, 325),
+            "b": Position(180, 325),
+            "n": Position(210, 325),
+            "m": Position(240, 325),
+            "change_case": Position(20, 325),
+            "back": Position(280, 325),
+            # fourth and last line
+            "change_layout": Position(5, 370),
+            " ": Position(190, 370),
+        },
+        DeviceType.APEX_M: {
+            # first line
+            "q": Position(15, 225),
+            "w": Position(45, 225),
+            "e": Position(75, 225),
+            "r": Position(105, 225),
+            "t": Position(135, 225),
+            "y": Position(165, 225),
+            "u": Position(195, 225),
+            "i": Position(225, 225),
+            "o": Position(255, 225),
+            "p": Position(285, 225),
+            # second line
+            "a": Position(30, 270),
+            "s": Position(60, 270),
+            "d": Position(90, 270),
+            "f": Position(120, 270),
+            "g": Position(150, 270),
+            "h": Position(180, 270),
+            "j": Position(210, 270),
+            "k": Position(240, 270),
+            "l": Position(270, 270),
+            # third and last line
+            "z": Position(60, 325),
+            "x": Position(90, 325),
+            "c": Position(120, 325),
+            "v": Position(150, 325),
+            "b": Position(180, 325),
+            "n": Position(210, 325),
+            "m": Position(240, 325),
+            "change_case": Position(20, 325),
+            "back": Position(280, 325),
+            # fourth and last line
+            "change_layout": Position(5, 370),
+            " ": Position(190, 370),
+        },
     },
     "FullKeyboardSpecialCharacters1": {
         DeviceType.STAX: {
@@ -343,7 +489,75 @@ POSITIONS = {
             # fourth and last line
             "change_layout": Position(72, 560),
             " ": Position(312, 560),
-        }
+        },
+        DeviceType.APEX_P: {
+            # first line
+            "1": Position(15, 220),
+            "2": Position(45, 220),
+            "3": Position(75, 220),
+            "4": Position(105, 220),
+            "5": Position(135, 220),
+            "6": Position(165, 220),
+            "7": Position(195, 220),
+            "8": Position(225, 220),
+            "9": Position(255, 220),
+            "0": Position(285, 220),
+            # second line
+            "-": Position(30, 270),
+            "/": Position(60, 270),
+            ":": Position(90, 270),
+            ";": Position(120, 270),
+            "(": Position(150, 270),
+            ")": Position(180, 270),
+            "&": Position(210, 270),
+            "@": Position(240, 270),
+            "\"": Position(270, 270),
+            # third line
+            "more_specials": Position(35, 320),
+            ".": Position(90, 320),
+            ",": Position(120, 320),
+            "?": Position(150, 320),
+            "!": Position(180, 320),
+            "'": Position(210, 320),
+            "back": Position(265, 320),
+            # fourth and last line
+            "change_layout": Position(50, 370),
+            " ": Position(190, 370),
+        },
+        DeviceType.APEX_M: {
+            # first line
+            "1": Position(15, 220),
+            "2": Position(45, 220),
+            "3": Position(75, 220),
+            "4": Position(105, 220),
+            "5": Position(135, 220),
+            "6": Position(165, 220),
+            "7": Position(195, 220),
+            "8": Position(225, 220),
+            "9": Position(255, 220),
+            "0": Position(285, 220),
+            # second line
+            "-": Position(30, 270),
+            "/": Position(60, 270),
+            ":": Position(90, 270),
+            ";": Position(120, 270),
+            "(": Position(150, 270),
+            ")": Position(180, 270),
+            "&": Position(210, 270),
+            "@": Position(240, 270),
+            "\"": Position(270, 270),
+            # third line
+            "more_specials": Position(35, 320),
+            ".": Position(90, 320),
+            ",": Position(120, 320),
+            "?": Position(150, 320),
+            "!": Position(180, 320),
+            "'": Position(210, 320),
+            "back": Position(265, 320),
+            # fourth and last line
+            "change_layout": Position(50, 370),
+            " ": Position(190, 370),
+        },
     },
     "FullKeyboardSpecialCharacters2": {
         DeviceType.STAX: {
@@ -413,7 +627,75 @@ POSITIONS = {
             # fourth and last line
             "change_layout": Position(72, 560),
             " ": Position(312, 560),
-        }
+        },
+        DeviceType.APEX_P: {
+            # first line
+            "[": Position(15, 220),
+            "]": Position(45, 220),
+            "{": Position(75, 220),
+            "}": Position(105, 220),
+            "#": Position(135, 220),
+            "%": Position(165, 220),
+            "^": Position(195, 220),
+            "*": Position(225, 220),
+            "+": Position(255, 220),
+            "=": Position(285, 220),
+            # second line
+            "_": Position(30, 270),
+            "\\": Position(60, 270),
+            "|": Position(90, 270),
+            "~": Position(120, 270),
+            ">": Position(150, 270),
+            "<": Position(180, 270),
+            "$": Position(210, 270),
+            "`": Position(240, 270),
+            "\"": Position(270, 270),
+            # third line
+            "more_specials": Position(35, 320),
+            ".": Position(90, 320),
+            ",": Position(120, 320),
+            "?": Position(150, 320),
+            "!": Position(180, 320),
+            "'": Position(210, 320),
+            "back": Position(265, 320),
+            # fourth and last line
+            "change_layout": Position(50, 370),
+            " ": Position(190, 370),
+        },
+        DeviceType.APEX_M: {
+            # first line
+            "[": Position(15, 220),
+            "]": Position(45, 220),
+            "{": Position(75, 220),
+            "}": Position(105, 220),
+            "#": Position(135, 220),
+            "%": Position(165, 220),
+            "^": Position(195, 220),
+            "*": Position(225, 220),
+            "+": Position(255, 220),
+            "=": Position(285, 220),
+            # second line
+            "_": Position(30, 270),
+            "\\": Position(60, 270),
+            "|": Position(90, 270),
+            "~": Position(120, 270),
+            ">": Position(150, 270),
+            "<": Position(180, 270),
+            "$": Position(210, 270),
+            "`": Position(240, 270),
+            "\"": Position(270, 270),
+            # third line
+            "more_specials": Position(35, 320),
+            ".": Position(90, 320),
+            ",": Position(120, 320),
+            "?": Position(150, 320),
+            "!": Position(180, 320),
+            "'": Position(210, 320),
+            "back": Position(265, 320),
+            # fourth and last line
+            "change_layout": Position(50, 370),
+            " ": Position(190, 370),
+        },
     },
     "TappableCenter": {
         DeviceType.STAX: STAX_CENTER,
