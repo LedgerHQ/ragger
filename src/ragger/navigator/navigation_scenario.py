@@ -19,17 +19,22 @@ class NavigationScenarioData:
     dismiss_warning: Sequence[InstructionType]
     pattern: str = ""
 
-    def __init__(self, device: Device, backend: BackendInterface, use_case: UseCase, approve: bool):
+    def __init__(self,
+                 device: Device,
+                 backend: BackendInterface,
+                 use_case: UseCase,
+                 approve: bool,
+                 nb_warnings: int = 1):
         if device.is_nano:
             self.navigation = NavInsID.RIGHT_CLICK
             self.validation = [NavInsID.BOTH_CLICK]
 
             if backend.sdk_graphics == GraphicalLibrary.BAGL:
-                self.dismiss_warning = [NavInsID.RIGHT_CLICK]
+                self.dismiss_warning = [NavInsID.RIGHT_CLICK] * nb_warnings
                 # Legacy navigation scenario when running an App compiled with bagl sdk library
                 self.pattern = r"^(Accept risk|Accept|Approve|Sign|Confirm)$" if approve else r"^(Cancel|Reject)$"
             else:
-                self.dismiss_warning = [NavInsID.BOTH_CLICK]
+                self.dismiss_warning = [NavInsID.BOTH_CLICK] * nb_warnings
                 # navigation scenario when running an App compiled with nbgl sdk library
                 if use_case == UseCase.ADDRESS_CONFIRMATION:
                     self.pattern = r"^(Accept risk|Accept|Approve|Sign|Confirm)$" if approve else r"^(Cancel|Reject)$"
@@ -54,7 +59,7 @@ class NavigationScenarioData:
 
         elif device.touchable:
             self.navigation = NavInsID.SWIPE_CENTER_TO_LEFT
-            self.dismiss_warning = [NavInsID.USE_CASE_CHOICE_REJECT]
+            self.dismiss_warning = [NavInsID.USE_CASE_CHOICE_REJECT] * nb_warnings
 
             if use_case == UseCase.ADDRESS_CONFIRMATION:
                 if approve:
@@ -133,10 +138,7 @@ class NavigateWithScenario:
                        test_name: Optional[str] = None,
                        custom_screen_text: Optional[str] = None,
                        do_comparison: bool = True):
-        scenario = NavigationScenarioData(self.device,
-                                          self.backend,
-                                          UseCase.TX_REVIEW,
-                                          approve=True)
+        scenario = NavigationScenarioData(self.device, self.backend, UseCase.TX_REVIEW, True)
         self._navigate_with_scenario(scenario, path, test_name, custom_screen_text, do_comparison)
 
     def review_approve_with_warning(self,
@@ -144,11 +146,10 @@ class NavigateWithScenario:
                                     test_name: Optional[str] = None,
                                     custom_screen_text: Optional[str] = None,
                                     do_comparison: bool = True,
-                                    warning_path: str = "warning"):
-        scenario = NavigationScenarioData(self.device,
-                                          self.backend,
-                                          UseCase.TX_REVIEW,
-                                          approve=True)
+                                    warning_path: str = "warning",
+                                    nb_warnings: int = 1):
+        scenario = NavigationScenarioData(self.device, self.backend, UseCase.TX_REVIEW, True,
+                                          nb_warnings)
         self._navigate_warning(scenario, test_name, do_comparison, warning_path)
         self._navigate_with_scenario(scenario, path, test_name, custom_screen_text, do_comparison)
 
@@ -157,10 +158,7 @@ class NavigateWithScenario:
                       test_name: Optional[str] = None,
                       custom_screen_text: Optional[str] = None,
                       do_comparison: bool = True):
-        scenario = NavigationScenarioData(self.device,
-                                          self.backend,
-                                          UseCase.TX_REVIEW,
-                                          approve=False)
+        scenario = NavigationScenarioData(self.device, self.backend, UseCase.TX_REVIEW, False)
         self._navigate_with_scenario(scenario, path, test_name, custom_screen_text, do_comparison)
 
     def review_reject_with_warning(self,
@@ -168,11 +166,10 @@ class NavigateWithScenario:
                                    test_name: Optional[str] = None,
                                    custom_screen_text: Optional[str] = None,
                                    do_comparison: bool = True,
-                                   warning_path: str = "warning"):
-        scenario = NavigationScenarioData(self.device,
-                                          self.backend,
-                                          UseCase.TX_REVIEW,
-                                          approve=False)
+                                   warning_path: str = "warning",
+                                   nb_warnings: int = 1):
+        scenario = NavigationScenarioData(self.device, self.backend, UseCase.TX_REVIEW, False,
+                                          nb_warnings)
         self._navigate_warning(scenario, test_name, do_comparison, warning_path)
         self._navigate_with_scenario(scenario, path, test_name, custom_screen_text, do_comparison)
 
@@ -181,10 +178,8 @@ class NavigateWithScenario:
                                test_name: Optional[str] = None,
                                custom_screen_text: Optional[str] = None,
                                do_comparison: bool = True):
-        scenario = NavigationScenarioData(self.device,
-                                          self.backend,
-                                          UseCase.ADDRESS_CONFIRMATION,
-                                          approve=True)
+        scenario = NavigationScenarioData(self.device, self.backend, UseCase.ADDRESS_CONFIRMATION,
+                                          True)
         self._navigate_with_scenario(scenario, path, test_name, custom_screen_text, do_comparison)
 
     def address_review_reject(self,
@@ -192,8 +187,6 @@ class NavigateWithScenario:
                               test_name: Optional[str] = None,
                               custom_screen_text: Optional[str] = None,
                               do_comparison: bool = True):
-        scenario = NavigationScenarioData(self.device,
-                                          self.backend,
-                                          UseCase.ADDRESS_CONFIRMATION,
-                                          approve=False)
+        scenario = NavigationScenarioData(self.device, self.backend, UseCase.ADDRESS_CONFIRMATION,
+                                          False)
         self._navigate_with_scenario(scenario, path, test_name, custom_screen_text, do_comparison)
