@@ -22,7 +22,7 @@ class StubPhysicalBackend(PhysicalBackend):
     def receive(self) -> RAPDU:
         return RAPDU(0x9000, b"")
 
-    def exchange_raw(self, data: bytes = b"") -> RAPDU:
+    def exchange_raw(self, data: bytes = b"", tick_timeout: int = 0) -> RAPDU:
         return RAPDU(0x9000, b"")
 
     @contextmanager
