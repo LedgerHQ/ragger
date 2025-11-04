@@ -64,7 +64,7 @@ jobs:
     - name: Clone
       uses: actions/checkout@v4
     - name: Check misspellings
-      uses: codespell-project/actions-codespell@v1
+      uses: codespell-project/actions-codespell@v2
       with:
         builtin: clear,rare
         check_filenames: true
