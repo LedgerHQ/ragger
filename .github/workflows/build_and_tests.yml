@@ -36,14 +36,36 @@ jobs:
       app_branch_name: nanos_baseline
       upload_app_binaries_artifact: boilerplate_binaries_nanos
 
+  prepare_matrix:
+    name: Prepare matrix from TOML file
+    runs-on: ubuntu-latest
+    outputs:
+      devices: ${{ steps.get_devices.outputs.devices }}
+    env:
+      APP_MANIFEST: "ledger_app.toml"
+
+    steps:
+      - name: Clone
+        uses: actions/checkout@v4
+      - name: Install ledgered
+        run: pip install ledgered
+      - name: Get devices from TOML
+        id: get_devices
+        run: |
+          # get device list as a single line json formatted value
+          compatible_devices="$(ledger-manifest --output-devices "${APP_MANIFEST}" -j | jq -rc '.devices')"
+
+          echo "devices=${compatible_devices}" | sed 's/+/p/' >> "${GITHUB_OUTPUT}"
+
   build_install_test:
     name: Install and test the library
-    needs: [build_boilerplate_application, build_boilerplate_application_nanos]
+    needs: [prepare_matrix, build_boilerplate_application, build_boilerplate_application_nanos]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         python_version: ['3.9', '3.10', '3.11', '3.12', '3.13']
+        device: ${{ fromJson(needs.prepare_matrix.outputs.devices) }}
 
     steps:
     - name: Clone
@@ -64,13 +86,20 @@ jobs:
         pip install -U .[tests,all_backends]
         pip install -U "click>=8"
 
+    - name: Install speculos for Nanos
+      if: ${{ matrix.device == 'nanos' }}
+      run: |
+        pip install -U speculos==v0.25.5
+
     - name: Download app binaries
+      if: ${{ matrix.device != 'nanos' }}
       uses: actions/download-artifact@v4
       with:
         name: boilerplate_binaries
         path: ./build/
 
     - name: Download app binaries for Nano S
+      if: ${{ matrix.device == 'nanos' }}
       uses: actions/download-artifact@v4
       with:
         name: boilerplate_binaries_nanos
@@ -83,7 +112,7 @@ jobs:
       run: pytest -v --tb=short tests/unit --cov ragger --cov-report xml
 
     - name: Run functional tests and generate coverage
-      run: pytest -v --tb=short tests/functional --cov ragger --cov-report xml --cov-append --device all
+      run: pytest -v --tb=short tests/functional --cov ragger --cov-report xml --cov-append --device ${{ matrix.device }}
 
     - name: Upload to codecov.io
       uses: codecov/codecov-action@v5
@@ -91,6 +120,7 @@ jobs:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       with:
         name: codecov-ragger
+        flags: ${{ matrix.device }}-py${{ matrix.python_version }}
 
   package_and_deploy:
     name: Build and deploy the Ragger Python package
@@ -100,4 +130,4 @@ jobs:
       package_name: ragger
       publish: ${{ startsWith(github.ref, 'refs/tags/') }}
     secrets:
-      pypi_token: ${{ secrets.PYPI_PUBLIC_API_TOKEN  }}
+      pypi_token: ${{ secrets.PYPI_PUBLIC_API_TOKEN }}
