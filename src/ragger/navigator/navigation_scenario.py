@@ -34,7 +34,9 @@ class NavigationScenarioData:
                 # Legacy navigation scenario when running an App compiled with bagl sdk library
                 self.pattern = r"^(Accept risk|Accept|Approve|Sign|Confirm)$" if approve else r"^(Cancel|Reject)$"
             else:
-                self.dismiss_warning = [NavInsID.BOTH_CLICK] * nb_warnings
+                self.dismiss_warning = []
+                self.dismiss_warning += [NavInsID.RIGHT_CLICK] * (nb_warnings - 1)
+                self.dismiss_warning += [NavInsID.BOTH_CLICK]
                 # navigation scenario when running an App compiled with nbgl sdk library
                 if use_case == UseCase.ADDRESS_CONFIRMATION:
                     self.pattern = r"^(Accept risk|Accept|Approve|Sign|Confirm)$" if approve else r"^(Cancel|Reject)$"
