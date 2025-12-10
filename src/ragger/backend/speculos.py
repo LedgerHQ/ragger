@@ -31,7 +31,7 @@ from ledgered.devices import Device
 from speculos.client import SpeculosClient, screenshot_equal, ApduResponse, ApduException
 from speculos.mcu.seproxyhal import TICKER_DELAY
 
-from ragger.error import ExceptionRAPDU
+from ragger.error import StatusWords, ExceptionRAPDU
 from ragger.logger import get_default_logger
 from ragger.utils import RAPDU, Crop
 from .interface import BackendInterface, GraphicalLibrary
@@ -198,17 +198,18 @@ class SpeculosBackend(BackendInterface):
     @raise_policy_enforcer
     def receive(self) -> RAPDU:
         assert self._pending is not None
-        result = RAPDU(0x9000, self._pending.receive())
+        result = RAPDU(StatusWords.SWO_SUCCESS, self._pending.receive())
         return result
 
     @raise_policy_enforcer
     def exchange_raw(self, data: bytes = b"", tick_timeout: int = 5 * 60 * 10) -> RAPDU:
         self.apdu_logger.info("=> %s", data.hex())
-        return RAPDU(0x9000, self._client._apdu_exchange(data, tick_timeout=tick_timeout))
+        return RAPDU(StatusWords.SWO_SUCCESS,
+                     self._client._apdu_exchange(data, tick_timeout=tick_timeout))
 
     @raise_policy_enforcer
     def _get_last_async_response(self, response) -> RAPDU:
-        return RAPDU(0x9000, response.receive())
+        return RAPDU(StatusWords.SWO_SUCCESS, response.receive())
 
     @contextmanager
     def exchange_async_raw(self, data: bytes = b"") -> Generator[bool, None, None]:

@@ -25,6 +25,7 @@ from warnings import warn
 from ragger.firmware import DEPRECATION_MESSAGE, Firmware
 from ragger.logger import get_default_logger, get_apdu_logger, set_apdu_logger_file
 from ragger.utils import pack_APDU, RAPDU, Crop
+from ragger.error import StatusWords
 
 
 class RaisePolicy(Enum):
@@ -130,7 +131,7 @@ class BackendInterface(ABC):
         """
         return ((self.raise_policy == RaisePolicy.RAISE_ALL)
                 or ((self.raise_policy == RaisePolicy.RAISE_ALL_BUT_0x9000) and
-                    (rapdu.status != 0x9000))
+                    (rapdu.status != StatusWords.SWO_SUCCESS))
                 or ((self.raise_policy == RaisePolicy.RAISE_CUSTOM) and
                     (rapdu.status not in self.whitelisted_status)))
 

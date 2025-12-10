@@ -18,6 +18,7 @@ from pathlib import Path
 from types import TracebackType
 from typing import Any, Generator, Optional, Type
 
+from ragger.error import StatusWords
 from ragger.utils.structs import Crop, RAPDU
 from .interface import BackendInterface
 
@@ -45,10 +46,10 @@ class StubBackend(BackendInterface):
         pass
 
     def receive(self) -> RAPDU:
-        return RAPDU(0x9000, b"")
+        return RAPDU(StatusWords.SWO_SUCCESS, b"")
 
     def exchange_raw(self, data: bytes = b"", tick_timeout: int = 5 * 60 * 10) -> RAPDU:
-        return RAPDU(0x9000, b"")
+        return RAPDU(StatusWords.SWO_SUCCESS, b"")
 
     @contextmanager
     def exchange_async_raw(self, data: bytes = b"") -> Generator[None, None, None]:

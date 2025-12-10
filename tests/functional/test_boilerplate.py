@@ -65,8 +65,7 @@ def test_waiting_screen(backend, device, navigator):
     if not device.touchable:
         pytest.skip("Don't apply")
 
-    prep_tx_apdu = bytes.fromhex("e006008015058000002c800000008000"
-                                 "00000000000000000000")
+    prep_tx_apdu = bytes.fromhex("e006008015058000002c80000001800000000000000000000000")
 
     sign_tx_apdu = bytes.fromhex("e0060100310000000000000001de0b29"
                                  "5669a9fd93d5f28d9ec85e40f4cb697b"
