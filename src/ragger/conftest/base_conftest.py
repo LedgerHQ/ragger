@@ -300,7 +300,9 @@ def prepare_speculos_args(root_pytest_dir: Path,
             subdirs = sorted(
                 filter(lambda d: (sideloaded_dir / d).is_dir(), os.listdir(sideloaded_dir)))
             for subdir in subdirs:
-                lib_path = find_application(sideloaded_dir / subdir, device_name, manifest.app.sdk)
+                # Currently only C apps are used as additional binaries by ragger (Ethereum and Exchange)
+                # TODO: add support for Rust SDK libraries if needed
+                lib_path = find_application(sideloaded_dir / subdir, device_name, "c")
                 speculos_args.append(f"-l{lib_path}")
 
     # Check if custom user seed has been provided through CLI or optional configuration.
