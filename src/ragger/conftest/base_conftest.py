@@ -279,7 +279,11 @@ def prepare_speculos_args(root_pytest_dir: Path,
     if conf.OPTIONAL.MAIN_APP_DIR is not None:
         # This repo holds the library, not the standalone app: search in root_dir/build
         lib_path = find_application(project_root_dir, device_name, manifest.app.sdk)
-        speculos_args.append(f"-l{lib_path}")
+        load_name = ""
+        if conf.OPTIONAL.SELF_APP_NAME is not None:
+            # This repo wants to set a specific library name
+            load_name = f"{conf.OPTIONAL.SELF_APP_NAME}:"
+        speculos_args.append(f"-l{load_name}{lib_path}")
 
     # Legacy lib method, remove once exchange is ported
     if len(conf.OPTIONAL.SIDELOADED_APPS) != 0:

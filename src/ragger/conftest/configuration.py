@@ -6,6 +6,7 @@ from typing import Optional, List
 class OptionalOptions:
     APP_NAME: str
     MAIN_APP_DIR: Optional[str]
+    SELF_APP_NAME: Optional[str]
     SIDELOADED_APPS: dict
     SIDELOADED_APPS_DIR: Optional[str]
     BACKEND_SCOPE: str
@@ -29,6 +30,15 @@ OPTIONAL = OptionalOptions(
     # Speculos will then start "tests/.test_dependencies/ethereum/build/<device>/bin/app.elf"
     # There must be exactly one application cloned inside this directory.
     MAIN_APP_DIR=None,
+
+    # If not None, this parameter specifies the name of the library application (the one in the
+    # current repository) when loaded by Speculos. This is only used when MAIN_APP_DIR is set.
+    #
+    # example: configuration.OPTIONAL.SELF_APP_NAME = "Bitcoin"
+    # Speculos will then load the library with the "-lBitcoin:<path>" argument.
+    #
+    # This is unnecessary for C applications as the application name is read from the ELF file.
+    SELF_APP_NAME=None,
 
     # Deprecated
     SIDELOADED_APPS=dict(),
