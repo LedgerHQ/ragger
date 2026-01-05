@@ -1,6 +1,7 @@
 import os
 import pytest
 import logging
+import warnings
 from dataclasses import fields
 from ledgered.devices import Device, Devices
 from ledgered.manifest import Manifest
@@ -14,6 +15,7 @@ from ragger.logger import init_loggers, standalone_conf_logger
 from ragger.navigator import Navigator, NanoNavigator, TouchNavigator, NavigateWithScenario
 from ragger.utils import find_project_root_dir, find_library_application, find_application
 from ragger.utils.misc import get_current_app_name_and_version, exit_current_app, open_app_from_dashboard
+from ragger.error import MissingElfError
 
 from . import configuration as conf
 
@@ -47,6 +49,10 @@ def pytest_addoption(parser):
                      const="apdu.log",
                      help="Log the APDU in a file. If no pattern provided, uses 'apdu_xxx.log'.")
     parser.addoption("--seed", action="store", default=None, help="Set a custom seed")
+    parser.addoption("--ignore-missing-binaries",
+                     action="store_true",
+                     default=False,
+                     help="Skip tests instead of failing when application binaries are missing")
     # Always allow "default" even if application conftest does not define it
     allowed_setups = conf.OPTIONAL.ALLOWED_SETUPS
     if "default" not in allowed_setups:
@@ -100,6 +106,11 @@ def log_apdu_file(request, pytestconfig, full_test_name: str):
 @pytest.fixture(scope="session")
 def cli_user_seed(pytestconfig):
     return pytestconfig.getoption("seed")
+
+
+@pytest.fixture(scope="session")
+def ignore_missing_binaries(pytestconfig):
+    return pytestconfig.getoption("ignore_missing_binaries")
 
 
 @pytest.fixture(scope="session")
@@ -238,7 +249,8 @@ def prepare_speculos_args(root_pytest_dir: Path,
                           pki_prod: bool,
                           cli_user_seed: str,
                           additional_args: List[str],
-                          verbose_speculos: bool = False):
+                          verbose_speculos: bool = False,
+                          ignore_missing_binaries: bool = False):
     speculos_args = additional_args.copy()
 
     if display:
@@ -270,16 +282,14 @@ def prepare_speculos_args(root_pytest_dir: Path,
                 f"Expected a single folder in {manifest.app.build_directory}, found {len(app_dir_subdirectories)}"
             )
         main_app_path = find_application(app_dir_subdirectories[0], device_name, "c")
+
+        # This repo holds the library, not the standalone app: search in root_dir/build
+        lib_path = find_application(project_root_dir, device_name, manifest.app.sdk)
+        speculos_args.append(f"-l{lib_path}")
     # If the app is standalone, the main app should be located in project_root_dir / manifest.app.build_directory
     else:
         main_app_path = find_application(project_root_dir / manifest.app.build_directory,
                                          device_name, manifest.app.sdk)
-
-    # If this repository does not hold the main app, then we need to load this repository's application as a library
-    if conf.OPTIONAL.MAIN_APP_DIR is not None:
-        # This repo holds the library, not the standalone app: search in root_dir/build
-        lib_path = find_application(project_root_dir, device_name, manifest.app.sdk)
-        speculos_args.append(f"-l{lib_path}")
 
     # Legacy lib method, remove once exchange is ported
     if len(conf.OPTIONAL.SIDELOADED_APPS) != 0:
@@ -290,8 +300,15 @@ def prepare_speculos_args(root_pytest_dir: Path,
         libs_dir = Path(project_root_dir / conf.OPTIONAL.SIDELOADED_APPS_DIR)
         # Add "-l Appname:filepath" to Speculos command line for every required lib app
         for coin_name, lib_name in conf.OPTIONAL.SIDELOADED_APPS.items():
-            lib_path = find_library_application(libs_dir, coin_name, device_name)
-            speculos_args.append(f"-l{lib_name}:{lib_path}")
+            try:
+                lib_path = find_library_application(libs_dir, coin_name, device_name)
+                speculos_args.append(f"-l{lib_name}:{lib_path}")
+            except MissingElfError as e:
+                if ignore_missing_binaries:
+                    warnings.warn(f"Could not find sideloaded app library for '{lib_name}': {e}",
+                                  UserWarning)
+                else:
+                    raise
     else:
         # Keep this method instead
         # Find all external libraries that have to be sideloaded
@@ -300,10 +317,17 @@ def prepare_speculos_args(root_pytest_dir: Path,
             subdirs = sorted(
                 filter(lambda d: (sideloaded_dir / d).is_dir(), os.listdir(sideloaded_dir)))
             for subdir in subdirs:
-                # Currently only C apps are used as additional binaries by ragger (Ethereum and Exchange)
-                # TODO: add support for Rust SDK libraries if needed
-                lib_path = find_application(sideloaded_dir / subdir, device_name, "c")
-                speculos_args.append(f"-l{lib_path}")
+                try:
+                    # Currently only C apps are used as additional binaries by ragger (Ethereum and Exchange)
+                    # TODO: add support for Rust SDK libraries if needed
+                    lib_path = find_application(sideloaded_dir / subdir, device_name, "c")
+                    speculos_args.append(f"-l{lib_path}")
+                except MissingElfError as e:
+                    if ignore_missing_binaries:
+                        warnings.warn(f"Could not find sideloaded app binary for '{subdir}': {e}",
+                                      UserWarning)
+                    else:
+                        raise
 
     # Check if custom user seed has been provided through CLI or optional configuration.
     # CLI user seed has priority over the optional configuration seed.
@@ -326,7 +350,8 @@ def create_backend(root_pytest_dir: Path,
                    log_apdu_file: Optional[Path],
                    cli_user_seed: str,
                    additional_speculos_arguments: List[str],
-                   verbose_speculos: bool = False) -> BackendInterface:
+                   verbose_speculos: bool = False,
+                   ignore_missing_binaries: bool = False) -> BackendInterface:
     if backend_name.lower() == "ledgercomm":
         return LedgerCommBackend(device=device,
                                  interface="hid",
@@ -338,7 +363,8 @@ def create_backend(root_pytest_dir: Path,
         main_app_path, speculos_args = prepare_speculos_args(root_pytest_dir, device, display,
                                                              pki_prod, cli_user_seed,
                                                              additional_speculos_arguments,
-                                                             verbose_speculos)
+                                                             verbose_speculos,
+                                                             ignore_missing_binaries)
         return SpeculosBackend(main_app_path,
                                device=device,
                                log_apdu_file=log_apdu_file,
@@ -353,12 +379,21 @@ def create_backend(root_pytest_dir: Path,
 @pytest.fixture(scope=conf.OPTIONAL.BACKEND_SCOPE)
 def backend(skip_tests_for_unsupported_devices, root_pytest_dir: Path, backend_name: str,
             device: Device, display: bool, pki_prod: bool, log_apdu_file: Optional[Path],
-            cli_user_seed: str, additional_speculos_arguments: List[str],
-            verbose_speculos: bool) -> Generator[BackendInterface, None, None]:
+            cli_user_seed: str, additional_speculos_arguments: List[str], verbose_speculos: bool,
+            ignore_missing_binaries: bool) -> Generator[BackendInterface, None, None]:
     # to separate the test name and its following logs
     print("")
-    with create_backend(root_pytest_dir, backend_name, device, display, pki_prod, log_apdu_file,
-                        cli_user_seed, additional_speculos_arguments, verbose_speculos) as b:
+    backend_instance = None
+    try:
+        backend_instance = create_backend(root_pytest_dir, backend_name, device, display, pki_prod,
+                                          log_apdu_file, cli_user_seed,
+                                          additional_speculos_arguments, verbose_speculos,
+                                          ignore_missing_binaries)
+    except MissingElfError as e:
+        pytest.fail(f"Missing ELF: {e}")
+
+    assert backend_instance is not None, "Backend instance should be initialized"
+    with backend_instance as b:
         if backend_name.lower() != "speculos" and conf.OPTIONAL.APP_NAME:
             # Make sure the app is restarted as this is what is requested by the fixture scope
             app_name, version = get_current_app_name_and_version(b)
