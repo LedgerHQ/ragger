@@ -4,7 +4,7 @@ from pathlib import Path
 from unittest import TestCase
 from unittest.mock import MagicMock
 
-from ragger.error import ExceptionRAPDU
+from ragger.error import ExceptionRAPDU, MissingElfError
 from ragger.utils import misc
 
 from ..helpers import temporary_directory
@@ -47,7 +47,7 @@ class TestMisc(TestCase):
             tmp_dir = (dir_path / "build" / device / "bin")
             tmp_dir.mkdir(parents=True, exist_ok=True)
             expected = tmp_dir / "app.elf"
-            with self.assertRaises(AssertionError) as error:
+            with self.assertRaises(MissingElfError) as error:
                 misc.find_application(dir_path, device, sdk)
             self.assertIn(str(expected), str(error.exception))
 
