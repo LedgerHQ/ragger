@@ -173,3 +173,11 @@ class ExceptionRAPDU(Exception):
 
     def __str__(self):
         return f"Error [0x{self.status:x}] {str(self.data)}"
+
+
+class MissingElfError(Exception):
+    """Exception raised when an expected ELF binary is missing."""
+
+    def __init__(self, path: str):
+        super().__init__(f"File '{path}' missing. Did you compile for this target?")
+        self.path = path

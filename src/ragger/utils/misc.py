@@ -16,7 +16,7 @@
 import toml
 from typing import Optional, Tuple, List
 from pathlib import Path
-from ragger.error import ExceptionRAPDU
+from ragger.error import ExceptionRAPDU, MissingElfError
 import subprocess
 import json
 
@@ -48,7 +48,7 @@ def find_library_application(base_dir: Path, name: str, device: str) -> Path:
         raise AssertionError(f"{base_dir} is not a directory")
     lib = Path(base_dir / (name + "_" + device + ".elf")).resolve()
     if not lib.is_file():
-        raise AssertionError(f"File '{lib}' missing. Did you compile for this target?")
+        raise MissingElfError(str(lib))
     return lib
 
 
@@ -91,7 +91,7 @@ def find_application(base_dir: Path, device: str, sdk: str) -> Path:
     else:
         app = app / "build" / device / "bin" / "app.elf"
     if not app.is_file():
-        raise AssertionError(f"File '{app}' missing. Did you compile for this target?")
+        raise MissingElfError(str(app))
     return app
 
 
