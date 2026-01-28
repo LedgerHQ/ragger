@@ -120,6 +120,7 @@ class SpeculosBackend(BackendInterface):
                                                       api_url=self.url,
                                                       **kwargs)
         self._pending: Optional[ApduResponse] = None
+        self._pending_async_response: Optional[ApduResponse] = None
         self._last_screenshot: Optional[BytesIO] = None
         self._home_screenshot: Optional[BytesIO] = None
         self._ticker_paused_count = 0
@@ -136,6 +137,15 @@ class SpeculosBackend(BackendInterface):
     @apdu_timeout.setter
     def apdu_timeout(self, value: float) -> None:
         self._apdu_timeout = value
+
+    def _check_async_error(self) -> None:
+        """Check for async APDU errors and raise if present."""
+        if self._pending_async_response is not None and self._last_async_response is None:
+            if has_data_available(self._pending_async_response, timeout=0):
+                self.logger.info("[Ragger] Early async data available, retrieving it now.")
+                # This will raise ExceptionRAPDU immediately if status != 9000
+                self._last_async_response = self._get_last_async_response(
+                    self._pending_async_response)
 
     def _retrieve_client_screen_content(self) -> dict:
         raw_content = self._client.get_current_screen_content()
@@ -214,13 +224,22 @@ class SpeculosBackend(BackendInterface):
     @contextmanager
     def exchange_async_raw(self, data: bytes = b"") -> Generator[bool, None, None]:
         self.apdu_logger.info("=> %s", data.hex())
+        # Reset state for this new async exchange
+        self._last_async_response = None
         with self._client.apdu_exchange_nowait(cla=data[0],
                                                ins=data[1],
                                                p1=data[2],
                                                p2=data[3],
                                                data=data[5:]) as response:
-            yield has_data_available(response, timeout=self.apdu_timeout)
-            self._last_async_response = self._get_last_async_response(response)
+            self._pending_async_response = response
+            try:
+                yield has_data_available(response, timeout=self.apdu_timeout)
+                # Only retrieve if not already retrieved by _check_async_error during navigation
+                if self._last_async_response is None:
+                    self._last_async_response = self._get_last_async_response(response)
+            finally:
+                # Clear pending async response flag in all cases
+                self._pending_async_response = None
 
     def right_click(self) -> None:
         self._client.press_and_release("right")
@@ -314,6 +333,12 @@ class SpeculosBackend(BackendInterface):
         for _ in range(int(timeout / TICKER_DELAY)):
             if not screenshot_equal(screenshot, self._last_screenshot):
                 break
+
+            # Check for async APDU errors before sending a tick. This ensures that if the
+            # application has already refused the APDU (e.g., due to an error), we detect and raise
+            # the error immediately instead of waiting for a screen change that will never occur.
+            # This makes navigation robust and prevents hanging.
+            self._check_async_error()
 
             # Send a ticker event and let the app process it
             self.send_tick()
