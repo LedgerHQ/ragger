@@ -147,3 +147,30 @@ class TestbackendSpeculos(TestCase):
                     self.backend.right_click()
                     self.backend.left_click()
                     self.backend.both_click()
+
+    def test_async_error_raised_during_navigation(self):
+        """
+        Ensure that an async APDU error is raised immediately during navigation (e.g., while waiting for a screen change),
+        not just at context exit. This simulates an error response being available before navigation completes.
+        Also verifies that sequential async exchanges properly reset state and retrieve fresh responses.
+        """
+        with patch("speculos.client.subprocess"):
+            with SpeculosServerStub():
+                with self.backend:
+                    # Start an async exchange with an error APDU (not 0x9000)
+                    with self.assertRaises(ExceptionRAPDU) as error:
+                        with self.backend.exchange_async_raw(bytes.fromhex("01000000")):
+                            # Simulate navigation that would trigger the async error check
+                            # (wait_for_screen_change calls _check_async_error)
+                            self.backend.wait_for_screen_change(timeout=0.5)
+                            # This line should be unreachable - if reached, the error wasn't raised during navigation
+                            assert False, "Expected ExceptionRAPDU was not raised during navigation"  # pragma: no cover
+                    self.assertEqual(error.exception.status, APDUStatus.ERROR)
+
+                    # Perform a second async exchange with a SUCCESS APDU to ensure state is properly reset
+                    # If state wasn't reset, this could incorrectly raise due to the previous error response
+                    with self.assertRaises(TimeoutError):
+                        with self.backend.exchange_async_raw(bytes.fromhex("00000000")):
+                            self.backend.wait_for_screen_change(timeout=1)
+                    # Verify that the response was successfully retrieved despite the timeout
+                    self.assertEqual(self.backend.last_async_response.status, APDUStatus.SUCCESS)
