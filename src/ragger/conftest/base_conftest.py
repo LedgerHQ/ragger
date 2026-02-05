@@ -283,8 +283,9 @@ def prepare_speculos_args(root_pytest_dir: Path,
             )
         main_app_path = find_application(app_dir_subdirectories[0], device_name, "c")
 
-        # This repo holds the library, not the standalone app: search in root_dir/build
-        lib_path = find_application(project_root_dir, device_name, manifest.app.sdk)
+        # This repo holds the library, not the standalone app: search in build_directory
+        lib_path = find_application(project_root_dir / manifest.app.build_directory, device_name,
+                                    manifest.app.sdk)
         speculos_args.append(f"-l{lib_path}")
     # If the app is standalone, the main app should be located in project_root_dir / manifest.app.build_directory
     else:
