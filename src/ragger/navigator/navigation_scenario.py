@@ -18,13 +18,16 @@ class NavigationScenarioData:
     validation: Sequence[InstructionType]
     dismiss_warning: Sequence[InstructionType]
     pattern: str = ""
+    post_validation_spinner: Optional[str] = None
 
     def __init__(self,
                  device: Device,
                  backend: BackendInterface,
                  use_case: UseCase,
                  approve: bool,
-                 nb_warnings: int = 1):
+                 nb_warnings: int = 1,
+                 post_validation_spinner: Optional[str] = None):
+
         if device.is_nano:
             self.navigation = NavInsID.RIGHT_CLICK
             self.validation = [NavInsID.BOTH_CLICK]
@@ -82,11 +85,15 @@ class NavigationScenarioData:
             else:
                 raise NotImplementedError("Unknown use case")
 
-            # Dismiss the result modal in all cases
-            self.validation += [NavInsID.USE_CASE_STATUS_DISMISS]
+            # We assume no spinner == modal
+            if post_validation_spinner is None:
+                self.validation += [NavInsID.USE_CASE_STATUS_DISMISS]
 
         else:
             raise NotImplementedError("Unknown device")
+
+        # For both Nano AND e-ink : remember if we have a final spinner to check for
+        self.post_validation_spinner = post_validation_spinner
 
 
 class NavigateWithScenario:
@@ -108,17 +115,29 @@ class NavigateWithScenario:
         if custom_screen_text is not None:
             scenario.pattern = custom_screen_text
 
+        # Assert post validation modal (give True) only if no spinner
+        screen_change_after_last_instruction = scenario.post_validation_spinner is None
+
         if do_comparison:
             self.navigator.navigate_until_text_and_compare(
                 navigate_instruction=scenario.navigation,
                 validation_instructions=scenario.validation,
                 text=scenario.pattern,
                 path=path if path else self.screenshot_path,
-                test_case_name=test_name if test_name else self.test_name)
+                test_case_name=test_name if test_name else self.test_name,
+                screen_change_after_last_instruction=screen_change_after_last_instruction)
         else:
-            self.navigator.navigate_until_text(navigate_instruction=scenario.navigation,
-                                               validation_instructions=scenario.validation,
-                                               text=scenario.pattern)
+            self.navigator.navigate_until_text(
+                navigate_instruction=scenario.navigation,
+                validation_instructions=scenario.validation,
+                text=scenario.pattern,
+                screen_change_after_last_instruction=screen_change_after_last_instruction)
+
+        if scenario.post_validation_spinner is not None:
+            # If the navigation ended with a spinner, we did not assert the post validation screen in
+            # navigate_until_text because we do not want to assert the spinner screen to avoid race issues
+            # We perform a manual text_on_screen check instead
+            self.backend.wait_for_text_on_screen(scenario.post_validation_spinner)
 
     def _navigate_warning(self,
                           scenario: NavigationScenarioData,
@@ -150,9 +169,25 @@ class NavigateWithScenario:
                                     do_comparison: bool = True,
                                     warning_path: str = "warning",
                                     nb_warnings: int = 1):
-        scenario = NavigationScenarioData(self.device, self.backend, UseCase.TX_REVIEW, True,
-                                          nb_warnings)
+        scenario = NavigationScenarioData(self.device,
+                                          self.backend,
+                                          UseCase.TX_REVIEW,
+                                          True,
+                                          nb_warnings=nb_warnings)
         self._navigate_warning(scenario, test_name, do_comparison, warning_path)
+        self._navigate_with_scenario(scenario, path, test_name, custom_screen_text, do_comparison)
+
+    def review_approve_with_spinner(self,
+                                    spinner_text: str,
+                                    path: Optional[Path] = None,
+                                    test_name: Optional[str] = None,
+                                    custom_screen_text: Optional[str] = None,
+                                    do_comparison: bool = True):
+        scenario = NavigationScenarioData(self.device,
+                                          self.backend,
+                                          UseCase.TX_REVIEW,
+                                          True,
+                                          post_validation_spinner=spinner_text)
         self._navigate_with_scenario(scenario, path, test_name, custom_screen_text, do_comparison)
 
     def review_reject(self,
@@ -170,8 +205,11 @@ class NavigateWithScenario:
                                    do_comparison: bool = True,
                                    warning_path: str = "warning",
                                    nb_warnings: int = 1):
-        scenario = NavigationScenarioData(self.device, self.backend, UseCase.TX_REVIEW, False,
-                                          nb_warnings)
+        scenario = NavigationScenarioData(self.device,
+                                          self.backend,
+                                          UseCase.TX_REVIEW,
+                                          False,
+                                          nb_warnings=nb_warnings)
         self._navigate_warning(scenario, test_name, do_comparison, warning_path)
         self._navigate_with_scenario(scenario, path, test_name, custom_screen_text, do_comparison)
 
