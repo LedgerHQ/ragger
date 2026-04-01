@@ -1,18 +1,19 @@
 """
-   Copyright 2022 Ledger SAS
+Copyright 2022 Ledger SAS
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 """
+
 from abc import ABC, abstractmethod
 from contextlib import contextmanager
 from enum import Enum, auto
@@ -54,11 +55,12 @@ class GraphicalLibrary(Enum):
 
 
 class BackendInterface(ABC):
-
-    def __init__(self,
-                 device: Device,
-                 log_apdu_file: Optional[Path] = None,
-                 whitelisted_status: Iterable = ()):
+    def __init__(
+        self,
+        device: Device,
+        log_apdu_file: Optional[Path] = None,
+        whitelisted_status: Iterable = (),
+    ):
         """Initializes the Backend
 
         :param device: Which Device will be managed
@@ -110,8 +112,12 @@ class BackendInterface(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def __exit__(self, exc_type: Optional[Type[BaseException]], exc_val: Optional[BaseException],
-                 exc_tb: Optional[TracebackType]):
+    def __exit__(
+        self,
+        exc_type: Optional[Type[BaseException]],
+        exc_val: Optional[BaseException],
+        exc_tb: Optional[TracebackType],
+    ):
         raise NotImplementedError
 
     def handle_usb_reset(self) -> None:
@@ -129,13 +135,21 @@ class BackendInterface(ABC):
         :return: If the given status is considered valid or not
         :rtype: bool
         """
-        return ((self.raise_policy == RaisePolicy.RAISE_ALL)
-                or ((self.raise_policy == RaisePolicy.RAISE_ALL_BUT_0x9000) and
-                    (rapdu.status != StatusWords.SWO_SUCCESS))
-                or ((self.raise_policy == RaisePolicy.RAISE_CUSTOM) and
-                    (rapdu.status not in self.whitelisted_status)))
+        return (
+            (self.raise_policy == RaisePolicy.RAISE_ALL)
+            or (
+                (self.raise_policy == RaisePolicy.RAISE_ALL_BUT_0x9000)
+                and (rapdu.status != StatusWords.SWO_SUCCESS)
+            )
+            or (
+                (self.raise_policy == RaisePolicy.RAISE_CUSTOM)
+                and (rapdu.status not in self.whitelisted_status)
+            )
+        )
 
-    def send(self, cla: int, ins: int, p1: int = 0, p2: int = 0, data: bytes = b"") -> None:
+    def send(
+        self, cla: int, ins: int, p1: int = 0, p2: int = 0, data: bytes = b""
+    ) -> None:
         """
         Formats then sends an APDU to the backend.
 
@@ -188,13 +202,15 @@ class BackendInterface(ABC):
         """
         raise NotImplementedError
 
-    def exchange(self,
-                 cla: int,
-                 ins: int,
-                 p1: int = 0,
-                 p2: int = 0,
-                 data: bytes = b"",
-                 tick_timeout: int = 5 * 60 * 10) -> RAPDU:
+    def exchange(
+        self,
+        cla: int,
+        ins: int,
+        p1: int = 0,
+        p2: int = 0,
+        data: bytes = b"",
+        tick_timeout: int = 5 * 60 * 10,
+    ) -> RAPDU:
         """
         Formats and sends an APDU to the backend, then receives its response.
 
@@ -218,7 +234,9 @@ class BackendInterface(ABC):
         :return: The APDU response
         :rtype: RAPDU
         """
-        return self.exchange_raw(pack_APDU(cla, ins, p1, p2, data), tick_timeout=tick_timeout)
+        return self.exchange_raw(
+            pack_APDU(cla, ins, p1, p2, data), tick_timeout=tick_timeout
+        )
 
     @abstractmethod
     def exchange_raw(self, data: bytes = b"", tick_timeout: int = 5 * 60 * 10) -> RAPDU:
@@ -241,12 +259,9 @@ class BackendInterface(ABC):
         raise NotImplementedError
 
     @contextmanager
-    def exchange_async(self,
-                       cla: int,
-                       ins: int,
-                       p1: int = 0,
-                       p2: int = 0,
-                       data: bytes = b"") -> Generator[None, None, None]:
+    def exchange_async(
+        self, cla: int, ins: int, p1: int = 0, p2: int = 0, data: bytes = b""
+    ) -> Generator[None, None, None]:
         """
         Formats and sends an APDU to the backend, then gives the control back to
         the caller.
@@ -280,7 +295,9 @@ class BackendInterface(ABC):
 
     @contextmanager
     @abstractmethod
-    def exchange_async_raw(self, data: bytes = b"") -> Generator[Union[bool, None], None, None]:
+    def exchange_async_raw(
+        self, data: bytes = b""
+    ) -> Generator[Union[bool, None], None, None]:
         """
         Sends the given APDU to the backend, then gives the control back to the
         caller.
@@ -376,11 +393,9 @@ class BackendInterface(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def finger_swipe(self,
-                     x: int = 0,
-                     y: int = 0,
-                     direction: str = "left",
-                     delay: float = 0.5) -> None:
+    def finger_swipe(
+        self, x: int = 0, y: int = 0, direction: str = "left", delay: float = 0.5
+    ) -> None:
         """
         Performs a finger swipe on the device screen.
 
@@ -407,11 +422,13 @@ class BackendInterface(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def compare_screen_with_snapshot(self,
-                                     golden_snap_path: Path,
-                                     crop: Optional[Crop] = None,
-                                     tmp_snap_path: Optional[Path] = None,
-                                     golden_run: bool = False) -> bool:
+    def compare_screen_with_snapshot(
+        self,
+        golden_snap_path: Path,
+        crop: Optional[Crop] = None,
+        tmp_snap_path: Optional[Path] = None,
+        golden_run: bool = False,
+    ) -> bool:
         """
         Compare the current device screen with the provided snapshot.
 

@@ -1,18 +1,19 @@
 """
-   Copyright 2022 Ledger SAS
+Copyright 2022 Ledger SAS
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 """
+
 from typing import Dict, Tuple
 from ledgered.devices import Device
 
@@ -20,13 +21,36 @@ from ragger.backend import BackendInterface
 
 from .element import Center
 
-from .layouts import CancelFooter, CenteredFooter, ChoiceList, ExitFooter, ExitHeader, \
-    FullKeyboardLetters, FullKeyboardSpecialCharacters1, FullKeyboardSpecialCharacters2, \
-    InfoFooter, InfoHeader, LeftHeader, LetterOnlyKeyboard, NavigationHeader, RightHeader, \
-    SettingsFooter, Suggestions, TappableCenter
+from .layouts import (
+    CancelFooter,
+    CenteredFooter,
+    ChoiceList,
+    ExitFooter,
+    ExitHeader,
+    FullKeyboardLetters,
+    FullKeyboardSpecialCharacters1,
+    FullKeyboardSpecialCharacters2,
+    InfoFooter,
+    InfoHeader,
+    LeftHeader,
+    LetterOnlyKeyboard,
+    NavigationHeader,
+    RightHeader,
+    SettingsFooter,
+    Suggestions,
+    TappableCenter,
+)
 
-from .use_cases import UseCaseHome, UseCaseSettings, UseCaseSubSettings, UseCaseChoice, \
-    UseCaseStatus, UseCaseReview, UseCaseViewDetails, UseCaseAddressConfirmation
+from .use_cases import (
+    UseCaseHome,
+    UseCaseSettings,
+    UseCaseSubSettings,
+    UseCaseChoice,
+    UseCaseStatus,
+    UseCaseReview,
+    UseCaseViewDetails,
+    UseCaseAddressConfirmation,
+)
 
 ELEMENT_PREFIX = "element_"
 LAYOUT_PREFIX = "layout_"
@@ -83,15 +107,18 @@ class MetaScreen(type):
     def __new__(cls, name: str, parents: Tuple, namespace: Dict):
         elements = {
             key.split(ELEMENT_PREFIX)[1]: namespace.pop(key)
-            for key in list(namespace.keys()) if key.startswith(ELEMENT_PREFIX)
+            for key in list(namespace.keys())
+            if key.startswith(ELEMENT_PREFIX)
         }
         layouts = {
             key.split(LAYOUT_PREFIX)[1]: namespace.pop(key)
-            for key in list(namespace.keys()) if key.startswith(LAYOUT_PREFIX)
+            for key in list(namespace.keys())
+            if key.startswith(LAYOUT_PREFIX)
         }
         use_cases = {
             key.split(USE_CASE_PREFIX)[1]: namespace.pop(key)
-            for key in list(namespace.keys()) if key.startswith(USE_CASE_PREFIX)
+            for key in list(namespace.keys())
+            if key.startswith(USE_CASE_PREFIX)
         }
         original_init = namespace.pop("__init__", lambda *args, **kwargs: None)
 

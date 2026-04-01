@@ -11,7 +11,6 @@ from ragger.backend import RaisePolicy
 
 
 class DummyBackend(BackendInterface):
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.mock = MagicMock()
@@ -84,10 +83,12 @@ class DummyBackend(BackendInterface):
 
 
 class TestBackendInterface(TestCase):
-
     def setUp(self):
         self.device = Devices.get_by_type(DeviceType.NANOS)
-        self.errors = (ExceptionRAPDU(0x8888, "ERROR1"), ExceptionRAPDU(0x7777, "ERROR2"))
+        self.errors = (
+            ExceptionRAPDU(0x8888, "ERROR1"),
+            ExceptionRAPDU(0x7777, "ERROR2"),
+        )
         self.valid_statuses = (0x9000, 0x9001, 0x9002)
         self.backend = DummyBackend(device=self.device)
 
@@ -104,7 +105,7 @@ class TestBackendInterface(TestCase):
         self.assertFalse(self.backend.mock.send_raw.called)
         self.backend.send(cla, ins, p1, p2)
         self.assertTrue(self.backend.mock.send_raw.called)
-        self.assertEqual(self.backend.mock.send_raw.call_args, ((expected, ), ))
+        self.assertEqual(self.backend.mock.send_raw.call_args, ((expected,),))
 
     def test_exchange(self):
         cla, ins, p1, p2 = 1, 2, 3, 4
@@ -112,7 +113,9 @@ class TestBackendInterface(TestCase):
         self.assertFalse(self.backend.mock.send_raw.called)
         result = self.backend.exchange(cla, ins, p1, p2)
         self.assertTrue(self.backend.mock.exchange_raw.called)
-        self.assertEqual(self.backend.mock.exchange_raw.call_args, ((expected, 5 * 60 * 10), ))
+        self.assertEqual(
+            self.backend.mock.exchange_raw.call_args, ((expected, 5 * 60 * 10),)
+        )
         self.assertEqual(result, self.backend.mock.exchange_raw())
 
     def test_exchange_async(self):
@@ -122,19 +125,18 @@ class TestBackendInterface(TestCase):
         with self.backend.exchange_async(cla, ins, p1, p2):
             pass
         self.assertTrue(self.backend.mock.exchange_async_raw.called)
-        self.assertEqual(self.backend.mock.exchange_async_raw.call_args, ((expected, ), ))
+        self.assertEqual(self.backend.mock.exchange_async_raw.call_args, ((expected,),))
 
 
 class TestBackendInterfaceLogging(TestCase):
-
     def test_log_apdu(self):
         self.device = Devices.get_by_type(DeviceType.NANOS)
         with tempfile.TemporaryDirectory() as td:
             test_file = (Path(td) / "test_log_file.log").resolve()
             self.backend = DummyBackend(device=self.device, log_apdu_file=test_file)
             ref_lines = ["Test logging", "hello world", "Lorem Ipsum"]
-            for l in ref_lines:
-                self.backend.apdu_logger.info(l)
-            with open(test_file, mode='r') as fp:
-                read_lines = [l.strip() for l in fp.readlines()]
+            for line in ref_lines:
+                self.backend.apdu_logger.info(line)
+            with open(test_file, mode="r") as fp:
+                read_lines = [line.strip() for line in fp.readlines()]
                 self.assertEqual(read_lines, ref_lines)

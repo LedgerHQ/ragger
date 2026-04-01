@@ -4,7 +4,6 @@ from ragger.utils import structs
 
 
 class TestStructsRAPDU(TestCase):
-
     def test___str__data(self):
         status = 19
         data = "012345"

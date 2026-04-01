@@ -27,13 +27,16 @@ GET_CURVE_OBJ = {
 
 SPECULOS_MNEMONIC = (
     "glory promote mansion idle axis finger extra february uncover one trip resource "
-    "lawn turtle enact monster seven myth punch hobby comfort wild raise skin")
+    "lawn turtle enact monster seven myth punch hobby comfort wild raise skin"
+)
 
 
-def calculate_public_key_and_chaincode(curve: CurveChoice,
-                                       path: str,
-                                       mnemonic: Sequence[str] = SPECULOS_MNEMONIC,
-                                       compress_public_key: bool = False) -> Tuple[str, str]:
+def calculate_public_key_and_chaincode(
+    curve: CurveChoice,
+    path: str,
+    mnemonic: Sequence[str] = SPECULOS_MNEMONIC,
+    compress_public_key: bool = False,
+) -> Tuple[str, str]:
     if not isinstance(curve, CurveChoice):
         raise ValueError(f'"{curve}" must be a CurveChoice enum')
 

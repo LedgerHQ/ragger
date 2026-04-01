@@ -5,7 +5,6 @@ from ragger.firmware.touch import MetaScreen
 
 
 class TestMetaScreen(TestCase):
-
     def setUp(self):
         self.layout = MagicMock()
 
@@ -24,7 +23,7 @@ class TestMetaScreen(TestCase):
         args = (client, device, "some")
         test = self.cls(*args)
         self.assertEqual(self.layout.call_count, 1)
-        self.assertEqual(self.layout.call_args, ((client, device), ))
+        self.assertEqual(self.layout.call_args, ((client, device),))
         self.assertEqual(test.one, self.layout())
         self.assertEqual(test.some, args[-1])
         self.assertIsNone(test.other)

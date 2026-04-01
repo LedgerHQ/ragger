@@ -1,18 +1,19 @@
 """
-   Copyright 2022 Ledger SAS
+Copyright 2022 Ledger SAS
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 """
+
 import select
 import socket
 from contextlib import contextmanager
@@ -28,7 +29,12 @@ from re import match
 
 from ledgered import binary
 from ledgered.devices import Device
-from speculos.client import SpeculosClient, screenshot_equal, ApduResponse, ApduException
+from speculos.client import (
+    SpeculosClient,
+    screenshot_equal,
+    ApduResponse,
+    ApduException,
+)
 from speculos.mcu.seproxyhal import TICKER_DELAY
 
 from ragger.error import StatusWords, ExceptionRAPDU
@@ -42,7 +48,7 @@ T = TypeVar("T", bound="SpeculosBackend")
 
 def _is_port_in_use(port: int) -> bool:
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        return s.connect_ex(('localhost', port)) == 0
+        return s.connect_ex(("localhost", port)) == 0
 
 
 def _get_unused_port_from(starting_port: int) -> int:
@@ -53,7 +59,7 @@ def _get_unused_port_from(starting_port: int) -> int:
 
 def raise_policy_enforcer(function):
 
-    def decoration(self: 'SpeculosBackend', *args, **kwargs) -> RAPDU:
+    def decoration(self: "SpeculosBackend", *args, **kwargs) -> RAPDU:
         # Catch backend raise
         try:
             rapdu: RAPDU = function(self, *args, **kwargs)
@@ -71,23 +77,25 @@ def raise_policy_enforcer(function):
 
 
 class SpeculosBackend(BackendInterface):
-
     _DEFAULT_API_PORT = 5000
-    _ARGS_KEY = 'args'
-    _ARGS_API_PORT_KEY = '--api-port'
-    _ARGS_APDU_PORT_KEY = '--apdu-port'
+    _ARGS_KEY = "args"
+    _ARGS_API_PORT_KEY = "--api-port"
+    _ARGS_APDU_PORT_KEY = "--apdu-port"
 
-    def __init__(self,
-                 application: Path,
-                 device: Device,
-                 log_apdu_file: Optional[Path] = None,
-                 **kwargs):
+    def __init__(
+        self,
+        application: Path,
+        device: Device,
+        log_apdu_file: Optional[Path] = None,
+        **kwargs,
+    ):
         super().__init__(device=device, log_apdu_file=log_apdu_file)
         # crafting Speculos arguments
         args = ["--model", device.name]
         speculos_args: List = kwargs.get(self._ARGS_KEY, list())
-        assert isinstance(speculos_args, list), \
+        assert isinstance(speculos_args, list), (
             f"'{self._ARGS_KEY}' ({speculos_args}) keyword argument must be a list of arguments"
+        )
         # Inferring the API port
         if self._ARGS_API_PORT_KEY in speculos_args:
             index = speculos_args.index(self._ARGS_API_PORT_KEY)
@@ -111,14 +119,16 @@ class SpeculosBackend(BackendInterface):
             # test just for the unit-test to pass.
             # In real life, the application is the path to the elf file, always present
             bin_data = binary.LedgerBinaryApp(application)
-            self.sdk_graphics = GraphicalLibrary.from_string(bin_data.sections.sdk_graphics)
+            self.sdk_graphics = GraphicalLibrary.from_string(
+                bin_data.sections.sdk_graphics
+            )
 
         self.logger.info("Speculos binary: '%s'", application)
         self.logger.info("SDK Library: '%s'", self.sdk_graphics)
         self.logger.info("Speculos options: '%s'", " ".join(kwargs[self._ARGS_KEY]))
-        self._client: SpeculosClient = SpeculosClient(app=str(application),
-                                                      api_url=self.url,
-                                                      **kwargs)
+        self._client: SpeculosClient = SpeculosClient(
+            app=str(application), api_url=self.url, **kwargs
+        )
         self._pending: Optional[ApduResponse] = None
         self._pending_async_response: Optional[ApduResponse] = None
         self._last_screenshot: Optional[BytesIO] = None
@@ -140,12 +150,18 @@ class SpeculosBackend(BackendInterface):
 
     def _check_async_error(self) -> None:
         """Check for async APDU errors and raise if present."""
-        if self._pending_async_response is not None and self._last_async_response is None:
+        if (
+            self._pending_async_response is not None
+            and self._last_async_response is None
+        ):
             if has_data_available(self._pending_async_response, timeout=0):
-                self.logger.info("[Ragger] Early async data available, retrieving it now.")
+                self.logger.info(
+                    "[Ragger] Early async data available, retrieving it now."
+                )
                 # This will raise ExceptionRAPDU immediately if status != 9000
                 self._last_async_response = self._get_last_async_response(
-                    self._pending_async_response)
+                    self._pending_async_response
+                )
 
     def _retrieve_client_screen_content(self) -> dict:
         raw_content = self._client.get_current_screen_content()
@@ -184,9 +200,10 @@ class SpeculosBackend(BackendInterface):
         while not self._retrieve_client_screen_content()["events"]:
             # Send a ticker event and let the app process it
             sleep(0.1)
-            if (time() - start > 20.0):
+            if time() - start > 20.0:
                 raise TimeoutError(
-                    "Timeout waiting for screen content upon Ragger Speculos Instance start")
+                    "Timeout waiting for screen content upon Ragger Speculos Instance start"
+                )
 
         self._last_screenshot = BytesIO(self._client.get_screenshot())
 
@@ -214,8 +231,10 @@ class SpeculosBackend(BackendInterface):
     @raise_policy_enforcer
     def exchange_raw(self, data: bytes = b"", tick_timeout: int = 5 * 60 * 10) -> RAPDU:
         self.apdu_logger.info("=> %s", data.hex())
-        return RAPDU(StatusWords.SWO_SUCCESS,
-                     self._client._apdu_exchange(data, tick_timeout=tick_timeout))
+        return RAPDU(
+            StatusWords.SWO_SUCCESS,
+            self._client._apdu_exchange(data, tick_timeout=tick_timeout),
+        )
 
     @raise_policy_enforcer
     def _get_last_async_response(self, response) -> RAPDU:
@@ -226,11 +245,9 @@ class SpeculosBackend(BackendInterface):
         self.apdu_logger.info("=> %s", data.hex())
         # Reset state for this new async exchange
         self._last_async_response = None
-        with self._client.apdu_exchange_nowait(cla=data[0],
-                                               ins=data[1],
-                                               p1=data[2],
-                                               p2=data[3],
-                                               data=data[5:]) as response:
+        with self._client.apdu_exchange_nowait(
+            cla=data[0], ins=data[1], p1=data[2], p2=data[3], data=data[5:]
+        ) as response:
             self._pending_async_response = response
             try:
                 yield has_data_available(response, timeout=self.apdu_timeout)
@@ -253,11 +270,9 @@ class SpeculosBackend(BackendInterface):
     def finger_touch(self, x: int = 0, y: int = 0, delay: float = 0.1) -> None:
         self._client.finger_touch(x, y, delay=delay)
 
-    def finger_swipe(self,
-                     x: int = 0,
-                     y: int = 0,
-                     direction: str = "left",
-                     delay: float = 0.1) -> None:
+    def finger_swipe(
+        self, x: int = 0, y: int = 0, direction: str = "left", delay: float = 0.1
+    ) -> None:
         self._client.finger_swipe(x, y, direction=direction, delay=delay)
 
     def _save_screen_snapshot(self, snap: BytesIO, path: Path) -> None:
@@ -265,11 +280,13 @@ class SpeculosBackend(BackendInterface):
         img = Image.open(snap)
         img.save(path)
 
-    def compare_screen_with_snapshot(self,
-                                     golden_snap_path: Path,
-                                     crop: Optional[Crop] = None,
-                                     tmp_snap_path: Optional[Path] = None,
-                                     golden_run: bool = False) -> bool:
+    def compare_screen_with_snapshot(
+        self,
+        golden_snap_path: Path,
+        crop: Optional[Crop] = None,
+        tmp_snap_path: Optional[Path] = None,
+        golden_run: bool = False,
+    ) -> bool:
         snap = BytesIO(self._client.get_screenshot())
 
         # Save snap in tmp folder.
@@ -282,12 +299,14 @@ class SpeculosBackend(BackendInterface):
             self._save_screen_snapshot(snap, golden_snap_path)
 
         if crop is not None:
-            return screenshot_equal(f"{golden_snap_path}",
-                                    snap,
-                                    left=crop.left,
-                                    upper=crop.upper,
-                                    right=crop.right,
-                                    lower=crop.lower)
+            return screenshot_equal(
+                f"{golden_snap_path}",
+                snap,
+                left=crop.left,
+                upper=crop.upper,
+                right=crop.right,
+                lower=crop.lower,
+            )
         else:
             return screenshot_equal(f"{golden_snap_path}", snap)
 
@@ -304,10 +323,9 @@ class SpeculosBackend(BackendInterface):
                 return True
         return False
 
-    def _wait_for_text_on_screen_or_not(self,
-                                        should_be_on_screen: bool,
-                                        text: str,
-                                        timeout: float = 10.0) -> None:
+    def _wait_for_text_on_screen_or_not(
+        self, should_be_on_screen: bool, text: str, timeout: float = 10.0
+    ) -> None:
         endtime = time() + timeout
         # Only manual ticks sent by compare_screen_with_text in this function because
         # we don't want a desync between screen and events
@@ -371,32 +389,49 @@ class SpeculosBackend(BackendInterface):
                 speculos_args.pop(index)
 
     @classmethod
-    def batch(cls: Type[T],
-              application: Path,
-              device: Device,
-              number: int,
-              *args,
-              different_seeds: bool = True,
-              different_rng: bool = True,
-              different_private: bool = True,
-              different_attestation: bool = False,
-              **kwargs) -> List["SpeculosBackend"]:
+    def batch(
+        cls: Type[T],
+        application: Path,
+        device: Device,
+        number: int,
+        *args,
+        different_seeds: bool = True,
+        different_rng: bool = True,
+        different_private: bool = True,
+        different_attestation: bool = False,
+        **kwargs,
+    ) -> List["SpeculosBackend"]:
         logger = get_default_logger()
-        logger.info("Request to spawn %d Speculos instances of '%s'", number, application)
+        logger.info(
+            "Request to spawn %d Speculos instances of '%s'", number, application
+        )
         test_port = STARTING_RANGE
         result: List["SpeculosBackend"] = list()
         while len(result) < number:
             tmp_kwargs = deepcopy(kwargs)
             api_port = _get_unused_port_from(test_port)
             apdu_port = _get_unused_port_from(api_port + 1)
-            logger.info("Instance %d ports: %d (API) and %s (APDU)",
-                        len(result) + 1, api_port, apdu_port)
+            logger.info(
+                "Instance %d ports: %d (API) and %s (APDU)",
+                len(result) + 1,
+                api_port,
+                apdu_port,
+            )
             test_port = apdu_port + 1
-            additional_args = [cls._ARGS_API_PORT_KEY, str(api_port), "--apdu-port", str(apdu_port)]
+            additional_args = [
+                cls._ARGS_API_PORT_KEY,
+                str(api_port),
+                "--apdu-port",
+                str(apdu_port),
+            ]
             if different_seeds:
-                additional_args.extend(["--seed", Mnemonic("english").generate(strength=256)])
+                additional_args.extend(
+                    ["--seed", Mnemonic("english").generate(strength=256)]
+                )
             if different_rng:
-                additional_args.extend(["--deterministic-rng", f"{apdu_port}{api_port}"])
+                additional_args.extend(
+                    ["--deterministic-rng", f"{apdu_port}{api_port}"]
+                )
             if different_private:
                 additional_args.extend(["--user-private-key", urandom(32).hex()])
             if different_attestation:

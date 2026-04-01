@@ -1,5 +1,6 @@
 from unittest import TestCase
 from typing import Tuple
+
 # from ragger.bip.seed import Seed
 from ragger.bip import calculate_public_key_and_chaincode, CurveChoice
 from bip_utils import Bip32KeyError
