@@ -4,7 +4,6 @@ from ragger.firmware import Firmware
 
 
 class TestFirmware(TestCase):
-
     def test_firmware_not_existing_version(self):
         with self.assertRaises(ValueError):
             Firmware(10)

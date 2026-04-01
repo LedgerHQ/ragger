@@ -1,25 +1,25 @@
 """
-   Copyright 2022 Ledger SAS
+Copyright 2022 Ledger SAS
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 """
 
 import atexit
 import logging
 from pathlib import Path
 
-SHORT_FORMAT = '[%(levelname)s] %(name)s - %(message)s'
-LONG_FORMAT = '[%(asctime)s][%(levelname)s] %(name)s - %(message)s'
+SHORT_FORMAT = "[%(levelname)s] %(name)s - %(message)s"
+LONG_FORMAT = "[%(asctime)s][%(levelname)s] %(name)s - %(message)s"
 
 
 def get_default_logger():
@@ -69,8 +69,8 @@ def set_apdu_logger_file(log_apdu_file: Path):
         if isinstance(handler, logging.FileHandler):
             apdu_logger.removeHandler(handler)
 
-    apdu_handler = logging.FileHandler(filename=log_apdu_file, mode='w', delay=True)
-    apdu_handler.setFormatter(logging.Formatter('%(message)s'))
+    apdu_handler = logging.FileHandler(filename=log_apdu_file, mode="w", delay=True)
+    apdu_handler.setFormatter(logging.Formatter("%(message)s"))
     apdu_logger.addHandler(apdu_handler)
 
     def cleanup():

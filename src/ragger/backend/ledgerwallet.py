@@ -1,18 +1,19 @@
 """
-   Copyright 2022 Ledger SAS
+Copyright 2022 Ledger SAS
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 """
+
 from contextlib import contextmanager
 from time import sleep
 from typing import Generator, Optional
@@ -28,7 +29,7 @@ from .physical_backend import PhysicalBackend
 
 def raise_policy_enforcer(function):
 
-    def decoration(self: 'LedgerWalletBackend', *args, **kwargs) -> RAPDU:
+    def decoration(self: "LedgerWalletBackend", *args, **kwargs) -> RAPDU:
         # Catch backend raise
         try:
             rapdu: RAPDU = function(self, *args, **kwargs)
@@ -46,7 +47,6 @@ def raise_policy_enforcer(function):
 
 
 class LedgerWalletBackend(PhysicalBackend):
-
     def __init__(self, device: Device, *args, with_gui: bool = False, **kwargs):
         super().__init__(device, *args, with_gui=with_gui, **kwargs)
         self._client: Optional[LedgerClient] = None

@@ -7,10 +7,11 @@ from ragger.backend import LedgerCommBackend, LedgerWalletBackend, SpeculosBacke
 
 
 class TestNanoNavigator(TestCase):
-
     def test___init__ok(self):
         for backend_cls in [
-                partial(SpeculosBackend, "some app"), LedgerCommBackend, LedgerWalletBackend
+            partial(SpeculosBackend, "some app"),
+            LedgerCommBackend,
+            LedgerWalletBackend,
         ]:
             backend = backend_cls(Devices.get_by_type(DeviceType.NANOS))
             NanoNavigator(backend, Devices.get_by_type(DeviceType.NANOS))

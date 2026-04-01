@@ -1,18 +1,19 @@
 """
-   Copyright 2022 Ledger SAS
+Copyright 2022 Ledger SAS
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 """
+
 from dataclasses import astuple, dataclass
 from ledgered.devices import DeviceType, Devices, Resolution
 
@@ -443,7 +444,7 @@ POSITIONS = {
             ")": Position(240, 470),
             "&": Position(280, 470),
             "@": Position(320, 470),
-            "\"": Position(360, 470),
+            '"': Position(360, 470),
             # third line
             "more_specials": Position(50, 525),
             ".": Position(120, 525),
@@ -477,7 +478,7 @@ POSITIONS = {
             ")": Position(288, 420),
             "&": Position(336, 420),
             "@": Position(384, 420),
-            "\"": Position(432, 420),
+            '"': Position(432, 420),
             # third line
             "more_specials": Position(60, 490),
             ".": Position(144, 490),
@@ -511,7 +512,7 @@ POSITIONS = {
             ")": Position(180, 270),
             "&": Position(210, 270),
             "@": Position(240, 270),
-            "\"": Position(270, 270),
+            '"': Position(270, 270),
             # third line
             "more_specials": Position(35, 320),
             ".": Position(90, 320),
@@ -545,7 +546,7 @@ POSITIONS = {
             ")": Position(180, 270),
             "&": Position(210, 270),
             "@": Position(240, 270),
-            "\"": Position(270, 270),
+            '"': Position(270, 270),
             # third line
             "more_specials": Position(35, 320),
             ".": Position(90, 320),
@@ -581,7 +582,7 @@ POSITIONS = {
             ">": Position(240, 470),
             "$": Position(280, 470),
             "`": Position(320, 470),
-            "\"": Position(360, 470),
+            '"': Position(360, 470),
             # third line
             "more_specials": Position(50, 525),
             ".": Position(120, 525),
@@ -615,7 +616,7 @@ POSITIONS = {
             "<": Position(288, 420),
             "$": Position(336, 420),
             "`": Position(384, 420),
-            "\"": Position(432, 420),
+            '"': Position(432, 420),
             # third line
             "more_specials": Position(60, 490),
             ".": Position(144, 490),
@@ -649,7 +650,7 @@ POSITIONS = {
             "<": Position(180, 270),
             "$": Position(210, 270),
             "`": Position(240, 270),
-            "\"": Position(270, 270),
+            '"': Position(270, 270),
             # third line
             "more_specials": Position(35, 320),
             ".": Position(90, 320),
@@ -683,7 +684,7 @@ POSITIONS = {
             "<": Position(180, 270),
             "$": Position(210, 270),
             "`": Position(240, 270),
-            "\"": Position(270, 270),
+            '"': Position(270, 270),
             # third line
             "more_specials": Position(35, 320),
             ".": Position(90, 320),
@@ -701,85 +702,85 @@ POSITIONS = {
         DeviceType.STAX: STAX_CENTER,
         DeviceType.FLEX: FLEX_CENTER,
         DeviceType.APEX_P: APEX_P_CENTER,
-        DeviceType.APEX_M: APEX_M_CENTER
+        DeviceType.APEX_M: APEX_M_CENTER,
     },
     "RightHeader": {
         DeviceType.STAX: STAX_BUTTON_UPPER_RIGHT,
         DeviceType.FLEX: FLEX_BUTTON_UPPER_RIGHT,
         DeviceType.APEX_P: APEX_P_BUTTON_UPPER_RIGHT,
-        DeviceType.APEX_M: APEX_M_BUTTON_UPPER_RIGHT
+        DeviceType.APEX_M: APEX_M_BUTTON_UPPER_RIGHT,
     },
     "LeftHeader": {
         DeviceType.STAX: STAX_BUTTON_UPPER_LEFT,
         DeviceType.FLEX: FLEX_BUTTON_UPPER_LEFT,
         DeviceType.APEX_P: APEX_P_BUTTON_UPPER_LEFT,
-        DeviceType.APEX_M: APEX_M_BUTTON_UPPER_LEFT
+        DeviceType.APEX_M: APEX_M_BUTTON_UPPER_LEFT,
     },
     "CenteredFooter": {
         DeviceType.STAX: STAX_BUTTON_LOWER_MIDDLE,
         DeviceType.FLEX: FLEX_BUTTON_LOWER_MIDDLE,
         DeviceType.APEX_P: APEX_P_BUTTON_LOWER_MIDDLE,
-        DeviceType.APEX_M: APEX_M_BUTTON_LOWER_MIDDLE
+        DeviceType.APEX_M: APEX_M_BUTTON_LOWER_MIDDLE,
     },
     "LeftFooter": {
         DeviceType.STAX: STAX_BUTTON_LOWER_LEFT,
         DeviceType.FLEX: FLEX_BUTTON_LOWER_LEFT,
         DeviceType.APEX_P: APEX_P_BUTTON_LOWER_LEFT,
-        DeviceType.APEX_M: APEX_M_BUTTON_LOWER_LEFT
+        DeviceType.APEX_M: APEX_M_BUTTON_LOWER_LEFT,
     },
     "CancelFooter": {
         DeviceType.STAX: STAX_BUTTON_LOWER_LEFT,
         DeviceType.FLEX: FLEX_BUTTON_LOWER_LEFT,
         DeviceType.APEX_P: APEX_P_BUTTON_LOWER_LEFT,
-        DeviceType.APEX_M: APEX_M_BUTTON_LOWER_LEFT
+        DeviceType.APEX_M: APEX_M_BUTTON_LOWER_LEFT,
     },
     "UseCaseHome": {
         DeviceType.STAX: {
             "info": STAX_BUTTON_UPPER_RIGHT,
             "settings": STAX_BUTTON_UPPER_RIGHT,
-            "quit": STAX_BUTTON_LOWER_MIDDLE
+            "quit": STAX_BUTTON_LOWER_MIDDLE,
         },
         DeviceType.FLEX: {
             "info": FLEX_BUTTON_UPPER_RIGHT,
             "settings": FLEX_BUTTON_UPPER_RIGHT,
-            "quit": FLEX_BUTTON_LOWER_MIDDLE
+            "quit": FLEX_BUTTON_LOWER_MIDDLE,
         },
         DeviceType.APEX_P: {
             "info": APEX_P_BUTTON_UPPER_RIGHT,
             "settings": APEX_P_BUTTON_UPPER_RIGHT,
-            "quit": APEX_P_BUTTON_LOWER_MIDDLE
+            "quit": APEX_P_BUTTON_LOWER_MIDDLE,
         },
         DeviceType.APEX_M: {
             "info": APEX_M_BUTTON_UPPER_RIGHT,
             "settings": APEX_M_BUTTON_UPPER_RIGHT,
-            "quit": APEX_M_BUTTON_LOWER_MIDDLE
-        }
+            "quit": APEX_M_BUTTON_LOWER_MIDDLE,
+        },
     },
     "UseCaseHomeExt": {
         DeviceType.STAX: {
             "info": STAX_BUTTON_UPPER_RIGHT,
             "settings": STAX_BUTTON_UPPER_RIGHT,
             "action": STAX_BUTTON_ABOVE_LOWER_MIDDLE,
-            "quit": STAX_BUTTON_LOWER_MIDDLE
+            "quit": STAX_BUTTON_LOWER_MIDDLE,
         },
         DeviceType.FLEX: {
             "info": FLEX_BUTTON_UPPER_RIGHT,
             "settings": FLEX_BUTTON_UPPER_RIGHT,
             "action": FLEX_BUTTON_ABOVE_LOWER_MIDDLE,
-            "quit": FLEX_BUTTON_LOWER_MIDDLE
+            "quit": FLEX_BUTTON_LOWER_MIDDLE,
         },
         DeviceType.APEX_P: {
             "info": APEX_P_BUTTON_UPPER_RIGHT,
             "settings": APEX_P_BUTTON_UPPER_RIGHT,
             "action": APEX_P_BUTTON_ABOVE_LOWER_MIDDLE,
-            "quit": APEX_P_BUTTON_LOWER_MIDDLE
+            "quit": APEX_P_BUTTON_LOWER_MIDDLE,
         },
         DeviceType.APEX_M: {
             "info": APEX_M_BUTTON_UPPER_RIGHT,
             "settings": APEX_M_BUTTON_UPPER_RIGHT,
             "action": APEX_M_BUTTON_ABOVE_LOWER_MIDDLE,
-            "quit": APEX_M_BUTTON_LOWER_MIDDLE
-        }
+            "quit": APEX_M_BUTTON_LOWER_MIDDLE,
+        },
     },
     "UseCaseSettings": {
         DeviceType.STAX: {
@@ -805,7 +806,7 @@ POSITIONS = {
             "multi_page_exit": APEX_M_BUTTON_UPPER_LEFT,
             "previous": APEX_M_BUTTON_LOWER_MIDDLE_RIGHT,
             "next": APEX_M_BUTTON_LOWER_RIGHT,
-        }
+        },
     },
     "UseCaseSubSettings": {
         DeviceType.STAX: {
@@ -827,7 +828,7 @@ POSITIONS = {
             "exit": APEX_M_BUTTON_UPPER_LEFT,
             "previous": APEX_M_BUTTON_LOWER_LEFT,
             "next": APEX_M_BUTTON_LOWER_RIGHT,
-        }
+        },
     },
     "UseCaseChoice": {
         DeviceType.STAX: {
@@ -845,7 +846,7 @@ POSITIONS = {
         DeviceType.APEX_M: {
             "confirm": APEX_M_BUTTON_ABOVE_LOWER_MIDDLE,
             "reject": APEX_M_BUTTON_LOWER_LEFT,
-        }
+        },
     },
     "UseCaseStatus": {
         DeviceType.STAX: {
@@ -859,7 +860,7 @@ POSITIONS = {
         },
         DeviceType.APEX_M: {
             "dismiss": APEX_M_CENTER,
-        }
+        },
     },
     "UseCaseReview": {
         DeviceType.STAX: {
@@ -885,7 +886,7 @@ POSITIONS = {
             "previous": APEX_M_BUTTON_LOWER_MIDDLE,
             "confirm": APEX_M_BUTTON_ABOVE_LOWER_MIDDLE,
             "reject": APEX_M_BUTTON_LOWER_LEFT,
-        }
+        },
     },
     "UseCaseViewDetails": {
         DeviceType.STAX: {
@@ -907,7 +908,7 @@ POSITIONS = {
             "exit": APEX_M_BUTTON_LOWER_LEFT,
             "previous": APEX_M_BUTTON_LOWER_MIDDLE,
             "next": APEX_M_BUTTON_LOWER_RIGHT,
-        }
+        },
     },
     "UseCaseAddressConfirmation": {
         DeviceType.STAX: {
@@ -933,6 +934,6 @@ POSITIONS = {
             "exit_qr": APEX_M_BUTTON_LOWER_MIDDLE,
             "confirm": APEX_M_BUTTON_ABOVE_LOWER_MIDDLE,
             "cancel": APEX_M_BUTTON_LOWER_LEFT,
-        }
+        },
     },
 }

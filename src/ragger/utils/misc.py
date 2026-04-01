@@ -1,18 +1,19 @@
 """
-   Copyright 2022 Ledger SAS
+Copyright 2022 Ledger SAS
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 """
+
 import toml
 from typing import Optional, Tuple, List
 from pathlib import Path
@@ -101,7 +102,10 @@ def _is_root(path_to_check: Path) -> bool:
 
 def find_project_root_dir(origin: Path) -> Path:
     project_root_dir = origin
-    while not _is_root(project_root_dir) and not (project_root_dir / ".git").resolve().is_dir():
+    while (
+        not _is_root(project_root_dir)
+        and not (project_root_dir / ".git").resolve().is_dir()
+    ):
         project_root_dir = project_root_dir.parent
     if _is_root(project_root_dir):
         raise ValueError("Could not find project top directory")
@@ -112,9 +116,11 @@ def prefix_with_len(to_prefix: bytes) -> bytes:
     return len(to_prefix).to_bytes(1, byteorder="big") + to_prefix
 
 
-def create_currency_config(main_ticker: str,
-                           application_name: str,
-                           sub_coin_config: Optional[Tuple[str, int]] = None) -> bytes:
+def create_currency_config(
+    main_ticker: str,
+    application_name: str,
+    sub_coin_config: Optional[Tuple[str, int]] = None,
+) -> bytes:
     sub_config: bytes = b""
     if sub_coin_config is not None:
         sub_config = prefix_with_len(sub_coin_config[0].encode())
@@ -126,7 +132,7 @@ def create_currency_config(main_ticker: str,
 
 
 def split_message(message: bytes, max_size: int) -> List[bytes]:
-    return [message[x:x + max_size] for x in range(0, len(message), max_size)]
+    return [message[x : x + max_size] for x in range(0, len(message), max_size)]
 
 
 def get_current_app_name_and_version(backend):
@@ -135,7 +141,8 @@ def get_current_app_name_and_version(backend):
             cla=0xB0,  # specific CLA for BOLOS
             ins=0x01,  # specific INS for get_app_and_version
             p1=0,
-            p2=0).data
+            p2=0,
+        ).data
         offset = 0
 
         format_id = response[offset]
@@ -144,18 +151,18 @@ def get_current_app_name_and_version(backend):
 
         app_name_len = response[offset]
         offset += 1
-        app_name = response[offset:offset + app_name_len].decode("ascii")
+        app_name = response[offset : offset + app_name_len].decode("ascii")
         offset += app_name_len
 
         version_len = response[offset]
         offset += 1
-        version = response[offset:offset + version_len].decode("ascii")
+        version = response[offset : offset + version_len].decode("ascii")
         offset += version_len
 
         if app_name != "BOLOS":
             flags_len = response[offset]
             offset += 1
-            _ = response[offset:offset + flags_len]
+            _ = response[offset : offset + flags_len]
             offset += flags_len
 
         assert offset == len(response)
@@ -172,7 +179,8 @@ def exit_current_app(backend):
         cla=0xB0,  # specific CLA for BOLOS
         ins=0xA7,  # specific INS for INS_APP_EXIT
         p1=0,
-        p2=0)
+        p2=0,
+    )
 
 
 def open_app_from_dashboard(backend, app_name: str):
@@ -182,7 +190,8 @@ def open_app_from_dashboard(backend, app_name: str):
             ins=0xD8,  # specific INS for INS_OPEN_APP
             p1=0,
             p2=0,
-            data=app_name.encode())
+            data=app_name.encode(),
+        )
     except ExceptionRAPDU as e:
         if e.status == ERROR_DENIED_BY_USER:
             raise ValueError("Open app consent denied by the user")

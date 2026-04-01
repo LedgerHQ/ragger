@@ -1,23 +1,23 @@
 """
-   Copyright 2022 Ledger SAS
+Copyright 2022 Ledger SAS
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 """
+
 from .element import Element
 
 
 class UseCaseHome(Element):
-
     def info(self):
         self.client.finger_touch(*self.positions["info"])
 
@@ -29,13 +29,11 @@ class UseCaseHome(Element):
 
 
 class UseCaseHomeExt(UseCaseHome):
-
     def action(self):
         self.client.finger_touch(*self.positions["action"])
 
 
 class UseCaseSettings(Element):
-
     def single_page_exit(self):
         self.client.finger_touch(*self.positions["single_page_exit"])
 
@@ -50,7 +48,6 @@ class UseCaseSettings(Element):
 
 
 class UseCaseSubSettings(Element):
-
     def exit(self):
         self.client.finger_touch(*self.positions["exit"])
 
@@ -62,7 +59,6 @@ class UseCaseSubSettings(Element):
 
 
 class UseCaseChoice(Element):
-
     def confirm(self):
         self.client.finger_touch(*self.positions["confirm"])
 
@@ -71,13 +67,11 @@ class UseCaseChoice(Element):
 
 
 class UseCaseStatus(Element):
-
     def dismiss(self):
         self.client.finger_touch(*self.positions["dismiss"])
 
 
 class UseCaseReview(Element):
-
     def tap(self):
         self.client.finger_touch(*self.positions["tap"])
 
@@ -93,7 +87,6 @@ class UseCaseReview(Element):
 
 
 class UseCaseViewDetails(Element):
-
     def exit(self):
         self.client.finger_touch(*self.positions["exit"])
 
@@ -105,7 +98,6 @@ class UseCaseViewDetails(Element):
 
 
 class UseCaseAddressConfirmation(Element):
-
     def tap(self):
         self.client.finger_touch(*self.positions["tap"])
 

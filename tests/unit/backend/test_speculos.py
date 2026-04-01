@@ -15,7 +15,6 @@ def get_next_in_list(the_list: List, elt: str) -> str:
 
 
 class TestSpeculosBackend(TestCase):
-
     maxDiff = None
 
     def setUp(self):
@@ -28,11 +27,11 @@ class TestSpeculosBackend(TestCase):
 
     def test___init__ports_ok(self):
         api_port, apdu_port = 4567, 9876
-        b1 = SpeculosBackend(APPNAME,
-                             self.nanos,
-                             args=["--api-port",
-                                   str(api_port), "--apdu-port",
-                                   str(apdu_port)])
+        b1 = SpeculosBackend(
+            APPNAME,
+            self.nanos,
+            args=["--api-port", str(api_port), "--apdu-port", str(apdu_port)],
+        )
         self.assertEqual(b1._api_port, api_port)
         self.assertEqual(b1._apdu_port, apdu_port)
 
@@ -65,8 +64,9 @@ class TestSpeculosBackend(TestCase):
             self.assertTrue(backend._client.__enter__.called)
             self.assertEqual(backend, yielded)
             self.assertEqual(backend._last_screenshot, backend._home_screenshot)
-            self.assertEqual(backend._last_screenshot.getvalue(),
-                             BytesIO(expected_image).getvalue())
+            self.assertEqual(
+                backend._last_screenshot.getvalue(), BytesIO(expected_image).getvalue()
+            )
             self.assertFalse(backend._client.__exit__.called)
         self.assertTrue(backend._client.__exit__.called)
 
@@ -81,7 +81,8 @@ class TestSpeculosBackend(TestCase):
                 self.nanos,
                 client_number,
                 different_attestation=True,
-                args=['--apdu-port', arg_apdu_port, '--api-port', arg_api_port])
+                args=["--apdu-port", arg_apdu_port, "--api-port", arg_api_port],
+            )
 
             self.assertEqual(len(clients), client_number)
             self.assertEqual(patched_client.call_count, client_number)
@@ -98,12 +99,18 @@ class TestSpeculosBackend(TestCase):
                 args, kwargs = all_client_args[index]
                 self.assertEqual(args, ())
                 self.assertEqual(kwargs["app"], APPNAME)
-                self.assertEqual(kwargs["api_url"], f"http://127.0.0.1:{client._api_port}")
+                self.assertEqual(
+                    kwargs["api_url"], f"http://127.0.0.1:{client._api_port}"
+                )
                 speculos_args = kwargs["args"]
                 client_seeds.add(get_next_in_list(speculos_args, "--seed"))
                 client_rngs.add(get_next_in_list(speculos_args, "--deterministic-rng"))
-                client_priv_keys.add(get_next_in_list(speculos_args, "--user-private-key"))
-                client_attestations.add(get_next_in_list(speculos_args, "--attestation-key"))
+                client_priv_keys.add(
+                    get_next_in_list(speculos_args, "--user-private-key")
+                )
+                client_attestations.add(
+                    get_next_in_list(speculos_args, "--attestation-key")
+                )
                 api_port = int(get_next_in_list(speculos_args, "--api-port"))
                 client_api_ports.add(client._api_port)
                 apdu_port = int(get_next_in_list(speculos_args, "--apdu-port"))
