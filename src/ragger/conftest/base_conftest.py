@@ -15,7 +15,8 @@ from ragger.logger import init_loggers, standalone_conf_logger
 from ragger.navigator import Navigator, NanoNavigator, TouchNavigator, NavigateWithScenario
 from ragger.utils import find_project_root_dir, find_library_application, find_application
 from ragger.utils.misc import get_current_app_name_and_version, exit_current_app, open_app_from_dashboard
-from ragger.error import MissingElfError
+from ragger.error import ExceptionRAPDU, MissingElfError, StatusWords
+from ragger.utils.structs import RAPDU
 
 from . import configuration as conf
 
@@ -53,6 +54,10 @@ def pytest_addoption(parser):
                      action="store_true",
                      default=False,
                      help="Skip tests instead of failing when application binaries are missing")
+    parser.addoption("--get-stack-consumption",
+                     action="store_true",
+                     default=False,
+                     help="Send APDUs to measure stack consumption. Based on CLA=0xB0, INS=0x57.")
     # Always allow "default" even if application conftest does not define it
     allowed_setups = conf.OPTIONAL.ALLOWED_SETUPS
     if "default" not in allowed_setups:
@@ -111,6 +116,57 @@ def cli_user_seed(pytestconfig):
 @pytest.fixture(scope="session")
 def ignore_missing_binaries(pytestconfig):
     return pytestconfig.getoption("ignore_missing_binaries")
+
+
+@pytest.fixture(scope="session")
+def get_stack_consumption(pytestconfig):
+    return pytestconfig.getoption("get_stack_consumption")
+
+
+# Storage for stack consumption results across tests (populated by stack_consumption_hooks)
+_stack_consumption_results: dict = {}
+
+
+@pytest.fixture(autouse=True)
+def stack_consumption_hooks(request, get_stack_consumption: bool):
+    if get_stack_consumption:
+        backend = request.getfixturevalue("backend")
+        _backend_name = request.getfixturevalue("backend_name")
+        if _backend_name.lower() == "speculos":
+            try:
+                backend.exchange(cla=0xB0, ins=0x57, p1=0x00, p2=0x01, data=b"")
+            except ExceptionRAPDU as e:
+                msg = (
+                    "Stack consumption not supported: app not built with DEBUG_OS_STACK_CONSUMPTION=1"
+                    if e.status == StatusWords.SWO_INVALID_CLA else
+                    f"Unexpected SW: {e.status:04X}")
+                pytest.fail(msg)
+    yield
+    if get_stack_consumption:
+        backend = request.getfixturevalue("backend")
+        _backend_name = request.getfixturevalue("backend_name")
+        if _backend_name.lower() == "speculos":
+            try:
+                rapdu_retrieve: RAPDU = backend.exchange(cla=0xB0,
+                                                         ins=0x57,
+                                                         p1=0x01,
+                                                         p2=0x01,
+                                                         data=b"")
+                consumption = int.from_bytes(rapdu_retrieve.data, byteorder='big')
+                print(f"\n[stack consumption] {consumption} bytes.")
+                _stack_consumption_results[request.node.nodeid] = consumption
+            except ExceptionRAPDU as e:
+                pytest.fail(f"Stack consumption retrieve failed with SW: {e.status:04X}")
+
+
+def pytest_terminal_summary(terminalreporter, exitstatus, config):
+    if not _stack_consumption_results:
+        return
+    terminalreporter.write_sep("=", "stack consumption summary")
+    for test_name, consumption in sorted(_stack_consumption_results.items()):
+        terminalreporter.write_line(f"  {consumption:>8} bytes  {test_name}")
+    worst_test, worst_value = max(_stack_consumption_results.items(), key=lambda x: x[1])
+    terminalreporter.write_sep("-", f"worst case: {worst_value} bytes  ({worst_test})")
 
 
 @pytest.fixture(scope="session")
