@@ -188,10 +188,20 @@ class SpeculosBackend(BackendInterface):
                 raise TimeoutError(
                     "Timeout waiting for screen content upon Ragger Speculos Instance start")
 
+        # Stabilize the screenshot: tick until it no longer changes.
+        # This ensures the home screen is fully rendered before we capture it.
         self._last_screenshot = BytesIO(self._client.get_screenshot())
+        for _ in range(50):
+            self.send_tick()
+            new_screenshot = BytesIO(self._client.get_screenshot())
+            if screenshot_equal(new_screenshot, self._last_screenshot):
+                break
+            self._last_screenshot = new_screenshot
 
         # Save current screenshot as _home_screenshot.
         self._home_screenshot = self._last_screenshot
+        self._home_screen_content = self._retrieve_client_screen_content()
+        self._last_screen_content = self._retrieve_client_screen_content()
 
         return self
 
@@ -330,34 +340,65 @@ class SpeculosBackend(BackendInterface):
 
     def wait_for_screen_change(self, timeout: float = 10.0) -> None:
         screenshot = BytesIO(self._client.get_screenshot())
+        if not hasattr(self, '_last_screen_content'):
+            self._last_screen_content = self._retrieve_client_screen_content()
+        text_changed = False
         for _ in range(int(timeout / TICKER_DELAY)):
             if not screenshot_equal(screenshot, self._last_screenshot):
                 break
 
-            # Check for async APDU errors before sending a tick. This ensures that if the
-            # application has already refused the APDU (e.g., due to an error), we detect and raise
-            # the error immediately instead of waiting for a screen change that will never occur.
-            # This makes navigation robust and prevents hanging.
+            # Also detect screen changes via text events (NBGL serialized path)
+            current_content = self._retrieve_client_screen_content()
+            if current_content != self._last_screen_content:
+                text_changed = True
+
+            # Check for async APDU errors before sending a tick.
             self._check_async_error()
 
             # Send a ticker event and let the app process it
             self.send_tick()
             screenshot = BytesIO(self._client.get_screenshot())
         else:
-            raise TimeoutError("Timeout waiting for screen change")
+            if text_changed:
+                pass
+            else:
+                raise TimeoutError("Timeout waiting for screen change")
 
-        # Update self._last_screenshot to use it as reference for next calls
+        # Stabilization phase: after detecting a screen change, keep ticking
+        # until the screenshot no longer changes (rendering is complete).
+        for _ in range(50):
+            self.send_tick()
+            new_screenshot = BytesIO(self._client.get_screenshot())
+            if screenshot_equal(new_screenshot, screenshot):
+                break
+            screenshot = new_screenshot
+
+        # Update references for next calls
         self._last_screenshot = screenshot
+        self._last_screen_content = self._retrieve_client_screen_content()
 
     def wait_for_home_screen(self, timeout: float = 10.0) -> None:
         if screenshot_equal(self._last_screenshot, self._home_screenshot):
             return
+
+        # Also check via text events for NBGL serialized path
+        if not hasattr(self, '_home_screen_content'):
+            self._home_screen_content = None
+        if self._home_screen_content is not None:
+            current = self._retrieve_client_screen_content()
+            if current == self._home_screen_content:
+                return
 
         endtime = time() + timeout
         while True:
             self.wait_for_screen_change(endtime - time())
             if screenshot_equal(self._last_screenshot, self._home_screenshot):
                 return
+            # Also accept home screen match via text events
+            if self._home_screen_content is not None:
+                current = self._retrieve_client_screen_content()
+                if current == self._home_screen_content:
+                    return
 
     @classmethod
     def clean_args(cls: Type[T], speculos_args: List) -> None:
