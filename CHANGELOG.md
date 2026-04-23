@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.45.0] - 2026-03-31
+
+### Added
+
+- Added a PKI helper class for tests that use it
+
 ## [1.44.0] - 2026-03-31
 
 ### Added
@@ -119,8 +125,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Enable to use both MAIN_APP_DIR and SIDELOADED_APPS options (required to perform Swap tests) 
- 
+- Enable to use both MAIN_APP_DIR and SIDELOADED_APPS options (required to perform Swap tests)
+
 
 ## [1.35.0] - 2025-05-14
 
