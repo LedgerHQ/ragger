@@ -81,7 +81,7 @@ def backend_name(pytestconfig):
 
 @pytest.fixture(scope="session")
 def display(pytestconfig):
-    return pytestconfig.getoption("display")
+    return pytestconfig.getoption("display") or pytestconfig.getoption("no_nav")
 
 
 @pytest.fixture(scope="session")
