@@ -492,6 +492,16 @@ def use_only_on_backend(request, backend_name):
             pytest.skip(f'skipped on this backend: "{current_backend}"')
 
 
+@pytest.fixture(autouse=True)
+def auto_skip_on_backend(request, backend_name):
+    """Auto-skip tests marked with skip_on_backend when running on the specified backend."""
+    marker = request.node.get_closest_marker('skip_on_backend')
+    if marker:
+        excluded_backend = marker.args[0]
+        if excluded_backend == backend_name:
+            pytest.skip(f'⚠️ Not supported on {excluded_backend} backend')
+
+
 # This function will look for the 'needs_setup' marker. Example:
 # @pytest.mark.needs_setup('prod_build')
 # If the needed setup is not the one requested, a skip marker will be added
@@ -519,6 +529,11 @@ def pytest_configure(config):
     config.addinivalue_line(
         "markers",
         "use_on_backend(backend): skip test if not on the specified backend",
+    )
+
+    config.addinivalue_line(
+        "markers",
+        "skip_on_backend(backend): skip test if on the specified backend",
     )
 
     # fixture with parameter, use with the following syntax
