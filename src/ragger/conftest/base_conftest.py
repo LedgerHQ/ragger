@@ -502,6 +502,20 @@ def auto_skip_on_backend(request, backend_name):
             pytest.skip(f'⚠️ Not supported on {excluded_backend} backend')
 
 
+@pytest.fixture(autouse=True)
+def auto_skip_nano(request):
+    """Auto-skip tests marked with skip_nano when running on Nano devices."""
+    if request.node.get_closest_marker('skip_nano'):
+        try:
+            device = request.getfixturevalue('device')
+            if device.is_nano:
+                pytest.skip("⚠️ Not yet supported on Nano devices")
+        except pytest.FixtureLookupError:
+            # 'device' is not available when running Ragger's own test suite;
+            # it is always defined in application test suites.
+            pass
+
+
 # This function will look for the 'needs_setup' marker. Example:
 # @pytest.mark.needs_setup('prod_build')
 # If the needed setup is not the one requested, a skip marker will be added
@@ -545,6 +559,11 @@ def pytest_configure(config):
     config.addinivalue_line(
         "markers",
         "needs_setup(setup_name): skip test if not on the specified setup",
+    )
+
+    config.addinivalue_line(
+        "markers",
+        "skip_nano: skip test on Nano devices",
     )
 
     _setup_log_level(config)
