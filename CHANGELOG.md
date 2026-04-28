@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.45.1] - 2026-04-27
+
+### Added
+
+- New marker `skip_on_backend(backend)` to skip tests on specific backends
+- New marker `skip_nano` to skip tests on Nano devices
+
+### Fixed
+
+- Force `display` option to be set when `no-nav` is requested
+
 ## [1.45.0] - 2026-03-31
 
 ### Added
