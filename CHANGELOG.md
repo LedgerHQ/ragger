@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.45.1] - 2026-04-27
 
+### Fixed
+
+- `--get-stack-consumption` : fixing case where test does not interact with device
+
+
+## [1.45.1] - 2026-04-27
+
 ### Added
 
 - New marker `skip_on_backend(backend)` to skip tests on specific backends

@@ -130,8 +130,12 @@ _stack_consumption_results: dict = {}
 @pytest.fixture(autouse=True)
 def stack_consumption_hooks(request, get_stack_consumption: bool):
     if get_stack_consumption:
-        backend = request.getfixturevalue("backend")
-        _backend_name = request.getfixturevalue("backend_name")
+        try:
+            backend = request.getfixturevalue("backend")
+            _backend_name = request.getfixturevalue("backend_name")
+        except pytest.FixtureLookupError:
+            yield
+            return
         if _backend_name.lower() == "speculos":
             try:
                 backend.exchange(cla=0xB0, ins=0x57, p1=0x00, p2=0x01, data=b"")
@@ -143,8 +147,11 @@ def stack_consumption_hooks(request, get_stack_consumption: bool):
                 pytest.fail(msg)
     yield
     if get_stack_consumption:
-        backend = request.getfixturevalue("backend")
-        _backend_name = request.getfixturevalue("backend_name")
+        try:
+            backend = request.getfixturevalue("backend")
+            _backend_name = request.getfixturevalue("backend_name")
+        except pytest.FixtureLookupError:
+            return
         if _backend_name.lower() == "speculos":
             try:
                 rapdu_retrieve: RAPDU = backend.exchange(cla=0xB0,
