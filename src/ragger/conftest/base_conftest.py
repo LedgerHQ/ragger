@@ -129,34 +129,36 @@ _stack_consumption_results: dict = {}
 
 @pytest.fixture(autouse=True)
 def stack_consumption_hooks(request, get_stack_consumption: bool):
-    if get_stack_consumption:
+    # This fixture is marked `autouse=True` so that it happens automatically
+    # on tests that interact with the device. However, it should do nothing if
+    # running tests that _do not_ interact with the device.
+    # We detect that by verifying if the `backend` fixture is present.
+    if not get_stack_consumption:
+        yield
+        return
+    try:
         backend = request.getfixturevalue("backend")
         _backend_name = request.getfixturevalue("backend_name")
-        if _backend_name.lower() == "speculos":
-            try:
-                backend.exchange(cla=0xB0, ins=0x57, p1=0x00, p2=0x01, data=b"")
-            except ExceptionRAPDU as e:
-                msg = (
-                    "Stack consumption not supported: app not built with DEBUG_OS_STACK_CONSUMPTION=1"
-                    if e.status == StatusWords.SWO_INVALID_CLA else
-                    f"Unexpected SW: {e.status:04X}")
-                pytest.fail(msg)
-    yield
-    if get_stack_consumption:
-        backend = request.getfixturevalue("backend")
-        _backend_name = request.getfixturevalue("backend_name")
-        if _backend_name.lower() == "speculos":
-            try:
-                rapdu_retrieve: RAPDU = backend.exchange(cla=0xB0,
-                                                         ins=0x57,
-                                                         p1=0x01,
-                                                         p2=0x01,
-                                                         data=b"")
-                consumption = int.from_bytes(rapdu_retrieve.data, byteorder='big')
-                print(f"\n[stack consumption] {consumption} bytes.")
-                _stack_consumption_results[request.node.nodeid] = consumption
-            except ExceptionRAPDU as e:
-                pytest.fail(f"Stack consumption retrieve failed with SW: {e.status:04X}")
+    except pytest.FixtureLookupError:
+        yield
+        return
+    if _backend_name.lower() == "speculos":
+        try:
+            backend.exchange(cla=0xB0, ins=0x57, p1=0x00, p2=0x01, data=b"")
+
+            yield
+
+            rapdu_retrieve: RAPDU = backend.exchange(cla=0xB0, ins=0x57, p1=0x01, p2=0x01, data=b"")
+            consumption = int.from_bytes(rapdu_retrieve.data, byteorder='big')
+            print(f"\n[stack consumption] {consumption} bytes.")
+            _stack_consumption_results[request.node.nodeid] = consumption
+        except ExceptionRAPDU as e:
+            msg = (
+                "Stack consumption not supported: app not built with DEBUG_OS_STACK_CONSUMPTION=1"
+                if e.status == StatusWords.SWO_INVALID_CLA else f"Unexpected SW: {e.status:04X}")
+            pytest.fail(msg)
+    else:
+        yield
 
 
 def pytest_terminal_summary(terminalreporter, exitstatus, config):
