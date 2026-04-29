@@ -27,6 +27,7 @@ jobs:
       app_repository: LedgerHQ/app-boilerplate
       app_branch_name: master
       upload_app_binaries_artifact: boilerplate_binaries
+      build_comparison: true
 
   build_boilerplate_application_nanos:
     name: Build boilerplate application for Nanos S using the reusable workflow
@@ -35,6 +36,7 @@ jobs:
       app_repository: LedgerHQ/app-boilerplate
       app_branch_name: nanos_baseline
       upload_app_binaries_artifact: boilerplate_binaries_nanos
+      build_comparison: true
 
   prepare_matrix:
     name: Prepare matrix from TOML file
