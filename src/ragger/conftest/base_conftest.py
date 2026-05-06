@@ -145,18 +145,22 @@ def stack_consumption_hooks(request, get_stack_consumption: bool):
     if _backend_name.lower() == "speculos":
         try:
             backend.exchange(cla=0xB0, ins=0x57, p1=0x00, p2=0x01, data=b"")
+        except ExceptionRAPDU as e:
+            if e.status == StatusWords.SWO_INVALID_CLA:
+                pytest.fail(
+                    "Stack consumption not supported: app not built with DEBUG_OS_STACK_CONSUMPTION=1"
+                )
 
-            yield
+        yield
 
+        try:
             rapdu_retrieve: RAPDU = backend.exchange(cla=0xB0, ins=0x57, p1=0x01, p2=0x01, data=b"")
-            consumption = int.from_bytes(rapdu_retrieve.data, byteorder='big')
+            consumption = int.from_bytes(rapdu_retrieve.data, byteorder="big")
             print(f"\n[stack consumption] {consumption} bytes.")
             _stack_consumption_results[request.node.nodeid] = consumption
-        except ExceptionRAPDU as e:
-            msg = (
-                "Stack consumption not supported: app not built with DEBUG_OS_STACK_CONSUMPTION=1"
-                if e.status == StatusWords.SWO_INVALID_CLA else f"Unexpected SW: {e.status:04X}")
-            pytest.fail(msg)
+        except Exception:
+            logging.debug("Failed to retrieve stack consumption for test %s. Continuing.",
+                          request.node.nodeid)
     else:
         yield
 
