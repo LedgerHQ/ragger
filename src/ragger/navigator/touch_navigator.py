@@ -25,7 +25,11 @@ from .instruction import BaseNavInsID, NavInsID
 
 class TouchNavigator(Navigator):
 
-    def __init__(self, backend: BackendInterface, device: Device, golden_run: bool = False):
+    def __init__(self,
+                 backend: BackendInterface,
+                 device: Device,
+                 golden_run: bool = False,
+                 rm_snap: bool = False):
         if not device.touchable:
             raise ValueError(f"'{self.__class__.__name__}' only works with touchable devices")
         screen = FullScreen(backend, device)
@@ -85,4 +89,4 @@ class TouchNavigator(Navigator):
             NavInsID.USE_CASE_ADDRESS_CONFIRMATION_CONFIRM: screen.address_confirmation.confirm,
             NavInsID.USE_CASE_ADDRESS_CONFIRMATION_CANCEL: screen.address_confirmation.cancel,
         }
-        super().__init__(backend, device, callbacks, golden_run)
+        super().__init__(backend, device, callbacks, golden_run, rm_snap)
