@@ -144,7 +144,7 @@ def stack_consumption_hooks(request, get_stack_consumption: bool):
         return
     if _backend_name.lower() == "speculos":
         try:
-            backend.exchange(cla=0xB0, ins=0x57, p1=0x00, p2=0x01, data=b"")
+            backend.exchange(cla=0xB0, ins=0x57, p1=0x00, p2=0x01, data=b"\x00")
         except ExceptionRAPDU as e:
             if e.status == StatusWords.SWO_INVALID_CLA:
                 pytest.fail(
@@ -154,7 +154,7 @@ def stack_consumption_hooks(request, get_stack_consumption: bool):
         yield
 
         try:
-            rapdu_retrieve: RAPDU = backend.exchange(cla=0xB0, ins=0x57, p1=0x01, p2=0x01, data=b"")
+            rapdu_retrieve: RAPDU = backend.exchange(cla=0xB0, ins=0x57, p1=0x01, p2=0x01, data=b"\x00")
             consumption = int.from_bytes(rapdu_retrieve.data, byteorder="big")
             print(f"\n[stack consumption] {consumption} bytes.")
             _stack_consumption_results[request.node.nodeid] = consumption
