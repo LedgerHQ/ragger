@@ -139,3 +139,102 @@ class TestBaseConftest(TestCase):
             result = bc.create_backend(None, "LedgerComm", self.stax, False, False, None, self.seed,
                                        [])
             self.assertEqual(result, backend())
+
+
+class NodeMock:
+    """Mock for pytest node objects, providing a nodeid."""
+
+    def __init__(self, nodeid: str):
+        self.nodeid = nodeid
+
+
+class TestSanitizeTestName(TestCase):
+
+    def test_simple_name(self):
+        self.assertEqual(bc._sanitize_test_name("test_foo"), "test_foo")
+
+    def test_strips_device_from_params(self):
+        result = bc._sanitize_test_name("test_foo[nanox]")
+        self.assertEqual(result, "test_foo")
+
+    def test_keeps_non_device_params(self):
+        result = bc._sanitize_test_name("test_foo[swap_valid_1-nanox]")
+        self.assertEqual(result, "test_foo_swap_valid_1")
+
+    def test_multiple_params_strips_device(self):
+        result = bc._sanitize_test_name("test_foo[SubCommand.SWAP-True-nanos]")
+        self.assertEqual(result, "test_foo_SubCommand.SWAP_True")
+
+    def test_special_chars_replaced(self):
+        result = bc._sanitize_test_name("test_foo[a/b:c'd e]")
+        self.assertEqual(result, "test_foo_a_b_cd_e")
+
+    def test_truncation_at_100_chars(self):
+        long_name = "test_" + "a" * 200
+        result = bc._sanitize_test_name(long_name)
+        self.assertEqual(len(result), 100)
+
+    def test_only_device_param(self):
+        result = bc._sanitize_test_name("test_quit_app[stax]")
+        self.assertEqual(result, "test_quit_app")
+
+
+class TestComputeApduLogPath(TestCase):
+
+    def setUp(self):
+        self.root = Path("/tmp/project")
+        self.nanox = Devices.get_by_type(DeviceType.NANOX)
+        self.stax = Devices.get_by_type(DeviceType.STAX)
+
+    def test_simple_function(self):
+        node = NodeMock("tests/test_foo.py::test_bar[nanox]")
+        result = bc.compute_apdu_log_path(self.root, self.nanox, node)
+        self.assertEqual(result,
+                         self.root / "apdu_logs" / "nanox" / "tests" / "test_foo" / "test_bar.apdus")
+
+    def test_with_class(self):
+        node = NodeMock("tests/test_bitcoin.py::TestsBitcoin::test_bitcoin[swap_valid_1-nanox]")
+        result = bc.compute_apdu_log_path(self.root, self.nanox, node)
+        self.assertEqual(
+            result,
+            self.root / "apdu_logs" / "nanox" / "tests" / "test_bitcoin" / "TestsBitcoin" /
+            "test_bitcoin_swap_valid_1.apdus")
+
+    def test_no_params(self):
+        node = NodeMock("test_simple.py::test_no_param")
+        result = bc.compute_apdu_log_path(self.root, self.stax, node)
+        self.assertEqual(result,
+                         self.root / "apdu_logs" / "stax" / "test_simple" / "test_no_param.apdus")
+
+    def test_parametrized_no_collision(self):
+        """Two parametrized tests with different params must produce different paths."""
+        node_a = NodeMock("tests/test_flow.py::test_order[SubCommand.SWAP-True-nanox]")
+        node_b = NodeMock("tests/test_flow.py::test_order[SubCommand.SWAP-False-nanox]")
+        path_a = bc.compute_apdu_log_path(self.root, self.nanox, node_a)
+        path_b = bc.compute_apdu_log_path(self.root, self.nanox, node_b)
+        self.assertNotEqual(path_a, path_b)
+        self.assertIn("SubCommand.SWAP_True", str(path_a))
+        self.assertIn("SubCommand.SWAP_False", str(path_b))
+
+    def test_device_no_collision(self):
+        """Same test on different devices must produce different paths."""
+        node = NodeMock("tests/test_foo.py::test_bar[nanox]")
+        path_nanox = bc.compute_apdu_log_path(self.root, self.nanox, node)
+
+        node_stax = NodeMock("tests/test_foo.py::test_bar[stax]")
+        path_stax = bc.compute_apdu_log_path(self.root, self.stax, node_stax)
+
+        self.assertNotEqual(path_nanox, path_stax)
+        self.assertIn("nanox", str(path_nanox))
+        self.assertIn("stax", str(path_stax))
+        # The filename part should be identical — only the device directory differs
+        self.assertEqual(path_nanox.name, path_stax.name)
+
+    def test_nested_module_path(self):
+        node = NodeMock("tests/functional/backend/test_deep.py::test_func[nanos]")
+        nanos = Devices.get_by_type(DeviceType.NANOS)
+        result = bc.compute_apdu_log_path(self.root, nanos, node)
+        self.assertEqual(
+            result,
+            self.root / "apdu_logs" / "nanos" / "tests" / "functional" / "backend" / "test_deep" /
+            "test_func.apdus")

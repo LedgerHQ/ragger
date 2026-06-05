@@ -480,12 +480,24 @@ will store the captured snapshots, with the ``--golden_run`` CLI argument.
 This is convenient to automatically generate stock of :term:`golden snapshots
 <Golden snapshot>`.
 
-Recording the APDUs (``--log_apdu_file``)
-'''''''''''''''''''''''''''''''''''''''''
+Recording the APDUs (``--log_apdu_file`` / ``--log_apdus``)
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 It can be useful to record all the APDU transmitted between the client and the
-application during a test. the ``--log_apdu_file`` allows to specify a file
-path in which every :term:`APDU` and :term:`RAPDU` will be recorded.
+application during a test.
+
+``--log_apdu_file`` allows to specify a file path in which every :term:`APDU`
+and :term:`RAPDU` will be recorded.
+
+``--log_apdus`` enables automatic per-test APDU recording, creating one log
+file per test under a structured directory:
+
+.. code-block:: text
+
+  apdu_logs/<device>/<module_path>/<test_name>.apdus
+
+For example, running ``pytest --device nanox --log_apdus tests/`` would
+create files like ``apdu_logs/nanox/tests/test_first/test_communicate.apdus``.
 
 
 Fixtures and decorators
@@ -537,6 +549,7 @@ fixture, and used into any test:
 - ``--display`` is reachable with the ``display`` fixture,
 - ``--golden_run`` is reachable with the ``golden_run`` fixture,
 - ``--log_apdu_file`` is reachable with the ``log_apdu_file`` fixture,
+- ``--log_apdus`` enables per-test APDU logging (see above),
 - ``--seed`` is reachable with the ``backend_cli_user_seed`` fixture,
 
 ``--device`` is not immediately reachable through a fixture, but it can be found

@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.46.0] - 2026-06-05
+
+### Changed
+
+- New `--log_apdus` option: creates per-test `.apdus` files under `apdu_logs/<device>/<module>/<test_name>.apdus`
+- Fixed file descriptor leak in APDU logger when rotating log files
+
 ## [1.45.3] - 2026-05-11
 
 ### Fixed

@@ -11,7 +11,7 @@ from unittest.mock import MagicMock
 
 from ragger.backend import BackendInterface, SpeculosBackend, LedgerCommBackend, LedgerWalletBackend
 from ragger.firmware import Firmware
-from ragger.logger import init_loggers, standalone_conf_logger
+from ragger.logger import init_loggers, standalone_conf_logger, set_apdu_logger_file, get_apdu_logger
 from ragger.navigator import Navigator, NanoNavigator, TouchNavigator, NavigateWithScenario
 from ragger.utils import find_project_root_dir, find_library_application, find_application
 from ragger.utils.misc import get_current_app_name_and_version, exit_current_app, open_app_from_dashboard
@@ -49,6 +49,10 @@ def pytest_addoption(parser):
                      nargs="?",
                      const="apdu.log",
                      help="Log the APDU in a file. If no pattern provided, uses 'apdu_xxx.log'.")
+    parser.addoption("--log_apdus",
+                     action="store_true",
+                     default=False,
+                     help="Log all APDU exchanges to per-test files under apdu_logs/<device>/")
     parser.addoption("--seed", action="store", default=None, help="Set a custom seed")
     parser.addoption("--ignore-missing-binaries",
                      action="store_true",
@@ -204,35 +208,69 @@ def default_screenshot_path(root_pytest_dir: Path) -> Path:
     return root_pytest_dir
 
 
-@pytest.fixture(scope=conf.OPTIONAL.BACKEND_SCOPE)
-def full_test_name(request) -> str:
-    # Get the name of current pytest test
-    test_name = request.node.name
+def _sanitize_test_name(test_name: str) -> str:
+    """Sanitize a test function name (with params) for use as a filename.
 
+    Strips device names from parameters, replaces special characters,
+    and truncates to a safe length.
+    """
     if '[' in test_name:
-        # Split all parameters
         base_name, params = test_name.rsplit('[', 1)
         params = params.rstrip(']')
-
-        # Split parameters by '-' and filter out device names
         param_list = [p for p in params.split('-') if p not in DEVICES]
-
-        # Rebuild test name with remaining parameters
         if param_list:
             test_name = f"{base_name}[{'-'.join(param_list)}]"
         else:
             test_name = base_name
 
-    # Clean up for filename friendliness by replacing special characters with underscores
     translation_table = str.maketrans({
         '[': '_',
         ']': '',
         '-': '_',
         '/': '_',
         "'": '',
+        ' ': '_',
+        ':': '_',
     })
     clean_name = test_name.translate(translation_table)
-    return clean_name
+
+    MAX_TEST_NAME_LENGTH = 100
+    return clean_name[:MAX_TEST_NAME_LENGTH]
+
+
+def compute_apdu_log_path(root_dir: Path, device: Device, node) -> Path:
+    """Compute the APDU log file path for a given test node.
+
+    Structure: root_dir / apdu_logs / <device> / <module_path> / [<class> /] <test_name>.apdus
+    """
+
+    # e.g. "tests/functional/test_boilerplate.py::TestClass::test_func[param-nanox]"
+    nodeid = node.nodeid
+    # ["tests/functional/test_boilerplate.py", "TestClass", "test_func[param-nanox]"]
+    parts = nodeid.split("::")
+
+    # First part is the file path (relative to rootdir)
+    file_part = parts[0]
+    # Strip .py extension to use as directory
+    if file_part.endswith(".py"):
+        file_part = file_part[:-3]
+
+    # Last part is the test function name (with parameters)
+    func_name = parts[-1]
+    sanitized_func = _sanitize_test_name(func_name)
+
+    # Middle parts are class names (if any)
+    class_parts = parts[1:-1]
+
+    base = root_dir / "apdu_logs" / device.name / file_part
+    if class_parts:
+        base = base / Path(*class_parts)
+    return base / f"{sanitized_func}.apdus"
+
+
+@pytest.fixture(scope=conf.OPTIONAL.BACKEND_SCOPE)
+def full_test_name(request) -> str:
+    return _sanitize_test_name(request.node.name)
 
 
 @pytest.fixture
@@ -469,6 +507,35 @@ def backend(skip_tests_for_unsupported_devices, root_pytest_dir: Path, backend_n
             open_app_from_dashboard(b, requested_app)
             b.handle_usb_reset()
         yield b
+
+
+@pytest.fixture(autouse=True)
+def _rotate_apdu_log(request, pytestconfig, root_pytest_dir: Path):
+    """Per-test APDU log file rotation.
+
+    When --log_apdus is enabled, each test gets its own .apdus file under
+    apdu_logs/<device>/<module_path>/[<class>/]<test_name>.apdus
+    """
+    if not pytestconfig.getoption("log_apdus"):
+        yield
+        return
+
+    try:
+        device = request.getfixturevalue("device")
+    except pytest.FixtureLookupError:
+        yield
+        return
+
+    log_path = compute_apdu_log_path(root_pytest_dir, device, request.node)
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    set_apdu_logger_file(log_path)
+    yield
+    # Explicitly close the file handler after the test
+    apdu_logger = get_apdu_logger()
+    for handler in list(apdu_logger.handlers):
+        if isinstance(handler, logging.FileHandler):
+            handler.close()
+            apdu_logger.removeHandler(handler)
 
 
 @pytest.fixture(scope=conf.OPTIONAL.BACKEND_SCOPE)

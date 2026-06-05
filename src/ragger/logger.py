@@ -64,9 +64,10 @@ def standalone_conf_logger():
 def set_apdu_logger_file(log_apdu_file: Path):
     apdu_logger = get_apdu_logger()
 
-    # Only one file handler supported
-    for handler in apdu_logger.handlers:
+    # Close and remove any existing file handler (only one supported)
+    for handler in list(apdu_logger.handlers):
         if isinstance(handler, logging.FileHandler):
+            handler.close()
             apdu_logger.removeHandler(handler)
 
     apdu_handler = logging.FileHandler(filename=log_apdu_file, mode='w', delay=True)
