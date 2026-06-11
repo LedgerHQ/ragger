@@ -24,6 +24,9 @@ BACKENDS = ["speculos", "ledgercomm", "ledgerwallet"]
 
 DEVICES = [device.name for device in Devices()] + ["all", "all_nano", "all_eink"]
 
+# Directory (under the pytest root) where QEMU coverage traces are written.
+COVERAGE_TRACE_ROOT = ".ragger_coverage"
+
 
 def pytest_addoption(parser):
     parser.addoption("--device", choices=DEVICES, required=True)
@@ -67,6 +70,25 @@ def pytest_addoption(parser):
                      default="default",
                      help="Specify the setup fixture (e.g., 'prod_build')",
                      choices=allowed_setups)
+    parser.addoption("--coverage",
+                     action="store_true",
+                     default=False,
+                     help="Trace the app inside Speculos/QEMU and, at the end of the session, "
+                     "emit an lcov firmware coverage file (speculos backend only). The app must "
+                     "be built with debug symbols.")
+    parser.addoption("--coverage_output",
+                     action="store",
+                     default="coverage.info",
+                     help="Output lcov file for --coverage (default: 'coverage.info'). With "
+                     "several devices, one file per device is written as '<stem>-<device>.info'. "
+                     "An HTML report ('<stem>_html/') is also rendered if 'genhtml' is installed.")
+    parser.addoption("--coverage_exclude",
+                     action="append",
+                     default=None,
+                     help="Exclude matching source paths (repo-relative) from --coverage, e.g. a "
+                     "vendored submodule '--coverage_exclude ethereum-plugin-sdk'. Repeatable, and "
+                     "each value may be a comma-separated list. Patterns match a path, a leading "
+                     "directory of it, or an fnmatch glob.")
 
 
 @pytest.fixture(scope="session")
@@ -166,18 +188,43 @@ def stack_consumption_hooks(request, get_stack_consumption: bool):
 
 
 def pytest_terminal_summary(terminalreporter, exitstatus, config):
-    if not _stack_consumption_results:
-        return
-    terminalreporter.write_sep("=", "stack consumption summary")
-    for test_name, consumption in sorted(_stack_consumption_results.items()):
-        terminalreporter.write_line(f"  {consumption:>8} bytes  {test_name}")
-    worst_test, worst_value = max(_stack_consumption_results.items(), key=lambda x: x[1])
-    terminalreporter.write_sep("-", f"worst case: {worst_value} bytes  ({worst_test})")
+    if _stack_consumption_results:
+        terminalreporter.write_sep("=", "stack consumption summary")
+        for test_name, consumption in sorted(_stack_consumption_results.items()):
+            terminalreporter.write_line(f"  {consumption:>8} bytes  {test_name}")
+        worst_test, worst_value = max(_stack_consumption_results.items(), key=lambda x: x[1])
+        terminalreporter.write_sep("-", f"worst case: {worst_value} bytes  ({worst_test})")
+
+    if config.getoption("coverage"):
+        from ragger.utils import coverage
+        project_root = find_project_root_dir(Path(config.rootpath).resolve())
+        output = Path(config.getoption("coverage_output"))
+        if not output.is_absolute():
+            output = Path(config.invocation_params.dir) / output
+        # Flatten the repeatable option and allow comma-separated values.
+        exclude = [
+            pat for opt in (config.getoption("coverage_exclude") or []) for pat in opt.split(",")
+        ]
+        results = coverage.finalize(project_root, output, exclude=exclude)
+        terminalreporter.write_sep("=", "firmware coverage")
+        if not results:
+            terminalreporter.write_line("  no coverage produced (see warnings above)")
+        for device, files, cov, total, out, html in results:
+            pct = 100.0 * cov / total if total else 0.0
+            terminalreporter.write_line(
+                f"  {device}: {cov}/{total} lines ({pct:.1f}%), {files} files -> {out}")
+            if html is not None:
+                terminalreporter.write_line(f"  {' ' * len(device)}  HTML: {html}")
 
 
 @pytest.fixture(scope="session")
 def pki_prod(pytestconfig):
     return pytestconfig.getoption("pki_prod")
+
+
+@pytest.fixture(scope="session")
+def coverage_enabled(pytestconfig):
+    return pytestconfig.getoption("coverage")
 
 
 @pytest.fixture(scope="session")
@@ -414,7 +461,8 @@ def create_backend(root_pytest_dir: Path,
                    cli_user_seed: str,
                    additional_speculos_arguments: List[str],
                    verbose_speculos: bool = False,
-                   ignore_missing_binaries: bool = False) -> BackendInterface:
+                   ignore_missing_binaries: bool = False,
+                   coverage_trace_dir: Optional[Path] = None) -> BackendInterface:
     if backend_name.lower() == "ledgercomm":
         return LedgerCommBackend(device=device,
                                  interface="hid",
@@ -431,6 +479,7 @@ def create_backend(root_pytest_dir: Path,
         return SpeculosBackend(main_app_path,
                                device=device,
                                log_apdu_file=log_apdu_file,
+                               coverage_trace_dir=coverage_trace_dir,
                                **speculos_args)
     else:
         raise ValueError(f"Backend '{backend_name}' is unknown. Valid backends are: {BACKENDS}")
@@ -443,15 +492,19 @@ def create_backend(root_pytest_dir: Path,
 def backend(skip_tests_for_unsupported_devices, root_pytest_dir: Path, backend_name: str,
             device: Device, display: bool, pki_prod: bool, log_apdu_file: Optional[Path],
             cli_user_seed: str, additional_speculos_arguments: List[str], verbose_speculos: bool,
-            ignore_missing_binaries: bool) -> Generator[BackendInterface, None, None]:
+            ignore_missing_binaries: bool,
+            coverage_enabled: bool) -> Generator[BackendInterface, None, None]:
     # to separate the test name and its following logs
     print("")
+    coverage_trace_dir = None
+    if coverage_enabled:
+        coverage_trace_dir = root_pytest_dir / COVERAGE_TRACE_ROOT / device.name
     backend_instance = None
     try:
         backend_instance = create_backend(root_pytest_dir, backend_name, device, display, pki_prod,
                                           log_apdu_file, cli_user_seed,
                                           additional_speculos_arguments, verbose_speculos,
-                                          ignore_missing_binaries)
+                                          ignore_missing_binaries, coverage_trace_dir)
     except MissingElfError as e:
         pytest.fail(f"Missing ELF: {e}")
 
@@ -573,6 +626,15 @@ def pytest_configure(config):
     )
 
     _setup_log_level(config)
+
+
+def pytest_sessionstart(session):
+    # Start each coverage run from a clean trace directory so stale traces from
+    # a previous run are not mixed in.
+    if session.config.getoption("coverage"):
+        import shutil
+        trace_root = Path(session.config.rootpath).resolve() / COVERAGE_TRACE_ROOT
+        shutil.rmtree(trace_root, ignore_errors=True)
 
 
 # TODO: forward robust log level instead of boolean to Speculos

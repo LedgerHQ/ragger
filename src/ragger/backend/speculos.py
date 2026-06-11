@@ -81,8 +81,14 @@ class SpeculosBackend(BackendInterface):
                  application: Path,
                  device: Device,
                  log_apdu_file: Optional[Path] = None,
+                 coverage_trace_dir: Optional[Path] = None,
                  **kwargs):
         super().__init__(device=device, log_apdu_file=log_apdu_file)
+        # ELF and trace directory used for firmware C coverage (see
+        # ragger.utils.coverage). Coverage is off unless a trace dir is given.
+        self._application = Path(application)
+        self._coverage_trace_dir = coverage_trace_dir
+        self._coverage_device_name = device.name
         # crafting Speculos arguments
         args = ["--model", device.name]
         speculos_args: List = kwargs.get(self._ARGS_KEY, list())
@@ -177,6 +183,11 @@ class SpeculosBackend(BackendInterface):
 
     def __enter__(self) -> "SpeculosBackend":
         self.logger.info(f"Starting {self.__class__.__name__} stream")
+        # Enable QEMU tracing before Speculos spawns it: the env vars are
+        # inherited by the QEMU process (Speculos uses Popen without env).
+        if self._coverage_trace_dir is not None:
+            from ragger.utils import coverage
+            coverage.enable(self._coverage_device_name, self._application, self._coverage_trace_dir)
         self._client.__enter__()
 
         # Wait until some text is displayed on the screen.

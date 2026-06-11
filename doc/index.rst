@@ -16,6 +16,7 @@ to develop complex behaviors on devices.
    rationale
    tutorial
    architecture
+   coverage
    source
    faq
    glossary
