@@ -123,3 +123,9 @@ Interface and instructions
 +++++++++++++++++++++
 
 .. autofunction:: ragger.utils.misc.app_path_from_app_name
+
+``ragger.utils.coverage``
++++++++++++++++++++++++++
+
+.. automodule:: ragger.utils.coverage
+   :members: enable, to_lcov, to_html, finalize
