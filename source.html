@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Code documentation &mdash; Ragger 1.45.4.dev2 documentation</title>
+  <title>Code documentation &mdash; Ragger 1.45.4.dev4 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
@@ -30,7 +30,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Frequently Asked Questions" href="faq.html" />
-    <link rel="prev" title="Architecture" href="architecture.html" />
+    <link rel="prev" title="Functional test coverage" href="coverage.html" />
     <link href="_static/layout.css" rel="stylesheet" type="text/css">
 
 </head>
@@ -63,6 +63,7 @@
 <li class="toctree-l1"><a class="reference internal" href="rationale.html">Rationale</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coverage.html">Functional test coverage</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Code documentation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#ragger-backend"><code class="docutils literal notranslate"><span class="pre">ragger.backend</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#ragger-backend-interface"><code class="docutils literal notranslate"><span class="pre">ragger.backend.interface</span></code></a><ul>
@@ -113,6 +114,13 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#ragger-utils-misc"><code class="docutils literal notranslate"><span class="pre">ragger.utils.misc</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-ragger.utils.coverage"><code class="docutils literal notranslate"><span class="pre">ragger.utils.coverage</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ragger.utils.coverage.enable"><code class="docutils literal notranslate"><span class="pre">enable()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragger.utils.coverage.finalize"><code class="docutils literal notranslate"><span class="pre">finalize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragger.utils.coverage.to_html"><code class="docutils literal notranslate"><span class="pre">to_html()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ragger.utils.coverage.to_lcov"><code class="docutils literal notranslate"><span class="pre">to_lcov()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -186,6 +194,7 @@
 <ul>
 <li><p><a class="reference internal" href="#ragger-utils-structs" id="id17"><code class="docutils literal notranslate"><span class="pre">ragger.utils.structs</span></code></a></p></li>
 <li><p><a class="reference internal" href="#ragger-utils-misc" id="id18"><code class="docutils literal notranslate"><span class="pre">ragger.utils.misc</span></code></a></p></li>
+<li><p><a class="reference internal" href="#module-ragger.utils.coverage" id="id19"><code class="docutils literal notranslate"><span class="pre">ragger.utils.coverage</span></code></a></p></li>
 </ul>
 </li>
 </ul>
@@ -362,6 +371,52 @@ the two last bytes)</p></li>
 <div class="section" id="ragger-utils-misc">
 <h3><code class="docutils literal notranslate"><span class="pre">ragger.utils.misc</span></code><a class="headerlink" href="#ragger-utils-misc" title="Permalink to this heading"></a></h3>
 </div>
+<div class="section" id="module-ragger.utils.coverage">
+<span id="ragger-utils-coverage"></span><h3><code class="docutils literal notranslate"><span class="pre">ragger.utils.coverage</span></code><a class="headerlink" href="#module-ragger.utils.coverage" title="Permalink to this heading"></a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="ragger.utils.coverage.enable">
+<span class="sig-prename descclassname"><span class="pre">ragger.utils.coverage.</span></span><span class="sig-name descname"><span class="pre">enable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trace_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ragger.utils.coverage.enable" title="Permalink to this definition"></a></dt>
+<dd><p>Turn on QEMU <code class="docutils literal notranslate"><span class="pre">in_asm</span></code> tracing for the upcoming Speculos launches.</p>
+<p>Sets the <code class="docutils literal notranslate"><span class="pre">QEMU_LOG*</span></code> environment variables (inherited by the QEMU process
+Speculos spawns) and registers the (elf, trace_dir) couple for this device
+so the traces can be converted at the end of the session. <code class="docutils literal notranslate"><span class="pre">%d</span></code> in the
+filename is expanded by QEMU to the process pid: the backend is usually
+class-scoped, so several QEMU instances run and each must write its own file.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ragger.utils.coverage.finalize">
+<span class="sig-prename descclassname"><span class="pre">ragger.utils.coverage.</span></span><span class="sig-name descname"><span class="pre">finalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project_root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">readelf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'readelf'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Path</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#ragger.utils.coverage.finalize" title="Permalink to this definition"></a></dt>
+<dd><p>Convert every registered device’s traces into an lcov file.</p>
+<p>For a single device, writes <code class="docutils literal notranslate"><span class="pre">output</span></code>. For several devices, writes one file
+per device next to <code class="docutils literal notranslate"><span class="pre">output</span></code> (<code class="docutils literal notranslate"><span class="pre">&lt;stem&gt;-&lt;device&gt;&lt;suffix&gt;</span></code>). An HTML report is
+rendered next to each <code class="docutils literal notranslate"><span class="pre">.info</span></code> (<code class="docutils literal notranslate"><span class="pre">&lt;stem&gt;_html/</span></code>) whenever <code class="docutils literal notranslate"><span class="pre">genhtml</span></code> is
+available; otherwise only the lcov file is produced. <code class="docutils literal notranslate"><span class="pre">exclude</span></code> removes
+matching repo-relative source paths (e.g. vendored submodules). Returns the
+per-device results (rendering of the human-readable summary is left to the
+caller).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ragger.utils.coverage.to_html">
+<span class="sig-prename descclassname"><span class="pre">ragger.utils.coverage.</span></span><span class="sig-name descname"><span class="pre">to_html</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">html_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project_root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#ragger.utils.coverage.to_html" title="Permalink to this definition"></a></dt>
+<dd><p>Render an lcov <code class="docutils literal notranslate"><span class="pre">.info</span></code> into an HTML report with <code class="docutils literal notranslate"><span class="pre">genhtml</span></code>.</p>
+<p>Run from <code class="docutils literal notranslate"><span class="pre">project_root</span></code> so the repo-relative <code class="docutils literal notranslate"><span class="pre">SF:</span></code> paths resolve to their
+sources. Returns the report’s <code class="docutils literal notranslate"><span class="pre">index.html</span></code> on success, or None (with a
+warning) if <code class="docutils literal notranslate"><span class="pre">genhtml</span></code> is unavailable or failed.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ragger.utils.coverage.to_lcov">
+<span class="sig-prename descclassname"><span class="pre">ragger.utils.coverage.</span></span><span class="sig-name descname"><span class="pre">to_lcov</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trace_files</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project_root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">readelf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'readelf'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_base</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1073741824</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#ragger.utils.coverage.to_lcov" title="Permalink to this definition"></a></dt>
+<dd><p>Convert in_asm traces into an lcov tracefile.</p>
+<p><code class="docutils literal notranslate"><span class="pre">exclude</span></code> is an optional list of patterns (see <code class="xref py py-func docutils literal notranslate"><span class="pre">_excluded()</span></code>) removing
+matching repo-relative source paths, e.g. vendored submodules.</p>
+<p>Returns (files, covered_lines, instrumented_lines). Raises ValueError if the
+ELF has no DWARF line info, or if no app code was executed.</p>
+</dd></dl>
+
+</div>
 </div>
 </div>
 
@@ -369,7 +424,7 @@ the two last bytes)</p></li>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="architecture.html" class="btn btn-neutral float-left" title="Architecture" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="coverage.html" class="btn btn-neutral float-left" title="Functional test coverage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="faq.html" class="btn btn-neutral float-right" title="Frequently Asked Questions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

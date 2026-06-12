@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Functional test coverage &mdash; Ragger 1.45.4.dev4 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+      <link rel="stylesheet" type="text/css" href="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.min.css" />
+      <link rel="stylesheet" type="text/css" href="_static/sphinxcontrib-images/LightBox2/lightbox2-customize/pointer.css" />
+
+  
+    <link rel="shortcut icon" href="_static/ragger.png"/>
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/clipboard.min.js"></script>
+        <script src="_static/copybutton.js"></script>
+        <script src="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+        <script src="_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Code documentation" href="source.html" />
+    <link rel="prev" title="Architecture" href="architecture.html" />
+    <link href="_static/layout.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Ragger
+          </a>
+              <div class="version">
+                1.45
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">How is this doc structured:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rationale.html">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Functional test coverage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#why-not-gcov">Why not gcov?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-it-works">How it works</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#limitations">Limitations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="source.html">Code documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">Frequently Asked Questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ragger</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Functional test coverage</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/coverage.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="functional-test-coverage">
+<span id="coverage"></span><h1>Functional test coverage<a class="headerlink" href="#functional-test-coverage" title="Permalink to this heading"></a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">Ragger</span></code> can measure the <strong>C code coverage of the firmware</strong> exercised by the
+functional tests, through the <code class="docutils literal notranslate"><span class="pre">--coverage</span></code> option. This complements the unit
+tests: it tells which lines of the application sources are actually reached when
+running the <a class="reference internal" href="glossary.html#term-Speculos"><span class="xref std std-term">Speculos</span></a>-based functional suite.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Coverage is only available on the <a class="reference internal" href="glossary.html#term-Speculos"><span class="xref std std-term">Speculos</span></a> backend (the application
+runs as ARM code inside an emulator, which is what makes the measurement
+possible). The application must be built <strong>with debug symbols</strong>: a default
+build keeps them, a stripped/release build does not.</p>
+</div>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># whole suite, single device -&gt; coverage.info (+ coverage_html/ if genhtml is installed)</span>
+pytest<span class="w"> </span>--device<span class="w"> </span>flex<span class="w"> </span>--coverage
+
+<span class="c1"># custom output path</span>
+pytest<span class="w"> </span>--device<span class="w"> </span>flex<span class="w"> </span>--coverage<span class="w"> </span>--coverage_output<span class="w"> </span>cov.info
+
+<span class="c1"># several devices -&gt; one file per device: coverage-&lt;device&gt;.info</span>
+pytest<span class="w"> </span>--device<span class="w"> </span>all<span class="w"> </span>--coverage
+</pre></div>
+</div>
+<p>The options added by the plugin are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--coverage</span></code>: enable tracing and produce the lcov file(s) at the end of the
+session.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--coverage_output</span></code> (default <code class="docutils literal notranslate"><span class="pre">coverage.info</span></code>): the output lcov path. With
+several devices, one file per device is written as <code class="docutils literal notranslate"><span class="pre">&lt;stem&gt;-&lt;device&gt;.info</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--coverage_exclude</span></code>: exclude matching source paths (repo-relative) from the
+report, typically a vendored submodule. Repeatable, and each value may be a
+comma-separated list; a pattern matches a path, a leading directory of it, or
+an fnmatch glob. Example: <code class="docutils literal notranslate"><span class="pre">--coverage_exclude</span> <span class="pre">my-vendored-submodule</span></code>.</p></li>
+</ul>
+<p>An HTML report (<code class="docutils literal notranslate"><span class="pre">&lt;stem&gt;_html/</span></code>) is rendered next to each lcov file when
+<code class="docutils literal notranslate"><span class="pre">genhtml</span></code> (from the <code class="docutils literal notranslate"><span class="pre">lcov</span></code> package) is available; otherwise only the lcov
+file is produced.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>SDK/toolchain files (under <code class="docutils literal notranslate"><span class="pre">/opt</span></code>, <code class="docutils literal notranslate"><span class="pre">/usr</span></code> …) are already dropped
+automatically because only sources found under the project root are kept.
+<code class="docutils literal notranslate"><span class="pre">--coverage_exclude</span></code> is meant for sources that <em>are</em> in the repository but
+should not be reported, such as a vendored git submodule.</p>
+</div>
+</div>
+<div class="section" id="why-not-gcov">
+<h2>Why not gcov?<a class="headerlink" href="#why-not-gcov" title="Permalink to this heading"></a></h2>
+<p>The usual C coverage flow relies on <strong>gcov</strong>: the application is compiled with
+<code class="docutils literal notranslate"><span class="pre">-fprofile-arcs</span> <span class="pre">-ftest-coverage</span></code>, which produces <code class="docutils literal notranslate"><span class="pre">.gcno</span></code> files (the
+build-time call graph) ; at runtime <code class="docutils literal notranslate"><span class="pre">libgcov</span></code> writes <code class="docutils literal notranslate"><span class="pre">.gcda</span></code> files (the
+execution counters) when the process exits.</p>
+<p>That flow <strong>cannot</strong> work on a Ledger application:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">libgcov</span></code> is not linked into the firmware,</p></li>
+<li><p>the application never performs a normal libc <code class="docutils literal notranslate"><span class="pre">exit()</span></code> under BOLOS/Speculos,</p></li>
+</ul>
+<p>so <strong>no</strong> <code class="docutils literal notranslate"><span class="pre">.gcda</span></code> is ever produced. <code class="docutils literal notranslate"><span class="pre">Ragger</span></code> therefore does <strong>not</strong> use gcov
+at all (the build is not instrumented). Instead, coverage is reconstructed at
+the <strong>emulator</strong> level, and the gcov building blocks are replaced by equivalents
+that are available without instrumentation:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>gcov</p></th>
+<th class="head"><p>Ragger’s approach</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">.gcno</span></code> (build-time address → line map)</p></td>
+<td><p>the <strong>DWARF line table</strong> (<code class="docutils literal notranslate"><span class="pre">.debug_line</span></code>), already present in the ELF</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">.gcda</span></code> (runtime counters)</p></td>
+<td><p>the <strong>QEMU</strong> <code class="docutils literal notranslate"><span class="pre">in_asm</span></code> <strong>trace</strong> (which blocks actually ran)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gcov</span></code> merge</p></td>
+<td><p>intersecting the executed address ranges with the line table</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="how-it-works">
+<h2>How it works<a class="headerlink" href="#how-it-works" title="Permalink to this heading"></a></h2>
+<p><a class="reference internal" href="glossary.html#term-Speculos"><span class="xref std std-term">Speculos</span></a> runs the ARM application through <code class="docutils literal notranslate"><span class="pre">qemu-arm-static</span></code>. The
+coverage pipeline is:</p>
+<ol class="arabic simple">
+<li><p><strong>Tracing.</strong> QEMU honours the <code class="docutils literal notranslate"><span class="pre">QEMU_LOG=in_asm</span></code> / <code class="docutils literal notranslate"><span class="pre">QEMU_LOG_FILENAME</span></code>
+environment variables. With <code class="docutils literal notranslate"><span class="pre">in_asm</span></code>, QEMU logs the guest assembly of every
+<em>translated</em> basic block. A block is translated the first time it is reached,
+so “translated” == “executed at least once” == line coverage. (<code class="docutils literal notranslate"><span class="pre">exec,nochain</span></code>
+would log every execution – orders of magnitude bigger – and is not needed.)
+Enabling this requires no change to Speculos or QEMU: Speculos spawns QEMU
+with <code class="docutils literal notranslate"><span class="pre">Popen</span></code> without an explicit <code class="docutils literal notranslate"><span class="pre">env</span></code>, so the variables set in
+<code class="docutils literal notranslate"><span class="pre">os.environ</span></code> are inherited. One trace file per QEMU process is written
+(<code class="docutils literal notranslate"><span class="pre">cov-&lt;pid&gt;.log</span></code>): the backend is usually class-scoped, so several QEMU
+instances run during a session and each must write its own file.</p></li>
+<li><p><strong>Rebasing.</strong> Ledger applications are PIC: linked high (e.g. <code class="docutils literal notranslate"><span class="pre">0xc0de0000</span></code>)
+but loaded and executed by Speculos at a fixed base (<code class="docutils literal notranslate"><span class="pre">0x40000000</span></code> for every
+Cortex-M target). The executed block addresses are rebased back to link
+addresses.</p></li>
+<li><p><strong>Mapping.</strong> The rebased ranges are intersected with the DWARF line table of
+the ELF to determine which source lines were covered.</p></li>
+<li><p><strong>Output.</strong> A standard lcov <code class="docutils literal notranslate"><span class="pre">.info</span></code> tracefile is emitted (uploadable to
+Codecov, renderable with <code class="docutils literal notranslate"><span class="pre">genhtml</span></code>). Source paths are made repo-relative by
+stripping the longest prefix that still resolves to a file under the project
+root, which drops toolchain/SDK files (<code class="docutils literal notranslate"><span class="pre">/opt</span></code>, <code class="docutils literal notranslate"><span class="pre">/usr</span></code> …).</p></li>
+</ol>
+<p>The implementation lives in <a class="reference internal" href="source.html#module-ragger.utils.coverage" title="ragger.utils.coverage"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ragger.utils.coverage</span></code></a>; the wiring (option,
+per-device trace directory, end-of-session conversion) is in the <code class="docutils literal notranslate"><span class="pre">Ragger</span></code>
+<code class="docutils literal notranslate"><span class="pre">conftest</span></code> and the <code class="xref py py-class docutils literal notranslate"><span class="pre">SpeculosBackend</span></code>.</p>
+</div>
+<div class="section" id="limitations">
+<h2>Limitations<a class="headerlink" href="#limitations" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Line/block coverage only – no branch coverage.</strong> We only know that a block
+ran, not which side of a conditional was taken. Each covered line is reported
+with a hit count of 1 (presence/absence, not an execution frequency).</p></li>
+<li><p>The application ELF must keep its <code class="docutils literal notranslate"><span class="pre">.debug_*</span></code> sections (<code class="docutils literal notranslate"><span class="pre">-g</span></code>).</p></li>
+<li><p>Attribution is done on the optimized build (<code class="docutils literal notranslate"><span class="pre">-Os</span></code>), so the line mapping is as
+approximate as for any optimized-build coverage (inlining, shared lines).</p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="architecture.html" class="btn btn-neutral float-left" title="Architecture" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="source.html" class="btn btn-neutral float-right" title="Code documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, bow.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
