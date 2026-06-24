@@ -6,6 +6,16 @@ Code documentation
   :backlinks: none
 
 
+``ragger.address_book``
+-----------------------
+
+Generic helper for the SDK Address Book feature: each sub-command serializes
+itself into a TLV payload and builds its own APDUs via ``get_chunks()``.
+
+.. automodule:: ragger.address_book.address_book
+   :members:
+   :show-inheritance:
+
 ``ragger.backend``
 ------------------
 
