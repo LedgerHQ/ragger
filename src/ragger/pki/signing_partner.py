@@ -39,6 +39,9 @@ class CertificatePubKeyUsage(IntEnum):
     SWAP_TEMPLATE = 0x0d
     SAFE_ACCOUNT = 0x0e
     GATING = 0x0f
+    LKRP_TOPIC = 0x10
+    PERPS_DATA = 0x11
+    TOKEN_MULTIPLIER = 0x12
 
 
 class SigningPartner:
