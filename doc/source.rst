@@ -111,6 +111,38 @@ Interface and instructions
    :members:
    :undoc-members:
 
+``ragger.tlv``
+--------------
+
+Generic TLV serialization primitives and the Trust Services tag/enum registry.
+
+``ragger.tlv.serializable``
++++++++++++++++++++++++++++
+
+.. automodule:: ragger.tlv.serializable
+   :members:
+
+``ragger.tlv.common_tags``
+++++++++++++++++++++++++++
+
+.. automodule:: ragger.tlv.common_tags
+   :members:
+   :undoc-members:
+
+``ragger.tlv.feature_tags``
++++++++++++++++++++++++++++
+
+.. automodule:: ragger.tlv.feature_tags
+   :members:
+   :undoc-members:
+
+``ragger.tlv.enums``
+++++++++++++++++++++
+
+.. automodule:: ragger.tlv.enums
+   :members:
+   :undoc-members:
+
 ``ragger.utils``
 ----------------
 
