@@ -6,6 +6,16 @@ Code documentation
   :backlinks: none
 
 
+``ragger.address_book``
+-----------------------
+
+Generic helper for the SDK Address Book feature: each sub-command serializes
+itself into a TLV payload and builds its own APDUs via ``get_chunks()``.
+
+.. automodule:: ragger.address_book.address_book
+   :members:
+   :show-inheritance:
+
 ``ragger.backend``
 ------------------
 
@@ -108,6 +118,38 @@ Interface and instructions
 ++++++++++++++++++++++++++
 
 .. automodule:: ragger.navigator.navigator
+   :members:
+   :undoc-members:
+
+``ragger.tlv``
+--------------
+
+Generic TLV serialization primitives and the Trust Services tag/enum registry.
+
+``ragger.tlv.serializable``
++++++++++++++++++++++++++++
+
+.. automodule:: ragger.tlv.serializable
+   :members:
+
+``ragger.tlv.common_tags``
+++++++++++++++++++++++++++
+
+.. automodule:: ragger.tlv.common_tags
+   :members:
+   :undoc-members:
+
+``ragger.tlv.feature_tags``
++++++++++++++++++++++++++++
+
+.. automodule:: ragger.tlv.feature_tags
+   :members:
+   :undoc-members:
+
+``ragger.tlv.enums``
+++++++++++++++++++++
+
+.. automodule:: ragger.tlv.enums
    :members:
    :undoc-members:
 

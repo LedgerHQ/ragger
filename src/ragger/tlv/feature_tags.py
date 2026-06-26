@@ -1,0 +1,219 @@
+"""
+   Copyright 2026 Ledger SAS
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+   Feature-specific TLV field tags (Trust Services spec).
+
+   Each structure type owns its own tag namespace. Tags are globally unique
+   ACROSS features, EXCEPT where a feature deliberately reuses a common tag
+   or where a feature splits into several
+   sub-structures that reuse IDs internally. The latter is why Perps
+   is modelled as several enums rather than one: ASSET_ID is 0xd1 in most
+   sub-structures but 0xe1 in the Order / UpdateIsolatedMargin tables.
+"""
+from enum import IntEnum
+
+
+class TrustedNameFieldTag(IntEnum):
+    """Trusted domain name specific fields."""
+    TRUSTED_NAME_TYPE = 0x70
+    TRUSTED_NAME_SOURCE = 0x71
+    TRUSTED_NAME_NFT_ID = 0x72
+    TRUSTED_NAME_SOURCE_CONTRACT = 0x73
+    TRUSTED_NAME_OWNER = 0x74
+    TRUSTED_NAME_OWNER_DERIVATION_PATH = 0x75
+
+
+class EvmFunctionFieldTag(IntEnum):
+    """EVM function info / plugin descriptor specific fields."""
+    EVM_FUNCTION_SELECTOR = 0x40
+    IMPLEMENTATION_ADDRESSES = 0x41
+    DELEGATION_TYPE = 0x42
+
+
+class CoinInfoFieldTag(IntEnum):
+    """Coin info / dynamic network specific fields."""
+    COIN_CONFIG = 0x50
+    BLOCKCHAIN_FAMILY = 0x51
+    NETWORK_NAME = 0x52
+    NETWORK_ICON_HASH = 0x53
+
+
+class SeedIdLkrpFieldTag(IntEnum):
+    """SeedID / LKRP specific fields."""
+    PROTOCOL_VERSION = 0x60
+    ADDRESS_SIGNATURE = 0x61
+    TOPIC_PARENT = 0x62
+    TOPIC_DICTIONARY = 0x63
+    TOPIC_CONTROL_DISPLAY = 0x64
+    TOPIC_NEW_AUTHORITY = 0x65
+    STEP_TYPE = 0x66
+    STEP_COUNT = 0x67
+    DISPLAY = 0x68
+    DERIVATION_PATH = 0x69
+    MEMBER = 0x6a
+    TOPIC_HASH = 0x6b
+    DISPLAYED_STEP_COUNT = 0x6c
+    MEMBER_COUNT = 0x6d
+
+
+class TxSimulationFieldTag(IntEnum):
+    """TX Simulation specific fields."""
+    NORMALIZED_RISK = 0x80
+    NORMALIZED_CATEGORY = 0x81
+    PROVIDER_MESSAGE = 0x82
+    TINY_URL = 0x83
+    SIMULATION_TYPE = 0x84
+
+
+class SwapTemplateFieldTag(IntEnum):
+    """Solana swap template specific fields."""
+    TEMPLATE_ID = 0x90
+    PROGRAM_ID = 0x91
+    DISCRIMINATOR = 0x92
+    AMOUNT_SIZE = 0x93
+    AMOUNT_OFFSET = 0x94
+    AMOUNT_RULES = 0x95
+    ASSET_ACCOUNT_INDEX = 0x96
+    ASSET_ATA_INDEX = 0x97
+    RECIPIENT_ACCOUNT_INDEX = 0x98
+    RECIPIENT_ATA_INDEX = 0x99
+
+
+class LesMultisigFieldTag(IntEnum):
+    """LES Multisig specific fields."""
+    THRESHOLD = 0xa0
+    SIGNERS_COUNT = 0xa1
+    ROLE = 0xa2
+
+
+class AleoFieldTag(IntEnum):
+    """Aleo application specific fields."""
+    MAX_BASE_FEE = 0xb0
+    MAX_PRIORITY_FEE = 0xb1
+    FEE_FUNCTION_NAME = 0xb2
+    FEE_PROGRAM_ID = 0xb3
+    REQUEST = 0xb4
+    PROGRAM_ID = 0xb5
+    FUNCTION_NAME = 0xb6
+    INPUT_COUNT = 0xb7
+    INPUT_VALUES = 0xb8
+    INPUT_TYPES = 0xb9
+    NESTED_CALL_COUNT = 0xba
+    RECORD_COMMITMENTS_COUNT = 0xbc
+    RECORD_COMMITMENT = 0xbd
+    TVK = 0xbf
+    TPK = 0xc0
+    GAMMAS_COUNT = 0xc1
+    GAMMAS = 0xc2
+    NETWORK_ID = 0xc3
+    PROGRAM_CHECKSUM = 0xc4
+    R_HINT = 0xc5
+
+
+# --- Perps (HyperLiquid) specific fields -------------------------
+# Split into one enum per sub-structure: the action sub-structures reuse tag
+# IDs (ASSET_ID is 0xd1 in most tables but 0xe1 in Order / UpdateIsolatedMargin,
+# LEVERAGE is 0xd5 in the context but 0xed in the leverage action, ...), so a
+# single flat enum is impossible.
+
+
+class PerpsContextFieldTag(IntEnum):
+    """Perps context descriptor."""
+    ACTION_TYPE = 0xd0
+    ASSET_ID = 0xd1
+    NETWORK_TYPE = 0xd2
+    BUILDER_ADDRESS = 0xd3
+    MARGIN = 0xd4
+    LEVERAGE = 0xd5
+
+
+class PerpsActionFieldTag(IntEnum):
+    """Perps action wrapper."""
+    ACTION_TYPE = 0xd0
+    NONCE = 0xda
+    ACTION_STRUCTURE = 0xdb
+
+
+class PerpsCreateOrderFieldTag(IntEnum):
+    """Perps create_order action structure."""
+    ORDER = 0xdd
+    GROUPING = 0xea
+    BUILDER = 0xeb
+    BUILDER_ADDRESS = 0xd3
+    BUILDER_FEE = 0xec
+
+
+class PerpsUpdateOrderFieldTag(IntEnum):
+    """Perps update_order action structure."""
+    UPDATE_ORDER = 0xd8
+    ORDER = 0xdd
+    ORDER_ID = 0xdc
+
+
+class PerpsCancelOrderFieldTag(IntEnum):
+    """Perps cancel_order action structure."""
+    CANCEL_ORDER = 0xd9
+    ASSET_ID = 0xd1
+    ORDER_ID = 0xdc
+
+
+class PerpsLeverageFieldTag(IntEnum):
+    """Perps leverage action structure."""
+    ASSET_ID = 0xd1
+    IS_CROSS = 0xde
+    LEVERAGE = 0xed
+
+
+class PerpsOrderFieldTag(IntEnum):
+    """Perps Order structure, incl. its ORDER_DETAIL tags.
+
+    NB: here ASSET_ID is 0xe1 (vs 0xd1 in the other sub-structures).
+    """
+    ORDER_TYPE = 0xe0
+    ASSET_ID = 0xe1
+    IS_BUY = 0xe2
+    PRICE = 0xe3
+    SIZE = 0xe4
+    REDUCE_ONLY = 0xe5
+    ORDER_DETAIL = 0xd7
+    TIF = 0xe6
+    TRIGGER_MARKET = 0xe7
+    TRIGGER_PRICE = 0xe8
+    TRIGGER_TYPE = 0xe9
+
+
+class PerpsApprovalBuilderFeeFieldTag(IntEnum):
+    """Perps ApprovalBuilderFee action structure."""
+    MAX_BASE_FEE = 0xb0
+    BUILDER_ADDRESS = 0xd3
+
+
+class PerpsUpdateIsolatedMarginFieldTag(IntEnum):
+    """Perps UpdateIsolatedMargin action structure."""
+    ASSET_ID = 0xe1
+    IS_BUY = 0xe2
+    NTLI = 0xd6
+
+
+class AddressBookFieldTag(IntEnum):
+    """Address Book specific fields ."""
+    CONTACT_NAME = 0xf0
+    SCOPE = 0xf1
+    ACCOUNT_IDENTIFIER = 0xf2
+    PREVIOUS_CONTACT_NAME = 0xf3
+    PREVIOUS_IDENTIFIER = 0xf4
+    PREVIOUS_SCOPE = 0xf5
+    GROUP_HANDLE = 0xf6
+    HMAC_REST = 0xf7

@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.47.0] - 2026-06-24
+
+### Added
+
+- Adding a new generic TLV module (`ragger.tlv`)
+- Adding a new generic Address Book module (`ragger.address_book`)
+
 ## [1.46.0] - 2026-06-11
 
 ### Added
@@ -22,7 +29,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - `--get-stack-consumption` : fixing case where test does not interact with device
-
 
 ## [1.45.1] - 2026-04-27
 
@@ -156,7 +162,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Enable to use both MAIN_APP_DIR and SIDELOADED_APPS options (required to perform Swap tests)
-
 
 ## [1.35.0] - 2025-05-14
 
@@ -392,7 +397,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.16.0] - 2024-03-27
 
-### Added:
+### Added
 - conftest: Integrating Rust application binary paths
 
 ### Changed
@@ -450,38 +455,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.12.0] - 2023-10-20
 
-### Added:
+### Added
 - conftest: Add support for plugin testing
 
 ## [1.11.5] - 2023-09-27
 
-### Changed:
+### Changed
 - backend/speculos - navigator: Allow navigation screen content comparison with regex.
 
 ## [1.11.4] - 2023-07-31
 
-### Changed:
+### Changed
 - Requirements: Fail due to missing pytesseract only if really needed.
 
 ## [1.11.3] - 2023-07-31
 
-### Changed:
+### Changed
 - CI: Remove CI job dependency to allow deployment if wanted
 - Dependency: Update needed Speculos version
 
 ## [1.11.2] - 2023-07-31
 
-### Changed:
+### Changed
 - firmware:use_case: Increase confirm time to 2.4 sec following SDK change
 
 ## [1.11.1] - 2023-07-19
 
-### Fixed:
+### Fixed
 - base conftest : hotfix option "all_nano"
 
 ## [1.11.0] - 2023-07-19
 
-### Added:
+### Added
 - base conftest : add an "all_nano" option for the device parameter
 
 ## [1.10.2] - 2023-07-07
@@ -595,20 +600,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dependency: Use speculos>=0.1.224 to avoid issues when running in slow setup.
 
 ### Fixed
- - backend: speculos.py: Strip empty text events from Speculos. This avoid false detection of screen change in navigation.
+- backend: speculos.py: Strip empty text events from Speculos. This avoid false detection of screen change in navigation.
 
 ## [1.5.0] - 2023-02-17
 
 ### Added
- - conftest: new module that provides a base_conftest for unifying conftest features
+- conftest: new module that provides a base_conftest for unifying conftest features
 
 ### Changed
- - tests: the existing tests now use the new conftest module
- - CI: the CI now uses the reusable workflows for boilerplate compilation
+- tests: the existing tests now use the new conftest module
+- CI: the CI now uses the reusable workflows for boilerplate compilation
 
 ### Fixed
- - tests: all tests are passing for Stax
- - misspelling fixes and new CI
+- tests: all tests are passing for Stax
+- misspelling fixes and new CI
 
 ## [1.4.0] - 2023-02-09
 
@@ -667,7 +672,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - navigator: Improve navigation by waiting screen changes instead of hardcoded sleeps
 - navigator: `navigate_and_compare()`: add optional snap_start_idx parameter
 - navigator: `navigate_until_text()`: take a list of validation instructions and check last screen
-
 
 ## [1.0.0] - 2022-12-26
 
