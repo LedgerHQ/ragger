@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Clone
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
     - run: pip install flake8 flake8-pyproject
     - name: Flake8 lint Python code
       run: flake8 src/
@@ -29,7 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Clone
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
     - run: pip install yapf toml
     - name: Yapf source formatting
       run: |
@@ -42,7 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Clone
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
     - run: pip install mypy types-toml
     - name: Mypy type checking
       run: mypy src
@@ -52,20 +52,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Clone
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
     - run: pip install bandit
     - name: Bandit security checking
       run: bandit -r src -ll
 
   misspell:
     name: Check misspellings
-    runs-on: ubuntu-latest
-    steps:
-    - name: Clone
-      uses: actions/checkout@v4
-    - name: Check misspellings
-      uses: codespell-project/actions-codespell@v2
-      with:
-        builtin: clear,rare
-        check_filenames: true
-        ignore_words_list: assertIn,crate,
+    uses: LedgerHQ/ledger-app-workflows/.github/workflows/reusable_spell_check.yml@v1
+    with:
+      ignore_words_list: assertIn,crate,
