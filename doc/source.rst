@@ -121,6 +121,19 @@ Interface and instructions
    :members:
    :undoc-members:
 
+``ragger.pki``
+--------------
+
+Helper to sign payloads and onboard a PKI certificate on a device, acting as a
+Trust Services signing partner.
+
+.. autoclass:: ragger.pki.SigningPartner
+   :members:
+
+.. autoclass:: ragger.pki.CertificatePubKeyUsage
+   :members:
+   :undoc-members:
+
 ``ragger.tlv``
 --------------
 
