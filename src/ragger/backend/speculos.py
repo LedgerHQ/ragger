@@ -190,18 +190,31 @@ class SpeculosBackend(BackendInterface):
             coverage.enable(self._coverage_device_name, self._application, self._coverage_trace_dir)
         self._client.__enter__()
 
-        # Wait until some text is displayed on the screen.
+        # Wait until the app has rendered its first screen.
+        #
+        # Primary check: OCR-based text events (works when speculos can
+        # identify characters from the rendered bitmaps).
+        #
+        # Fallback check: screenshot comparison.  Some SDK versions (e.g.
+        # API_LEVEL >= 26) copy font bitmaps to a RAM buffer before drawing,
+        # which breaks the speculos launcher's pointer-based character lookup.
+        # In that case no text events are produced, but the screenshot is
+        # still correctly rendered.  Comparing consecutive screenshots lets
+        # us detect that the app has started without relying on OCR.
         start = time()
-        while not self._retrieve_client_screen_content()["events"]:
-            # Send a ticker event and let the app process it
+        initial_screenshot = self._client.get_screenshot()
+        while True:
+            if self._retrieve_client_screen_content()["events"]:
+                break
+            screenshot = self._client.get_screenshot()
+            if screenshot != initial_screenshot:
+                break
             sleep(0.1)
             if (time() - start > 20.0):
                 raise TimeoutError(
                     "Timeout waiting for screen content upon Ragger Speculos Instance start")
 
         self._last_screenshot = BytesIO(self._client.get_screenshot())
-
-        # Save current screenshot as _home_screenshot.
         self._home_screenshot = self._last_screenshot
 
         return self
