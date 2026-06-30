@@ -7,6 +7,7 @@ class BaseNavInsID(Enum):
     Base NavInsID class, allowing to define NavInsID specific to one's application
     while being compatible with all Navigator methods.
     """
+
     pass
 
 
@@ -14,6 +15,7 @@ class NavInsID(BaseNavInsID):
     """
     Pre-defined instruction ID to navigate into a device UI.
     """
+
     WAIT = auto()
 
     # Navigation instructions that embedded a call to
@@ -82,7 +84,6 @@ class NavInsID(BaseNavInsID):
 
 
 class NavIns:
-
     def __init__(self, id: BaseNavInsID, args=(), kwargs: Dict[str, Any] = {}):
         self.id = id
         self.args = args

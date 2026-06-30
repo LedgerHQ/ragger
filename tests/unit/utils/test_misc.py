@@ -11,11 +11,10 @@ from ..helpers import temporary_directory
 
 
 class TestMisc(TestCase):
-
     def test_find_application_ok_c(self):
         device, sdk = "device", "sdk"
         with temporary_directory() as dir_path:
-            tmp_dir = (dir_path / "build" / device / "bin")
+            tmp_dir = dir_path / "build" / device / "bin"
             tmp_dir.mkdir(parents=True, exist_ok=True)
             expected = tmp_dir / "app.elf"
             expected.touch()
@@ -28,7 +27,7 @@ class TestMisc(TestCase):
             cmd = ["cargo", "new", appname]
             subprocess.check_output(cmd, cwd=dir_path)
             app_path = dir_path / appname
-            tmp_dir = (app_path / "target" / device / "release")
+            tmp_dir = app_path / "target" / device / "release"
             tmp_dir.mkdir(parents=True, exist_ok=True)
             expected = tmp_dir / appname
             expected.touch()
@@ -44,7 +43,7 @@ class TestMisc(TestCase):
     def test_find_application_nok_not_file(self):
         device, sdk = "device", "sdk"
         with temporary_directory() as dir_path:
-            tmp_dir = (dir_path / "build" / device / "bin")
+            tmp_dir = dir_path / "build" / device / "bin"
             tmp_dir.mkdir(parents=True, exist_ok=True)
             expected = tmp_dir / "app.elf"
             with self.assertRaises(MissingElfError) as error:
@@ -60,7 +59,8 @@ class TestMisc(TestCase):
             os.mkdir(nested_dir)
             self.assertEqual(
                 Path(dir_path).resolve(),
-                Path(misc.find_project_root_dir(nested_dir)).resolve())
+                Path(misc.find_project_root_dir(nested_dir)).resolve(),
+            )
 
     def test_find_project_root_dir_nok(self):
         with temporary_directory() as dir_path:
@@ -85,8 +85,16 @@ class TestMisc(TestCase):
         ticker = "ticker"  # size 6
         name = "name"  # size 4
         subconfig = ("subconfig", 13)  # size 9 + 1
-        expected = b"\x06" + ticker.encode() + b"\x04" + name.encode() + b"\x0b" \
-            + b"\x09" + subconfig[0].encode() + subconfig[1].to_bytes(1, byteorder="big")
+        expected = (
+            b"\x06"
+            + ticker.encode()
+            + b"\x04"
+            + name.encode()
+            + b"\x0b"
+            + b"\x09"
+            + subconfig[0].encode()
+            + subconfig[1].to_bytes(1, byteorder="big")
+        )
         self.assertEqual(expected, misc.create_currency_config(ticker, name, subconfig))
 
     def test_split_message(self):
@@ -101,10 +109,14 @@ class TestMisc(TestCase):
         # <l1v name>
         # <l1v version>
         # <l1v flags>
-        backend.exchange().data = bytes.fromhex("01") \
-            + len(name.encode()).to_bytes(1, "big") + name.encode() \
-            + len(version.encode()).to_bytes(1, "big") + version.encode() \
+        backend.exchange().data = (
+            bytes.fromhex("01")
+            + len(name.encode()).to_bytes(1, "big")
+            + name.encode()
+            + len(version.encode()).to_bytes(1, "big")
+            + version.encode()
             + bytes.fromhex("0112")
+        )
         result_name, result_version = misc.get_current_app_name_and_version(backend)
         self.assertEqual(name, result_name)
         self.assertEqual(version, result_version)

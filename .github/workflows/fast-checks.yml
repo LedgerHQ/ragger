@@ -14,50 +14,16 @@ concurrency:
 
 
 jobs:
-  lint:
-    name: Linting
-    runs-on: ubuntu-latest
-    steps:
-    - name: Clone
-      uses: actions/checkout@v7
-    - run: pip install flake8 flake8-pyproject
-    - name: Flake8 lint Python code
-      run: flake8 src/
+  python_checks:
+    name: Python checks
+    uses: LedgerHQ/ledger-app-workflows/.github/workflows/reusable_python_checks.yml@v1
+    with:
+      run_type_check: true
+      run_security_check: true
+      src_directory: "src"
+      bandit_severity_level: "medium"
 
-  yapf:
-    name: Formatting
-    runs-on: ubuntu-latest
-    steps:
-    - name: Clone
-      uses: actions/checkout@v7
-    - run: pip install yapf toml
-    - name: Yapf source formatting
-      run: |
-        yapf src/ --recursive -d
-        yapf tests/ --recursive -d
-        yapf template/ --recursive -d
-
-  mypy:
-    name: Type checking
-    runs-on: ubuntu-latest
-    steps:
-    - name: Clone
-      uses: actions/checkout@v7
-    - run: pip install mypy types-toml
-    - name: Mypy type checking
-      run: mypy src
-
-  bandit:
-    name: Security checking
-    runs-on: ubuntu-latest
-    steps:
-    - name: Clone
-      uses: actions/checkout@v7
-    - run: pip install bandit
-    - name: Bandit security checking
-      run: bandit -r src -ll
-
-  misspell:
+  mispell:
     name: Check misspellings
     uses: LedgerHQ/ledger-app-workflows/.github/workflows/reusable_spell_check.yml@v1
     with:

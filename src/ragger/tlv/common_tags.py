@@ -1,28 +1,29 @@
 """
-   Copyright 2026 Ledger SAS
+Copyright 2026 Ledger SAS
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
-   Common TLV field tags shared by Ledger "Nano certificates and descriptors".
+Common TLV field tags shared by Ledger "Nano certificates and descriptors".
 
-   Source of truth:
-   https://ledgerhq.atlassian.net/wiki/spaces/TrustServices/pages/3843719348/LNS+Arch+Common+Fields+for+Nano+certificates+and+descriptors
+Source of truth:
+https://ledgerhq.atlassian.net/wiki/spaces/TrustServices/pages/3843719348/LNS+Arch+Common+Fields+for+Nano+certificates+and+descriptors
 
-   IMPORTANT - this enum is intentionally limited to the *globally unique* tags.
-   The TLV tag space is NOT a single flat namespace: several feature contexts
-   reuse the same tag IDs with a different meaning.
-   Those MUST stay in their own per-context enum and must NOT be merged here.
+IMPORTANT - this enum is intentionally limited to the *globally unique* tags.
+The TLV tag space is NOT a single flat namespace: several feature contexts
+reuse the same tag IDs with a different meaning.
+Those MUST stay in their own per-context enum and must NOT be merged here.
 """
+
 from enum import IntEnum
 
 

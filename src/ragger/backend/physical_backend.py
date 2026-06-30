@@ -1,18 +1,19 @@
 """
-   Copyright 2022 Ledger SAS
+Copyright 2022 Ledger SAS
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 """
+
 from ledgered.devices import Device
 from pathlib import Path
 from types import TracebackType
@@ -26,16 +27,19 @@ from .interface import BackendInterface
 
 
 class PhysicalBackend(BackendInterface):
-
     def __init__(self, device: Device, *args, with_gui: bool = False, **kwargs):
         super().__init__(device, *args, **kwargs)
-        self._ui: Optional[RaggerGUI] = RaggerGUI(device=device.name) if with_gui else None
+        self._ui: Optional[RaggerGUI] = (
+            RaggerGUI(device=device.name) if with_gui else None
+        )
         self._last_valid_snap_path: Optional[Path] = None
 
-    def __exit__(self,
-                 exc_type: Optional[Type[BaseException]] = None,
-                 exc_val: Optional[BaseException] = None,
-                 exc_tb: Optional[TracebackType] = None):
+    def __exit__(
+        self,
+        exc_type: Optional[Type[BaseException]] = None,
+        exc_val: Optional[BaseException] = None,
+        exc_tb: Optional[TracebackType] = None,
+    ):
         if self._ui is not None:
             self._ui.kill()
 
@@ -43,8 +47,9 @@ class PhysicalBackend(BackendInterface):
         """
         Initialize the GUI if needed.
         """
-        assert self._ui is not None, \
+        assert self._ui is not None, (
             "This method should only be called if the backend manages an GUI"
+        )
         if not self._ui.is_alive():
             self._ui.start()
 
@@ -72,21 +77,21 @@ class PhysicalBackend(BackendInterface):
         self.init_gui()
         self._ui.ask_for_touch_action(x, y)
 
-    def finger_swipe(self,
-                     x: int = 0,
-                     y: int = 0,
-                     direction: str = "left",
-                     delay: float = 0.5) -> None:
+    def finger_swipe(
+        self, x: int = 0, y: int = 0, direction: str = "left", delay: float = 0.5
+    ) -> None:
         if self._ui is None:
             return
         self.init_gui()
         self._ui.ask_for_swipe_action(x, y, direction)
 
-    def compare_screen_with_snapshot(self,
-                                     golden_snap_path: Path,
-                                     crop: Optional[Crop] = None,
-                                     tmp_snap_path: Optional[Path] = None,
-                                     golden_run: bool = False) -> bool:
+    def compare_screen_with_snapshot(
+        self,
+        golden_snap_path: Path,
+        crop: Optional[Crop] = None,
+        tmp_snap_path: Optional[Path] = None,
+        golden_run: bool = False,
+    ) -> bool:
 
         # If the file has no size, it's because we are within a NamedTemporaryFile
         # We do nothing and return False to exit the while loop of
@@ -118,7 +123,8 @@ class PhysicalBackend(BackendInterface):
         except ImportError as error:
             raise ImportError(
                 "This feature needs at least one physical backend. "
-                "Please install ragger[ledgercomm] or ragger[ledgerwallet]") from error
+                "Please install ragger[ledgercomm] or ragger[ledgerwallet]"
+            ) from error
 
         if self._ui is None:
             return True

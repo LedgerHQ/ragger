@@ -1,18 +1,19 @@
 """
-   Copyright 2023 Ledger SAS
+Copyright 2023 Ledger SAS
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 """
+
 from contextlib import contextmanager
 from pathlib import Path
 from types import TracebackType
@@ -35,8 +36,12 @@ class StubBackend(BackendInterface):
     def __enter__(self):
         pass
 
-    def __exit__(self, exc_type: Optional[Type[BaseException]], exc_val: Optional[BaseException],
-                 exc_tb: Optional[TracebackType]):
+    def __exit__(
+        self,
+        exc_type: Optional[Type[BaseException]],
+        exc_val: Optional[BaseException],
+        exc_tb: Optional[TracebackType],
+    ):
         pass
 
     def handle_usb_reset(self) -> None:
@@ -67,18 +72,18 @@ class StubBackend(BackendInterface):
     def finger_touch(self, x: int = 0, y: int = 0, delay: float = 0.5) -> None:
         pass
 
-    def finger_swipe(self,
-                     x: int = 0,
-                     y: int = 0,
-                     direction: str = "left",
-                     delay: float = 0.5) -> None:
+    def finger_swipe(
+        self, x: int = 0, y: int = 0, direction: str = "left", delay: float = 0.5
+    ) -> None:
         pass
 
-    def compare_screen_with_snapshot(self,
-                                     golden_snap_path: Path,
-                                     crop: Optional[Crop] = None,
-                                     tmp_snap_path: Optional[Path] = None,
-                                     golden_run: bool = False) -> bool:
+    def compare_screen_with_snapshot(
+        self,
+        golden_snap_path: Path,
+        crop: Optional[Crop] = None,
+        tmp_snap_path: Optional[Path] = None,
+        golden_run: bool = False,
+    ) -> bool:
         return True
 
     def wait_for_home_screen(self, timeout: float = 10.0) -> None:

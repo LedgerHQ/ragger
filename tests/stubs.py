@@ -22,17 +22,18 @@ class EndPoint:
 
 class Events:
     back = [{"text": "Back", "x": 51, "y": 19}]
-    info = [{
-        "text": "Boilerplate App",
-        "x": 20,
-        "y": 3
-    }, {
-        "text": "(c) 2020 Ledger",
-        "x": 26,
-        "y": 17
-    }]
-    home = [{"text": "Boilerplate", "x": 41, "y": 3}, {"text": "is ready", "x": 41, "y": 17}]
-    version = [{"text": "Version", "x": 43, "y": 3}, {"text": "1.0.1", "x": 52, "y": 17}]
+    info = [
+        {"text": "Boilerplate App", "x": 20, "y": 3},
+        {"text": "(c) 2020 Ledger", "x": 26, "y": 17},
+    ]
+    home = [
+        {"text": "Boilerplate", "x": 41, "y": 3},
+        {"text": "is ready", "x": 41, "y": 17},
+    ]
+    version = [
+        {"text": "Version", "x": 43, "y": 3},
+        {"text": "1.0.1", "x": 52, "y": 17},
+    ]
     about = [{"text": "About", "x": 47, "y": 19}]
     indexed = [home, version, about, info, back]
 
@@ -52,7 +53,6 @@ def apdu(*args):
 
 
 class Actions:
-
     def __init__(self):
         self.idx = 0
 
@@ -84,8 +84,11 @@ class Actions:
         return {"events": Events.indexed[self.idx]}, 200
 
     def screenshot(self, *args):
-        path = Path(
-            __file__).parent.resolve() / "snapshots/nanos/generic" / f"{str(self.idx).zfill(5)}.png"
+        path = (
+            Path(__file__).parent.resolve()
+            / "snapshots/nanos/generic"
+            / f"{str(self.idx).zfill(5)}.png"
+        )
         img_temp = Image.open(path)
         iobytes = BytesIO()
         img_temp.save(iobytes, format="PNG")
@@ -96,18 +99,27 @@ class Actions:
 
 
 class SpeculosServerStub:
-
     def __init__(self):
         actions = Actions()
-        self.app = Flask('stub')
+        self.app = Flask("stub")
         self.app.add_url_rule("/", view_func=root)
         self.app.add_url_rule("/apdu", methods=["GET", "POST"], view_func=apdu)
-        self.app.add_url_rule("/button/right", methods=["GET", "POST"], view_func=actions.button)
-        self.app.add_url_rule("/button/left", methods=["GET", "POST"], view_func=actions.button)
-        self.app.add_url_rule("/button/both", methods=["GET", "POST"], view_func=actions.button)
+        self.app.add_url_rule(
+            "/button/right", methods=["GET", "POST"], view_func=actions.button
+        )
+        self.app.add_url_rule(
+            "/button/left", methods=["GET", "POST"], view_func=actions.button
+        )
+        self.app.add_url_rule(
+            "/button/both", methods=["GET", "POST"], view_func=actions.button
+        )
         self.app.add_url_rule("/events", view_func=actions.events)
-        self.app.add_url_rule("/screenshot", methods=["GET"], view_func=actions.screenshot)
-        self.app.add_url_rule("/ticker", methods=["GET", "POST"], view_func=actions.ticker)
+        self.app.add_url_rule(
+            "/screenshot", methods=["GET"], view_func=actions.screenshot
+        )
+        self.app.add_url_rule(
+            "/ticker", methods=["GET", "POST"], view_func=actions.ticker
+        )
         self.process = None
 
     def __enter__(self):

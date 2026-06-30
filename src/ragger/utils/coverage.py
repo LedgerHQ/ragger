@@ -1,18 +1,19 @@
 """
-   Copyright 2022 Ledger SAS
+Copyright 2022 Ledger SAS
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 """
+
 # Firmware C code coverage for Speculos-based functional tests.
 #
 # The application under test is the real ARM firmware, run by Speculos through
@@ -98,7 +99,9 @@ def _text_range(readelf: str, elf: Path) -> Tuple[int, int]:
     raise ValueError(f"no .text section found in {elf}")
 
 
-def _parse_traces(trace_files: List[Path], lo: int, hi: int, delta: int) -> List[Tuple[int, int]]:
+def _parse_traces(
+    trace_files: List[Path], lo: int, hi: int, delta: int
+) -> List[Tuple[int, int]]:
     """Parse in_asm traces -> sorted executed link-address ranges (deduped).
 
     ``lo``/``hi`` bound the app .text in *runtime* addresses; ``delta`` rebases a
@@ -126,7 +129,9 @@ def _parse_traces(trace_files: List[Path], lo: int, hi: int, delta: int) -> List
     return sorted(ranges)
 
 
-def _line_table(readelf: str, elf: Path, vlo: int, vhi: int) -> List[Tuple[int, str, int]]:
+def _line_table(
+    readelf: str, elf: Path, vlo: int, vhi: int
+) -> List[Tuple[int, str, int]]:
     """DWARF line table -> sorted (addr, source_path, line) statements in range."""
     out = _run([readelf, "--debug-dump=decodedline", str(elf)])
     entries: List[Tuple[int, str, int]] = []
@@ -147,8 +152,9 @@ def _line_table(readelf: str, elf: Path, vlo: int, vhi: int) -> List[Tuple[int, 
     return entries
 
 
-def _repo_relative(source_path: str, project_root: Path,
-                   cache: Dict[str, Optional[str]]) -> Optional[str]:
+def _repo_relative(
+    source_path: str, project_root: Path, cache: Dict[str, Optional[str]]
+) -> Optional[str]:
     """Map a DWARF source path to a path relative to ``project_root``.
 
     Generic and toolchain-agnostic: strip the longest leading prefix such that
@@ -196,13 +202,15 @@ def _excluded(rel: str, patterns: List[str]) -> bool:
     return False
 
 
-def to_lcov(elf: Path,
-            trace_files: List[Path],
-            output: Path,
-            project_root: Path,
-            readelf: str = "readelf",
-            load_base: int = LOAD_BASE,
-            exclude: Optional[List[str]] = None) -> Tuple[int, int, int]:
+def to_lcov(
+    elf: Path,
+    trace_files: List[Path],
+    output: Path,
+    project_root: Path,
+    readelf: str = "readelf",
+    load_base: int = LOAD_BASE,
+    exclude: Optional[List[str]] = None,
+) -> Tuple[int, int, int]:
     """Convert in_asm traces into an lcov tracefile.
 
     ``exclude`` is an optional list of patterns (see :func:`_excluded`) removing
@@ -218,11 +226,15 @@ def to_lcov(elf: Path,
     entries = _line_table(readelf, elf, tvma, tvma + tsize)
 
     if not entries:
-        raise ValueError(f"no DWARF line info in {elf}; build with debug symbols "
-                         "(a default build keeps them, a stripped build does not)")
+        raise ValueError(
+            f"no DWARF line info in {elf}; build with debug symbols "
+            "(a default build keeps them, a stripped build does not)"
+        )
     if not exec_ranges:
-        raise ValueError(f"no app code executed in [{load_base:#x}, "
-                         f"{load_base + tsize:#x}); check traces and load base")
+        raise ValueError(
+            f"no app code executed in [{load_base:#x}, "
+            f"{load_base + tsize:#x}); check traces and load base"
+        )
 
     starts = [r[0] for r in exec_ranges]
     hits: Dict[str, Dict[int, int]] = defaultdict(lambda: defaultdict(int))
@@ -268,22 +280,30 @@ def to_html(info: Path, html_dir: Path, project_root: Path) -> Optional[Path]:
     warning) if ``genhtml`` is unavailable or failed.
     """
     if shutil.which("genhtml") is None:
-        logger.warning("[coverage] genhtml not found, skipping HTML report "
-                       "(install the 'lcov' package)")
+        logger.warning(
+            "[coverage] genhtml not found, skipping HTML report "
+            "(install the 'lcov' package)"
+        )
         return None
     html_dir.mkdir(parents=True, exist_ok=True)
     try:
         # `source`: some sources may be absent; `unmapped`: recent genhtml is
         # strict about line-table entries it cannot map on an optimized build.
-        subprocess.run([
-            "genhtml", "--quiet", "--ignore-errors", "source,unmapped",
-            str(info), "-o",
-            str(html_dir)
-        ],
-                       cwd=project_root,
-                       check=True,
-                       capture_output=True,
-                       text=True)
+        subprocess.run(
+            [
+                "genhtml",
+                "--quiet",
+                "--ignore-errors",
+                "source,unmapped",
+                str(info),
+                "-o",
+                str(html_dir),
+            ],
+            cwd=project_root,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
     except subprocess.CalledProcessError as exc:
         logger.error("[coverage] genhtml failed: %s", exc)
         return None
@@ -295,10 +315,12 @@ def to_html(info: Path, html_dir: Path, project_root: Path) -> Optional[Path]:
 Result = Tuple[str, int, int, int, Path, Optional[Path]]
 
 
-def finalize(project_root: Path,
-             output: Path,
-             readelf: str = "readelf",
-             exclude: Optional[List[str]] = None) -> List[Result]:
+def finalize(
+    project_root: Path,
+    output: Path,
+    readelf: str = "readelf",
+    exclude: Optional[List[str]] = None,
+) -> List[Result]:
     """Convert every registered device's traces into an lcov file.
 
     For a single device, writes ``output``. For several devices, writes one file
@@ -320,7 +342,9 @@ def finalize(project_root: Path,
         if multi:
             out = output.with_name(f"{output.stem}-{device}{output.suffix}")
         try:
-            files, cov, total = to_lcov(elf, traces, out, project_root, readelf, exclude=exclude)
+            files, cov, total = to_lcov(
+                elf, traces, out, project_root, readelf, exclude=exclude
+            )
         except ValueError as exc:
             logger.error("[coverage] %s: %s", device, exc)
             continue

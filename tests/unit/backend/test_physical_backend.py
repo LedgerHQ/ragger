@@ -12,7 +12,6 @@ from ragger.utils.structs import RAPDU
 
 
 class StubPhysicalBackend(PhysicalBackend):
-
     def __enter__(self):
         pass
 
@@ -31,7 +30,6 @@ class StubPhysicalBackend(PhysicalBackend):
 
 
 class TestPhysicalBackend(TestCase):
-
     def setUp(self):
         self.device = Devices.get_by_type(DeviceType.NANOS)
         self.backend = StubPhysicalBackend(self.device, with_gui=True)
@@ -59,20 +57,27 @@ class TestPhysicalBackend(TestCase):
     def test_navigation_methods_no_gui_None(self):
         backend = StubPhysicalBackend(self.device)
         for method in [
-                backend.right_click, backend.left_click, backend.both_click, backend.finger_touch
+            backend.right_click,
+            backend.left_click,
+            backend.both_click,
+            backend.finger_touch,
         ]:
             self.assertIsNone(method())
 
     def test_click_methods_with_gui(self):
-        for (method, expected_arg) in [(self.backend.right_click, NavInsID.RIGHT_CLICK),
-                                       (self.backend.left_click, NavInsID.LEFT_CLICK),
-                                       (self.backend.both_click, NavInsID.BOTH_CLICK)]:
+        for method, expected_arg in [
+            (self.backend.right_click, NavInsID.RIGHT_CLICK),
+            (self.backend.left_click, NavInsID.LEFT_CLICK),
+            (self.backend.both_click, NavInsID.BOTH_CLICK),
+        ]:
             # mocking the underlying called method
             self.backend._ui.ask_for_click_action = MagicMock()
 
             self.assertIsNone(method())
             self.assertTrue(self.backend._ui.ask_for_click_action.called)
-            self.assertEqual(self.backend._ui.ask_for_click_action.call_args, ((expected_arg, ), ))
+            self.assertEqual(
+                self.backend._ui.ask_for_click_action.call_args, ((expected_arg,),)
+            )
 
     def test_finger_touch_with_gui(self):
         x, y = 3, 7
@@ -81,7 +86,7 @@ class TestPhysicalBackend(TestCase):
 
         self.assertIsNone(self.backend.finger_touch(x, y))
         self.assertTrue(self.backend._ui.ask_for_touch_action.called)
-        self.assertEqual(self.backend._ui.ask_for_touch_action.call_args, ((x, y), ))
+        self.assertEqual(self.backend._ui.ask_for_touch_action.call_args, ((x, y),))
 
     def test_compare_methods_no_gui_bool(self):
         backend = StubPhysicalBackend(self.device)
@@ -124,9 +129,13 @@ class TestPhysicalBackend(TestCase):
         self.backend._last_valid_snap_path = path
 
         self.assertTrue(self.backend.compare_screen_with_text(text))
-        self.assertFalse(self.backend.compare_screen_with_text("this text does not exist here"))
+        self.assertFalse(
+            self.backend.compare_screen_with_text("this text does not exist here")
+        )
 
-    def test_compare_screen_with_text_with_gui_last_valid_snap_path_does_not_exist(self):
+    def test_compare_screen_with_text_with_gui_last_valid_snap_path_does_not_exist(
+        self,
+    ):
         # mocking the underlying called method
         oracle = MagicMock()
         oracle.return_value = True
@@ -135,7 +144,7 @@ class TestPhysicalBackend(TestCase):
         text = "sometext"
         self.assertTrue(self.backend.compare_screen_with_text(text))
         self.assertTrue(oracle.called)
-        self.assertEqual(oracle.call_args, ((text, ), ))
+        self.assertEqual(oracle.call_args, ((text,),))
 
     def test_wait_for_screen_change(self):
         self.assertIsNone(self.backend.wait_for_screen_change())

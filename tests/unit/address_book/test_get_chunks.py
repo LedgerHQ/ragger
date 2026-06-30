@@ -6,6 +6,7 @@ from ragger.address_book import AddressBookCommand, AddressBookSubCommand
 
 class _Dummy(AddressBookCommand):
     """Minimal command exposing a fixed payload, to test the APDU framing alone."""
+
     subcommand = AddressBookSubCommand.SUB_CMD_REGISTER_IDENTITY
     struct_type = LedgerStructType.TYPE_REGISTER_IDENTITY
 
@@ -28,16 +29,19 @@ def reassemble(apdus, cla=0xB0, ins=0x10, p1=0x01):
 
 
 class TestGetChunksFraming(TestCase):
-
     def test_single_chunk_layout(self):
         apdus = _Dummy(b"\xaa\xbb").get_chunks()
         self.assertEqual(1, len(apdus))
         # CLA INS P1 P2 Lc | len-prefix(2) | payload
-        self.assertEqual(bytes([0xB0, 0x10, 0x01, 0x00, 4]) + b"\x00\x02\xaa\xbb", apdus[0])
+        self.assertEqual(
+            bytes([0xB0, 0x10, 0x01, 0x00, 4]) + b"\x00\x02\xaa\xbb", apdus[0]
+        )
 
     def test_p1_is_the_subcommand(self):
-        self.assertEqual(int(AddressBookSubCommand.SUB_CMD_REGISTER_IDENTITY),
-                         _Dummy(b"x").get_chunks()[0][2])
+        self.assertEqual(
+            int(AddressBookSubCommand.SUB_CMD_REGISTER_IDENTITY),
+            _Dummy(b"x").get_chunks()[0][2],
+        )
 
     def test_length_prefix_is_two_bytes_big_endian(self):
         apdus = _Dummy(b"\x00" * 5).get_chunks()
