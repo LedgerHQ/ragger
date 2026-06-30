@@ -1,18 +1,19 @@
 """
-   Copyright 2026 Ledger SAS
+Copyright 2026 Ledger SAS
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 """
+
 import hashlib
 from enum import IntEnum
 from pathlib import Path
@@ -33,12 +34,12 @@ class CertificatePubKeyUsage(IntEnum):
     PLUGIN_METADATA = 0x07
     COIN_META = 0x08
     SEED_ID_AUTH = 0x09
-    TX_SIMU_SIGNER = 0x0a
-    CALLDATA = 0x0b
-    NETWORK = 0x0c
-    SWAP_TEMPLATE = 0x0d
-    SAFE_ACCOUNT = 0x0e
-    GATING = 0x0f
+    TX_SIMU_SIGNER = 0x0A
+    CALLDATA = 0x0B
+    NETWORK = 0x0C
+    SWAP_TEMPLATE = 0x0D
+    SAFE_ACCOUNT = 0x0E
+    GATING = 0x0F
     LKRP_TOPIC = 0x10
     PERPS_DATA = 0x11
     TOKEN_MULTIPLIER = 0x12
@@ -56,12 +57,14 @@ class SigningPartner:
     PKI_CLA = 0xB0
     PKI_INS = 0x06
 
-    def __init__(self,
-                 pem_key_path: Path,
-                 cert_pub_key_usage: CertificatePubKeyUsage,
-                 certificates: dict[DeviceType, str],
-                 hash_func=hashlib.sha256,
-                 sigencode=sigencode_der):
+    def __init__(
+        self,
+        pem_key_path: Path,
+        cert_pub_key_usage: CertificatePubKeyUsage,
+        certificates: dict[DeviceType, str],
+        hash_func=hashlib.sha256,
+        sigencode=sigencode_der,
+    ):
         """
         Args:
             pem_key_path: Path to the PEM private key file.
@@ -87,8 +90,20 @@ class SigningPartner:
             KeyError: If the device type has no certificate configured.
         """
         if device_type not in self._certificates:
-            raise KeyError(f"No PKI certificate for device type '{device_type}' "
-                           f"(usage {self._cert_pub_key_usage.name})")
+            raise KeyError(
+                f"No PKI certificate for device type '{device_type}' "
+                f"(usage {self._cert_pub_key_usage.name})"
+            )
         cert_data = bytes.fromhex(self._certificates[device_type])
-        return bytes([self.PKI_CLA, self.PKI_INS, self._cert_pub_key_usage, 0x00,
-                      len(cert_data)]) + cert_data
+        return (
+            bytes(
+                [
+                    self.PKI_CLA,
+                    self.PKI_INS,
+                    self._cert_pub_key_usage,
+                    0x00,
+                    len(cert_data),
+                ]
+            )
+            + cert_data
+        )

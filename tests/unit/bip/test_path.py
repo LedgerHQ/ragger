@@ -8,18 +8,21 @@ HARDENED_INDEX = 2**31
 
 
 class TestPath(TestCase):
-
     def _test_level_n(self, n: int):
         for variant in [0, 255, 81845, 887587, MAX_VALUE]:
             for hardening in [False, True]:
-                hardening_char = '\'' if hardening else ''
+                hardening_char = "'" if hardening else ""
                 previous_levels = "0/" * (n - 1)
-                path = f'm/{previous_levels}{variant}{hardening_char}'
+                path = f"m/{previous_levels}{variant}{hardening_char}"
                 packed = p.pack_derivation_path(path)
                 self.assertEqual(packed[0], n)
                 self.assertEqual(len(packed), 1 + n * 4)
-                last_value = int.from_bytes(packed[len(packed) - 4:len(packed)], byteorder="big")
-                self.assertEqual(last_value, variant | (HARDENED_INDEX if hardening else 0))
+                last_value = int.from_bytes(
+                    packed[len(packed) - 4 : len(packed)], byteorder="big"
+                )
+                self.assertEqual(
+                    last_value, variant | (HARDENED_INDEX if hardening else 0)
+                )
 
     def test_errors(self):
         with self.assertRaises(ValueError):
@@ -70,7 +73,9 @@ class TestPath(TestCase):
         base = b"\x03\x80\x00\x00\x2c\x80\x00\x00\x00\x00\x00\x00\x00"
         prefix = [b"\x00", b"\x01", b"\x02", b"\x03", b"\x04"]
         for i, format in enumerate(p.BtcDerivationPathFormat):
-            self.assertEqual(prefix[i] + base, p.bitcoin_pack_derivation_path(format, "m/44'/0'/0"))
+            self.assertEqual(
+                prefix[i] + base, p.bitcoin_pack_derivation_path(format, "m/44'/0'/0")
+            )
 
     def test_bitcoin_pack_derivation_path_nok(self):
         with self.assertRaises(ValueError):

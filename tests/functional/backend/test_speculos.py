@@ -34,7 +34,9 @@ class TestbackendSpeculos(TestCase):
     - else means the response has a APDUStatus.ERROR status (arbitrarily set to 0x8000)
     """
 
-    def check_rapdu(self, rapdu: RAPDU, expected: Optional[bytes] = None, status: int = 0x9000):
+    def check_rapdu(
+        self, rapdu: RAPDU, expected: Optional[bytes] = None, status: int = 0x9000
+    ):
         self.assertEqual(rapdu.status, status)
         if expected is None:
             return
@@ -57,9 +59,11 @@ class TestbackendSpeculos(TestCase):
                 with self.backend:
                     self.backend.raise_policy = RaisePolicy.RAISE_NOTHING
                     rapdu = self.backend.exchange_raw(bytes.fromhex("01000000"))
-                    self.check_rapdu(rapdu,
-                                     expected=bytes.fromhex(EndPoint.APDU),
-                                     status=APDUStatus.ERROR)
+                    self.check_rapdu(
+                        rapdu,
+                        expected=bytes.fromhex(EndPoint.APDU),
+                        status=APDUStatus.ERROR,
+                    )
 
     def test_exchange_raw_raises(self):
         with patch("speculos.client.subprocess"):
@@ -117,9 +121,11 @@ class TestbackendSpeculos(TestCase):
                         self.assertIsNone(self.backend.last_async_response)
                     rapdu = self.backend.last_async_response
                     self.assertIsNotNone(rapdu)
-                    self.check_rapdu(rapdu,
-                                     expected=bytes.fromhex(EndPoint.APDU),
-                                     status=APDUStatus.ERROR)
+                    self.check_rapdu(
+                        rapdu,
+                        expected=bytes.fromhex(EndPoint.APDU),
+                        status=APDUStatus.ERROR,
+                    )
 
     def test_exchange_async_raw_raises(self):
         with patch("speculos.client.subprocess"):
@@ -164,7 +170,9 @@ class TestbackendSpeculos(TestCase):
                             # (wait_for_screen_change calls _check_async_error)
                             self.backend.wait_for_screen_change(timeout=0.5)
                             # This line should be unreachable - if reached, the error wasn't raised during navigation
-                            assert False, "Expected ExceptionRAPDU was not raised during navigation"  # pragma: no cover
+                            assert False, (
+                                "Expected ExceptionRAPDU was not raised during navigation"
+                            )  # pragma: no cover
                     self.assertEqual(error.exception.status, APDUStatus.ERROR)
 
                     # Perform a second async exchange with a SUCCESS APDU to ensure state is properly reset
@@ -173,4 +181,6 @@ class TestbackendSpeculos(TestCase):
                         with self.backend.exchange_async_raw(bytes.fromhex("00000000")):
                             self.backend.wait_for_screen_change(timeout=1)
                     # Verify that the response was successfully retrieved despite the timeout
-                    self.assertEqual(self.backend.last_async_response.status, APDUStatus.SUCCESS)
+                    self.assertEqual(
+                        self.backend.last_async_response.status, APDUStatus.SUCCESS
+                    )

@@ -14,4 +14,4 @@ configuration.OPTIONAL.BACKEND_SCOPE = "function"
 #########################
 
 # Pull all features from the base ragger conftest using the overridden configuration
-pytest_plugins = ("ragger.conftest.base_conftest", )
+pytest_plugins = ("ragger.conftest.base_conftest",)

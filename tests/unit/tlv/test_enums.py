@@ -13,10 +13,9 @@ from ragger.tlv import (
 
 
 class TestStructType(TestCase):
-
     def test_known_values(self):
         self.assertEqual(0x01, LedgerStructType.TYPE_CERTIFICATE)
-        self.assertEqual(0x2d, LedgerStructType.TYPE_REGISTER_IDENTITY)
+        self.assertEqual(0x2D, LedgerStructType.TYPE_REGISTER_IDENTITY)
         self.assertEqual(0x33, LedgerStructType.TYPE_PROVIDE_CONTACT)
         self.assertEqual(0x34, LedgerStructType.TYPE_PROVIDE_LEDGER_ACCOUNT_CONTACT)
 
@@ -26,7 +25,6 @@ class TestStructType(TestCase):
 
 
 class TestValueEnums(TestCase):
-
     def test_blockchain_family(self):
         self.assertEqual(0x00, BlockchainFamily.BITCOIN)
         self.assertEqual(0x01, BlockchainFamily.ETHEREUM)

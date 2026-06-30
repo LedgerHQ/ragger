@@ -10,12 +10,13 @@ from ragger.backend import RaisePolicy
 
 
 class TestLedgerWalletBackend(TestCase):
-
     def setUp(self):
         self.device = MagicMock()
         self.backend = LedgerWalletBackend(Devices.get_by_type(DeviceType.NANOS))
 
-    def check_rapdu(self, rapdu: RAPDU, status: int = 0x9000, payload: Optional[bytes] = None):
+    def check_rapdu(
+        self, rapdu: RAPDU, status: int = 0x9000, payload: Optional[bytes] = None
+    ):
         self.assertIsInstance(rapdu, RAPDU)
         self.assertEqual(rapdu.status, status)
         self.assertEqual(rapdu.data, payload)

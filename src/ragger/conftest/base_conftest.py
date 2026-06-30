@@ -9,12 +9,30 @@ from pathlib import Path
 from typing import Generator, List, Optional
 from unittest.mock import MagicMock
 
-from ragger.backend import BackendInterface, SpeculosBackend, LedgerCommBackend, LedgerWalletBackend
+from ragger.backend import (
+    BackendInterface,
+    SpeculosBackend,
+    LedgerCommBackend,
+    LedgerWalletBackend,
+)
 from ragger.firmware import Firmware
 from ragger.logger import init_loggers, standalone_conf_logger
-from ragger.navigator import Navigator, NanoNavigator, TouchNavigator, NavigateWithScenario
-from ragger.utils import find_project_root_dir, find_library_application, find_application
-from ragger.utils.misc import get_current_app_name_and_version, exit_current_app, open_app_from_dashboard
+from ragger.navigator import (
+    Navigator,
+    NanoNavigator,
+    TouchNavigator,
+    NavigateWithScenario,
+)
+from ragger.utils import (
+    find_project_root_dir,
+    find_library_application,
+    find_application,
+)
+from ragger.utils.misc import (
+    get_current_app_name_and_version,
+    exit_current_app,
+    open_app_from_dashboard,
+)
 from ragger.error import ExceptionRAPDU, MissingElfError, StatusWords
 from ragger.utils.structs import RAPDU
 
@@ -31,64 +49,86 @@ COVERAGE_TRACE_ROOT = ".ragger_coverage"
 def pytest_addoption(parser):
     parser.addoption("--device", choices=DEVICES, required=True)
     parser.addoption("--backend", choices=BACKENDS, default="speculos")
-    parser.addoption("--no-nav", action="store_true", default=False, help="Disable the navigation")
-    parser.addoption("--display",
-                     action="store_true",
-                     default=False,
-                     help="Pops up a Qt interface displaying either the emulated device (Speculos "
-                     "backend) or the expected screens and actions (physical backend)")
-    parser.addoption("--golden_run",
-                     action="store_true",
-                     default=False,
-                     help="Do not compare the snapshots during testing, but instead save the live "
-                     "ones. Will only work with 'speculos' as the backend")
-    parser.addoption("--pki_prod",
-                     action="store_true",
-                     default=False,
-                     help="Have Speculos accept prod PKI certificates instead of test")
-    parser.addoption("--log_apdu_file",
-                     action="store",
-                     default=None,
-                     nargs="?",
-                     const="apdu.log",
-                     help="Log the APDU in a file. If no pattern provided, uses 'apdu_xxx.log'.")
+    parser.addoption(
+        "--no-nav", action="store_true", default=False, help="Disable the navigation"
+    )
+    parser.addoption(
+        "--display",
+        action="store_true",
+        default=False,
+        help="Pops up a Qt interface displaying either the emulated device (Speculos "
+        "backend) or the expected screens and actions (physical backend)",
+    )
+    parser.addoption(
+        "--golden_run",
+        action="store_true",
+        default=False,
+        help="Do not compare the snapshots during testing, but instead save the live "
+        "ones. Will only work with 'speculos' as the backend",
+    )
+    parser.addoption(
+        "--pki_prod",
+        action="store_true",
+        default=False,
+        help="Have Speculos accept prod PKI certificates instead of test",
+    )
+    parser.addoption(
+        "--log_apdu_file",
+        action="store",
+        default=None,
+        nargs="?",
+        const="apdu.log",
+        help="Log the APDU in a file. If no pattern provided, uses 'apdu_xxx.log'.",
+    )
     parser.addoption("--seed", action="store", default=None, help="Set a custom seed")
-    parser.addoption("--ignore-missing-binaries",
-                     action="store_true",
-                     default=False,
-                     help="Skip tests instead of failing when application binaries are missing")
-    parser.addoption("--get-stack-consumption",
-                     action="store_true",
-                     default=False,
-                     help="Send APDUs to measure stack consumption. Based on CLA=0xB0, INS=0x57.")
+    parser.addoption(
+        "--ignore-missing-binaries",
+        action="store_true",
+        default=False,
+        help="Skip tests instead of failing when application binaries are missing",
+    )
+    parser.addoption(
+        "--get-stack-consumption",
+        action="store_true",
+        default=False,
+        help="Send APDUs to measure stack consumption. Based on CLA=0xB0, INS=0x57.",
+    )
     # Always allow "default" even if application conftest does not define it
     allowed_setups = conf.OPTIONAL.ALLOWED_SETUPS
     if "default" not in allowed_setups:
         allowed_setups.insert(0, "default")
-    parser.addoption("--setup",
-                     action="store",
-                     default="default",
-                     help="Specify the setup fixture (e.g., 'prod_build')",
-                     choices=allowed_setups)
-    parser.addoption("--coverage",
-                     action="store_true",
-                     default=False,
-                     help="Trace the app inside Speculos/QEMU and, at the end of the session, "
-                     "emit an lcov firmware coverage file (speculos backend only). The app must "
-                     "be built with debug symbols.")
-    parser.addoption("--coverage_output",
-                     action="store",
-                     default="coverage.info",
-                     help="Output lcov file for --coverage (default: 'coverage.info'). With "
-                     "several devices, one file per device is written as '<stem>-<device>.info'. "
-                     "An HTML report ('<stem>_html/') is also rendered if 'genhtml' is installed.")
-    parser.addoption("--coverage_exclude",
-                     action="append",
-                     default=None,
-                     help="Exclude matching source paths (repo-relative) from --coverage, e.g. a "
-                     "vendored submodule '--coverage_exclude ethereum-plugin-sdk'. Repeatable, and "
-                     "each value may be a comma-separated list. Patterns match a path, a leading "
-                     "directory of it, or an fnmatch glob.")
+    parser.addoption(
+        "--setup",
+        action="store",
+        default="default",
+        help="Specify the setup fixture (e.g., 'prod_build')",
+        choices=allowed_setups,
+    )
+    parser.addoption(
+        "--coverage",
+        action="store_true",
+        default=False,
+        help="Trace the app inside Speculos/QEMU and, at the end of the session, "
+        "emit an lcov firmware coverage file (speculos backend only). The app must "
+        "be built with debug symbols.",
+    )
+    parser.addoption(
+        "--coverage_output",
+        action="store",
+        default="coverage.info",
+        help="Output lcov file for --coverage (default: 'coverage.info'). With "
+        "several devices, one file per device is written as '<stem>-<device>.info'. "
+        "An HTML report ('<stem>_html/') is also rendered if 'genhtml' is installed.",
+    )
+    parser.addoption(
+        "--coverage_exclude",
+        action="append",
+        default=None,
+        help="Exclude matching source paths (repo-relative) from --coverage, e.g. a "
+        "vendored submodule '--coverage_exclude ethereum-plugin-sdk'. Repeatable, and "
+        "each value may be a comma-separated list. Patterns match a path, a leading "
+        "directory of it, or an fnmatch glob.",
+    )
 
 
 @pytest.fixture(scope="session")
@@ -176,13 +216,17 @@ def stack_consumption_hooks(request, get_stack_consumption: bool):
         yield
 
         try:
-            rapdu_retrieve: RAPDU = backend.exchange(cla=0xB0, ins=0x57, p1=0x01, p2=0x01, data=b"")
+            rapdu_retrieve: RAPDU = backend.exchange(
+                cla=0xB0, ins=0x57, p1=0x01, p2=0x01, data=b""
+            )
             consumption = int.from_bytes(rapdu_retrieve.data, byteorder="big")
             print(f"\n[stack consumption] {consumption} bytes.")
             _stack_consumption_results[request.node.nodeid] = consumption
         except Exception:
-            logging.debug("Failed to retrieve stack consumption for test %s. Continuing.",
-                          request.node.nodeid)
+            logging.debug(
+                "Failed to retrieve stack consumption for test %s. Continuing.",
+                request.node.nodeid,
+            )
     else:
         yield
 
@@ -192,18 +236,25 @@ def pytest_terminal_summary(terminalreporter, exitstatus, config):
         terminalreporter.write_sep("=", "stack consumption summary")
         for test_name, consumption in sorted(_stack_consumption_results.items()):
             terminalreporter.write_line(f"  {consumption:>8} bytes  {test_name}")
-        worst_test, worst_value = max(_stack_consumption_results.items(), key=lambda x: x[1])
-        terminalreporter.write_sep("-", f"worst case: {worst_value} bytes  ({worst_test})")
+        worst_test, worst_value = max(
+            _stack_consumption_results.items(), key=lambda x: x[1]
+        )
+        terminalreporter.write_sep(
+            "-", f"worst case: {worst_value} bytes  ({worst_test})"
+        )
 
     if config.getoption("coverage"):
         from ragger.utils import coverage
+
         project_root = find_project_root_dir(Path(config.rootpath).resolve())
         output = Path(config.getoption("coverage_output"))
         if not output.is_absolute():
             output = Path(config.invocation_params.dir) / output
         # Flatten the repeatable option and allow comma-separated values.
         exclude = [
-            pat for opt in (config.getoption("coverage_exclude") or []) for pat in opt.split(",")
+            pat
+            for opt in (config.getoption("coverage_exclude") or [])
+            for pat in opt.split(",")
         ]
         results = coverage.finalize(project_root, output, exclude=exclude)
         terminalreporter.write_sep("=", "firmware coverage")
@@ -212,7 +263,8 @@ def pytest_terminal_summary(terminalreporter, exitstatus, config):
         for device, files, cov, total, out, html in results:
             pct = 100.0 * cov / total if total else 0.0
             terminalreporter.write_line(
-                f"  {device}: {cov}/{total} lines ({pct:.1f}%), {files} files -> {out}")
+                f"  {device}: {cov}/{total} lines ({pct:.1f}%), {files} files -> {out}"
+            )
             if html is not None:
                 terminalreporter.write_line(f"  {' ' * len(device)}  HTML: {html}")
 
@@ -256,13 +308,13 @@ def full_test_name(request) -> str:
     # Get the name of current pytest test
     test_name = request.node.name
 
-    if '[' in test_name:
+    if "[" in test_name:
         # Split all parameters
-        base_name, params = test_name.rsplit('[', 1)
-        params = params.rstrip(']')
+        base_name, params = test_name.rsplit("[", 1)
+        params = params.rstrip("]")
 
         # Split parameters by '-' and filter out device names
-        param_list = [p for p in params.split('-') if p not in DEVICES]
+        param_list = [p for p in params.split("-") if p not in DEVICES]
 
         # Rebuild test name with remaining parameters
         if param_list:
@@ -271,13 +323,15 @@ def full_test_name(request) -> str:
             test_name = base_name
 
     # Clean up for filename friendliness by replacing special characters with underscores
-    translation_table = str.maketrans({
-        '[': '_',
-        ']': '',
-        '-': '_',
-        '/': '_',
-        "'": '',
-    })
+    translation_table = str.maketrans(
+        {
+            "[": "_",
+            "]": "",
+            "-": "_",
+            "/": "_",
+            "'": "",
+        }
+    )
     clean_name = test_name.translate(translation_table)
     return clean_name
 
@@ -320,9 +374,12 @@ def pytest_generate_tests(metafunc):
 
         # Enable firmware for requested devices
         for fw in Devices():
-            if device == fw.name or device == "all" or (device == "all_nano"
-                                                        and fw.is_nano) or (device == "all_eink"
-                                                                            and not fw.is_nano):
+            if (
+                device == fw.name
+                or device == "all"
+                or (device == "all_nano" and fw.is_nano)
+                or (device == "all_eink" and not fw.is_nano)
+            ):
                 device_list.append(fw)
                 ids.append(fw.name)
 
@@ -340,9 +397,12 @@ def pytest_generate_tests(metafunc):
 
         # Enable firmware for requested devices
         for fw in Firmware:
-            if device == fw.name or device == "all" or (device == "all_nano"
-                                                        and fw.is_nano) or (device == "all_eink"
-                                                                            and not fw.is_nano):
+            if (
+                device == fw.name
+                or device == "all"
+                or (device == "all_nano" and fw.is_nano)
+                or (device == "all_eink" and not fw.is_nano)
+            ):
                 firmware_list.append(fw)
                 ids.append(fw.name)
 
@@ -352,14 +412,16 @@ def pytest_generate_tests(metafunc):
         metafunc.parametrize("firmware", firmware_list, ids=ids, scope="session")
 
 
-def prepare_speculos_args(root_pytest_dir: Path,
-                          device: Device,
-                          display: bool,
-                          pki_prod: bool,
-                          cli_user_seed: str,
-                          additional_args: List[str],
-                          verbose_speculos: bool = False,
-                          ignore_missing_binaries: bool = False):
+def prepare_speculos_args(
+    root_pytest_dir: Path,
+    device: Device,
+    display: bool,
+    pki_prod: bool,
+    cli_user_seed: str,
+    additional_args: List[str],
+    verbose_speculos: bool = False,
+    ignore_missing_binaries: bool = False,
+):
     speculos_args = additional_args.copy()
 
     if display:
@@ -384,7 +446,9 @@ def prepare_speculos_args(root_pytest_dir: Path,
     # project_root_dir / conf.OPTIONAL.MAIN_APP_DIR. There should be only one subfolder in the path.
     main_app_path = None
     if conf.OPTIONAL.MAIN_APP_DIR is not None:
-        app_dir_content = list((project_root_dir / conf.OPTIONAL.MAIN_APP_DIR).iterdir())
+        app_dir_content = list(
+            (project_root_dir / conf.OPTIONAL.MAIN_APP_DIR).iterdir()
+        )
         app_dir_subdirectories = [child for child in app_dir_content if child.is_dir()]
         if len(app_dir_subdirectories) != 1:
             raise ValueError(
@@ -393,20 +457,28 @@ def prepare_speculos_args(root_pytest_dir: Path,
         main_app_path = find_application(app_dir_subdirectories[0], device_name, "c")
 
         # This repo holds the library, not the standalone app: search in build_directory
-        lib_path = find_application(project_root_dir / manifest.app.build_directory, device_name,
-                                    manifest.app.sdk)
+        lib_path = find_application(
+            project_root_dir / manifest.app.build_directory,
+            device_name,
+            manifest.app.sdk,
+        )
         speculos_args.append(f"-l{lib_path}")
     # If the app is standalone, the main app should be located in project_root_dir / manifest.app.build_directory
     else:
-        main_app_path = find_application(project_root_dir / manifest.app.build_directory,
-                                         device_name, manifest.app.sdk)
+        main_app_path = find_application(
+            project_root_dir / manifest.app.build_directory,
+            device_name,
+            manifest.app.sdk,
+        )
 
     # Legacy lib method, remove once exchange is ported
     if len(conf.OPTIONAL.SIDELOADED_APPS) != 0:
         # We are testing a a standalone app that needs libraries: search in SIDELOADED_APPS_DIR
         if conf.OPTIONAL.SIDELOADED_APPS_DIR is None:
-            raise ValueError("Configuration \"SIDELOADED_APPS_DIR\" is mandatory if "
-                             "\"SIDELOADED_APPS\" is used")
+            raise ValueError(
+                'Configuration "SIDELOADED_APPS_DIR" is mandatory if '
+                '"SIDELOADED_APPS" is used'
+            )
         libs_dir = Path(project_root_dir / conf.OPTIONAL.SIDELOADED_APPS_DIR)
         # Add "-l Appname:filepath" to Speculos command line for every required lib app
         for coin_name, lib_name in conf.OPTIONAL.SIDELOADED_APPS.items():
@@ -415,8 +487,10 @@ def prepare_speculos_args(root_pytest_dir: Path,
                 speculos_args.append(f"-l{lib_name}:{lib_path}")
             except MissingElfError as e:
                 if ignore_missing_binaries:
-                    warnings.warn(f"Could not find sideloaded app library for '{lib_name}': {e}",
-                                  UserWarning)
+                    warnings.warn(
+                        f"Could not find sideloaded app library for '{lib_name}': {e}",
+                        UserWarning,
+                    )
                 else:
                     raise
     else:
@@ -425,17 +499,24 @@ def prepare_speculos_args(root_pytest_dir: Path,
         if conf.OPTIONAL.SIDELOADED_APPS_DIR is not None:
             sideloaded_dir = project_root_dir / conf.OPTIONAL.SIDELOADED_APPS_DIR
             subdirs = sorted(
-                filter(lambda d: (sideloaded_dir / d).is_dir(), os.listdir(sideloaded_dir)))
+                filter(
+                    lambda d: (sideloaded_dir / d).is_dir(), os.listdir(sideloaded_dir)
+                )
+            )
             for subdir in subdirs:
                 try:
                     # Currently only C apps are used as additional binaries by ragger (Ethereum and Exchange)
                     # TODO: add support for Rust SDK libraries if needed
-                    lib_path = find_application(sideloaded_dir / subdir, device_name, "c")
+                    lib_path = find_application(
+                        sideloaded_dir / subdir, device_name, "c"
+                    )
                     speculos_args.append(f"-l{lib_path}")
                 except MissingElfError as e:
                     if ignore_missing_binaries:
-                        warnings.warn(f"Could not find sideloaded app binary for '{subdir}': {e}",
-                                      UserWarning)
+                        warnings.warn(
+                            f"Could not find sideloaded app binary for '{subdir}': {e}",
+                            UserWarning,
+                        )
                     else:
                         raise
 
@@ -452,48 +533,72 @@ def prepare_speculos_args(root_pytest_dir: Path,
 # Depending on the "--backend" option value, a different backend is
 # instantiated, and the tests will either run on Speculos or on a physical
 # device depending on the backend
-def create_backend(root_pytest_dir: Path,
-                   backend_name: str,
-                   device: Device,
-                   display: bool,
-                   pki_prod: bool,
-                   log_apdu_file: Optional[Path],
-                   cli_user_seed: str,
-                   additional_speculos_arguments: List[str],
-                   verbose_speculos: bool = False,
-                   ignore_missing_binaries: bool = False,
-                   coverage_trace_dir: Optional[Path] = None) -> BackendInterface:
+def create_backend(
+    root_pytest_dir: Path,
+    backend_name: str,
+    device: Device,
+    display: bool,
+    pki_prod: bool,
+    log_apdu_file: Optional[Path],
+    cli_user_seed: str,
+    additional_speculos_arguments: List[str],
+    verbose_speculos: bool = False,
+    ignore_missing_binaries: bool = False,
+    coverage_trace_dir: Optional[Path] = None,
+) -> BackendInterface:
     if backend_name.lower() == "ledgercomm":
-        return LedgerCommBackend(device=device,
-                                 interface="hid",
-                                 log_apdu_file=log_apdu_file,
-                                 with_gui=display)
+        return LedgerCommBackend(
+            device=device,
+            interface="hid",
+            log_apdu_file=log_apdu_file,
+            with_gui=display,
+        )
     elif backend_name.lower() == "ledgerwallet":
-        return LedgerWalletBackend(device=device, log_apdu_file=log_apdu_file, with_gui=display)
+        return LedgerWalletBackend(
+            device=device, log_apdu_file=log_apdu_file, with_gui=display
+        )
     elif backend_name.lower() == "speculos":
-        main_app_path, speculos_args = prepare_speculos_args(root_pytest_dir, device, display,
-                                                             pki_prod, cli_user_seed,
-                                                             additional_speculos_arguments,
-                                                             verbose_speculos,
-                                                             ignore_missing_binaries)
-        return SpeculosBackend(main_app_path,
-                               device=device,
-                               log_apdu_file=log_apdu_file,
-                               coverage_trace_dir=coverage_trace_dir,
-                               **speculos_args)
+        main_app_path, speculos_args = prepare_speculos_args(
+            root_pytest_dir,
+            device,
+            display,
+            pki_prod,
+            cli_user_seed,
+            additional_speculos_arguments,
+            verbose_speculos,
+            ignore_missing_binaries,
+        )
+        return SpeculosBackend(
+            main_app_path,
+            device=device,
+            log_apdu_file=log_apdu_file,
+            coverage_trace_dir=coverage_trace_dir,
+            **speculos_args,
+        )
     else:
-        raise ValueError(f"Backend '{backend_name}' is unknown. Valid backends are: {BACKENDS}")
+        raise ValueError(
+            f"Backend '{backend_name}' is unknown. Valid backends are: {BACKENDS}"
+        )
 
 
 # Backend scope can be configured by the user
 # fixture skip_tests_for_unsupported_devices is a dependency because we want to skip the test
 # before trying to find the binary
 @pytest.fixture(scope=conf.OPTIONAL.BACKEND_SCOPE)
-def backend(skip_tests_for_unsupported_devices, root_pytest_dir: Path, backend_name: str,
-            device: Device, display: bool, pki_prod: bool, log_apdu_file: Optional[Path],
-            cli_user_seed: str, additional_speculos_arguments: List[str], verbose_speculos: bool,
-            ignore_missing_binaries: bool,
-            coverage_enabled: bool) -> Generator[BackendInterface, None, None]:
+def backend(
+    skip_tests_for_unsupported_devices,
+    root_pytest_dir: Path,
+    backend_name: str,
+    device: Device,
+    display: bool,
+    pki_prod: bool,
+    log_apdu_file: Optional[Path],
+    cli_user_seed: str,
+    additional_speculos_arguments: List[str],
+    verbose_speculos: bool,
+    ignore_missing_binaries: bool,
+    coverage_enabled: bool,
+) -> Generator[BackendInterface, None, None]:
     # to separate the test name and its following logs
     print("")
     coverage_trace_dir = None
@@ -501,10 +606,19 @@ def backend(skip_tests_for_unsupported_devices, root_pytest_dir: Path, backend_n
         coverage_trace_dir = root_pytest_dir / COVERAGE_TRACE_ROOT / device.name
     backend_instance = None
     try:
-        backend_instance = create_backend(root_pytest_dir, backend_name, device, display, pki_prod,
-                                          log_apdu_file, cli_user_seed,
-                                          additional_speculos_arguments, verbose_speculos,
-                                          ignore_missing_binaries, coverage_trace_dir)
+        backend_instance = create_backend(
+            root_pytest_dir,
+            backend_name,
+            device,
+            display,
+            pki_prod,
+            log_apdu_file,
+            cli_user_seed,
+            additional_speculos_arguments,
+            verbose_speculos,
+            ignore_missing_binaries,
+            coverage_trace_dir,
+        )
     except MissingElfError as e:
         pytest.fail(f"Missing ELF: {e}")
 
@@ -525,8 +639,13 @@ def backend(skip_tests_for_unsupported_devices, root_pytest_dir: Path, backend_n
 
 
 @pytest.fixture(scope=conf.OPTIONAL.BACKEND_SCOPE)
-def navigator(backend: BackendInterface, device: Device, golden_run: bool, display: bool,
-              navigation: bool):
+def navigator(
+    backend: BackendInterface,
+    device: Device,
+    golden_run: bool,
+    display: bool,
+    navigation: bool,
+):
     if not navigation:
         return MagicMock()
 
@@ -537,14 +656,21 @@ def navigator(backend: BackendInterface, device: Device, golden_run: bool, displ
 
 
 @pytest.fixture(scope="function")
-def scenario_navigator(backend: BackendInterface, navigator: Navigator, device: Device,
-                       test_name: str, default_screenshot_path: Path):
-    return NavigateWithScenario(backend, navigator, device, test_name, default_screenshot_path)
+def scenario_navigator(
+    backend: BackendInterface,
+    navigator: Navigator,
+    device: Device,
+    test_name: str,
+    default_screenshot_path: Path,
+):
+    return NavigateWithScenario(
+        backend, navigator, device, test_name, default_screenshot_path
+    )
 
 
 @pytest.fixture(autouse=True)
 def use_only_on_backend(request, backend_name):
-    marker = request.node.get_closest_marker('use_on_backend')
+    marker = request.node.get_closest_marker("use_on_backend")
     if marker:
         current_backend = marker.args[0]
         if current_backend != backend_name:
@@ -554,19 +680,19 @@ def use_only_on_backend(request, backend_name):
 @pytest.fixture(autouse=True)
 def auto_skip_on_backend(request, backend_name):
     """Auto-skip tests marked with skip_on_backend when running on the specified backend."""
-    marker = request.node.get_closest_marker('skip_on_backend')
+    marker = request.node.get_closest_marker("skip_on_backend")
     if marker:
         excluded_backend = marker.args[0]
         if excluded_backend == backend_name:
-            pytest.skip(f'⚠️ Not supported on {excluded_backend} backend')
+            pytest.skip(f"⚠️ Not supported on {excluded_backend} backend")
 
 
 @pytest.fixture(autouse=True)
 def auto_skip_nano(request):
     """Auto-skip tests marked with skip_nano when running on Nano devices."""
-    if request.node.get_closest_marker('skip_nano'):
+    if request.node.get_closest_marker("skip_nano"):
         try:
-            device = request.getfixturevalue('device')
+            device = request.getfixturevalue("device")
             if device.is_nano:
                 pytest.skip("⚠️ Not yet supported on Nano devices")
         except pytest.FixtureLookupError:
@@ -581,11 +707,14 @@ def auto_skip_nano(request):
 def pytest_collection_modifyitems(config, items):
     current = config.getoption("--setup")
     for item in items:
-        marker = item.get_closest_marker('needs_setup')
+        marker = item.get_closest_marker("needs_setup")
         needed = marker.args[0] if marker else "default"
         if needed != current:
             item.add_marker(
-                pytest.mark.skip(reason=f"Test requires setup '{needed}' but setup is '{current}'"))
+                pytest.mark.skip(
+                    reason=f"Test requires setup '{needed}' but setup is '{current}'"
+                )
+            )
 
 
 # Fixture like function that will configure the ragger log level
@@ -633,6 +762,7 @@ def pytest_sessionstart(session):
     # a previous run are not mixed in.
     if session.config.getoption("coverage"):
         import shutil
+
         trace_root = Path(session.config.rootpath).resolve() / COVERAGE_TRACE_ROOT
         shutil.rmtree(trace_root, ignore_errors=True)
 
