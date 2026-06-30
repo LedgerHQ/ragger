@@ -487,6 +487,54 @@ It can be useful to record all the APDU transmitted between the client and the
 application during a test. the ``--log_apdu_file`` allows to specify a file
 path in which every :term:`APDU` and :term:`RAPDU` will be recorded.
 
+Disabling the navigation (``--no-nav``)
+'''''''''''''''''''''''''''''''''''''''
+
+The ``--no-nav`` CLI argument disables the navigation: the :class:`Navigator
+<ragger.navigator.navigator.Navigator>` methods will exchange with the
+application but will not perform any action on the device. This is useful to
+manually drive the UI while a test is running. As manual navigation requires
+seeing the device, ``--no-nav`` automatically forces the ``--display`` option.
+
+Measuring the stack consumption (``--get-stack-consumption``)
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+.. warning::
+
+   Capability limited to the :class:`SpeculosBackend
+   <ragger.backend.SpeculosBackend>`, and requires the application to implement
+   the dedicated APDU (``CLA=0xB0``, ``INS=0x57``).
+
+With the ``--get-stack-consumption`` CLI argument, ``Ragger`` sends an APDU
+after each test to measure the application stack consumption. The per-test
+values, as well as a summary highlighting the worst case, are printed at the end
+of the test session. If the stack consumption cannot be retrieved (for instance
+when a test purposely quits Speculos), the test is not failed.
+
+Producing firmware code coverage (``--coverage``)
+'''''''''''''''''''''''''''''''''''''''''''''''''
+
+.. warning::
+
+   Capability limited to the :class:`SpeculosBackend
+   <ragger.backend.SpeculosBackend>`, and requires the application to be built
+   with debug symbols.
+
+The ``--coverage`` CLI argument traces the application inside Speculos/QEMU and,
+at the end of the session, emits an `lcov` firmware coverage file. Two companion
+arguments tune the output:
+
+- ``--coverage_output`` sets the output `lcov` file (default ``coverage.info``).
+  With several devices, one file per device is written as
+  ``<stem>-<device>.info``. An HTML report (``<stem>_html/``) is also rendered
+  if ``genhtml`` is installed.
+- ``--coverage_exclude`` excludes matching source paths (repo-relative) from the
+  coverage, for instance a vendored submodule:
+  ``--coverage_exclude ethereum-plugin-sdk``. It is repeatable, and each value
+  may be a comma-separated list.
+
+More details are available in the :doc:`dedicated coverage chapter <coverage>`.
+
 
 Fixtures and decorators
 +++++++++++++++++++++++
@@ -525,6 +573,46 @@ Some tests should only run on a specific backend. ``Ragger`` defines a
   tests/test_first.py::test_communication[nanos 2.1] SKIPPED (skipped on this backend: "ledgercomm")      [100%]
 
   ============================================= 1 skipped in 0.81s =============================================
+
+
+Skipping a test on a specific backend
+'''''''''''''''''''''''''''''''''''''
+
+Conversely, the ``skip_on_backend`` marker prevents a test from running on a
+given backend, while letting it run on all the others:
+
+.. code-block:: python
+  :caption: tests/test_first.py
+  :linenos:
+
+  import pytest
+
+  CLA = 0xB0
+  INS = 0x01
+
+  # this will run on every backend, except with the ``--backend speculos`` argument
+  @pytest.mark.skip_on_backend("speculos")
+  def test_communicate(backend):
+    print(backend.exchange(cla=CLA, ins=INS))
+
+
+Skipping a test on Nano devices
+'''''''''''''''''''''''''''''''
+
+Some tests are only relevant for touchscreen devices (Stax, Flex, ...). The
+``skip_nano`` marker skips them when running on a Nano device:
+
+.. code-block:: python
+  :caption: tests/test_first.py
+  :linenos:
+
+  import pytest
+
+  # this test will be skipped when running with ``--device nanos``,
+  # ``--device nanox`` or ``--device nanosp``
+  @pytest.mark.skip_nano
+  def test_touch_only(navigator):
+    ...
 
 
 Getting the value of any CLI argument
