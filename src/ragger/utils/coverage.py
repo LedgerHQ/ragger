@@ -304,14 +304,14 @@ def to_html(info: Path, html_dir: Path, project_root: Path) -> Optional[Path]:
         return None
     html_dir.mkdir(parents=True, exist_ok=True)
     try:
-        # `source`: some sources may be absent; `unmapped`: recent genhtml is
-        # strict about line-table entries it cannot map on an optimized build.
+        # Ignore genhtml errors expected on an optimized build: missing sources,
+        # unmappable entries, and line numbers past a file's end (`range`).
         subprocess.run(
             [
                 "genhtml",
                 "--quiet",
                 "--ignore-errors",
-                "source,unmapped",
+                "source,unmapped,range",
                 str(info),
                 "-o",
                 str(html_dir),
