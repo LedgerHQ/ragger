@@ -35,8 +35,9 @@ limitations under the License.
 #
 # Limitations: line/block coverage only (no branch coverage); the app ELF must
 # keep its `.debug_*` sections (a default build does; a stripped/release build
-# does not); attribution is on the optimized build, so it is as approximate as
-# any optimized-build coverage.
+# does not); attribution is on the optimized build, so it is approximate. A
+# covered line near a `return` may be a false positive (a shared epilogue folded
+# into it); an uncovered line is reliable.
 #
 # Enabling tracing requires no change to Speculos or QEMU: Speculos spawns QEMU
 # with `Popen` without an explicit `env`, so the `QEMU_LOG*` variables set in
