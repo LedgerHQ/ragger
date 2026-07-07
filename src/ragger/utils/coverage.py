@@ -35,8 +35,9 @@ limitations under the License.
 #
 # Limitations: line/block coverage only (no branch coverage); the app ELF must
 # keep its `.debug_*` sections (a default build does; a stripped/release build
-# does not); attribution is on the optimized build, so it is as approximate as
-# any optimized-build coverage.
+# does not); attribution is on the optimized build, so it is approximate. A
+# covered line near a `return` may be a false positive (a shared epilogue folded
+# into it); an uncovered line is reliable.
 #
 # Enabling tracing requires no change to Speculos or QEMU: Speculos spawns QEMU
 # with `Popen` without an explicit `env`, so the `QEMU_LOG*` variables set in
@@ -99,6 +100,17 @@ def _text_range(readelf: str, elf: Path) -> Tuple[int, int]:
     raise ValueError(f"no .text section found in {elf}")
 
 
+# Disassembly line: hex-byte column between the address and the mnemonic.
+# No match on an object-dump header line.
+_INSN_RE = re.compile(r"^0x[0-9a-f]+:\s+([0-9a-f]{2}[0-9a-f ]*?)(?:\t| {2,})")
+
+
+def _inline_len(line: str) -> int:
+    """Byte length from a disassembly-form line's inline hex column (0 if none)."""
+    m = _INSN_RE.match(line)
+    return len(m.group(1).replace(" ", "")) // 2 if m else 0
+
+
 def _parse_traces(
     trace_files: List[Path], lo: int, hi: int, delta: int
 ) -> List[Tuple[int, int]]:
@@ -106,9 +118,13 @@ def _parse_traces(
 
     ``lo``/``hi`` bound the app .text in *runtime* addresses; ``delta`` rebases a
     runtime address to its link address.
+
+    Handles both QEMU in_asm layouts (which one is used depends on the
+    qemu-arm-static build): object-dump (``0x<addr>:`` + ``OBJD-T: <bytes>``
+    lines) and plain disassembly (``0x<addr>:  <bytes>  <mnemonic>``).
     """
     ranges: Set[Tuple[int, int]] = set()
-    block_re = re.compile(r"^(0x[0-9a-f]+):")
+    addr_re = re.compile(r"^(0x[0-9a-f]+):")
 
     def flush(addr: Optional[int], length: int) -> None:
         if addr is not None and lo <= addr < hi and length:
@@ -119,12 +135,14 @@ def _parse_traces(
         cur_len = 0
         with open(path, errors="ignore") as fh:
             for line in fh:
-                m = block_re.match(line)
+                if line.startswith("OBJD-T:"):  # object-dump bytes
+                    cur_len += len(line.split(":", 1)[1].strip()) // 2
+                    continue
+                m = addr_re.match(line)
                 if m:
                     flush(cur_addr, cur_len)
-                    cur_addr, cur_len = int(m.group(1), 16), 0
-                elif line.startswith("OBJD-T:"):
-                    cur_len += len(line.split(":", 1)[1].strip()) // 2
+                    cur_addr = int(m.group(1), 16)
+                    cur_len = _inline_len(line)  # 0 for an object-dump header line
             flush(cur_addr, cur_len)
     return sorted(ranges)
 
@@ -287,14 +305,14 @@ def to_html(info: Path, html_dir: Path, project_root: Path) -> Optional[Path]:
         return None
     html_dir.mkdir(parents=True, exist_ok=True)
     try:
-        # `source`: some sources may be absent; `unmapped`: recent genhtml is
-        # strict about line-table entries it cannot map on an optimized build.
+        # Ignore genhtml errors expected on an optimized build: missing sources,
+        # unmappable entries, and line numbers past a file's end (`range`).
         subprocess.run(
             [
                 "genhtml",
                 "--quiet",
                 "--ignore-errors",
-                "source,unmapped",
+                "source,unmapped,range",
                 str(info),
                 "-o",
                 str(html_dir),
