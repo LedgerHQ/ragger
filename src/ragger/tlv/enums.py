@@ -89,6 +89,7 @@ class BlockchainFamily(IntEnum):
     POLKADOT = 0x03
     COSMOS = 0x04
     CARDANO = 0x05
+    TRON = 0x06
 
 
 class SimulationType(IntEnum):
