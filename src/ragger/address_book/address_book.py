@@ -171,7 +171,6 @@ class RegisterIdentity(AddressBookCommand):
         identifier: bytes,
         contact_name: str,
         scope: str,
-        derivation_path: str,
         blockchain_family: BlockchainFamily,
         chain_id: Optional[int] = None,
         group_handle: Optional[bytes] = None,
@@ -182,7 +181,6 @@ class RegisterIdentity(AddressBookCommand):
             identifier: Unique identifier for the contact
             contact_name: Name of the contact (max 32 chars, printable ASCII)
             scope: Scope/namespace for the identifier (max 32 chars)
-            derivation_path: BIP32 path used to derive the HMAC key on device
             blockchain_family: Blockchain family of the identifier
             chain_id: Chain ID for the network (optional, typically used for Ethereum-like chains)
             group_handle: Optional 64-byte group handle to link this identifier to an existing group
@@ -191,7 +189,6 @@ class RegisterIdentity(AddressBookCommand):
         self.identifier = identifier
         self.contact_name = contact_name
         self.scope = scope
-        self.derivation_path = derivation_path
         self.blockchain_family = blockchain_family
         self.chain_id = chain_id
         self.group_handle = group_handle
@@ -202,7 +199,6 @@ class RegisterIdentity(AddressBookCommand):
             self.contact_name and len(self.contact_name) <= CONTACT_NAME_MAX_LENGTH
         ), ERR_CONTACT_NAME_REQUIRED
         assert len(self.identifier) > 0, ERR_IDENTIFIER_REQUIRED
-        assert self.derivation_path, ERR_DERIVATION_PATH_REQUIRED
         assert (self.group_handle is None) == (self.hmac_proof is None), (
             ERR_GROUP_HANDLE_HMAC_TOGETHER
         )
@@ -212,8 +208,6 @@ class RegisterIdentity(AddressBookCommand):
             )
         if self.hmac_proof is not None:
             assert len(self.hmac_proof) == HMAC_PROOF_LENGTH, ERR_HMAC_PROOF_REQUIRED
-
-        path_bytes = pack_derivation_path(self.derivation_path)
 
         payload: bytes = self.serialize_field(
             LedgerCommonFieldTag.STRUCTURE_TYPE, self.struct_type
@@ -228,7 +222,6 @@ class RegisterIdentity(AddressBookCommand):
         payload += self.serialize_field(
             AddressBookFieldTag.ACCOUNT_IDENTIFIER, self.identifier
         )
-        payload += self.serialize_field(SeedIdLkrpFieldTag.DERIVATION_PATH, path_bytes)
         payload += self._serialize_network()
         if self.group_handle is not None:
             payload += self.serialize_field(
@@ -257,7 +250,6 @@ class EditContactName(AddressBookCommand):
         new_contact_name: str,
         hmac_proof: bytes,
         group_handle: bytes,
-        derivation_path: str,
     ) -> None:
         """
         Args:
@@ -265,13 +257,11 @@ class EditContactName(AddressBookCommand):
             new_contact_name: New name to assign to the contact
             hmac_proof: HMAC_NAME from the original Register Identity response
             group_handle: 64-byte group handle received from the Register Identity response
-            derivation_path: BIP32 path used to derive the HMAC key on device
         """
         self.old_contact_name = old_contact_name
         self.new_contact_name = new_contact_name
         self.hmac_proof = hmac_proof
         self.group_handle = group_handle
-        self.derivation_path = derivation_path
 
     def serialize(self) -> bytes:
         assert (
@@ -283,10 +273,7 @@ class EditContactName(AddressBookCommand):
             and len(self.new_contact_name) <= CONTACT_NAME_MAX_LENGTH
         ), ERR_NEW_CONTACT_NAME_REQUIRED
         assert len(self.group_handle) == GROUP_HANDLE_LENGTH, ERR_GROUP_HANDLE_LENGTH
-        assert self.derivation_path, ERR_DERIVATION_PATH_REQUIRED
         assert len(self.hmac_proof) == HMAC_PROOF_LENGTH, ERR_HMAC_PROOF_LENGTH
-
-        path_bytes = pack_derivation_path(self.derivation_path)
 
         payload: bytes = self.serialize_field(
             LedgerCommonFieldTag.STRUCTURE_TYPE, self.struct_type
@@ -302,7 +289,6 @@ class EditContactName(AddressBookCommand):
         payload += self.serialize_field(
             AddressBookFieldTag.GROUP_HANDLE, self.group_handle
         )
-        payload += self.serialize_field(SeedIdLkrpFieldTag.DERIVATION_PATH, path_bytes)
         payload += self.serialize_field(
             LedgerCommonFieldTag.HMAC_PROOF, self.hmac_proof
         )
@@ -321,7 +307,6 @@ class EditIdentifier(AddressBookCommand):
         new_identifier: bytes,
         contact_name: str,
         scope: str,
-        derivation_path: str,
         hmac_proof: bytes,
         hmac_rest: bytes,
         group_handle: bytes,
@@ -334,7 +319,6 @@ class EditIdentifier(AddressBookCommand):
             new_identifier: New identifier for the contact
             contact_name: Name of the contact (unchanged, for display)
             scope: Scope/namespace for the identifier (unchanged)
-            derivation_path: BIP32 path used to derive the HMAC key on device
             hmac_proof: HMAC_NAME from the original Register Identity response
             hmac_rest: HMAC_REST from the original Register Identity response
             group_handle: 64-byte group handle received from the Register Identity response
@@ -345,7 +329,6 @@ class EditIdentifier(AddressBookCommand):
         self.new_identifier = new_identifier
         self.contact_name = contact_name
         self.scope = scope
-        self.derivation_path = derivation_path
         self.hmac_proof = hmac_proof
         self.hmac_rest = hmac_rest
         self.group_handle = group_handle
@@ -359,11 +342,8 @@ class EditIdentifier(AddressBookCommand):
         assert len(self.group_handle) == GROUP_HANDLE_LENGTH, ERR_GROUP_HANDLE_LENGTH
         assert len(self.old_identifier) > 0, ERR_OLD_IDENTIFIER_REQUIRED
         assert len(self.new_identifier) > 0, ERR_NEW_IDENTIFIER_REQUIRED
-        assert self.derivation_path, ERR_DERIVATION_PATH_REQUIRED
         assert len(self.hmac_proof) == HMAC_PROOF_LENGTH, ERR_HMAC_PROOF_LENGTH
         assert len(self.hmac_rest) == HMAC_PROOF_LENGTH, ERR_HMAC_REST_LENGTH
-
-        path_bytes = pack_derivation_path(self.derivation_path)
 
         payload: bytes = self.serialize_field(
             LedgerCommonFieldTag.STRUCTURE_TYPE, self.struct_type
@@ -384,7 +364,6 @@ class EditIdentifier(AddressBookCommand):
         payload += self.serialize_field(
             AddressBookFieldTag.GROUP_HANDLE, self.group_handle
         )
-        payload += self.serialize_field(SeedIdLkrpFieldTag.DERIVATION_PATH, path_bytes)
         payload += self.serialize_field(
             LedgerCommonFieldTag.HMAC_PROOF, self.hmac_proof
         )
@@ -405,7 +384,6 @@ class EditScope(AddressBookCommand):
         new_scope: str,
         identifier: bytes,
         contact_name: str,
-        derivation_path: str,
         hmac_proof: bytes,
         hmac_rest: bytes,
         group_handle: bytes,
@@ -418,7 +396,6 @@ class EditScope(AddressBookCommand):
             new_scope: New scope to assign to the contact
             identifier: Raw identifier bytes
             contact_name: Name of the contact (unchanged, for display)
-            derivation_path: BIP32 path used to derive the HMAC key on device
             hmac_proof: HMAC_NAME from the original Register Identity response
             hmac_rest: HMAC_REST from the original Register Identity response
             group_handle: 64-byte group handle received from the Register Identity response
@@ -429,7 +406,6 @@ class EditScope(AddressBookCommand):
         self.new_scope = new_scope
         self.identifier = identifier
         self.contact_name = contact_name
-        self.derivation_path = derivation_path
         self.hmac_proof = hmac_proof
         self.hmac_rest = hmac_rest
         self.group_handle = group_handle
@@ -448,11 +424,8 @@ class EditScope(AddressBookCommand):
             ERR_NEW_SCOPE_REQUIRED
         )
         assert len(self.identifier) > 0, ERR_IDENTIFIER_REQUIRED
-        assert self.derivation_path, ERR_DERIVATION_PATH_REQUIRED
         assert len(self.hmac_proof) == HMAC_PROOF_LENGTH, ERR_HMAC_PROOF_LENGTH
         assert len(self.hmac_rest) == HMAC_PROOF_LENGTH, ERR_HMAC_REST_LENGTH
-
-        path_bytes = pack_derivation_path(self.derivation_path)
 
         payload: bytes = self.serialize_field(
             LedgerCommonFieldTag.STRUCTURE_TYPE, self.struct_type
@@ -473,7 +446,6 @@ class EditScope(AddressBookCommand):
         payload += self.serialize_field(
             AddressBookFieldTag.GROUP_HANDLE, self.group_handle
         )
-        payload += self.serialize_field(SeedIdLkrpFieldTag.DERIVATION_PATH, path_bytes)
         payload += self.serialize_field(
             LedgerCommonFieldTag.HMAC_PROOF, self.hmac_proof
         )
@@ -610,21 +582,19 @@ class ProvideContact(AddressBookCommand):
         hmac_rest: bytes,
         contact_name: str,
         scope: str,
-        derivation_path: str,
         blockchain_family: BlockchainFamily,
         chain_id: Optional[int] = None,
     ) -> None:
         """
         Args:
-            identifier:         Raw identifier bytes
-            group_handle:    64-byte group handle from the Register Identity response
-            hmac_name:       HMAC_PROOF (32 B) from the Register Identity response
-            hmac_rest:       HMAC_REST  (32 B) from the Register Identity response
-            contact_name:    Human-readable name bound to the identifier
-            scope:           Scope/namespace for the identifier
-            derivation_path: BIP32 path used to derive the HMAC key on device
+            identifier:       Raw identifier bytes
+            group_handle:     64-byte group handle from the Register Identity response
+            hmac_name:        HMAC_PROOF (32 B) from the Register Identity response
+            hmac_rest:        HMAC_REST  (32 B) from the Register Identity response
+            contact_name:     Human-readable name bound to the identifier
+            scope:            Scope/namespace for the identifier
             blockchain_family: Blockchain family of the identifier
-            chain_id:        Chain ID for the network (optional, typically used for Ethereum-like chains)
+            chain_id:         Chain ID for the network (optional, typically used for Ethereum-like chains)
         """
         self.identifier = identifier
         self.group_handle = group_handle
@@ -632,7 +602,6 @@ class ProvideContact(AddressBookCommand):
         self.hmac_rest = hmac_rest
         self.contact_name = contact_name
         self.scope = scope
-        self.derivation_path = derivation_path
         self.blockchain_family = blockchain_family
         self.chain_id = chain_id
 
@@ -645,9 +614,6 @@ class ProvideContact(AddressBookCommand):
         assert len(self.group_handle) == GROUP_HANDLE_LENGTH, ERR_GROUP_HANDLE_LENGTH
         assert len(self.hmac_name) == HMAC_PROOF_LENGTH, ERR_HMAC_PROOF_LENGTH
         assert len(self.hmac_rest) == HMAC_PROOF_LENGTH, ERR_HMAC_REST_LENGTH_ALT
-        assert self.derivation_path, ERR_DERIVATION_PATH_REQUIRED
-
-        path_bytes = pack_derivation_path(self.derivation_path)
 
         payload: bytes = self.serialize_field(
             LedgerCommonFieldTag.STRUCTURE_TYPE, self.struct_type
@@ -665,7 +631,6 @@ class ProvideContact(AddressBookCommand):
         payload += self.serialize_field(
             AddressBookFieldTag.GROUP_HANDLE, self.group_handle
         )
-        payload += self.serialize_field(SeedIdLkrpFieldTag.DERIVATION_PATH, path_bytes)
         payload += self._serialize_network()
         payload += self.serialize_field(LedgerCommonFieldTag.HMAC_PROOF, self.hmac_name)
         payload += self.serialize_field(AddressBookFieldTag.HMAC_REST, self.hmac_rest)
