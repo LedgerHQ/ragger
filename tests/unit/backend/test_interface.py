@@ -8,6 +8,7 @@ from ledgered.devices import Devices, DeviceType
 
 from ragger.backend import BackendInterface, RaisePolicy
 from ragger.error import ExceptionRAPDU
+from ragger.utils import Crop
 
 
 class DummyBackend(BackendInterface):
@@ -33,7 +34,7 @@ class DummyBackend(BackendInterface):
     def exchange_async_raw(self, *args, **kwargs):
         return self.mock.exchange_async_raw(*args, **kwargs)
 
-    def exchange_raw(self, data: bytes, tick_timeout: int):
+    def exchange_raw(self, data: bytes = b"", tick_timeout: int = 5 * 60 * 10):
         return self.mock.exchange_raw(data, tick_timeout)
 
     def receive(self):
@@ -48,7 +49,13 @@ class DummyBackend(BackendInterface):
     def finger_swipe(self, *args, **kwargs):
         self.mock.finger_touch(*args, **kwargs)
 
-    def compare_screen_with_snapshot(self, snap_path, crop=None) -> bool:
+    def compare_screen_with_snapshot(
+        self,
+        golden_snap_path: Path,
+        crop: Crop | None = None,
+        tmp_snap_path: Path | None = None,
+        golden_run: bool = False,
+    ) -> bool:
         return self.mock.compare_screen_with_snapshot()
 
     def save_screen_snapshot(self, path) -> None:

@@ -23,7 +23,7 @@ jobs:
       src_directory: "src"
       bandit_severity_level: "medium"
 
-  mispell:
+  misspell:
     name: Check misspellings
     uses: LedgerHQ/ledger-app-workflows/.github/workflows/reusable_spell_check.yml@v1
     with:
