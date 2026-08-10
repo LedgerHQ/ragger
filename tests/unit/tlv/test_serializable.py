@@ -57,9 +57,7 @@ class TestTlvSerializable(TestCase):
 
     def test_static_helpers_delegate_to_module_functions(self):
         self.assertEqual(der_encode(0x80), TlvSerializable.der_encode(0x80))
-        self.assertEqual(
-            format_tlv(0x20, "AB"), TlvSerializable.serialize_field(0x20, "AB")
-        )
+        self.assertEqual(format_tlv(0x20, "AB"), TlvSerializable.serialize_field(0x20, "AB"))
 
     def test_subclass_can_build_a_payload(self):
 

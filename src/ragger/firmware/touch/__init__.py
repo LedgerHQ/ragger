@@ -14,6 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from .screen import MetaScreen, FullScreen
+from .screen import FullScreen, MetaScreen
 
-__all__ = ["MetaScreen", "FullScreen"]
+__all__ = ["FullScreen", "MetaScreen"]

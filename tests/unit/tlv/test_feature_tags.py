@@ -1,24 +1,24 @@
 from unittest import TestCase
 
 from ragger.tlv import (
-    TrustedNameFieldTag,
-    EvmFunctionFieldTag,
-    CoinInfoFieldTag,
-    SeedIdLkrpFieldTag,
-    TxSimulationFieldTag,
-    SwapTemplateFieldTag,
-    LesMultisigFieldTag,
+    AddressBookFieldTag,
     AleoFieldTag,
-    PerpsContextFieldTag,
+    CoinInfoFieldTag,
+    EvmFunctionFieldTag,
+    LesMultisigFieldTag,
     PerpsActionFieldTag,
-    PerpsCreateOrderFieldTag,
-    PerpsUpdateOrderFieldTag,
+    PerpsApprovalBuilderFeeFieldTag,
     PerpsCancelOrderFieldTag,
+    PerpsContextFieldTag,
+    PerpsCreateOrderFieldTag,
     PerpsLeverageFieldTag,
     PerpsOrderFieldTag,
-    PerpsApprovalBuilderFeeFieldTag,
     PerpsUpdateIsolatedMarginFieldTag,
-    AddressBookFieldTag,
+    PerpsUpdateOrderFieldTag,
+    SeedIdLkrpFieldTag,
+    SwapTemplateFieldTag,
+    TrustedNameFieldTag,
+    TxSimulationFieldTag,
 )
 
 ALL_FEATURE_ENUMS = [
@@ -57,9 +57,7 @@ class TestFeatureFieldTags(TestCase):
         for enum in ALL_FEATURE_ENUMS:
             names = list(enum.__members__)
             canonical = list(enum)
-            self.assertEqual(
-                len(names), len(canonical), f"{enum.__name__} has an aliased member"
-            )
+            self.assertEqual(len(names), len(canonical), f"{enum.__name__} has an aliased member")
 
     def test_derivation_path_is_0x69(self):
         # DERIVATION_PATH 0x69 is shared by SeedID/LKRP and the Address Book.

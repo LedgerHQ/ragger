@@ -24,13 +24,15 @@ from .element import Element
 
 class ChoiceList(Element):
     def choose(self, index: int):
-        assert 1 <= index <= 6, "Choice index must be in [1, 6]"
+        if not 1 <= index <= 6:
+            raise ValueError("Choice index must be in [1, 6]")
         self.client.finger_touch(*self.positions[index])
 
 
 class Suggestions(Element):
     def choose(self, index: int):
-        assert 1 <= index <= 4, "Suggestion index must be in [1, 4]"
+        if not 1 <= index <= 4:
+            raise ValueError("Suggestion index must be in [1, 4]")
         self.client.finger_touch(*self.positions[index])
 
 
@@ -38,9 +40,7 @@ class Suggestions(Element):
 class _GenericKeyboard(Element):
     def write(self, word: str):
         for letter in word.lower():
-            logging.info(
-                "Writing letter '%s', position '%s'", letter, self.positions[letter]
-            )
+            logging.info("Writing letter '%s', position '%s'", letter, self.positions[letter])
             self.client.finger_touch(*self.positions[letter])
 
     def back(self):

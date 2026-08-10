@@ -1,39 +1,40 @@
-import os
-import pytest
 import logging
+import os
 import warnings
+from collections.abc import Generator
 from dataclasses import fields
+from pathlib import Path
+from unittest.mock import MagicMock
+
+import pytest
 from ledgered.devices import Device, Devices
 from ledgered.manifest import Manifest
-from pathlib import Path
-from typing import Generator, List, Optional
-from unittest.mock import MagicMock
 
 from ragger.backend import (
     BackendInterface,
-    SpeculosBackend,
     LedgerCommBackend,
     LedgerWalletBackend,
+    SpeculosBackend,
 )
+from ragger.error import ExceptionRAPDU, MissingElfError, StatusWords
 from ragger.firmware import Firmware
 from ragger.logger import init_loggers, standalone_conf_logger
 from ragger.navigator import (
-    Navigator,
     NanoNavigator,
-    TouchNavigator,
     NavigateWithScenario,
+    Navigator,
+    TouchNavigator,
 )
 from ragger.utils import (
-    find_project_root_dir,
-    find_library_application,
     find_application,
+    find_library_application,
+    find_project_root_dir,
 )
 from ragger.utils.misc import (
-    get_current_app_name_and_version,
     exit_current_app,
+    get_current_app_name_and_version,
     open_app_from_dashboard,
 )
-from ragger.error import ExceptionRAPDU, MissingElfError, StatusWords
 from ragger.utils.structs import RAPDU
 
 from . import configuration as conf
@@ -49,9 +50,7 @@ COVERAGE_TRACE_ROOT = ".ragger_coverage"
 def pytest_addoption(parser):
     parser.addoption("--device", choices=DEVICES, required=True)
     parser.addoption("--backend", choices=BACKENDS, default="speculos")
-    parser.addoption(
-        "--no-nav", action="store_true", default=False, help="Disable the navigation"
-    )
+    parser.addoption("--no-nav", action="store_true", default=False, help="Disable the navigation")
     parser.addoption(
         "--display",
         action="store_true",
@@ -209,16 +208,12 @@ def stack_consumption_hooks(request, get_stack_consumption: bool):
             backend.exchange(cla=0xB0, ins=0x57, p1=0x00, p2=0x01, data=b"")
         except ExceptionRAPDU as e:
             if e.status == StatusWords.SWO_INVALID_CLA:
-                pytest.fail(
-                    "Stack consumption not supported: app not built with DEBUG_OS_STACK_CONSUMPTION=1"
-                )
+                pytest.fail("Stack consumption not supported: app not built with DEBUG_OS_STACK_CONSUMPTION=1")
 
         yield
 
         try:
-            rapdu_retrieve: RAPDU = backend.exchange(
-                cla=0xB0, ins=0x57, p1=0x01, p2=0x01, data=b""
-            )
+            rapdu_retrieve: RAPDU = backend.exchange(cla=0xB0, ins=0x57, p1=0x01, p2=0x01, data=b"")
             consumption = int.from_bytes(rapdu_retrieve.data, byteorder="big")
             print(f"\n[stack consumption] {consumption} bytes.")
             _stack_consumption_results[request.node.nodeid] = consumption
@@ -236,12 +231,8 @@ def pytest_terminal_summary(terminalreporter, exitstatus, config):
         terminalreporter.write_sep("=", "stack consumption summary")
         for test_name, consumption in sorted(_stack_consumption_results.items()):
             terminalreporter.write_line(f"  {consumption:>8} bytes  {test_name}")
-        worst_test, worst_value = max(
-            _stack_consumption_results.items(), key=lambda x: x[1]
-        )
-        terminalreporter.write_sep(
-            "-", f"worst case: {worst_value} bytes  ({worst_test})"
-        )
+        worst_test, worst_value = max(_stack_consumption_results.items(), key=lambda x: x[1])
+        terminalreporter.write_sep("-", f"worst case: {worst_value} bytes  ({worst_test})")
 
     if config.getoption("coverage"):
         from ragger.utils import coverage
@@ -251,20 +242,14 @@ def pytest_terminal_summary(terminalreporter, exitstatus, config):
         if not output.is_absolute():
             output = Path(config.invocation_params.dir) / output
         # Flatten the repeatable option and allow comma-separated values.
-        exclude = [
-            pat
-            for opt in (config.getoption("coverage_exclude") or [])
-            for pat in opt.split(",")
-        ]
+        exclude = [pat for opt in (config.getoption("coverage_exclude") or []) for pat in opt.split(",")]
         results = coverage.finalize(project_root, output, exclude=exclude)
         terminalreporter.write_sep("=", "firmware coverage")
         if not results:
             terminalreporter.write_line("  no coverage produced (see warnings above)")
         for device, files, cov, total, out, html in results:
             pct = 100.0 * cov / total if total else 0.0
-            terminalreporter.write_line(
-                f"  {device}: {cov}/{total} lines ({pct:.1f}%), {files} files -> {out}"
-            )
+            terminalreporter.write_line(f"  {device}: {cov}/{total} lines ({pct:.1f}%), {files} files -> {out}")
             if html is not None:
                 terminalreporter.write_line(f"  {' ' * len(device)}  HTML: {html}")
 
@@ -285,14 +270,14 @@ def root_pytest_dir(request) -> Path:
 
 
 @pytest.fixture(scope="session")
-def supported_devices(root_pytest_dir: Path) -> List[str]:
+def supported_devices(root_pytest_dir: Path) -> list[str]:
     project_root_dir = find_project_root_dir(root_pytest_dir)
     manifest = Manifest.from_path(project_root_dir / "ledger_app.toml")
     return ["nanosp" if d == "nanos+" else d for d in manifest.app.devices.json]
 
 
 @pytest.fixture(scope="session")
-def skip_tests_for_unsupported_devices(supported_devices: List[str], device: Device):
+def skip_tests_for_unsupported_devices(supported_devices: list[str], device: Device):
     if device.name not in supported_devices:
         pytest.skip(f"Device {device.name} is not supported according to the manifest")
 
@@ -359,7 +344,7 @@ def test_name(request) -> str:
 #
 # Be aware that the fixture scope must respect the `backend` fixture scope.
 @pytest.fixture(scope=conf.OPTIONAL.BACKEND_SCOPE)
-def additional_speculos_arguments() -> List[str]:
+def additional_speculos_arguments() -> list[str]:
     return []
 
 
@@ -418,7 +403,7 @@ def prepare_speculos_args(
     display: bool,
     pki_prod: bool,
     cli_user_seed: str,
-    additional_args: List[str],
+    additional_args: list[str],
     verbose_speculos: bool = False,
     ignore_missing_binaries: bool = False,
 ):
@@ -446,14 +431,10 @@ def prepare_speculos_args(
     # project_root_dir / conf.OPTIONAL.MAIN_APP_DIR. There should be only one subfolder in the path.
     main_app_path = None
     if conf.OPTIONAL.MAIN_APP_DIR is not None:
-        app_dir_content = list(
-            (project_root_dir / conf.OPTIONAL.MAIN_APP_DIR).iterdir()
-        )
+        app_dir_content = list((project_root_dir / conf.OPTIONAL.MAIN_APP_DIR).iterdir())
         app_dir_subdirectories = [child for child in app_dir_content if child.is_dir()]
         if len(app_dir_subdirectories) != 1:
-            raise ValueError(
-                f"Expected a single folder in {manifest.app.build_directory}, found {len(app_dir_subdirectories)}"
-            )
+            raise ValueError(f"Expected a single folder in {manifest.app.build_directory}, found {len(app_dir_subdirectories)}")
         main_app_path = find_application(app_dir_subdirectories[0], device_name, "c")
 
         # This repo holds the library, not the standalone app: search in build_directory
@@ -475,10 +456,7 @@ def prepare_speculos_args(
     if len(conf.OPTIONAL.SIDELOADED_APPS) != 0:
         # We are testing a a standalone app that needs libraries: search in SIDELOADED_APPS_DIR
         if conf.OPTIONAL.SIDELOADED_APPS_DIR is None:
-            raise ValueError(
-                'Configuration "SIDELOADED_APPS_DIR" is mandatory if '
-                '"SIDELOADED_APPS" is used'
-            )
+            raise ValueError('Configuration "SIDELOADED_APPS_DIR" is mandatory if "SIDELOADED_APPS" is used')
         libs_dir = Path(project_root_dir / conf.OPTIONAL.SIDELOADED_APPS_DIR)
         # Add "-l Appname:filepath" to Speculos command line for every required lib app
         for coin_name, lib_name in conf.OPTIONAL.SIDELOADED_APPS.items():
@@ -490,6 +468,7 @@ def prepare_speculos_args(
                     warnings.warn(
                         f"Could not find sideloaded app library for '{lib_name}': {e}",
                         UserWarning,
+                        stacklevel=2,
                     )
                 else:
                     raise
@@ -498,24 +477,19 @@ def prepare_speculos_args(
         # Find all external libraries that have to be sideloaded
         if conf.OPTIONAL.SIDELOADED_APPS_DIR is not None:
             sideloaded_dir = project_root_dir / conf.OPTIONAL.SIDELOADED_APPS_DIR
-            subdirs = sorted(
-                filter(
-                    lambda d: (sideloaded_dir / d).is_dir(), os.listdir(sideloaded_dir)
-                )
-            )
+            subdirs = sorted(filter(lambda d: (sideloaded_dir / d).is_dir(), os.listdir(sideloaded_dir)))
             for subdir in subdirs:
                 try:
                     # Currently only C apps are used as additional binaries by ragger (Ethereum and Exchange)
                     # TODO: add support for Rust SDK libraries if needed
-                    lib_path = find_application(
-                        sideloaded_dir / subdir, device_name, "c"
-                    )
+                    lib_path = find_application(sideloaded_dir / subdir, device_name, "c")
                     speculos_args.append(f"-l{lib_path}")
                 except MissingElfError as e:
                     if ignore_missing_binaries:
                         warnings.warn(
                             f"Could not find sideloaded app binary for '{subdir}': {e}",
                             UserWarning,
+                            stacklevel=2,
                         )
                     else:
                         raise
@@ -539,12 +513,12 @@ def create_backend(
     device: Device,
     display: bool,
     pki_prod: bool,
-    log_apdu_file: Optional[Path],
+    log_apdu_file: Path | None,
     cli_user_seed: str,
-    additional_speculos_arguments: List[str],
+    additional_speculos_arguments: list[str],
     verbose_speculos: bool = False,
     ignore_missing_binaries: bool = False,
-    coverage_trace_dir: Optional[Path] = None,
+    coverage_trace_dir: Path | None = None,
 ) -> BackendInterface:
     if backend_name.lower() == "ledgercomm":
         return LedgerCommBackend(
@@ -554,9 +528,7 @@ def create_backend(
             with_gui=display,
         )
     elif backend_name.lower() == "ledgerwallet":
-        return LedgerWalletBackend(
-            device=device, log_apdu_file=log_apdu_file, with_gui=display
-        )
+        return LedgerWalletBackend(device=device, log_apdu_file=log_apdu_file, with_gui=display)
     elif backend_name.lower() == "speculos":
         main_app_path, speculos_args = prepare_speculos_args(
             root_pytest_dir,
@@ -576,9 +548,7 @@ def create_backend(
             **speculos_args,
         )
     else:
-        raise ValueError(
-            f"Backend '{backend_name}' is unknown. Valid backends are: {BACKENDS}"
-        )
+        raise ValueError(f"Backend '{backend_name}' is unknown. Valid backends are: {BACKENDS}")
 
 
 # Backend scope can be configured by the user
@@ -592,9 +562,9 @@ def backend(
     device: Device,
     display: bool,
     pki_prod: bool,
-    log_apdu_file: Optional[Path],
+    log_apdu_file: Path | None,
     cli_user_seed: str,
-    additional_speculos_arguments: List[str],
+    additional_speculos_arguments: list[str],
     verbose_speculos: bool,
     ignore_missing_binaries: bool,
     coverage_enabled: bool,
@@ -622,11 +592,12 @@ def backend(
     except MissingElfError as e:
         pytest.fail(f"Missing ELF: {e}")
 
-    assert backend_instance is not None, "Backend instance should be initialized"
+    if backend_instance is None:
+        raise RuntimeError("Backend instance should be initialized")
     with backend_instance as b:
         if backend_name.lower() != "speculos" and conf.OPTIONAL.APP_NAME:
             # Make sure the app is restarted as this is what is requested by the fixture scope
-            app_name, version = get_current_app_name_and_version(b)
+            app_name, _version = get_current_app_name_and_version(b)
             requested_app = conf.OPTIONAL.APP_NAME
             if app_name == requested_app:
                 exit_current_app(b)
@@ -663,9 +634,7 @@ def scenario_navigator(
     test_name: str,
     default_screenshot_path: Path,
 ):
-    return NavigateWithScenario(
-        backend, navigator, device, test_name, default_screenshot_path
-    )
+    return NavigateWithScenario(backend, navigator, device, test_name, default_screenshot_path)
 
 
 @pytest.fixture(autouse=True)
@@ -710,11 +679,7 @@ def pytest_collection_modifyitems(config, items):
         marker = item.get_closest_marker("needs_setup")
         needed = marker.args[0] if marker else "default"
         if needed != current:
-            item.add_marker(
-                pytest.mark.skip(
-                    reason=f"Test requires setup '{needed}' but setup is '{current}'"
-                )
-            )
+            item.add_marker(pytest.mark.skip(reason=f"Test requires setup '{needed}' but setup is '{current}'"))
 
 
 # Fixture like function that will configure the ragger log level

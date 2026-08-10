@@ -1,7 +1,7 @@
 from unittest import TestCase
 
-from ragger.tlv import LedgerStructType
 from ragger.address_book import AddressBookCommand, AddressBookSubCommand
+from ragger.tlv import LedgerStructType
 
 
 class _Dummy(AddressBookCommand):
@@ -33,9 +33,7 @@ class TestGetChunksFraming(TestCase):
         apdus = _Dummy(b"\xaa\xbb").get_chunks()
         self.assertEqual(1, len(apdus))
         # CLA INS P1 P2 Lc | len-prefix(2) | payload
-        self.assertEqual(
-            bytes([0xB0, 0x10, 0x01, 0x00, 4]) + b"\x00\x02\xaa\xbb", apdus[0]
-        )
+        self.assertEqual(bytes([0xB0, 0x10, 0x01, 0x00, 4]) + b"\x00\x02\xaa\xbb", apdus[0])
 
     def test_p1_is_the_subcommand(self):
         self.assertEqual(

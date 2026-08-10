@@ -1,14 +1,14 @@
 from unittest import TestCase
 
 from ragger.tlv import (
-    LedgerStructType,
     BlockchainFamily,
-    TrustedNameType,
-    TrustedNameSource,
-    SimulationType,
-    ProxyDelegatorType,
+    LedgerStructType,
     LesMultisigRole,
     LkrpStepType,
+    ProxyDelegatorType,
+    SimulationType,
+    TrustedNameSource,
+    TrustedNameType,
 )
 
 

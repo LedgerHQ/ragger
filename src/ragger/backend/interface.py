@@ -15,18 +15,20 @@ limitations under the License.
 """
 
 from abc import ABC, abstractmethod
+from collections.abc import Generator, Iterable
 from contextlib import contextmanager
 from enum import Enum, auto
 from pathlib import Path
 from types import TracebackType
-from typing import Optional, Type, Generator, Any, Iterable, Union
-from ledgered.devices import Device
+from typing import Any
 from warnings import warn
 
-from ragger.firmware import DEPRECATION_MESSAGE, Firmware
-from ragger.logger import get_default_logger, get_apdu_logger, set_apdu_logger_file
-from ragger.utils import pack_APDU, RAPDU, Crop
+from ledgered.devices import Device
+
 from ragger.error import StatusWords
+from ragger.firmware import DEPRECATION_MESSAGE, Firmware
+from ragger.logger import get_apdu_logger, get_default_logger, set_apdu_logger_file
+from ragger.utils import RAPDU, Crop, pack_APDU
 
 
 class RaisePolicy(Enum):
@@ -58,7 +60,7 @@ class BackendInterface(ABC):
     def __init__(
         self,
         device: Device,
-        log_apdu_file: Optional[Path] = None,
+        log_apdu_file: Path | None = None,
         whitelisted_status: Iterable = (),
     ):
         """Initializes the Backend
@@ -67,10 +69,10 @@ class BackendInterface(ABC):
         :type device: Device
         """
         self._device = device
-        self._last_async_response: Optional[RAPDU] = None
+        self._last_async_response: RAPDU | None = None
         self.raise_policy = RaisePolicy.RAISE_ALL_BUT_0x9000
         # SDK graphic library
-        self.sdk_graphics: Optional[GraphicalLibrary] = None
+        self.sdk_graphics: GraphicalLibrary | None = None
 
         if log_apdu_file:
             set_apdu_logger_file(log_apdu_file=log_apdu_file)
@@ -94,11 +96,11 @@ class BackendInterface(ABC):
         :return: The currently managed Device.
         :rtype: Device
         """
-        warn(DEPRECATION_MESSAGE)
+        warn(DEPRECATION_MESSAGE, stacklevel=2)
         return Firmware(self._device.type)
 
     @property
-    def last_async_response(self) -> Optional[RAPDU]:
+    def last_async_response(self) -> RAPDU | None:
         """
         :return: The last RAPDU received after a call to `exchange_async` or
                  `exchange_async_raw`. `None` if no called was made, or if it
@@ -114,9 +116,9 @@ class BackendInterface(ABC):
     @abstractmethod
     def __exit__(
         self,
-        exc_type: Optional[Type[BaseException]],
-        exc_val: Optional[BaseException],
-        exc_tb: Optional[TracebackType],
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None,
     ):
         raise NotImplementedError
 
@@ -137,19 +139,11 @@ class BackendInterface(ABC):
         """
         return (
             (self.raise_policy == RaisePolicy.RAISE_ALL)
-            or (
-                (self.raise_policy == RaisePolicy.RAISE_ALL_BUT_0x9000)
-                and (rapdu.status != StatusWords.SWO_SUCCESS)
-            )
-            or (
-                (self.raise_policy == RaisePolicy.RAISE_CUSTOM)
-                and (rapdu.status not in self.whitelisted_status)
-            )
+            or ((self.raise_policy == RaisePolicy.RAISE_ALL_BUT_0x9000) and (rapdu.status != StatusWords.SWO_SUCCESS))
+            or ((self.raise_policy == RaisePolicy.RAISE_CUSTOM) and (rapdu.status not in self.whitelisted_status))
         )
 
-    def send(
-        self, cla: int, ins: int, p1: int = 0, p2: int = 0, data: bytes = b""
-    ) -> None:
+    def send(self, cla: int, ins: int, p1: int = 0, p2: int = 0, data: bytes = b"") -> None:
         """
         Formats then sends an APDU to the backend.
 
@@ -234,9 +228,7 @@ class BackendInterface(ABC):
         :return: The APDU response
         :rtype: RAPDU
         """
-        return self.exchange_raw(
-            pack_APDU(cla, ins, p1, p2, data), tick_timeout=tick_timeout
-        )
+        return self.exchange_raw(pack_APDU(cla, ins, p1, p2, data), tick_timeout=tick_timeout)
 
     @abstractmethod
     def exchange_raw(self, data: bytes = b"", tick_timeout: int = 5 * 60 * 10) -> RAPDU:
@@ -259,9 +251,7 @@ class BackendInterface(ABC):
         raise NotImplementedError
 
     @contextmanager
-    def exchange_async(
-        self, cla: int, ins: int, p1: int = 0, p2: int = 0, data: bytes = b""
-    ) -> Generator[None, None, None]:
+    def exchange_async(self, cla: int, ins: int, p1: int = 0, p2: int = 0, data: bytes = b"") -> Generator[None, None, None]:
         """
         Formats and sends an APDU to the backend, then gives the control back to
         the caller.
@@ -295,9 +285,7 @@ class BackendInterface(ABC):
 
     @contextmanager
     @abstractmethod
-    def exchange_async_raw(
-        self, data: bytes = b""
-    ) -> Generator[Union[bool, None], None, None]:
+    def exchange_async_raw(self, data: bytes = b"") -> Generator[bool | None, None, None]:
         """
         Sends the given APDU to the backend, then gives the control back to the
         caller.
@@ -393,9 +381,7 @@ class BackendInterface(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def finger_swipe(
-        self, x: int = 0, y: int = 0, direction: str = "left", delay: float = 0.5
-    ) -> None:
+    def finger_swipe(self, x: int = 0, y: int = 0, direction: str = "left", delay: float = 0.5) -> None:
         """
         Performs a finger swipe on the device screen.
 
@@ -425,8 +411,8 @@ class BackendInterface(ABC):
     def compare_screen_with_snapshot(
         self,
         golden_snap_path: Path,
-        crop: Optional[Crop] = None,
-        tmp_snap_path: Optional[Path] = None,
+        crop: Crop | None = None,
+        tmp_snap_path: Path | None = None,
         golden_run: bool = False,
     ) -> bool:
         """

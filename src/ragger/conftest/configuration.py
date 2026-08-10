@@ -1,22 +1,21 @@
 from dataclasses import dataclass
-from typing import Optional, List
 
 
 @dataclass
 class OptionalOptions:
     APP_NAME: str
-    MAIN_APP_DIR: Optional[str]
+    MAIN_APP_DIR: str | None
     SIDELOADED_APPS: dict
-    SIDELOADED_APPS_DIR: Optional[str]
+    SIDELOADED_APPS_DIR: str | None
     BACKEND_SCOPE: str
     CUSTOM_SEED: str
-    ALLOWED_SETUPS: List[str]
+    ALLOWED_SETUPS: list[str]
 
 
 OPTIONAL = OptionalOptions(
     # Use this parameter if you want physical Ragger backends (LedgerWallet and LedgerComm) to start
     # your application from the Dashboard at test start.
-    APP_NAME=str(),
+    APP_NAME="",
     # If not None, the application being tested with Ragger should be loaded as a library and not as
     # a standalone application. This parameter points to the repository holding the "main app", i.e
     # the application started from the Dashboard, which will then use the "local app" as a library.
@@ -46,7 +45,7 @@ OPTIONAL = OptionalOptions(
     # This would result in speculos being launched with --seed <CUSTOM_SEED>
     # If a seed is provided through the "--seed" pytest command line option, it will override this one.
     # /!\ DO NOT USE SEEDS WITH REAL FUNDS /!\
-    CUSTOM_SEED=str(),
+    CUSTOM_SEED="",
     # /!\ DEPRECATED /!\
     # Use this parameter if you want ragger to handle running different test suites depending on setup
     # Useful when some tests need certain build options and other tests need other build options, or a

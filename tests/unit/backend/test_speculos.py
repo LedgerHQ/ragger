@@ -1,15 +1,15 @@
 from io import BytesIO
-from ledgered.devices import DeviceType, Devices
-from typing import List
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
+
+from ledgered.devices import Devices, DeviceType
 
 from ragger.backend import SpeculosBackend
 
 APPNAME = "some app"
 
 
-def get_next_in_list(the_list: List, elt: str) -> str:
+def get_next_in_list(the_list: list, elt: str) -> str:
     index = the_list.index(elt)
     return the_list[index + 1]
 
@@ -64,9 +64,7 @@ class TestSpeculosBackend(TestCase):
             self.assertTrue(backend._client.__enter__.called)
             self.assertEqual(backend, yielded)
             self.assertEqual(backend._last_screenshot, backend._home_screenshot)
-            self.assertEqual(
-                backend._last_screenshot.getvalue(), BytesIO(expected_image).getvalue()
-            )
+            self.assertEqual(backend._last_screenshot.getvalue(), BytesIO(expected_image).getvalue())
             self.assertFalse(backend._client.__exit__.called)
         self.assertTrue(backend._client.__exit__.called)
 
@@ -99,18 +97,12 @@ class TestSpeculosBackend(TestCase):
                 args, kwargs = all_client_args[index]
                 self.assertEqual(args, ())
                 self.assertEqual(kwargs["app"], APPNAME)
-                self.assertEqual(
-                    kwargs["api_url"], f"http://127.0.0.1:{client._api_port}"
-                )
+                self.assertEqual(kwargs["api_url"], f"http://127.0.0.1:{client._api_port}")
                 speculos_args = kwargs["args"]
                 client_seeds.add(get_next_in_list(speculos_args, "--seed"))
                 client_rngs.add(get_next_in_list(speculos_args, "--deterministic-rng"))
-                client_priv_keys.add(
-                    get_next_in_list(speculos_args, "--user-private-key")
-                )
-                client_attestations.add(
-                    get_next_in_list(speculos_args, "--attestation-key")
-                )
+                client_priv_keys.add(get_next_in_list(speculos_args, "--user-private-key"))
+                client_attestations.add(get_next_in_list(speculos_args, "--attestation-key"))
                 api_port = int(get_next_in_list(speculos_args, "--api-port"))
                 client_api_ports.add(client._api_port)
                 apdu_port = int(get_next_in_list(speculos_args, "--apdu-port"))

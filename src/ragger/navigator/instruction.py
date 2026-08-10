@@ -1,5 +1,5 @@
-from enum import auto, Enum
-from typing import Any, Dict
+from enum import Enum, auto
+from typing import Any
 
 
 class BaseNavInsID(Enum):
@@ -84,7 +84,7 @@ class NavInsID(BaseNavInsID):
 
 
 class NavIns:
-    def __init__(self, id: BaseNavInsID, args=(), kwargs: Dict[str, Any] = {}):
+    def __init__(self, id: BaseNavInsID, args=(), kwargs: dict[str, Any] | None = None):
         self.id = id
         self.args = args
-        self.kwargs = kwargs
+        self.kwargs = kwargs if kwargs is not None else {}

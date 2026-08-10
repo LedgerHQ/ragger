@@ -22,9 +22,7 @@ except ImportError as e:
         raise e
 
     def RaggerGUI(*args, **kwatgs):  # type: ignore
-        raise ImportError(
-            "This feature needs PyQt6. Please install this package (run `pip install pyqt6`)"
-        )
+        raise ImportError("This feature needs PyQt6. Please install this package (run `pip install pyqt6`)")
 
 
 __all__ = ["RaggerGUI"]

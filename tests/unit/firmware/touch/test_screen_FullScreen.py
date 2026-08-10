@@ -1,5 +1,6 @@
 from unittest import TestCase
 from unittest.mock import MagicMock
+
 from ledgered.devices import Devices, DeviceType
 
 from ragger.firmware.touch import FullScreen
@@ -55,9 +56,7 @@ class TestFullScreen(TestCase):
             layout.choose(index)
             call_number += 1
             self.assertEqual(self.backend.finger_touch.call_count, call_number)
-            self.assertEqual(
-                self.backend.finger_touch.call_args, ((*position[index],),)
-            )
+            self.assertEqual(self.backend.finger_touch.call_args, ((*position[index],),))
 
     def test_keyboards_common_functions(self):
         layouts_word_positions = [
@@ -92,9 +91,7 @@ class TestFullScreen(TestCase):
 
             layout.back()
             self.assertEqual(self.backend.finger_touch.call_count, call_number + 1)
-            self.assertEqual(
-                self.backend.finger_touch.call_args, ((*positions["back"],),)
-            )
+            self.assertEqual(self.backend.finger_touch.call_args, ((*positions["back"],),))
 
             self.backend.finger_touch.reset_mock()
 
@@ -119,9 +116,7 @@ class TestFullScreen(TestCase):
             layout.change_layout()
             call_number += 1
             self.assertEqual(self.backend.finger_touch.call_count, call_number)
-            self.assertEqual(
-                self.backend.finger_touch.call_args, ((*positions["change_layout"],),)
-            )
+            self.assertEqual(self.backend.finger_touch.call_args, ((*positions["change_layout"],),))
 
     def test_keyboards_change_case(self):
         self.assertEqual(self.backend.finger_touch.call_count, 0)
@@ -149,6 +144,4 @@ class TestFullScreen(TestCase):
             layout.more_specials()
             call_number += 1
             self.assertEqual(self.backend.finger_touch.call_count, call_number)
-            self.assertEqual(
-                self.backend.finger_touch.call_args, ((*positions["more_specials"],),)
-            )
+            self.assertEqual(self.backend.finger_touch.call_args, ((*positions["more_specials"],),))

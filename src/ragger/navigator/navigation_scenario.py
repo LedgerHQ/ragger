@@ -1,11 +1,13 @@
-from pathlib import Path
-from typing import Optional, Sequence
+from collections.abc import Sequence
 from enum import Enum, auto
+from pathlib import Path
+
 from ledgered.devices import Device
 
 from ragger.backend import BackendInterface
-from .navigator import InstructionType, Navigator, NavInsID
 from ragger.backend.interface import GraphicalLibrary
+
+from .navigator import InstructionType, Navigator, NavInsID
 
 
 class UseCase(Enum):
@@ -18,7 +20,7 @@ class NavigationScenarioData:
     validation: Sequence[InstructionType]
     dismiss_warning: Sequence[InstructionType]
     pattern: str = ""
-    post_validation_spinner: Optional[str] = None
+    post_validation_spinner: str | None = None
 
     def __init__(
         self,
@@ -27,7 +29,7 @@ class NavigationScenarioData:
         use_case: UseCase,
         approve: bool,
         nb_warnings: int = 1,
-        post_validation_spinner: Optional[str] = None,
+        post_validation_spinner: str | None = None,
     ):
 
         if device.is_nano:
@@ -37,31 +39,21 @@ class NavigationScenarioData:
             if backend.sdk_graphics == GraphicalLibrary.BAGL:
                 self.dismiss_warning = [NavInsID.RIGHT_CLICK] * nb_warnings
                 # Legacy navigation scenario when running an App compiled with bagl sdk library
-                self.pattern = (
-                    r"^(Accept risk|Accept|Approve|Sign|Confirm)$"
-                    if approve
-                    else r"^(Cancel|Reject)$"
-                )
+                self.pattern = r"^(Accept risk|Accept|Approve|Sign|Confirm)$" if approve else r"^(Cancel|Reject)$"
             else:
                 self.dismiss_warning = []
                 self.dismiss_warning += [NavInsID.RIGHT_CLICK] * (nb_warnings - 1)
                 self.dismiss_warning += [NavInsID.BOTH_CLICK]
                 # navigation scenario when running an App compiled with nbgl sdk library
                 if use_case == UseCase.ADDRESS_CONFIRMATION:
-                    self.pattern = (
-                        r"^(Accept risk|Accept|Approve|Sign|Confirm)$"
-                        if approve
-                        else r"^(Cancel|Reject)$"
-                    )
+                    self.pattern = r"^(Accept risk|Accept|Approve|Sign|Confirm)$" if approve else r"^(Cancel|Reject)$"
                 elif use_case == UseCase.TX_REVIEW:
                     if approve:
                         # Matches:
                         #  - "Accept risk and "
                         #  - "Accept risk and sign [transaction/message/operation]"
                         #  - "Sign [transaction/message/operation]"
-                        blind_sign_pattern = (
-                            r"(Accept risk and (sign (transaction|message|operation))?)"
-                        )
+                        blind_sign_pattern = r"(Accept risk and (sign (transaction|message|operation))?)"
                         clear_sign_pattern = r"(Sign (transaction|message|operation))"
                         self.pattern = rf"^({blind_sign_pattern}|{clear_sign_pattern})$"
                     else:
@@ -127,9 +119,9 @@ class NavigateWithScenario:
     def _navigate_with_scenario(
         self,
         scenario: NavigationScenarioData,
-        path: Optional[Path] = None,
-        test_name: Optional[str] = None,
-        custom_screen_text: Optional[str] = None,
+        path: Path | None = None,
+        test_name: str | None = None,
+        custom_screen_text: str | None = None,
         do_comparison: bool = True,
     ):
         if custom_screen_text is not None:
@@ -164,7 +156,7 @@ class NavigateWithScenario:
     def _navigate_warning(
         self,
         scenario: NavigationScenarioData,
-        test_name: Optional[str] = None,
+        test_name: str | None = None,
         do_comparison: bool = True,
         warning_path: str = "warning",
     ):
@@ -176,47 +168,37 @@ class NavigateWithScenario:
                 screen_change_after_last_instruction=False,
             )
         else:
-            self.navigator.navigate(
-                scenario.dismiss_warning, screen_change_after_last_instruction=False
-            )
+            self.navigator.navigate(scenario.dismiss_warning, screen_change_after_last_instruction=False)
 
     def review_approve(
         self,
-        path: Optional[Path] = None,
-        test_name: Optional[str] = None,
-        custom_screen_text: Optional[str] = None,
+        path: Path | None = None,
+        test_name: str | None = None,
+        custom_screen_text: str | None = None,
         do_comparison: bool = True,
     ):
-        scenario = NavigationScenarioData(
-            self.device, self.backend, UseCase.TX_REVIEW, True
-        )
-        self._navigate_with_scenario(
-            scenario, path, test_name, custom_screen_text, do_comparison
-        )
+        scenario = NavigationScenarioData(self.device, self.backend, UseCase.TX_REVIEW, True)
+        self._navigate_with_scenario(scenario, path, test_name, custom_screen_text, do_comparison)
 
     def review_approve_with_warning(
         self,
-        path: Optional[Path] = None,
-        test_name: Optional[str] = None,
-        custom_screen_text: Optional[str] = None,
+        path: Path | None = None,
+        test_name: str | None = None,
+        custom_screen_text: str | None = None,
         do_comparison: bool = True,
         warning_path: str = "warning",
         nb_warnings: int = 1,
     ):
-        scenario = NavigationScenarioData(
-            self.device, self.backend, UseCase.TX_REVIEW, True, nb_warnings=nb_warnings
-        )
+        scenario = NavigationScenarioData(self.device, self.backend, UseCase.TX_REVIEW, True, nb_warnings=nb_warnings)
         self._navigate_warning(scenario, test_name, do_comparison, warning_path)
-        self._navigate_with_scenario(
-            scenario, path, test_name, custom_screen_text, do_comparison
-        )
+        self._navigate_with_scenario(scenario, path, test_name, custom_screen_text, do_comparison)
 
     def review_approve_with_spinner(
         self,
         spinner_text: str,
-        path: Optional[Path] = None,
-        test_name: Optional[str] = None,
-        custom_screen_text: Optional[str] = None,
+        path: Path | None = None,
+        test_name: str | None = None,
+        custom_screen_text: str | None = None,
         do_comparison: bool = True,
     ):
         scenario = NavigationScenarioData(
@@ -226,65 +208,47 @@ class NavigateWithScenario:
             True,
             post_validation_spinner=spinner_text,
         )
-        self._navigate_with_scenario(
-            scenario, path, test_name, custom_screen_text, do_comparison
-        )
+        self._navigate_with_scenario(scenario, path, test_name, custom_screen_text, do_comparison)
 
     def review_reject(
         self,
-        path: Optional[Path] = None,
-        test_name: Optional[str] = None,
-        custom_screen_text: Optional[str] = None,
+        path: Path | None = None,
+        test_name: str | None = None,
+        custom_screen_text: str | None = None,
         do_comparison: bool = True,
     ):
-        scenario = NavigationScenarioData(
-            self.device, self.backend, UseCase.TX_REVIEW, False
-        )
-        self._navigate_with_scenario(
-            scenario, path, test_name, custom_screen_text, do_comparison
-        )
+        scenario = NavigationScenarioData(self.device, self.backend, UseCase.TX_REVIEW, False)
+        self._navigate_with_scenario(scenario, path, test_name, custom_screen_text, do_comparison)
 
     def review_reject_with_warning(
         self,
-        path: Optional[Path] = None,
-        test_name: Optional[str] = None,
-        custom_screen_text: Optional[str] = None,
+        path: Path | None = None,
+        test_name: str | None = None,
+        custom_screen_text: str | None = None,
         do_comparison: bool = True,
         warning_path: str = "warning",
         nb_warnings: int = 1,
     ):
-        scenario = NavigationScenarioData(
-            self.device, self.backend, UseCase.TX_REVIEW, False, nb_warnings=nb_warnings
-        )
+        scenario = NavigationScenarioData(self.device, self.backend, UseCase.TX_REVIEW, False, nb_warnings=nb_warnings)
         self._navigate_warning(scenario, test_name, do_comparison, warning_path)
-        self._navigate_with_scenario(
-            scenario, path, test_name, custom_screen_text, do_comparison
-        )
+        self._navigate_with_scenario(scenario, path, test_name, custom_screen_text, do_comparison)
 
     def address_review_approve(
         self,
-        path: Optional[Path] = None,
-        test_name: Optional[str] = None,
-        custom_screen_text: Optional[str] = None,
+        path: Path | None = None,
+        test_name: str | None = None,
+        custom_screen_text: str | None = None,
         do_comparison: bool = True,
     ):
-        scenario = NavigationScenarioData(
-            self.device, self.backend, UseCase.ADDRESS_CONFIRMATION, True
-        )
-        self._navigate_with_scenario(
-            scenario, path, test_name, custom_screen_text, do_comparison
-        )
+        scenario = NavigationScenarioData(self.device, self.backend, UseCase.ADDRESS_CONFIRMATION, True)
+        self._navigate_with_scenario(scenario, path, test_name, custom_screen_text, do_comparison)
 
     def address_review_reject(
         self,
-        path: Optional[Path] = None,
-        test_name: Optional[str] = None,
-        custom_screen_text: Optional[str] = None,
+        path: Path | None = None,
+        test_name: str | None = None,
+        custom_screen_text: str | None = None,
         do_comparison: bool = True,
     ):
-        scenario = NavigationScenarioData(
-            self.device, self.backend, UseCase.ADDRESS_CONFIRMATION, False
-        )
-        self._navigate_with_scenario(
-            scenario, path, test_name, custom_screen_text, do_comparison
-        )
+        scenario = NavigationScenarioData(self.device, self.backend, UseCase.ADDRESS_CONFIRMATION, False)
+        self._navigate_with_scenario(scenario, path, test_name, custom_screen_text, do_comparison)

@@ -2,6 +2,7 @@ from enum import IntEnum
 from io import BytesIO
 from multiprocessing import Process
 from pathlib import Path
+from typing import ClassVar
 
 from flask import Flask, request
 from PIL import Image
@@ -21,21 +22,21 @@ class EndPoint:
 
 
 class Events:
-    back = [{"text": "Back", "x": 51, "y": 19}]
-    info = [
+    back: ClassVar[list] = [{"text": "Back", "x": 51, "y": 19}]
+    info: ClassVar[list] = [
         {"text": "Boilerplate App", "x": 20, "y": 3},
         {"text": "(c) 2020 Ledger", "x": 26, "y": 17},
     ]
-    home = [
+    home: ClassVar[list] = [
         {"text": "Boilerplate", "x": 41, "y": 3},
         {"text": "is ready", "x": 41, "y": 17},
     ]
-    version = [
+    version: ClassVar[list] = [
         {"text": "Version", "x": 43, "y": 3},
         {"text": "1.0.1", "x": 52, "y": 17},
     ]
-    about = [{"text": "About", "x": 47, "y": 19}]
-    indexed = [home, version, about, info, back]
+    about: ClassVar[list] = [{"text": "About", "x": 47, "y": 19}]
+    indexed: ClassVar[list] = [home, version, about, info, back]
 
 
 # can't use lambdas: Flask stores functions using their names (and lambdas have none, so they'll
@@ -84,11 +85,7 @@ class Actions:
         return {"events": Events.indexed[self.idx]}, 200
 
     def screenshot(self, *args):
-        path = (
-            Path(__file__).parent.resolve()
-            / "snapshots/nanos/generic"
-            / f"{str(self.idx).zfill(5)}.png"
-        )
+        path = Path(__file__).parent.resolve() / "snapshots/nanos/generic" / f"{str(self.idx).zfill(5)}.png"
         img_temp = Image.open(path)
         iobytes = BytesIO()
         img_temp.save(iobytes, format="PNG")
@@ -104,22 +101,12 @@ class SpeculosServerStub:
         self.app = Flask("stub")
         self.app.add_url_rule("/", view_func=root)
         self.app.add_url_rule("/apdu", methods=["GET", "POST"], view_func=apdu)
-        self.app.add_url_rule(
-            "/button/right", methods=["GET", "POST"], view_func=actions.button
-        )
-        self.app.add_url_rule(
-            "/button/left", methods=["GET", "POST"], view_func=actions.button
-        )
-        self.app.add_url_rule(
-            "/button/both", methods=["GET", "POST"], view_func=actions.button
-        )
+        self.app.add_url_rule("/button/right", methods=["GET", "POST"], view_func=actions.button)
+        self.app.add_url_rule("/button/left", methods=["GET", "POST"], view_func=actions.button)
+        self.app.add_url_rule("/button/both", methods=["GET", "POST"], view_func=actions.button)
         self.app.add_url_rule("/events", view_func=actions.events)
-        self.app.add_url_rule(
-            "/screenshot", methods=["GET"], view_func=actions.screenshot
-        )
-        self.app.add_url_rule(
-            "/ticker", methods=["GET", "POST"], view_func=actions.ticker
-        )
+        self.app.add_url_rule("/screenshot", methods=["GET"], view_func=actions.screenshot)
+        self.app.add_url_rule("/ticker", methods=["GET", "POST"], view_func=actions.ticker)
         self.process = None
 
     def __enter__(self):
@@ -128,7 +115,7 @@ class SpeculosServerStub:
         started = False
         while not started:
             try:
-                get("http://127.0.0.1:5000")
+                get("http://127.0.0.1:5000", timeout=5)
                 started = True
             except ConnectionError:
                 pass

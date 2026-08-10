@@ -1,16 +1,16 @@
 from unittest import TestCase
 
-from ragger.tlv import BlockchainFamily, LedgerStructType
 from ragger.address_book import (
-    RegisterIdentity,
     EditContactName,
     EditIdentifier,
-    EditScope,
-    RegisterLedgerAccount,
     EditLedgerAccount,
+    EditScope,
     ProvideContact,
     ProvideLedgerAccountContact,
+    RegisterIdentity,
+    RegisterLedgerAccount,
 )
+from ragger.tlv import BlockchainFamily, LedgerStructType
 
 FAMILY = BlockchainFamily.ETHEREUM
 ADDR = bytes.fromhex("6b175474e89094c44da98b954eedeac495271d0f")  # 20 bytes
@@ -63,9 +63,7 @@ class TestRegisterIdentity(TestCase):
             blockchain_family=BlockchainFamily.ETHEREUM,
         )
         tlv = parse_tlv(cmd.serialize())
-        self.assertEqual(
-            bytes([LedgerStructType.TYPE_REGISTER_IDENTITY]), tlv[STRUCT_TYPE]
-        )
+        self.assertEqual(bytes([LedgerStructType.TYPE_REGISTER_IDENTITY]), tlv[STRUCT_TYPE])
         self.assertEqual(b"\x01", tlv[VERSION])
         self.assertEqual(b"Alice", tlv[CONTACT_NAME])
         self.assertEqual(b"Eth Address 1", tlv[SCOPE])

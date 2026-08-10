@@ -14,16 +14,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+from collections.abc import Generator
 from contextlib import contextmanager
 from time import sleep
-from typing import Generator, Optional
 
 from ledgered.devices import Device
-from ledgerwallet.client import LedgerClient, CommException
+from ledgerwallet.client import CommException, LedgerClient
 from ledgerwallet.transport import HidDevice
 
-from ragger.utils import RAPDU
 from ragger.error import ExceptionRAPDU
+from ragger.utils import RAPDU
+
 from .physical_backend import PhysicalBackend
 
 
@@ -49,7 +50,7 @@ def raise_policy_enforcer(function):
 class LedgerWalletBackend(PhysicalBackend):
     def __init__(self, device: Device, *args, with_gui: bool = False, **kwargs):
         super().__init__(device, *args, with_gui=with_gui, **kwargs)
-        self._client: Optional[LedgerClient] = None
+        self._client: LedgerClient | None = None
 
     def __enter__(self) -> "LedgerWalletBackend":
         self.logger.info(f"Starting {self.__class__.__name__} stream")
@@ -64,7 +65,8 @@ class LedgerWalletBackend(PhysicalBackend):
 
     def __exit__(self, *args):
         super().__exit__(*args)
-        assert self._client is not None
+        if self._client is None:
+            raise RuntimeError("Backend not initialized: used outside context manager")
         self._client.close()
 
     def handle_usb_reset(self) -> None:
@@ -74,12 +76,14 @@ class LedgerWalletBackend(PhysicalBackend):
 
     def send_raw(self, data: bytes = b"") -> None:
         self.apdu_logger.info("=> %s", data.hex())
-        assert self._client is not None
+        if self._client is None:
+            raise RuntimeError("Backend not initialized: used outside context manager")
         self._client.device.write(data)
 
     @raise_policy_enforcer
     def receive(self) -> RAPDU:
-        assert self._client is not None
+        if self._client is None:
+            raise RuntimeError("Backend not initialized: used outside context manager")
         # TODO: remove this checked with LedgerWallet > 0.1.3
         if isinstance(self._client.device, HidDevice):
             raw_result = self._client.device.read(1000)
@@ -92,7 +96,8 @@ class LedgerWalletBackend(PhysicalBackend):
     @raise_policy_enforcer
     def exchange_raw(self, data: bytes = b"", tick_timeout: int = 0) -> RAPDU:
         self.apdu_logger.info("=> %s", data.hex())
-        assert self._client is not None
+        if self._client is None:
+            raise RuntimeError("Backend not initialized: used outside context manager")
         raw_result = self._client.raw_exchange(data)
         result = RAPDU(int.from_bytes(raw_result[-2:], "big"), raw_result[:-2] or b"")
         return result

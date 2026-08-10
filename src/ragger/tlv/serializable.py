@@ -14,8 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from typing import Union
-
 
 def der_encode(value: int) -> bytes:
     """DER-encode an unsigned integer (used for both TLV tags and lengths).
@@ -30,7 +28,7 @@ def der_encode(value: int) -> bytes:
     return value_bytes
 
 
-def format_tlv(tag: int, value: Union[int, str, bytes, bytearray]) -> bytes:
+def format_tlv(tag: int, value: int | str | bytes | bytearray) -> bytes:
     """Serialize a single (tag, value) pair into a DER-style TLV triplet.
 
     ``int`` values are encoded as minimal-length big-endian bytes and ``str``
@@ -44,9 +42,8 @@ def format_tlv(tag: int, value: Union[int, str, bytes, bytearray]) -> bytes:
     elif isinstance(value, bytearray):
         value = bytes(value)
 
-    assert isinstance(value, bytes), (
-        f"Unhandled TLV formatting for type : {type(value)}"
-    )
+    if not isinstance(value, bytes):
+        raise TypeError(f"Unhandled TLV formatting for type : {type(value)}")
 
     tlv = bytearray()
     tlv += der_encode(tag)
@@ -71,5 +68,5 @@ class TlvSerializable:
         return der_encode(value)
 
     @staticmethod
-    def serialize_field(tag: int, value: Union[int, str, bytes, bytearray]) -> bytes:
+    def serialize_field(tag: int, value: int | str | bytes | bytearray) -> bytes:
         return format_tlv(tag, value)

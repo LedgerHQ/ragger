@@ -1,13 +1,13 @@
-from requests.exceptions import ConnectionError
-
-import pytest
 import time
 from pathlib import Path
 
-from ragger.error import ExceptionRAPDU
-from ragger.utils import RAPDU
+import pytest
+from requests.exceptions import ConnectionError
+
 from ragger.backend import RaisePolicy
-from ragger.navigator import NavInsID, NavIns
+from ragger.error import ExceptionRAPDU
+from ragger.navigator import NavIns, NavInsID
+from ragger.utils import RAPDU
 
 ROOT_SCREENSHOT_PATH = Path(__file__).parent.parent.resolve()
 
@@ -70,10 +70,7 @@ def test_waiting_screen(backend, device, navigator):
     prep_tx_apdu = bytes.fromhex("e006008015058000002c80000001800000000000000000000000")
 
     sign_tx_apdu = bytes.fromhex(
-        "e0060100310000000000000001de0b29"
-        "5669a9fd93d5f28d9ec85e40f4cb697b"
-        "ae000000000000029a0c466f72207520"
-        "457468446576"
+        "e0060100310000000000000001de0b295669a9fd93d5f28d9ec85e40f4cb697bae000000000000029a0c466f72207520457468446576"
     )
 
     # Test multiple way to wait for the return for the Home screen after a review.

@@ -17,13 +17,15 @@ limitations under the License.
 import sys
 from multiprocessing import Process, Queue
 from pathlib import Path
+from typing import Any
+
 from PyQt6.QtCore import QObject, QThread, pyqtSignal
 from PyQt6.QtWidgets import QApplication
-from typing import Tuple, Any
 
-from .interface import RaggerMainWindow
 from ragger.logger import get_gui_logger
 from ragger.navigator.instruction import NavInsID
+
+from .interface import RaggerMainWindow
 
 NAVIGATION_ACTIONS = {
     NavInsID.RIGHT_CLICK: "right button",
@@ -36,7 +38,7 @@ class ProcessCommunicationWorker(QObject):
     finished = pyqtSignal()
     progress = pyqtSignal(int)
 
-    def __init__(self, queues: Tuple[Queue, Queue], main_window: RaggerMainWindow):
+    def __init__(self, queues: tuple[Queue, Queue], main_window: RaggerMainWindow):
         super().__init__()
         self.logger = get_gui_logger().getChild("CommunicationThread")
         self._queues = queues
@@ -91,7 +93,7 @@ class RaggerGUI(Process):
         self.thread: QThread
         self.worker: ProcessCommunicationWorker
         self.logger = get_gui_logger().getChild("RaggerGUI")
-        self._queues: Tuple[Queue, Queue] = (Queue(), Queue())
+        self._queues: tuple[Queue, Queue] = (Queue(), Queue())
         self._device = device
         self.logger.info("Initiated")
 

@@ -14,18 +14,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from .instruction import BaseNavInsID, NavInsID, NavIns
-from .navigator import Navigator
-from .touch_navigator import TouchNavigator
+from .instruction import BaseNavInsID, NavIns, NavInsID
 from .nano_navigator import NanoNavigator
 from .navigation_scenario import NavigateWithScenario
+from .navigator import Navigator
+from .touch_navigator import TouchNavigator
 
 __all__ = [
     "BaseNavInsID",
-    "NavInsID",
+    "NanoNavigator",
     "NavIns",
+    "NavInsID",
+    "NavigateWithScenario",
     "Navigator",
     "TouchNavigator",
-    "NanoNavigator",
-    "NavigateWithScenario",
 ]

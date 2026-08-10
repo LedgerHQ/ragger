@@ -1,8 +1,9 @@
+from collections.abc import Generator
 from contextlib import contextmanager
-from ledgered.devices import DeviceType, Devices
-from typing import Generator
 from unittest import TestCase
 from unittest.mock import MagicMock
+
+from ledgered.devices import Devices, DeviceType
 
 from ragger.backend import BackendInterface
 from ragger.backend.physical_backend import PhysicalBackend
@@ -75,9 +76,7 @@ class TestPhysicalBackend(TestCase):
 
             self.assertIsNone(method())
             self.assertTrue(self.backend._ui.ask_for_click_action.called)
-            self.assertEqual(
-                self.backend._ui.ask_for_click_action.call_args, ((expected_arg,),)
-            )
+            self.assertEqual(self.backend._ui.ask_for_click_action.call_args, ((expected_arg,),))
 
     def test_finger_touch_with_gui(self):
         x, y = 3, 7
@@ -129,9 +128,7 @@ class TestPhysicalBackend(TestCase):
         self.backend._last_valid_snap_path = path
 
         self.assertTrue(self.backend.compare_screen_with_text(text))
-        self.assertFalse(
-            self.backend.compare_screen_with_text("this text does not exist here")
-        )
+        self.assertFalse(self.backend.compare_screen_with_text("this text does not exist here"))
 
     def test_compare_screen_with_text_with_gui_last_valid_snap_path_does_not_exist(
         self,

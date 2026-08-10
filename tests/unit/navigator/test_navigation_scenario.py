@@ -1,8 +1,9 @@
-from ledgered.devices import DeviceType, Devices
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest import TestCase
 from unittest.mock import MagicMock
+
+from ledgered.devices import Devices, DeviceType
 
 from ragger.navigator import NavigateWithScenario
 
@@ -14,9 +15,7 @@ class TestNavigationScenario(TestCase):
         self.device = Devices.get_by_type(DeviceType.NANOS)
         self.callbacks = dict()
         self.navigator = MagicMock()
-        self.navigate_with_scenario = NavigateWithScenario(
-            self.backend, self.navigator, self.device, "test_name", self.directory
-        )
+        self.navigate_with_scenario = NavigateWithScenario(self.backend, self.navigator, self.device, "test_name", self.directory)
 
     def tearDown(self):
         self.directory.cleanup()
@@ -43,9 +42,7 @@ class TestNavigationScenario(TestCase):
         self.assertFalse(
             call_kwargs.kwargs.get(
                 "screen_change_after_last_instruction",
-                call_kwargs[1].get("screen_change_after_last_instruction", True)
-                if len(call_kwargs) > 1
-                else True,
+                call_kwargs[1].get("screen_change_after_last_instruction", True) if len(call_kwargs) > 1 else True,
             )
         )
 
@@ -56,9 +53,7 @@ class TestNavigationScenario(TestCase):
         """Test that review_approve_with_spinner with do_comparison=False uses navigate_until_text
         with screen_change_after_last_instruction=False and calls wait_for_text_on_screen."""
         spinner_text = "Signing..."
-        self.navigate_with_scenario.review_approve_with_spinner(
-            spinner_text, do_comparison=False
-        )
+        self.navigate_with_scenario.review_approve_with_spinner(spinner_text, do_comparison=False)
 
         # navigate_until_text should have been called (not navigate_until_text_and_compare)
         self.navigator.navigate_until_text_and_compare.assert_not_called()
@@ -67,9 +62,7 @@ class TestNavigationScenario(TestCase):
         self.assertFalse(
             call_kwargs.kwargs.get(
                 "screen_change_after_last_instruction",
-                call_kwargs[1].get("screen_change_after_last_instruction", True)
-                if len(call_kwargs) > 1
-                else True,
+                call_kwargs[1].get("screen_change_after_last_instruction", True) if len(call_kwargs) > 1 else True,
             )
         )
 
@@ -79,9 +72,7 @@ class TestNavigationScenario(TestCase):
     def test_review_approve_with_spinner_touchable(self):
         """Test spinner behavior on a touchable device (Stax)."""
         device = Devices.get_by_type(DeviceType.STAX)
-        navigate_with_scenario = NavigateWithScenario(
-            self.backend, self.navigator, device, "test_name", self.directory
-        )
+        navigate_with_scenario = NavigateWithScenario(self.backend, self.navigator, device, "test_name", self.directory)
         spinner_text = "Please wait..."
         navigate_with_scenario.review_approve_with_spinner(spinner_text)
 
@@ -91,9 +82,7 @@ class TestNavigationScenario(TestCase):
         self.assertFalse(
             call_kwargs.kwargs.get(
                 "screen_change_after_last_instruction",
-                call_kwargs[1].get("screen_change_after_last_instruction", True)
-                if len(call_kwargs) > 1
-                else True,
+                call_kwargs[1].get("screen_change_after_last_instruction", True) if len(call_kwargs) > 1 else True,
             )
         )
 
