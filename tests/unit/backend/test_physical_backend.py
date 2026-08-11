@@ -48,7 +48,7 @@ class TestPhysicalBackend(TestCase):
 
     def test_init_gui_no_ui(self):
         backend = StubPhysicalBackend(self.device)
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(RuntimeError):
             backend.init_gui()
 
     def test_init_gui_with_gui(self):

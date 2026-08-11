@@ -46,7 +46,7 @@ class TestFormatTlv(TestCase):
         self.assertEqual(b"\x20\x00", format_tlv(0x20, b""))
 
     def test_unhandled_type_raises(self):
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(TypeError):
             format_tlv(0x20, 1.5)  # type: ignore[arg-type]
 
 

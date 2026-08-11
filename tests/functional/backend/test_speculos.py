@@ -88,7 +88,7 @@ class TestbackendSpeculos(TestCase):
                     self.assertIsNotNone(self.backend._pending)
 
     def test_receive_error(self):
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(RuntimeError):
             self.backend.receive()
 
     def test_receive_ok(self):

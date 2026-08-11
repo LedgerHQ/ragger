@@ -47,7 +47,7 @@ class TestSpeculosBackend(TestCase):
         SpeculosBackend(APPNAME, self.nanos, args=["some", "specific", "arguments"])
 
     def test___init__args_nok(self):
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(TypeError):
             SpeculosBackend(APPNAME, self.nanos, args="not a list")
 
     def test_context_manager(self):

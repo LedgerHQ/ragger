@@ -96,7 +96,7 @@ class TestRegisterIdentity(TestCase):
             blockchain_family=FAMILY,
             group_handle=GH,
         )
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(ValueError):
             cmd.serialize()
 
     def test_contact_name_too_long_raises(self):
@@ -107,7 +107,7 @@ class TestRegisterIdentity(TestCase):
             chain_id=1,
             blockchain_family=FAMILY,
         )
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(ValueError):
             cmd.serialize()
 
 
@@ -145,7 +145,7 @@ class TestValidations(TestCase):
             hmac_proof=PR,
             group_handle=b"\x00" * 10,
         )
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(ValueError):
             cmd.serialize()
 
     def test_bad_hmac_proof_length(self):
@@ -155,7 +155,7 @@ class TestValidations(TestCase):
             hmac_proof=b"\x00" * 10,
             group_handle=GH,
         )
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(ValueError):
             cmd.serialize()
 
 
