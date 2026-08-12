@@ -14,26 +14,24 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+from collections.abc import Callable
 from time import sleep
-from typing import Callable, Dict
+
 from ledgered.devices import Device
 
 from ragger.backend import BackendInterface
 from ragger.firmware.touch import FullScreen
-from .navigator import Navigator
+
 from .instruction import BaseNavInsID, NavInsID
+from .navigator import Navigator
 
 
 class TouchNavigator(Navigator):
-    def __init__(
-        self, backend: BackendInterface, device: Device, golden_run: bool = False
-    ):
+    def __init__(self, backend: BackendInterface, device: Device, golden_run: bool = False):
         if not device.touchable:
-            raise ValueError(
-                f"'{self.__class__.__name__}' only works with touchable devices"
-            )
+            raise ValueError(f"'{self.__class__.__name__}' only works with touchable devices")
         screen = FullScreen(backend, device)
-        callbacks: Dict[BaseNavInsID, Callable] = {
+        callbacks: dict[BaseNavInsID, Callable] = {
             NavInsID.WAIT: sleep,
             NavInsID.WAIT_FOR_SCREEN_CHANGE: backend.wait_for_screen_change,
             NavInsID.WAIT_FOR_HOME_SCREEN: backend.wait_for_home_screen,

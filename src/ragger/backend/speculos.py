@@ -16,30 +16,32 @@ limitations under the License.
 
 import select
 import socket
+from collections.abc import Generator
 from contextlib import contextmanager
 from copy import deepcopy
 from io import BytesIO
-from mnemonic import Mnemonic
 from os import urandom
 from pathlib import Path
-from PIL import Image
-from typing import Optional, Generator, List, Type, TypeVar
-from time import time, sleep
 from re import match
+from time import sleep, time
+from typing import TypeVar
 
 from ledgered import binary
 from ledgered.devices import Device
+from mnemonic import Mnemonic
+from PIL import Image
 from speculos.client import (
+    ApduException,
+    ApduResponse,
     SpeculosClient,
     screenshot_equal,
-    ApduResponse,
-    ApduException,
 )
 from speculos.mcu.seproxyhal import TICKER_DELAY
 
-from ragger.error import StatusWords, ExceptionRAPDU
+from ragger.error import ExceptionRAPDU, StatusWords
 from ragger.logger import get_default_logger
 from ragger.utils import RAPDU, Crop
+
 from .interface import BackendInterface, GraphicalLibrary
 
 STARTING_RANGE = 7000
@@ -86,8 +88,8 @@ class SpeculosBackend(BackendInterface):
         self,
         application: Path,
         device: Device,
-        log_apdu_file: Optional[Path] = None,
-        coverage_trace_dir: Optional[Path] = None,
+        log_apdu_file: Path | None = None,
+        coverage_trace_dir: Path | None = None,
         **kwargs,
     ):
         super().__init__(device=device, log_apdu_file=log_apdu_file)
@@ -98,10 +100,9 @@ class SpeculosBackend(BackendInterface):
         self._coverage_device_name = device.name
         # crafting Speculos arguments
         args = ["--model", device.name]
-        speculos_args: List = kwargs.get(self._ARGS_KEY, list())
-        assert isinstance(speculos_args, list), (
-            f"'{self._ARGS_KEY}' ({speculos_args}) keyword argument must be a list of arguments"
-        )
+        speculos_args: list = kwargs.get(self._ARGS_KEY, list())
+        if not isinstance(speculos_args, list):
+            raise TypeError(f"'{self._ARGS_KEY}' ({speculos_args}) keyword argument must be a list of arguments")
         # Inferring the API port
         if self._ARGS_API_PORT_KEY in speculos_args:
             index = speculos_args.index(self._ARGS_API_PORT_KEY)
@@ -120,25 +121,21 @@ class SpeculosBackend(BackendInterface):
         kwargs[self._ARGS_KEY] = speculos_args
 
         # SDK graphic library used by the App, retrieved from the elf sections
-        self.sdk_graphics: Optional[GraphicalLibrary] = None
+        self.sdk_graphics: GraphicalLibrary | None = None
         if Path(application).is_file():
             # test just for the unit-test to pass.
             # In real life, the application is the path to the elf file, always present
             bin_data = binary.LedgerBinaryApp(application)
-            self.sdk_graphics = GraphicalLibrary.from_string(
-                bin_data.sections.sdk_graphics
-            )
+            self.sdk_graphics = GraphicalLibrary.from_string(bin_data.sections.sdk_graphics)
 
         self.logger.info("Speculos binary: '%s'", application)
         self.logger.info("SDK Library: '%s'", self.sdk_graphics)
         self.logger.info("Speculos options: '%s'", " ".join(kwargs[self._ARGS_KEY]))
-        self._client: SpeculosClient = SpeculosClient(
-            app=str(application), api_url=self.url, **kwargs
-        )
-        self._pending: Optional[ApduResponse] = None
-        self._pending_async_response: Optional[ApduResponse] = None
-        self._last_screenshot: Optional[BytesIO] = None
-        self._home_screenshot: Optional[BytesIO] = None
+        self._client: SpeculosClient = SpeculosClient(app=str(application), api_url=self.url, **kwargs)
+        self._pending: ApduResponse | None = None
+        self._pending_async_response: ApduResponse | None = None
+        self._last_screenshot: BytesIO | None = None
+        self._home_screenshot: BytesIO | None = None
         self._ticker_paused_count = 0
         self._apdu_timeout = 0.3
 
@@ -156,18 +153,11 @@ class SpeculosBackend(BackendInterface):
 
     def _check_async_error(self) -> None:
         """Check for async APDU errors and raise if present."""
-        if (
-            self._pending_async_response is not None
-            and self._last_async_response is None
-        ):
+        if self._pending_async_response is not None and self._last_async_response is None:
             if has_data_available(self._pending_async_response, timeout=0):
-                self.logger.info(
-                    "[Ragger] Early async data available, retrieving it now."
-                )
+                self.logger.info("[Ragger] Early async data available, retrieving it now.")
                 # This will raise ExceptionRAPDU immediately if status != 9000
-                self._last_async_response = self._get_last_async_response(
-                    self._pending_async_response
-                )
+                self._last_async_response = self._get_last_async_response(self._pending_async_response)
 
     def _retrieve_client_screen_content(self) -> dict:
         raw_content = self._client.get_current_screen_content()
@@ -192,7 +182,8 @@ class SpeculosBackend(BackendInterface):
         self._ticker_paused_count -= 1
         if self._ticker_paused_count == 0:
             self._client.ticker_ctl("resume")
-        assert self._ticker_paused_count >= 0
+        if self._ticker_paused_count < 0:
+            raise RuntimeError("Ticker resume called more times than pause")
 
     def send_tick(self) -> None:
         self._client.ticker_ctl("single-step")
@@ -204,9 +195,7 @@ class SpeculosBackend(BackendInterface):
         if self._coverage_trace_dir is not None:
             from ragger.utils import coverage
 
-            coverage.enable(
-                self._coverage_device_name, self._application, self._coverage_trace_dir
-            )
+            coverage.enable(self._coverage_device_name, self._application, self._coverage_trace_dir)
         self._client.__enter__()
 
         # Wait until some text is displayed on the screen.
@@ -215,9 +204,7 @@ class SpeculosBackend(BackendInterface):
             # Send a ticker event and let the app process it
             sleep(0.1)
             if time() - start > 20.0:
-                raise TimeoutError(
-                    "Timeout waiting for screen content upon Ragger Speculos Instance start"
-                )
+                raise TimeoutError("Timeout waiting for screen content upon Ragger Speculos Instance start")
 
         self._last_screenshot = BytesIO(self._client.get_screenshot())
 
@@ -238,7 +225,8 @@ class SpeculosBackend(BackendInterface):
 
     @raise_policy_enforcer
     def receive(self) -> RAPDU:
-        assert self._pending is not None
+        if self._pending is None:
+            raise RuntimeError("No pending APDU to receive")
         result = RAPDU(StatusWords.SWO_SUCCESS, self._pending.receive())
         return result
 
@@ -259,9 +247,7 @@ class SpeculosBackend(BackendInterface):
         self.apdu_logger.info("=> %s", data.hex())
         # Reset state for this new async exchange
         self._last_async_response = None
-        with self._client.apdu_exchange_nowait(
-            cla=data[0], ins=data[1], p1=data[2], p2=data[3], data=data[5:]
-        ) as response:
+        with self._client.apdu_exchange_nowait(cla=data[0], ins=data[1], p1=data[2], p2=data[3], data=data[5:]) as response:
             self._pending_async_response = response
             try:
                 yield has_data_available(response, timeout=self.apdu_timeout)
@@ -284,9 +270,7 @@ class SpeculosBackend(BackendInterface):
     def finger_touch(self, x: int = 0, y: int = 0, delay: float = 0.1) -> None:
         self._client.finger_touch(x, y, delay=delay)
 
-    def finger_swipe(
-        self, x: int = 0, y: int = 0, direction: str = "left", delay: float = 0.1
-    ) -> None:
+    def finger_swipe(self, x: int = 0, y: int = 0, direction: str = "left", delay: float = 0.1) -> None:
         self._client.finger_swipe(x, y, direction=direction, delay=delay)
 
     def _save_screen_snapshot(self, snap: BytesIO, path: Path) -> None:
@@ -297,8 +281,8 @@ class SpeculosBackend(BackendInterface):
     def compare_screen_with_snapshot(
         self,
         golden_snap_path: Path,
-        crop: Optional[Crop] = None,
-        tmp_snap_path: Optional[Path] = None,
+        crop: Crop | None = None,
+        tmp_snap_path: Path | None = None,
         golden_run: bool = False,
     ) -> bool:
         snap = BytesIO(self._client.get_screenshot())
@@ -337,9 +321,7 @@ class SpeculosBackend(BackendInterface):
                 return True
         return False
 
-    def _wait_for_text_on_screen_or_not(
-        self, should_be_on_screen: bool, text: str, timeout: float = 10.0
-    ) -> None:
+    def _wait_for_text_on_screen_or_not(self, should_be_on_screen: bool, text: str, timeout: float = 10.0) -> None:
         endtime = time() + timeout
         # Only manual ticks sent by compare_screen_with_text in this function because
         # we don't want a desync between screen and events
@@ -392,7 +374,7 @@ class SpeculosBackend(BackendInterface):
                 return
 
     @classmethod
-    def clean_args(cls: Type[T], speculos_args: List) -> None:
+    def clean_args(cls: type[T], speculos_args: list) -> None:
         logger = get_default_logger()
         for argument in [cls._ARGS_APDU_PORT_KEY, cls._ARGS_API_PORT_KEY]:
             if argument in speculos_args:
@@ -404,7 +386,7 @@ class SpeculosBackend(BackendInterface):
 
     @classmethod
     def batch(
-        cls: Type[T],
+        cls: type[T],
         application: Path,
         device: Device,
         number: int,
@@ -414,13 +396,11 @@ class SpeculosBackend(BackendInterface):
         different_private: bool = True,
         different_attestation: bool = False,
         **kwargs,
-    ) -> List["SpeculosBackend"]:
+    ) -> list["SpeculosBackend"]:
         logger = get_default_logger()
-        logger.info(
-            "Request to spawn %d Speculos instances of '%s'", number, application
-        )
+        logger.info("Request to spawn %d Speculos instances of '%s'", number, application)
         test_port = STARTING_RANGE
-        result: List["SpeculosBackend"] = list()
+        result: list[SpeculosBackend] = list()
         while len(result) < number:
             tmp_kwargs = deepcopy(kwargs)
             api_port = _get_unused_port_from(test_port)
@@ -439,13 +419,9 @@ class SpeculosBackend(BackendInterface):
                 str(apdu_port),
             ]
             if different_seeds:
-                additional_args.extend(
-                    ["--seed", Mnemonic("english").generate(strength=256)]
-                )
+                additional_args.extend(["--seed", Mnemonic("english").generate(strength=256)])
             if different_rng:
-                additional_args.extend(
-                    ["--deterministic-rng", f"{apdu_port}{api_port}"]
-                )
+                additional_args.extend(["--deterministic-rng", f"{apdu_port}{api_port}"])
             if different_private:
                 additional_args.extend(["--user-private-key", urandom(32).hex()])
             if different_attestation:

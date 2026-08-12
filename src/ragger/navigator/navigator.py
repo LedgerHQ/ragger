@@ -15,10 +15,11 @@ limitations under the License.
 """
 
 from abc import ABC
+from collections.abc import Callable, Sequence
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from time import time
-from typing import Callable, Dict, Optional, Sequence, Union
+
 from ledgered.devices import Device
 
 from ragger.backend import BackendInterface, SpeculosBackend
@@ -27,10 +28,10 @@ from ragger.utils import Crop
 from .instruction import BaseNavInsID, NavIns, NavInsID
 
 LAST_SCREEN_UPDATE_TIMEOUT = 2
-InstructionType = Union[NavIns, BaseNavInsID]
+InstructionType = NavIns | BaseNavInsID
 
 
-class Navigator(ABC):
+class Navigator(ABC):  # noqa: B024
     GOLDEN_INSTRUCTION_SLEEP_MULTIPLIER_FIRST = 2
     GOLDEN_INSTRUCTION_SLEEP_MULTIPLIER_MIDDLE = 5
     GOLDEN_INSTRUCTION_SLEEP_MULTIPLIER_LAST = 2
@@ -39,7 +40,7 @@ class Navigator(ABC):
         self,
         backend: BackendInterface,
         device: Device,
-        callbacks: Dict[BaseNavInsID, Callable],
+        callbacks: dict[BaseNavInsID, Callable],
         golden_run: bool = False,
     ):
         """Initializes the Backend
@@ -58,31 +59,23 @@ class Navigator(ABC):
         self._callbacks = callbacks
         self._golden_run = golden_run
 
-    def _get_snaps_dir_path(
-        self, path: Path, test_case_name: Union[Path, str], is_golden: bool
-    ) -> Path:
+    def _get_snaps_dir_path(self, path: Path, test_case_name: Path | str, is_golden: bool) -> Path:
         if is_golden:
             subdir = "snapshots"
         else:
             subdir = "snapshots-tmp"
         return path / subdir / self._device.name / test_case_name
 
-    def _check_snaps_dir_path(
-        self, path: Path, test_case_name: Union[Path, str], is_golden: bool
-    ) -> Path:
+    def _check_snaps_dir_path(self, path: Path, test_case_name: Path | str, is_golden: bool) -> Path:
         dir_path = self._get_snaps_dir_path(path, test_case_name, is_golden)
         if not dir_path.is_dir():
             if self._golden_run:
                 dir_path.mkdir(parents=True)
             else:
-                raise ValueError(
-                    f"Golden snapshots directory ({dir_path}) does not exist."
-                )
+                raise ValueError(f"Golden snapshots directory ({dir_path}) does not exist.")
         return dir_path
 
-    def _init_snaps_temp_dir(
-        self, path: Path, test_case_name: Union[Path, str], start_idx: int = 0
-    ) -> Path:
+    def _init_snaps_temp_dir(self, path: Path, test_case_name: Path | str, start_idx: int = 0) -> Path:
         snaps_tmp_path = self._get_snaps_dir_path(path, test_case_name, False)
         if snaps_tmp_path.exists():
             for file in snaps_tmp_path.iterdir():
@@ -106,15 +99,13 @@ class Navigator(ABC):
         self,
         path: Path,
         timeout_s: float = 5.0,
-        crop: Optional[Crop] = None,
-        tmp_snap_path: Optional[Path] = None,
+        crop: Crop | None = None,
+        tmp_snap_path: Path | None = None,
     ) -> bool:
         start = time()
         now = start
         while not (now - start > timeout_s):
-            if self._backend.compare_screen_with_snapshot(
-                path, crop, tmp_snap_path=tmp_snap_path
-            ):
+            if self._backend.compare_screen_with_snapshot(path, crop, tmp_snap_path=tmp_snap_path):
                 return True
             now = time()
         return False
@@ -123,13 +114,10 @@ class Navigator(ABC):
         golden = self._get_snap_path(snaps_golden_path, index)
         tmp = self._get_snap_path(snaps_tmp_path, index)
 
-        assert self._backend.compare_screen_with_snapshot(
-            golden, tmp_snap_path=tmp, golden_run=self._golden_run
-        ), f"Screen does not match golden '{tmp}'"
+        if not self._backend.compare_screen_with_snapshot(golden, tmp_snap_path=tmp, golden_run=self._golden_run):
+            raise AssertionError(f"Screen does not match golden '{tmp}'")
 
-    def add_callback(
-        self, ins_id: BaseNavInsID, callback: Callable, override: bool = True
-    ) -> None:
+    def add_callback(self, ins_id: BaseNavInsID, callback: Callable, override: bool = True) -> None:
         """
         Register a new callback.
 
@@ -148,10 +136,7 @@ class Navigator(ABC):
         :rtype: NoneType
         """
         if not override and ins_id in self._callbacks:
-            raise KeyError(
-                f"Navigation instruction ID '{ins_id}' already exists in the "
-                "registered callbacks"
-            )
+            raise KeyError(f"Navigation instruction ID '{ins_id}' already exists in the registered callbacks")
         self._callbacks[ins_id] = callback
 
     def _run_instruction(
@@ -159,16 +144,14 @@ class Navigator(ABC):
         instruction: InstructionType,
         timeout: float = 10.0,
         wait_for_screen_change: bool = True,
-        path: Optional[Path] = None,
-        test_case_name: Optional[Union[Path, str]] = None,
+        path: Path | None = None,
+        test_case_name: Path | str | None = None,
         snap_idx: int = 0,
     ) -> None:
         if isinstance(instruction, BaseNavInsID):
             instruction = NavIns(instruction)
         if instruction.id not in self._callbacks:
-            raise NotImplementedError(
-                f"No callback registered for instruction ID {instruction.id}"
-            )
+            raise NotImplementedError(f"No callback registered for instruction ID {instruction.id}")
 
         if instruction.id == NavInsID.USE_CASE_REVIEW_CONFIRM:
             # Specific handling due to the fact that the screen is updated multiple
@@ -183,9 +166,7 @@ class Navigator(ABC):
             with NamedTemporaryFile(suffix=".png") as tmp:
                 tmp_file = Path(tmp.name)
                 # Backup screen content before instruction in tmp file
-                self._backend.compare_screen_with_snapshot(
-                    tmp_file, tmp_snap_path=tmp_file, golden_run=True
-                )
+                self._backend.compare_screen_with_snapshot(tmp_file, tmp_snap_path=tmp_file, golden_run=True)
 
                 # Call instruction callback
                 self._callbacks[instruction.id](*instruction.args, **instruction.kwargs)
@@ -198,9 +179,7 @@ class Navigator(ABC):
                     endtime = time() + timeout
                     while True:
                         self._backend.wait_for_screen_change(endtime - time())
-                        if not self._backend.compare_screen_with_snapshot(
-                            tmp_file, cropping
-                        ):
+                        if not self._backend.compare_screen_with_snapshot(tmp_file, cropping):
                             break
 
         else:
@@ -225,9 +204,7 @@ class Navigator(ABC):
         if path and test_case_name:
             if snap_idx == 0:
                 snaps_tmp_path = self._init_snaps_temp_dir(path, test_case_name)
-                snaps_golden_path = self._check_snaps_dir_path(
-                    path, test_case_name, True
-                )
+                snaps_golden_path = self._check_snaps_dir_path(path, test_case_name, True)
             else:
                 snaps_tmp_path = self._get_snaps_dir_path(path, test_case_name, False)
                 snaps_golden_path = self._get_snaps_dir_path(path, test_case_name, True)
@@ -236,8 +213,8 @@ class Navigator(ABC):
 
     def navigate_and_compare(
         self,
-        path: Optional[Path],
-        test_case_name: Optional[Union[Path, str]],
+        path: Path | None,
+        test_case_name: Path | str | None,
         instructions: Sequence[InstructionType],
         timeout: float = 10.0,
         screen_change_before_first_instruction: bool = True,
@@ -363,13 +340,13 @@ class Navigator(ABC):
         navigate_instruction: InstructionType,
         validation_instruction: InstructionType,
         path: Path,
-        test_case_name: Union[Path, str],
+        test_case_name: Path | str,
         start_img_name: str,
         last_img_name: str,
         take_snaps: bool = True,
         timeout: int = 30,
-        crop_first: Optional[Crop] = None,
-        crop_last: Optional[Crop] = None,
+        crop_first: Crop | None = None,
+        crop_last: Crop | None = None,
     ) -> int:
         """
         Navigate until snapshot is found.
@@ -431,9 +408,7 @@ class Navigator(ABC):
 
         # Check if the first snapshot is found before going in the navigation loop.
         # It saves time in non-nominal cases where the navigation flow does not start.
-        if self._compare_snap_with_timeout(
-            first_golden_snap, timeout_s=2, crop=crop_first, tmp_snap_path=tmp_snap_path
-        ):
+        if self._compare_snap_with_timeout(first_golden_snap, timeout_s=2, crop=crop_first, tmp_snap_path=tmp_snap_path):
             start = time()
             # Navigate until the last snapshot specified in argument is found.
             while True:
@@ -455,9 +430,7 @@ class Navigator(ABC):
                     raise TimeoutError(f"Timeout waiting for snap {last_golden_snap}")
 
                 # Go to the next screen.
-                self._run_instruction(
-                    navigate_instruction, wait_for_screen_change=False
-                )
+                self._run_instruction(navigate_instruction, wait_for_screen_change=False)
                 img_idx += 1
 
             # Validation action when last snapshot is found.
@@ -465,14 +438,10 @@ class Navigator(ABC):
 
             # Make sure there is a screen update after the final action.
             start = time()
-            while self._compare_snap_with_timeout(
-                last_golden_snap, timeout_s=0.5, crop=crop_last
-            ):
+            while self._compare_snap_with_timeout(last_golden_snap, timeout_s=0.5, crop=crop_last):
                 now = time()
                 if now - start > LAST_SCREEN_UPDATE_TIMEOUT:
-                    raise TimeoutError(
-                        f"Timeout waiting for screen change after last snapshot : {last_golden_snap}"
-                    )
+                    raise TimeoutError(f"Timeout waiting for screen change after last snapshot : {last_golden_snap}")
         else:
             raise ValueError(f"Could not find first snapshot {first_golden_snap}")
         return img_idx
@@ -482,8 +451,8 @@ class Navigator(ABC):
         navigate_instruction: InstructionType,
         validation_instructions: Sequence[InstructionType],
         text: str,
-        path: Optional[Path] = None,
-        test_case_name: Optional[Union[Path, str]] = None,
+        path: Path | None = None,
+        test_case_name: Path | str | None = None,
         timeout: int = 300,
         screen_change_before_first_instruction: bool = True,
         screen_change_after_last_instruction: bool = True,

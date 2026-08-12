@@ -15,13 +15,12 @@ limitations under the License.
 """
 
 from enum import IntEnum
-from ledgered.devices import Devices, DeviceType
 from warnings import warn
 
+from ledgered.devices import Devices, DeviceType
 
 DEPRECATION_MESSAGE = (
-    "`ragger.firmware.Firmware` is deprecated, use `ledgered.devices.Devices` "
-    "or `ledgered.devices.DeviceType` instead"
+    "`ragger.firmware.Firmware` is deprecated, use `ledgered.devices.Devices` or `ledgered.devices.DeviceType` instead"
 )
 
 
@@ -36,7 +35,7 @@ class Firmware(IntEnum):
 
     @staticmethod
     def deprec_warning() -> None:
-        warn(DEPRECATION_MESSAGE)
+        warn(DEPRECATION_MESSAGE, stacklevel=2)
 
     @property
     def name(self) -> str:

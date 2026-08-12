@@ -14,8 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from bip_utils import Bip32Utils
 from enum import IntEnum
+
+from bip_utils import Bip32Utils
 
 
 class BtcDerivationPathFormat(IntEnum):
@@ -37,17 +38,13 @@ def pack_derivation_path(derivation_path: str) -> bytes:
         if value == "":
             raise ValueError(f'Error missing value in split list "{split}"')
         if value.endswith("'"):
-            path_bytes += Bip32Utils.HardenIndex(int(value[:-1])).to_bytes(
-                4, byteorder="big"
-            )
+            path_bytes += Bip32Utils.HardenIndex(int(value[:-1])).to_bytes(4, byteorder="big")
         else:
             path_bytes += int(value).to_bytes(4, byteorder="big")
     return path_bytes
 
 
-def bitcoin_pack_derivation_path(
-    format: BtcDerivationPathFormat, derivation_path: str
-) -> bytes:
+def bitcoin_pack_derivation_path(format: BtcDerivationPathFormat, derivation_path: str) -> bytes:
     if not isinstance(format, BtcDerivationPathFormat):
         raise ValueError(f'"{format}" must be a BtcDerivationPathFormat enum')
     return format.to_bytes(1, "big") + pack_derivation_path(derivation_path)

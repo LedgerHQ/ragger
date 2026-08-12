@@ -20,7 +20,6 @@ from pathlib import Path
 
 from ecdsa import SigningKey
 from ecdsa.util import sigencode_der
-
 from ledgered.devices import DeviceType
 
 
@@ -90,10 +89,7 @@ class SigningPartner:
             KeyError: If the device type has no certificate configured.
         """
         if device_type not in self._certificates:
-            raise KeyError(
-                f"No PKI certificate for device type '{device_type}' "
-                f"(usage {self._cert_pub_key_usage.name})"
-            )
+            raise KeyError(f"No PKI certificate for device type '{device_type}' (usage {self._cert_pub_key_usage.name})")
         cert_data = bytes.fromhex(self._certificates[device_type])
         return (
             bytes(

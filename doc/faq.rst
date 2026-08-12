@@ -59,7 +59,7 @@ instance. This behavior can be change with the three other options:
 - ``RaisePolicy.RAISE_ALL``, where the backend will always raise a
   :py:class:`ExceptionAPDU <ragger.error.ExceptionRAPDU>`, whatever the status.
 - ``RaisePolicy.RAISE_CUSTOM``, where the backend will raise a
-  :py:class:`ExceptionAPDU <ragger.error.ExceptionRAPDU>`, for :term:`APDU` ending with 
+  :py:class:`ExceptionAPDU <ragger.error.ExceptionRAPDU>`, for :term:`APDU` ending with
   status defined in ``whitelisted_status``.
 
 From that, every higher-level error management can be performed on top of

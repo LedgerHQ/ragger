@@ -16,15 +16,15 @@ limitations under the License.
 
 from .path import (
     BtcDerivationPathFormat,
-    pack_derivation_path,
     bitcoin_pack_derivation_path,
+    pack_derivation_path,
 )
 from .seed import CurveChoice, calculate_public_key_and_chaincode
 
 __all__ = [
-    "bitcoin_pack_derivation_path",
     "BtcDerivationPathFormat",
-    "calculate_public_key_and_chaincode",
     "CurveChoice",
+    "bitcoin_pack_derivation_path",
+    "calculate_public_key_and_chaincode",
     "pack_derivation_path",
 ]

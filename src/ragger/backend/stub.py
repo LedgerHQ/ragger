@@ -14,13 +14,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+from collections.abc import Generator
 from contextlib import contextmanager
 from pathlib import Path
 from types import TracebackType
-from typing import Any, Generator, Optional, Type
+from typing import Any
 
 from ragger.error import StatusWords
-from ragger.utils.structs import Crop, RAPDU
+from ragger.utils.structs import RAPDU, Crop
+
 from .interface import BackendInterface
 
 
@@ -38,9 +40,9 @@ class StubBackend(BackendInterface):
 
     def __exit__(
         self,
-        exc_type: Optional[Type[BaseException]],
-        exc_val: Optional[BaseException],
-        exc_tb: Optional[TracebackType],
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None,
     ):
         pass
 
@@ -72,16 +74,14 @@ class StubBackend(BackendInterface):
     def finger_touch(self, x: int = 0, y: int = 0, delay: float = 0.5) -> None:
         pass
 
-    def finger_swipe(
-        self, x: int = 0, y: int = 0, direction: str = "left", delay: float = 0.5
-    ) -> None:
+    def finger_swipe(self, x: int = 0, y: int = 0, direction: str = "left", delay: float = 0.5) -> None:
         pass
 
     def compare_screen_with_snapshot(
         self,
         golden_snap_path: Path,
-        crop: Optional[Crop] = None,
-        tmp_snap_path: Optional[Path] = None,
+        crop: Crop | None = None,
+        tmp_snap_path: Path | None = None,
         golden_run: bool = False,
     ) -> bool:
         return True

@@ -14,13 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from typing import Dict, Tuple
 from ledgered.devices import Device
 
 from ragger.backend import BackendInterface
 
 from .element import Center
-
 from .layouts import (
     CancelFooter,
     CenteredFooter,
@@ -40,16 +38,15 @@ from .layouts import (
     Suggestions,
     TappableCenter,
 )
-
 from .use_cases import (
-    UseCaseHome,
-    UseCaseSettings,
-    UseCaseSubSettings,
-    UseCaseChoice,
-    UseCaseStatus,
-    UseCaseReview,
-    UseCaseViewDetails,
     UseCaseAddressConfirmation,
+    UseCaseChoice,
+    UseCaseHome,
+    UseCaseReview,
+    UseCaseSettings,
+    UseCaseStatus,
+    UseCaseSubSettings,
+    UseCaseViewDetails,
 )
 
 ELEMENT_PREFIX = "element_"
@@ -104,21 +101,15 @@ class MetaScreen(type):
     example will not work in most cases).
     """
 
-    def __new__(cls, name: str, parents: Tuple, namespace: Dict):
+    def __new__(cls, name: str, parents: tuple, namespace: dict):
         elements = {
-            key.split(ELEMENT_PREFIX)[1]: namespace.pop(key)
-            for key in list(namespace.keys())
-            if key.startswith(ELEMENT_PREFIX)
+            key.split(ELEMENT_PREFIX)[1]: namespace.pop(key) for key in list(namespace.keys()) if key.startswith(ELEMENT_PREFIX)
         }
         layouts = {
-            key.split(LAYOUT_PREFIX)[1]: namespace.pop(key)
-            for key in list(namespace.keys())
-            if key.startswith(LAYOUT_PREFIX)
+            key.split(LAYOUT_PREFIX)[1]: namespace.pop(key) for key in list(namespace.keys()) if key.startswith(LAYOUT_PREFIX)
         }
         use_cases = {
-            key.split(USE_CASE_PREFIX)[1]: namespace.pop(key)
-            for key in list(namespace.keys())
-            if key.startswith(USE_CASE_PREFIX)
+            key.split(USE_CASE_PREFIX)[1]: namespace.pop(key) for key in list(namespace.keys()) if key.startswith(USE_CASE_PREFIX)
         }
         original_init = namespace.pop("__init__", lambda *args, **kwargs: None)
 

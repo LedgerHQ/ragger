@@ -15,6 +15,6 @@ limitations under the License.
 """
 
 try:
-    from ragger.__version__ import __version__  # noqa
+    from ragger.__version__ import __version__
 except ImportError:
-    __version__ = "unknown version"  # noqa
+    __version__ = "unknown version"

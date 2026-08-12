@@ -30,21 +30,20 @@ their own family and default values in a thin wrapper.
 """
 
 from enum import IntEnum
-from typing import List, Optional
 
 from ragger.bip import pack_derivation_path
 from ragger.tlv import (
-    TlvSerializable,
-    BlockchainFamily,
-    LedgerStructType,
-    LedgerCommonFieldTag,
-    CoinInfoFieldTag,
-    SeedIdLkrpFieldTag,
     AddressBookFieldTag,
+    BlockchainFamily,
+    CoinInfoFieldTag,
+    LedgerCommonFieldTag,
+    LedgerStructType,
+    SeedIdLkrpFieldTag,
+    TlvSerializable,
 )
 
 # Re-exported; canonical definitions live in ragger.tlv.
-__all__ = ["BlockchainFamily", "AddressBookFieldTag"]
+__all__ = ["AddressBookFieldTag", "BlockchainFamily"]
 
 
 class AddressBookSubCommand(IntEnum):
@@ -71,21 +70,11 @@ ERR_DERIVATION_PATH_REQUIRED = "Derivation path is required"
 ERR_IDENTIFIER_REQUIRED = "Identifier is required"
 ERR_NEW_IDENTIFIER_REQUIRED = "New identifier is required"
 ERR_OLD_IDENTIFIER_REQUIRED = "Old identifier is required"
-ERR_CONTACT_NAME_REQUIRED = (
-    f"Contact name required (max {CONTACT_NAME_MAX_LENGTH} chars)"
-)
-ERR_PREVIOUS_CONTACT_NAME_REQUIRED = (
-    f"Previous contact name required (max {CONTACT_NAME_MAX_LENGTH} chars)"
-)
-ERR_NEW_CONTACT_NAME_REQUIRED = (
-    f"New contact name required (max {CONTACT_NAME_MAX_LENGTH} chars)"
-)
-ERR_OLD_ACCOUNT_NAME_REQUIRED = (
-    f"Old account name required (max {CONTACT_NAME_MAX_LENGTH} chars)"
-)
-ERR_NEW_ACCOUNT_NAME_REQUIRED = (
-    f"New account name required (max {CONTACT_NAME_MAX_LENGTH} chars)"
-)
+ERR_CONTACT_NAME_REQUIRED = f"Contact name required (max {CONTACT_NAME_MAX_LENGTH} chars)"
+ERR_PREVIOUS_CONTACT_NAME_REQUIRED = f"Previous contact name required (max {CONTACT_NAME_MAX_LENGTH} chars)"
+ERR_NEW_CONTACT_NAME_REQUIRED = f"New contact name required (max {CONTACT_NAME_MAX_LENGTH} chars)"
+ERR_OLD_ACCOUNT_NAME_REQUIRED = f"Old account name required (max {CONTACT_NAME_MAX_LENGTH} chars)"
+ERR_NEW_ACCOUNT_NAME_REQUIRED = f"New account name required (max {CONTACT_NAME_MAX_LENGTH} chars)"
 ERR_PREVIOUS_SCOPE_REQUIRED = f"Previous scope required (max {SCOPE_MAX_LENGTH} chars)"
 ERR_NEW_SCOPE_REQUIRED = f"New scope required (max {SCOPE_MAX_LENGTH} chars)"
 ERR_SCOPE_REQUIRED = f"Scope required (max {SCOPE_MAX_LENGTH} chars)"
@@ -118,7 +107,7 @@ class AddressBookCommand(TlvSerializable):
     subcommand: AddressBookSubCommand
     struct_type: LedgerStructType
     blockchain_family: BlockchainFamily
-    chain_id: Optional[int]
+    chain_id: int | None
 
     def _serialize_network(self) -> bytes:
         """Serialize the CHAIN_ID (optional) + BLOCKCHAIN_FAMILY fields.
@@ -127,17 +116,11 @@ class AddressBookCommand(TlvSerializable):
         """
         payload = b""
         if self.chain_id is not None:
-            payload += self.serialize_field(
-                LedgerCommonFieldTag.CHAIN_ID, self.chain_id
-            )
-        payload += self.serialize_field(
-            CoinInfoFieldTag.BLOCKCHAIN_FAMILY, self.blockchain_family
-        )
+            payload += self.serialize_field(LedgerCommonFieldTag.CHAIN_ID, self.chain_id)
+        payload += self.serialize_field(CoinInfoFieldTag.BLOCKCHAIN_FAMILY, self.blockchain_family)
         return payload
 
-    def get_chunks(
-        self, cla: Optional[int] = None, ins: Optional[int] = None
-    ) -> List[bytes]:
+    def get_chunks(self, cla: int | None = None, ins: int | None = None) -> list[bytes]:
         """Build the full list of APDUs for this sub-command, ready to _exchange.
 
         The TLV payload is prefixed with its 2-byte big-endian total length and split over
@@ -150,7 +133,7 @@ class AddressBookCommand(TlvSerializable):
         payload = self.serialize()
         payload = len(payload).to_bytes(2, "big") + payload
 
-        apdus: List[bytes] = []
+        apdus: list[bytes] = []
         p2 = self.P2_FIRST_CHUNK
         while payload:
             chunk = payload[: self.CHUNK_SIZE]
@@ -171,18 +154,16 @@ class RegisterIdentity(AddressBookCommand):
         identifier: bytes,
         contact_name: str,
         scope: str,
-        derivation_path: str,
         blockchain_family: BlockchainFamily,
-        chain_id: Optional[int] = None,
-        group_handle: Optional[bytes] = None,
-        hmac_proof: Optional[bytes] = None,
+        chain_id: int | None = None,
+        group_handle: bytes | None = None,
+        hmac_proof: bytes | None = None,
     ) -> None:
         """
         Args:
             identifier: Unique identifier for the contact
             contact_name: Name of the contact (max 32 chars, printable ASCII)
             scope: Scope/namespace for the identifier (max 32 chars)
-            derivation_path: BIP32 path used to derive the HMAC key on device
             blockchain_family: Blockchain family of the identifier
             chain_id: Chain ID for the network (optional, typically used for Ethereum-like chains)
             group_handle: Optional 64-byte group handle to link this identifier to an existing group
@@ -191,53 +172,35 @@ class RegisterIdentity(AddressBookCommand):
         self.identifier = identifier
         self.contact_name = contact_name
         self.scope = scope
-        self.derivation_path = derivation_path
         self.blockchain_family = blockchain_family
         self.chain_id = chain_id
         self.group_handle = group_handle
         self.hmac_proof = hmac_proof
 
     def serialize(self) -> bytes:
-        assert (
-            self.contact_name and len(self.contact_name) <= CONTACT_NAME_MAX_LENGTH
-        ), ERR_CONTACT_NAME_REQUIRED
-        assert len(self.identifier) > 0, ERR_IDENTIFIER_REQUIRED
-        assert self.derivation_path, ERR_DERIVATION_PATH_REQUIRED
-        assert (self.group_handle is None) == (self.hmac_proof is None), (
-            ERR_GROUP_HANDLE_HMAC_TOGETHER
-        )
+        if not self.contact_name or len(self.contact_name) > CONTACT_NAME_MAX_LENGTH:
+            raise ValueError(ERR_CONTACT_NAME_REQUIRED)
+        if len(self.identifier) == 0:
+            raise ValueError(ERR_IDENTIFIER_REQUIRED)
+        if (self.group_handle is None) != (self.hmac_proof is None):
+            raise ValueError(ERR_GROUP_HANDLE_HMAC_TOGETHER)
         if self.group_handle is not None:
-            assert len(self.group_handle) == GROUP_HANDLE_LENGTH, (
-                ERR_GROUP_HANDLE_LENGTH
-            )
+            if len(self.group_handle) != GROUP_HANDLE_LENGTH:
+                raise ValueError(ERR_GROUP_HANDLE_LENGTH)
         if self.hmac_proof is not None:
-            assert len(self.hmac_proof) == HMAC_PROOF_LENGTH, ERR_HMAC_PROOF_REQUIRED
+            if len(self.hmac_proof) != HMAC_PROOF_LENGTH:
+                raise ValueError(ERR_HMAC_PROOF_REQUIRED)
 
-        path_bytes = pack_derivation_path(self.derivation_path)
-
-        payload: bytes = self.serialize_field(
-            LedgerCommonFieldTag.STRUCTURE_TYPE, self.struct_type
-        )
+        payload: bytes = self.serialize_field(LedgerCommonFieldTag.STRUCTURE_TYPE, self.struct_type)
         payload += self.serialize_field(LedgerCommonFieldTag.VERSION, 1)
-        payload += self.serialize_field(
-            AddressBookFieldTag.CONTACT_NAME, self.contact_name.encode("utf-8")
-        )
-        payload += self.serialize_field(
-            AddressBookFieldTag.SCOPE, self.scope.encode("utf-8")
-        )
-        payload += self.serialize_field(
-            AddressBookFieldTag.ACCOUNT_IDENTIFIER, self.identifier
-        )
-        payload += self.serialize_field(SeedIdLkrpFieldTag.DERIVATION_PATH, path_bytes)
+        payload += self.serialize_field(AddressBookFieldTag.CONTACT_NAME, self.contact_name.encode("utf-8"))
+        payload += self.serialize_field(AddressBookFieldTag.SCOPE, self.scope.encode("utf-8"))
+        payload += self.serialize_field(AddressBookFieldTag.ACCOUNT_IDENTIFIER, self.identifier)
         payload += self._serialize_network()
         if self.group_handle is not None:
-            payload += self.serialize_field(
-                AddressBookFieldTag.GROUP_HANDLE, self.group_handle
-            )
+            payload += self.serialize_field(AddressBookFieldTag.GROUP_HANDLE, self.group_handle)
         if self.hmac_proof is not None:
-            payload += self.serialize_field(
-                LedgerCommonFieldTag.HMAC_PROOF, self.hmac_proof
-            )
+            payload += self.serialize_field(LedgerCommonFieldTag.HMAC_PROOF, self.hmac_proof)
         return payload
 
 
@@ -257,7 +220,6 @@ class EditContactName(AddressBookCommand):
         new_contact_name: str,
         hmac_proof: bytes,
         group_handle: bytes,
-        derivation_path: str,
     ) -> None:
         """
         Args:
@@ -265,47 +227,31 @@ class EditContactName(AddressBookCommand):
             new_contact_name: New name to assign to the contact
             hmac_proof: HMAC_NAME from the original Register Identity response
             group_handle: 64-byte group handle received from the Register Identity response
-            derivation_path: BIP32 path used to derive the HMAC key on device
         """
         self.old_contact_name = old_contact_name
         self.new_contact_name = new_contact_name
         self.hmac_proof = hmac_proof
         self.group_handle = group_handle
-        self.derivation_path = derivation_path
 
     def serialize(self) -> bytes:
-        assert (
-            self.old_contact_name
-            and len(self.old_contact_name) <= CONTACT_NAME_MAX_LENGTH
-        ), ERR_PREVIOUS_CONTACT_NAME_REQUIRED
-        assert (
-            self.new_contact_name
-            and len(self.new_contact_name) <= CONTACT_NAME_MAX_LENGTH
-        ), ERR_NEW_CONTACT_NAME_REQUIRED
-        assert len(self.group_handle) == GROUP_HANDLE_LENGTH, ERR_GROUP_HANDLE_LENGTH
-        assert self.derivation_path, ERR_DERIVATION_PATH_REQUIRED
-        assert len(self.hmac_proof) == HMAC_PROOF_LENGTH, ERR_HMAC_PROOF_LENGTH
+        if not self.old_contact_name or len(self.old_contact_name) > CONTACT_NAME_MAX_LENGTH:
+            raise ValueError(ERR_PREVIOUS_CONTACT_NAME_REQUIRED)
+        if not self.new_contact_name or len(self.new_contact_name) > CONTACT_NAME_MAX_LENGTH:
+            raise ValueError(ERR_NEW_CONTACT_NAME_REQUIRED)
+        if len(self.group_handle) != GROUP_HANDLE_LENGTH:
+            raise ValueError(ERR_GROUP_HANDLE_LENGTH)
+        if len(self.hmac_proof) != HMAC_PROOF_LENGTH:
+            raise ValueError(ERR_HMAC_PROOF_LENGTH)
 
-        path_bytes = pack_derivation_path(self.derivation_path)
-
-        payload: bytes = self.serialize_field(
-            LedgerCommonFieldTag.STRUCTURE_TYPE, self.struct_type
-        )
+        payload: bytes = self.serialize_field(LedgerCommonFieldTag.STRUCTURE_TYPE, self.struct_type)
         payload += self.serialize_field(LedgerCommonFieldTag.VERSION, 1)
-        payload += self.serialize_field(
-            AddressBookFieldTag.CONTACT_NAME, self.new_contact_name.encode("utf-8")
-        )
+        payload += self.serialize_field(AddressBookFieldTag.CONTACT_NAME, self.new_contact_name.encode("utf-8"))
         payload += self.serialize_field(
             AddressBookFieldTag.PREVIOUS_CONTACT_NAME,
             self.old_contact_name.encode("utf-8"),
         )
-        payload += self.serialize_field(
-            AddressBookFieldTag.GROUP_HANDLE, self.group_handle
-        )
-        payload += self.serialize_field(SeedIdLkrpFieldTag.DERIVATION_PATH, path_bytes)
-        payload += self.serialize_field(
-            LedgerCommonFieldTag.HMAC_PROOF, self.hmac_proof
-        )
+        payload += self.serialize_field(AddressBookFieldTag.GROUP_HANDLE, self.group_handle)
+        payload += self.serialize_field(LedgerCommonFieldTag.HMAC_PROOF, self.hmac_proof)
         return payload
 
 
@@ -321,12 +267,11 @@ class EditIdentifier(AddressBookCommand):
         new_identifier: bytes,
         contact_name: str,
         scope: str,
-        derivation_path: str,
         hmac_proof: bytes,
         hmac_rest: bytes,
         group_handle: bytes,
         blockchain_family: BlockchainFamily,
-        chain_id: Optional[int] = None,
+        chain_id: int | None = None,
     ) -> None:
         """
         Args:
@@ -334,7 +279,6 @@ class EditIdentifier(AddressBookCommand):
             new_identifier: New identifier for the contact
             contact_name: Name of the contact (unchanged, for display)
             scope: Scope/namespace for the identifier (unchanged)
-            derivation_path: BIP32 path used to derive the HMAC key on device
             hmac_proof: HMAC_NAME from the original Register Identity response
             hmac_rest: HMAC_REST from the original Register Identity response
             group_handle: 64-byte group handle received from the Register Identity response
@@ -345,7 +289,6 @@ class EditIdentifier(AddressBookCommand):
         self.new_identifier = new_identifier
         self.contact_name = contact_name
         self.scope = scope
-        self.derivation_path = derivation_path
         self.hmac_proof = hmac_proof
         self.hmac_rest = hmac_rest
         self.group_handle = group_handle
@@ -353,41 +296,27 @@ class EditIdentifier(AddressBookCommand):
         self.chain_id = chain_id
 
     def serialize(self) -> bytes:
-        assert (
-            self.contact_name and len(self.contact_name) <= CONTACT_NAME_MAX_LENGTH
-        ), ERR_CONTACT_NAME_REQUIRED
-        assert len(self.group_handle) == GROUP_HANDLE_LENGTH, ERR_GROUP_HANDLE_LENGTH
-        assert len(self.old_identifier) > 0, ERR_OLD_IDENTIFIER_REQUIRED
-        assert len(self.new_identifier) > 0, ERR_NEW_IDENTIFIER_REQUIRED
-        assert self.derivation_path, ERR_DERIVATION_PATH_REQUIRED
-        assert len(self.hmac_proof) == HMAC_PROOF_LENGTH, ERR_HMAC_PROOF_LENGTH
-        assert len(self.hmac_rest) == HMAC_PROOF_LENGTH, ERR_HMAC_REST_LENGTH
+        if not self.contact_name or len(self.contact_name) > CONTACT_NAME_MAX_LENGTH:
+            raise ValueError(ERR_CONTACT_NAME_REQUIRED)
+        if len(self.group_handle) != GROUP_HANDLE_LENGTH:
+            raise ValueError(ERR_GROUP_HANDLE_LENGTH)
+        if len(self.old_identifier) == 0:
+            raise ValueError(ERR_OLD_IDENTIFIER_REQUIRED)
+        if len(self.new_identifier) == 0:
+            raise ValueError(ERR_NEW_IDENTIFIER_REQUIRED)
+        if len(self.hmac_proof) != HMAC_PROOF_LENGTH:
+            raise ValueError(ERR_HMAC_PROOF_LENGTH)
+        if len(self.hmac_rest) != HMAC_PROOF_LENGTH:
+            raise ValueError(ERR_HMAC_REST_LENGTH)
 
-        path_bytes = pack_derivation_path(self.derivation_path)
-
-        payload: bytes = self.serialize_field(
-            LedgerCommonFieldTag.STRUCTURE_TYPE, self.struct_type
-        )
+        payload: bytes = self.serialize_field(LedgerCommonFieldTag.STRUCTURE_TYPE, self.struct_type)
         payload += self.serialize_field(LedgerCommonFieldTag.VERSION, 1)
-        payload += self.serialize_field(
-            AddressBookFieldTag.CONTACT_NAME, self.contact_name.encode("utf-8")
-        )
-        payload += self.serialize_field(
-            AddressBookFieldTag.SCOPE, self.scope.encode("utf-8")
-        )
-        payload += self.serialize_field(
-            AddressBookFieldTag.ACCOUNT_IDENTIFIER, self.new_identifier
-        )
-        payload += self.serialize_field(
-            AddressBookFieldTag.PREVIOUS_IDENTIFIER, self.old_identifier
-        )
-        payload += self.serialize_field(
-            AddressBookFieldTag.GROUP_HANDLE, self.group_handle
-        )
-        payload += self.serialize_field(SeedIdLkrpFieldTag.DERIVATION_PATH, path_bytes)
-        payload += self.serialize_field(
-            LedgerCommonFieldTag.HMAC_PROOF, self.hmac_proof
-        )
+        payload += self.serialize_field(AddressBookFieldTag.CONTACT_NAME, self.contact_name.encode("utf-8"))
+        payload += self.serialize_field(AddressBookFieldTag.SCOPE, self.scope.encode("utf-8"))
+        payload += self.serialize_field(AddressBookFieldTag.ACCOUNT_IDENTIFIER, self.new_identifier)
+        payload += self.serialize_field(AddressBookFieldTag.PREVIOUS_IDENTIFIER, self.old_identifier)
+        payload += self.serialize_field(AddressBookFieldTag.GROUP_HANDLE, self.group_handle)
+        payload += self.serialize_field(LedgerCommonFieldTag.HMAC_PROOF, self.hmac_proof)
         payload += self.serialize_field(AddressBookFieldTag.HMAC_REST, self.hmac_rest)
         payload += self._serialize_network()
         return payload
@@ -405,12 +334,11 @@ class EditScope(AddressBookCommand):
         new_scope: str,
         identifier: bytes,
         contact_name: str,
-        derivation_path: str,
         hmac_proof: bytes,
         hmac_rest: bytes,
         group_handle: bytes,
         blockchain_family: BlockchainFamily,
-        chain_id: Optional[int] = None,
+        chain_id: int | None = None,
     ) -> None:
         """
         Args:
@@ -418,7 +346,6 @@ class EditScope(AddressBookCommand):
             new_scope: New scope to assign to the contact
             identifier: Raw identifier bytes
             contact_name: Name of the contact (unchanged, for display)
-            derivation_path: BIP32 path used to derive the HMAC key on device
             hmac_proof: HMAC_NAME from the original Register Identity response
             hmac_rest: HMAC_REST from the original Register Identity response
             group_handle: 64-byte group handle received from the Register Identity response
@@ -429,7 +356,6 @@ class EditScope(AddressBookCommand):
         self.new_scope = new_scope
         self.identifier = identifier
         self.contact_name = contact_name
-        self.derivation_path = derivation_path
         self.hmac_proof = hmac_proof
         self.hmac_rest = hmac_rest
         self.group_handle = group_handle
@@ -437,46 +363,29 @@ class EditScope(AddressBookCommand):
         self.chain_id = chain_id
 
     def serialize(self) -> bytes:
-        assert (
-            self.contact_name and len(self.contact_name) <= CONTACT_NAME_MAX_LENGTH
-        ), ERR_CONTACT_NAME_REQUIRED
-        assert len(self.group_handle) == GROUP_HANDLE_LENGTH, ERR_GROUP_HANDLE_LENGTH
-        assert self.old_scope and len(self.old_scope) <= SCOPE_MAX_LENGTH, (
-            ERR_PREVIOUS_SCOPE_REQUIRED
-        )
-        assert self.new_scope and len(self.new_scope) <= SCOPE_MAX_LENGTH, (
-            ERR_NEW_SCOPE_REQUIRED
-        )
-        assert len(self.identifier) > 0, ERR_IDENTIFIER_REQUIRED
-        assert self.derivation_path, ERR_DERIVATION_PATH_REQUIRED
-        assert len(self.hmac_proof) == HMAC_PROOF_LENGTH, ERR_HMAC_PROOF_LENGTH
-        assert len(self.hmac_rest) == HMAC_PROOF_LENGTH, ERR_HMAC_REST_LENGTH
+        if not self.contact_name or len(self.contact_name) > CONTACT_NAME_MAX_LENGTH:
+            raise ValueError(ERR_CONTACT_NAME_REQUIRED)
+        if len(self.group_handle) != GROUP_HANDLE_LENGTH:
+            raise ValueError(ERR_GROUP_HANDLE_LENGTH)
+        if not self.old_scope or len(self.old_scope) > SCOPE_MAX_LENGTH:
+            raise ValueError(ERR_PREVIOUS_SCOPE_REQUIRED)
+        if not self.new_scope or len(self.new_scope) > SCOPE_MAX_LENGTH:
+            raise ValueError(ERR_NEW_SCOPE_REQUIRED)
+        if len(self.identifier) == 0:
+            raise ValueError(ERR_IDENTIFIER_REQUIRED)
+        if len(self.hmac_proof) != HMAC_PROOF_LENGTH:
+            raise ValueError(ERR_HMAC_PROOF_LENGTH)
+        if len(self.hmac_rest) != HMAC_PROOF_LENGTH:
+            raise ValueError(ERR_HMAC_REST_LENGTH)
 
-        path_bytes = pack_derivation_path(self.derivation_path)
-
-        payload: bytes = self.serialize_field(
-            LedgerCommonFieldTag.STRUCTURE_TYPE, self.struct_type
-        )
+        payload: bytes = self.serialize_field(LedgerCommonFieldTag.STRUCTURE_TYPE, self.struct_type)
         payload += self.serialize_field(LedgerCommonFieldTag.VERSION, 1)
-        payload += self.serialize_field(
-            AddressBookFieldTag.CONTACT_NAME, self.contact_name.encode("utf-8")
-        )
-        payload += self.serialize_field(
-            AddressBookFieldTag.SCOPE, self.new_scope.encode("utf-8")
-        )
-        payload += self.serialize_field(
-            AddressBookFieldTag.ACCOUNT_IDENTIFIER, self.identifier
-        )
-        payload += self.serialize_field(
-            AddressBookFieldTag.PREVIOUS_SCOPE, self.old_scope.encode("utf-8")
-        )
-        payload += self.serialize_field(
-            AddressBookFieldTag.GROUP_HANDLE, self.group_handle
-        )
-        payload += self.serialize_field(SeedIdLkrpFieldTag.DERIVATION_PATH, path_bytes)
-        payload += self.serialize_field(
-            LedgerCommonFieldTag.HMAC_PROOF, self.hmac_proof
-        )
+        payload += self.serialize_field(AddressBookFieldTag.CONTACT_NAME, self.contact_name.encode("utf-8"))
+        payload += self.serialize_field(AddressBookFieldTag.SCOPE, self.new_scope.encode("utf-8"))
+        payload += self.serialize_field(AddressBookFieldTag.ACCOUNT_IDENTIFIER, self.identifier)
+        payload += self.serialize_field(AddressBookFieldTag.PREVIOUS_SCOPE, self.old_scope.encode("utf-8"))
+        payload += self.serialize_field(AddressBookFieldTag.GROUP_HANDLE, self.group_handle)
+        payload += self.serialize_field(LedgerCommonFieldTag.HMAC_PROOF, self.hmac_proof)
         payload += self.serialize_field(AddressBookFieldTag.HMAC_REST, self.hmac_rest)
         payload += self._serialize_network()
         return payload
@@ -493,7 +402,7 @@ class RegisterLedgerAccount(AddressBookCommand):
         contact_name: str,
         derivation_path: str,
         blockchain_family: BlockchainFamily,
-        chain_id: Optional[int] = None,
+        chain_id: int | None = None,
     ) -> None:
         """
         Args:
@@ -508,20 +417,16 @@ class RegisterLedgerAccount(AddressBookCommand):
         self.chain_id = chain_id
 
     def serialize(self) -> bytes:
-        assert (
-            self.contact_name and len(self.contact_name) <= CONTACT_NAME_MAX_LENGTH
-        ), ERR_CONTACT_NAME_REQUIRED
-        assert self.derivation_path, ERR_DERIVATION_PATH_REQUIRED
+        if not self.contact_name or len(self.contact_name) > CONTACT_NAME_MAX_LENGTH:
+            raise ValueError(ERR_CONTACT_NAME_REQUIRED)
+        if not self.derivation_path:
+            raise ValueError(ERR_DERIVATION_PATH_REQUIRED)
 
         path_bytes = pack_derivation_path(self.derivation_path)
 
-        payload: bytes = self.serialize_field(
-            LedgerCommonFieldTag.STRUCTURE_TYPE, self.struct_type
-        )
+        payload: bytes = self.serialize_field(LedgerCommonFieldTag.STRUCTURE_TYPE, self.struct_type)
         payload += self.serialize_field(LedgerCommonFieldTag.VERSION, 1)
-        payload += self.serialize_field(
-            AddressBookFieldTag.CONTACT_NAME, self.contact_name.encode("utf-8")
-        )
+        payload += self.serialize_field(AddressBookFieldTag.CONTACT_NAME, self.contact_name.encode("utf-8"))
         payload += self.serialize_field(SeedIdLkrpFieldTag.DERIVATION_PATH, path_bytes)
         payload += self._serialize_network()
         return payload
@@ -540,7 +445,7 @@ class EditLedgerAccount(AddressBookCommand):
         derivation_path: str,
         hmac_proof: bytes,
         blockchain_family: BlockchainFamily,
-        chain_id: Optional[int] = None,
+        chain_id: int | None = None,
     ) -> None:
         """
         Args:
@@ -559,34 +464,26 @@ class EditLedgerAccount(AddressBookCommand):
         self.chain_id = chain_id
 
     def serialize(self) -> bytes:
-        assert (
-            self.old_account_name
-            and len(self.old_account_name) <= CONTACT_NAME_MAX_LENGTH
-        ), ERR_OLD_ACCOUNT_NAME_REQUIRED
-        assert (
-            self.new_account_name
-            and len(self.new_account_name) <= CONTACT_NAME_MAX_LENGTH
-        ), ERR_NEW_ACCOUNT_NAME_REQUIRED
-        assert self.derivation_path, ERR_DERIVATION_PATH_REQUIRED
-        assert len(self.hmac_proof) == HMAC_PROOF_LENGTH, ERR_HMAC_PROOF_LENGTH_ALT
+        if not self.old_account_name or len(self.old_account_name) > CONTACT_NAME_MAX_LENGTH:
+            raise ValueError(ERR_OLD_ACCOUNT_NAME_REQUIRED)
+        if not self.new_account_name or len(self.new_account_name) > CONTACT_NAME_MAX_LENGTH:
+            raise ValueError(ERR_NEW_ACCOUNT_NAME_REQUIRED)
+        if not self.derivation_path:
+            raise ValueError(ERR_DERIVATION_PATH_REQUIRED)
+        if len(self.hmac_proof) != HMAC_PROOF_LENGTH:
+            raise ValueError(ERR_HMAC_PROOF_LENGTH_ALT)
 
         path_bytes = pack_derivation_path(self.derivation_path)
 
-        payload: bytes = self.serialize_field(
-            LedgerCommonFieldTag.STRUCTURE_TYPE, self.struct_type
-        )
+        payload: bytes = self.serialize_field(LedgerCommonFieldTag.STRUCTURE_TYPE, self.struct_type)
         payload += self.serialize_field(LedgerCommonFieldTag.VERSION, 1)
-        payload += self.serialize_field(
-            AddressBookFieldTag.CONTACT_NAME, self.new_account_name.encode("utf-8")
-        )
+        payload += self.serialize_field(AddressBookFieldTag.CONTACT_NAME, self.new_account_name.encode("utf-8"))
         payload += self.serialize_field(
             AddressBookFieldTag.PREVIOUS_CONTACT_NAME,
             self.old_account_name.encode("utf-8"),
         )
         payload += self.serialize_field(SeedIdLkrpFieldTag.DERIVATION_PATH, path_bytes)
-        payload += self.serialize_field(
-            LedgerCommonFieldTag.HMAC_PROOF, self.hmac_proof
-        )
+        payload += self.serialize_field(LedgerCommonFieldTag.HMAC_PROOF, self.hmac_proof)
         payload += self._serialize_network()
         return payload
 
@@ -610,21 +507,19 @@ class ProvideContact(AddressBookCommand):
         hmac_rest: bytes,
         contact_name: str,
         scope: str,
-        derivation_path: str,
         blockchain_family: BlockchainFamily,
-        chain_id: Optional[int] = None,
+        chain_id: int | None = None,
     ) -> None:
         """
         Args:
-            identifier:         Raw identifier bytes
-            group_handle:    64-byte group handle from the Register Identity response
-            hmac_name:       HMAC_PROOF (32 B) from the Register Identity response
-            hmac_rest:       HMAC_REST  (32 B) from the Register Identity response
-            contact_name:    Human-readable name bound to the identifier
-            scope:           Scope/namespace for the identifier
-            derivation_path: BIP32 path used to derive the HMAC key on device
+            identifier:       Raw identifier bytes
+            group_handle:     64-byte group handle from the Register Identity response
+            hmac_name:        HMAC_PROOF (32 B) from the Register Identity response
+            hmac_rest:        HMAC_REST  (32 B) from the Register Identity response
+            contact_name:     Human-readable name bound to the identifier
+            scope:            Scope/namespace for the identifier
             blockchain_family: Blockchain family of the identifier
-            chain_id:        Chain ID for the network (optional, typically used for Ethereum-like chains)
+            chain_id:         Chain ID for the network (optional, typically used for Ethereum-like chains)
         """
         self.identifier = identifier
         self.group_handle = group_handle
@@ -632,40 +527,29 @@ class ProvideContact(AddressBookCommand):
         self.hmac_rest = hmac_rest
         self.contact_name = contact_name
         self.scope = scope
-        self.derivation_path = derivation_path
         self.blockchain_family = blockchain_family
         self.chain_id = chain_id
 
     def serialize(self) -> bytes:
-        assert (
-            self.contact_name and len(self.contact_name) <= CONTACT_NAME_MAX_LENGTH
-        ), ERR_CONTACT_NAME_REQUIRED
-        assert self.scope and len(self.scope) <= SCOPE_MAX_LENGTH, ERR_SCOPE_REQUIRED
-        assert len(self.identifier) > 0, ERR_IDENTIFIER_REQUIRED
-        assert len(self.group_handle) == GROUP_HANDLE_LENGTH, ERR_GROUP_HANDLE_LENGTH
-        assert len(self.hmac_name) == HMAC_PROOF_LENGTH, ERR_HMAC_PROOF_LENGTH
-        assert len(self.hmac_rest) == HMAC_PROOF_LENGTH, ERR_HMAC_REST_LENGTH_ALT
-        assert self.derivation_path, ERR_DERIVATION_PATH_REQUIRED
+        if not self.contact_name or len(self.contact_name) > CONTACT_NAME_MAX_LENGTH:
+            raise ValueError(ERR_CONTACT_NAME_REQUIRED)
+        if not self.scope or len(self.scope) > SCOPE_MAX_LENGTH:
+            raise ValueError(ERR_SCOPE_REQUIRED)
+        if len(self.identifier) == 0:
+            raise ValueError(ERR_IDENTIFIER_REQUIRED)
+        if len(self.group_handle) != GROUP_HANDLE_LENGTH:
+            raise ValueError(ERR_GROUP_HANDLE_LENGTH)
+        if len(self.hmac_name) != HMAC_PROOF_LENGTH:
+            raise ValueError(ERR_HMAC_PROOF_LENGTH)
+        if len(self.hmac_rest) != HMAC_PROOF_LENGTH:
+            raise ValueError(ERR_HMAC_REST_LENGTH_ALT)
 
-        path_bytes = pack_derivation_path(self.derivation_path)
-
-        payload: bytes = self.serialize_field(
-            LedgerCommonFieldTag.STRUCTURE_TYPE, self.struct_type
-        )
+        payload: bytes = self.serialize_field(LedgerCommonFieldTag.STRUCTURE_TYPE, self.struct_type)
         payload += self.serialize_field(LedgerCommonFieldTag.VERSION, 1)
-        payload += self.serialize_field(
-            AddressBookFieldTag.CONTACT_NAME, self.contact_name.encode("utf-8")
-        )
-        payload += self.serialize_field(
-            AddressBookFieldTag.SCOPE, self.scope.encode("utf-8")
-        )
-        payload += self.serialize_field(
-            AddressBookFieldTag.ACCOUNT_IDENTIFIER, self.identifier
-        )
-        payload += self.serialize_field(
-            AddressBookFieldTag.GROUP_HANDLE, self.group_handle
-        )
-        payload += self.serialize_field(SeedIdLkrpFieldTag.DERIVATION_PATH, path_bytes)
+        payload += self.serialize_field(AddressBookFieldTag.CONTACT_NAME, self.contact_name.encode("utf-8"))
+        payload += self.serialize_field(AddressBookFieldTag.SCOPE, self.scope.encode("utf-8"))
+        payload += self.serialize_field(AddressBookFieldTag.ACCOUNT_IDENTIFIER, self.identifier)
+        payload += self.serialize_field(AddressBookFieldTag.GROUP_HANDLE, self.group_handle)
         payload += self._serialize_network()
         payload += self.serialize_field(LedgerCommonFieldTag.HMAC_PROOF, self.hmac_name)
         payload += self.serialize_field(AddressBookFieldTag.HMAC_REST, self.hmac_rest)
@@ -690,7 +574,7 @@ class ProvideLedgerAccountContact(AddressBookCommand):
         contact_name: str,
         derivation_path: str,
         blockchain_family: BlockchainFamily,
-        chain_id: Optional[int] = None,
+        chain_id: int | None = None,
     ) -> None:
         """
         Args:
@@ -707,24 +591,19 @@ class ProvideLedgerAccountContact(AddressBookCommand):
         self.chain_id = chain_id
 
     def serialize(self) -> bytes:
-        assert (
-            self.contact_name and len(self.contact_name) <= CONTACT_NAME_MAX_LENGTH
-        ), ERR_CONTACT_NAME_REQUIRED
-        assert len(self.hmac_proof) == HMAC_PROOF_LENGTH, ERR_HMAC_PROOF_REQUIRED
-        assert self.derivation_path, ERR_DERIVATION_PATH_REQUIRED
+        if not self.contact_name or len(self.contact_name) > CONTACT_NAME_MAX_LENGTH:
+            raise ValueError(ERR_CONTACT_NAME_REQUIRED)
+        if len(self.hmac_proof) != HMAC_PROOF_LENGTH:
+            raise ValueError(ERR_HMAC_PROOF_REQUIRED)
+        if not self.derivation_path:
+            raise ValueError(ERR_DERIVATION_PATH_REQUIRED)
 
         path_bytes = pack_derivation_path(self.derivation_path)
 
-        payload: bytes = self.serialize_field(
-            LedgerCommonFieldTag.STRUCTURE_TYPE, self.struct_type
-        )
+        payload: bytes = self.serialize_field(LedgerCommonFieldTag.STRUCTURE_TYPE, self.struct_type)
         payload += self.serialize_field(LedgerCommonFieldTag.VERSION, 1)
-        payload += self.serialize_field(
-            AddressBookFieldTag.CONTACT_NAME, self.contact_name.encode("utf-8")
-        )
+        payload += self.serialize_field(AddressBookFieldTag.CONTACT_NAME, self.contact_name.encode("utf-8"))
         payload += self.serialize_field(SeedIdLkrpFieldTag.DERIVATION_PATH, path_bytes)
         payload += self._serialize_network()
-        payload += self.serialize_field(
-            LedgerCommonFieldTag.HMAC_PROOF, self.hmac_proof
-        )
+        payload += self.serialize_field(LedgerCommonFieldTag.HMAC_PROOF, self.hmac_proof)
         return payload

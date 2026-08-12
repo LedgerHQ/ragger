@@ -14,16 +14,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+from collections.abc import Generator
 from contextlib import contextmanager
 from pathlib import Path
 from time import sleep
-from typing import Optional, Generator
 
 from ledgercomm import Transport
 from ledgered.devices import Device
 
-from ragger.utils import RAPDU
 from ragger.error import ExceptionRAPDU
+from ragger.utils import RAPDU
+
 from .physical_backend import PhysicalBackend
 
 
@@ -50,16 +51,14 @@ class LedgerCommBackend(PhysicalBackend):
         host: str = "127.0.0.1",
         port: int = 9999,
         interface: str = "hid",
-        log_apdu_file: Optional[Path] = None,
+        log_apdu_file: Path | None = None,
         with_gui: bool = False,
         **kwargs,
     ):
-        super().__init__(
-            device, *args, log_apdu_file=log_apdu_file, with_gui=with_gui, **kwargs
-        )
+        super().__init__(device, *args, log_apdu_file=log_apdu_file, with_gui=with_gui, **kwargs)
         self._host = host
         self._port = port
-        self._client: Optional[Transport] = None
+        self._client: Transport | None = None
         kwargs["interface"] = interface
         self._args = (args, kwargs)
 
@@ -67,21 +66,18 @@ class LedgerCommBackend(PhysicalBackend):
         self.logger.info(f"Starting {self.__class__.__name__} stream")
 
         try:
-            self._client = Transport(
-                server=self._host, port=self._port, *self._args[0], **self._args[1]
-            )
+            self._client = Transport(*self._args[0], server=self._host, port=self._port, **self._args[1])
         except Exception:
             # Give some time for the USB stack to power up and to be enumerated
             # Might be needed in successive tests where app is exited at the end of the test
             sleep(1)
-            self._client = Transport(
-                server=self._host, port=self._port, *self._args[0], **self._args[1]
-            )
+            self._client = Transport(*self._args[0], server=self._host, port=self._port, **self._args[1])
         return self
 
     def __exit__(self, *args):
         super().__exit__(*args)
-        assert self._client is not None
+        if self._client is None:
+            raise RuntimeError("Backend not initialized: used outside context manager")
         self._client.close()
 
     def handle_usb_reset(self) -> None:
@@ -91,19 +87,22 @@ class LedgerCommBackend(PhysicalBackend):
 
     def send_raw(self, data: bytes = b"") -> None:
         self.apdu_logger.info("=> %s", data.hex())
-        assert self._client is not None
+        if self._client is None:
+            raise RuntimeError("Backend not initialized: used outside context manager")
         self._client.send_raw(data)
 
     @raise_policy_enforcer
     def receive(self) -> RAPDU:
-        assert self._client is not None
+        if self._client is None:
+            raise RuntimeError("Backend not initialized: used outside context manager")
         result = RAPDU(*self._client.recv())
         return result
 
     @raise_policy_enforcer
     def exchange_raw(self, data: bytes = b"", tick_timeout: int = 0) -> RAPDU:
         self.apdu_logger.info("=> %s", data.hex())
-        assert self._client is not None
+        if self._client is None:
+            raise RuntimeError("Backend not initialized: used outside context manager")
         result = RAPDU(*self._client.exchange_raw(data))
         return result
 

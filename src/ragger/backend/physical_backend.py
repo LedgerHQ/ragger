@@ -14,31 +14,30 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from ledgered.devices import Device
 from pathlib import Path
-from types import TracebackType
-from typing import List, Optional, Type
 from re import match, search
+from types import TracebackType
+
+from ledgered.devices import Device
 
 from ragger.gui import RaggerGUI
 from ragger.navigator.instruction import NavInsID
 from ragger.utils import Crop
+
 from .interface import BackendInterface
 
 
 class PhysicalBackend(BackendInterface):
     def __init__(self, device: Device, *args, with_gui: bool = False, **kwargs):
         super().__init__(device, *args, **kwargs)
-        self._ui: Optional[RaggerGUI] = (
-            RaggerGUI(device=device.name) if with_gui else None
-        )
-        self._last_valid_snap_path: Optional[Path] = None
+        self._ui: RaggerGUI | None = RaggerGUI(device=device.name) if with_gui else None
+        self._last_valid_snap_path: Path | None = None
 
     def __exit__(
         self,
-        exc_type: Optional[Type[BaseException]] = None,
-        exc_val: Optional[BaseException] = None,
-        exc_tb: Optional[TracebackType] = None,
+        exc_type: type[BaseException] | None = None,
+        exc_val: BaseException | None = None,
+        exc_tb: TracebackType | None = None,
     ):
         if self._ui is not None:
             self._ui.kill()
@@ -47,9 +46,8 @@ class PhysicalBackend(BackendInterface):
         """
         Initialize the GUI if needed.
         """
-        assert self._ui is not None, (
-            "This method should only be called if the backend manages an GUI"
-        )
+        if self._ui is None:
+            raise RuntimeError("This method should only be called if the backend manages a GUI")
         if not self._ui.is_alive():
             self._ui.start()
 
@@ -77,9 +75,7 @@ class PhysicalBackend(BackendInterface):
         self.init_gui()
         self._ui.ask_for_touch_action(x, y)
 
-    def finger_swipe(
-        self, x: int = 0, y: int = 0, direction: str = "left", delay: float = 0.5
-    ) -> None:
+    def finger_swipe(self, x: int = 0, y: int = 0, direction: str = "left", delay: float = 0.5) -> None:
         if self._ui is None:
             return
         self.init_gui()
@@ -88,8 +84,8 @@ class PhysicalBackend(BackendInterface):
     def compare_screen_with_snapshot(
         self,
         golden_snap_path: Path,
-        crop: Optional[Crop] = None,
-        tmp_snap_path: Optional[Path] = None,
+        crop: Crop | None = None,
+        tmp_snap_path: Path | None = None,
         golden_run: bool = False,
     ) -> bool:
 
@@ -118,12 +114,11 @@ class PhysicalBackend(BackendInterface):
         # Only this method needs these dependencies, which needs at least one physical backend to
         # be installed. By postponing the imports, we avoid an import error when using only Speculos
         try:
-            from PIL import Image, ImageOps, ImageFilter
-            from pytesseract import image_to_data, Output
+            from PIL import Image, ImageFilter, ImageOps
+            from pytesseract import Output, image_to_data
         except ImportError as error:
             raise ImportError(
-                "This feature needs at least one physical backend. "
-                "Please install ragger[ledgercomm] or ragger[ledgerwallet]"
+                "This feature needs at least one physical backend. Please install ragger[ledgercomm] or ragger[ledgerwallet]"
             ) from error
 
         if self._ui is None:
@@ -158,7 +153,7 @@ class PhysicalBackend(BackendInterface):
     def wait_for_text_not_on_screen(self, text: str, timeout: float = 10.0) -> None:
         return
 
-    def get_current_screen_content(self) -> List:
+    def get_current_screen_content(self) -> list:
         return list()
 
     def pause_ticker(self) -> None:

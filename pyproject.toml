@@ -12,8 +12,6 @@ authors = [{name = "Ledger", email = "hello@ledger.fr"}]
 description = "Testing framework using Speculos and LedgerComm as backends"
 classifiers = [
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
@@ -21,7 +19,7 @@ classifiers = [
     "Operating System :: POSIX :: Linux",
     "Operating System :: MacOS :: MacOS X",
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.11"
 dependencies = [
     "bip_utils>=2.4.0",
     "ecdsa",
@@ -43,15 +41,6 @@ Homepage = "https://github.com/LedgerHQ/ragger"
 tests = [
     "pytest",
     "pytest-cov",
-]
-checkers = [
-    "yapf",
-    "toml",
-    "flake8",
-    "flake8-pyproject",
-    "mypy",
-    "types-toml",
-    "bandit",
 ]
 doc = [
     # embeds pyreverse
@@ -103,20 +92,9 @@ ragger = ["py.typed"]
 write_to = "src/ragger/__version__.py"
 local_scheme = "no-local-version"
 
-[tool.mypy]
-ignore_missing_imports = true
-
-[tool.yapf]
-based_on_style = "pep8"
-column_limit = 100
-
 [tool.coverage.report]
 show_missing = true
 exclude_lines = [
     "@abstractmethod",
     "pragma: no cover"
 ]
-
-[tool.flake8]
-max-line-length = 120
-extend-ignore = "E502"

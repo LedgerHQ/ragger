@@ -50,7 +50,6 @@ import shutil
 import subprocess
 from collections import defaultdict
 from pathlib import Path
-from typing import Dict, List, Optional, Set, Tuple
 
 from ragger.logger import get_default_logger
 
@@ -63,7 +62,7 @@ logger = get_default_logger()
 
 # Per-session registry: device name -> (elf path, trace directory). Populated by
 # the Speculos backend when coverage is enabled, consumed at session end.
-_REGISTRY: Dict[str, Tuple[Path, Path]] = {}
+_REGISTRY: dict[str, tuple[Path, Path]] = {}
 
 
 def enable(device_name: str, elf: Path, trace_dir: Path) -> None:
@@ -82,15 +81,15 @@ def enable(device_name: str, elf: Path, trace_dir: Path) -> None:
     logger.info("[coverage] tracing enabled for %s -> %s", device_name, trace_dir)
 
 
-def registered() -> Dict[str, Tuple[Path, Path]]:
+def registered() -> dict[str, tuple[Path, Path]]:
     return dict(_REGISTRY)
 
 
-def _run(cmd: List[str]) -> str:
-    return subprocess.run(cmd, capture_output=True, text=True, check=True).stdout
+def _run(cmd: list[str]) -> str:
+    return subprocess.run(cmd, capture_output=True, text=True, check=True).stdout  # noqa: S603
 
 
-def _text_range(readelf: str, elf: Path) -> Tuple[int, int]:
+def _text_range(readelf: str, elf: Path) -> tuple[int, int]:
     """Return (vma, size) of the .text section of the app ELF."""
     out = _run([readelf, "-S", str(elf)])
     for line in out.splitlines():
@@ -111,9 +110,7 @@ def _inline_len(line: str) -> int:
     return len(m.group(1).replace(" ", "")) // 2 if m else 0
 
 
-def _parse_traces(
-    trace_files: List[Path], lo: int, hi: int, delta: int
-) -> List[Tuple[int, int]]:
+def _parse_traces(trace_files: list[Path], lo: int, hi: int, delta: int) -> list[tuple[int, int]]:
     """Parse in_asm traces -> sorted executed link-address ranges (deduped).
 
     ``lo``/``hi`` bound the app .text in *runtime* addresses; ``delta`` rebases a
@@ -123,15 +120,15 @@ def _parse_traces(
     qemu-arm-static build): object-dump (``0x<addr>:`` + ``OBJD-T: <bytes>``
     lines) and plain disassembly (``0x<addr>:  <bytes>  <mnemonic>``).
     """
-    ranges: Set[Tuple[int, int]] = set()
+    ranges: set[tuple[int, int]] = set()
     addr_re = re.compile(r"^(0x[0-9a-f]+):")
 
-    def flush(addr: Optional[int], length: int) -> None:
+    def flush(addr: int | None, length: int) -> None:
         if addr is not None and lo <= addr < hi and length:
             ranges.add((addr + delta, addr + length + delta))
 
     for path in trace_files:
-        cur_addr: Optional[int] = None
+        cur_addr: int | None = None
         cur_len = 0
         with open(path, errors="ignore") as fh:
             for line in fh:
@@ -147,13 +144,11 @@ def _parse_traces(
     return sorted(ranges)
 
 
-def _line_table(
-    readelf: str, elf: Path, vlo: int, vhi: int
-) -> List[Tuple[int, str, int]]:
+def _line_table(readelf: str, elf: Path, vlo: int, vhi: int) -> list[tuple[int, str, int]]:
     """DWARF line table -> sorted (addr, source_path, line) statements in range."""
     out = _run([readelf, "--debug-dump=decodedline", str(elf)])
-    entries: List[Tuple[int, str, int]] = []
-    cur_path: Optional[str] = None
+    entries: list[tuple[int, str, int]] = []
+    cur_path: str | None = None
     hdr_re = re.compile(r"^(\S*\.(?:c|h|cpp|cc|cxx)):\s*$")
     ent_re = re.compile(r"^\S+\s+(\d+)\s+(0x[0-9a-f]+)")
     for line in out.splitlines():
@@ -170,9 +165,7 @@ def _line_table(
     return entries
 
 
-def _repo_relative(
-    source_path: str, project_root: Path, cache: Dict[str, Optional[str]]
-) -> Optional[str]:
+def _repo_relative(source_path: str, project_root: Path, cache: dict[str, str | None]) -> str | None:
     """Map a DWARF source path to a path relative to ``project_root``.
 
     Generic and toolchain-agnostic: strip the longest leading prefix such that
@@ -183,7 +176,7 @@ def _repo_relative(
         return cache[source_path]
     parts = Path(source_path).parts
     root = project_root.resolve()
-    result: Optional[str] = None
+    result: str | None = None
     for i in range(len(parts)):
         candidate = Path(*parts[i:])
         # Skip absolute candidates: `root / "/opt/x"` would collapse to "/opt/x"
@@ -204,7 +197,7 @@ def _repo_relative(
     return result
 
 
-def _excluded(rel: str, patterns: List[str]) -> bool:
+def _excluded(rel: str, patterns: list[str]) -> bool:
     """Whether a repo-relative path matches one of the exclusion patterns.
 
     A pattern matches if it equals the path, is a leading directory of it, or is
@@ -222,13 +215,13 @@ def _excluded(rel: str, patterns: List[str]) -> bool:
 
 def to_lcov(
     elf: Path,
-    trace_files: List[Path],
+    trace_files: list[Path],
     output: Path,
     project_root: Path,
     readelf: str = "readelf",
     load_base: int = LOAD_BASE,
-    exclude: Optional[List[str]] = None,
-) -> Tuple[int, int, int]:
+    exclude: list[str] | None = None,
+) -> tuple[int, int, int]:
     """Convert in_asm traces into an lcov tracefile.
 
     ``exclude`` is an optional list of patterns (see :func:`_excluded`) removing
@@ -245,19 +238,15 @@ def to_lcov(
 
     if not entries:
         raise ValueError(
-            f"no DWARF line info in {elf}; build with debug symbols "
-            "(a default build keeps them, a stripped build does not)"
+            f"no DWARF line info in {elf}; build with debug symbols (a default build keeps them, a stripped build does not)"
         )
     if not exec_ranges:
-        raise ValueError(
-            f"no app code executed in [{load_base:#x}, "
-            f"{load_base + tsize:#x}); check traces and load base"
-        )
+        raise ValueError(f"no app code executed in [{load_base:#x}, {load_base + tsize:#x}); check traces and load base")
 
     starts = [r[0] for r in exec_ranges]
-    hits: Dict[str, Dict[int, int]] = defaultdict(lambda: defaultdict(int))
-    instr: Dict[str, Set[int]] = defaultdict(set)
-    path_cache: Dict[str, Optional[str]] = {}
+    hits: dict[str, dict[int, int]] = defaultdict(lambda: defaultdict(int))
+    instr: dict[str, set[int]] = defaultdict(set)
+    path_cache: dict[str, str | None] = {}
 
     for i, (addr, src, lno) in enumerate(entries):
         nxt = entries[i + 1][0] if i + 1 < len(entries) else addr + 4
@@ -290,26 +279,24 @@ def to_lcov(
     return files, cov, total
 
 
-def to_html(info: Path, html_dir: Path, project_root: Path) -> Optional[Path]:
+def to_html(info: Path, html_dir: Path, project_root: Path) -> Path | None:
     """Render an lcov ``.info`` into an HTML report with ``genhtml``.
 
     Run from ``project_root`` so the repo-relative ``SF:`` paths resolve to their
     sources. Returns the report's ``index.html`` on success, or None (with a
     warning) if ``genhtml`` is unavailable or failed.
     """
-    if shutil.which("genhtml") is None:
-        logger.warning(
-            "[coverage] genhtml not found, skipping HTML report "
-            "(install the 'lcov' package)"
-        )
+    genhtml = shutil.which("genhtml")
+    if genhtml is None:
+        logger.warning("[coverage] genhtml not found, skipping HTML report (install the 'lcov' package)")
         return None
     html_dir.mkdir(parents=True, exist_ok=True)
     try:
         # Ignore genhtml errors expected on an optimized build: missing sources,
         # unmappable entries, and line numbers past a file's end (`range`).
-        subprocess.run(
+        subprocess.run(  # noqa: S603
             [
-                "genhtml",
+                genhtml,
                 "--quiet",
                 "--ignore-errors",
                 "source,unmapped,range",
@@ -330,15 +317,15 @@ def to_html(info: Path, html_dir: Path, project_root: Path) -> Optional[Path]:
 
 # One per-device coverage result: device, files, covered lines, total lines,
 # lcov path, and HTML index (or None).
-Result = Tuple[str, int, int, int, Path, Optional[Path]]
+Result = tuple[str, int, int, int, Path, Path | None]
 
 
 def finalize(
     project_root: Path,
     output: Path,
     readelf: str = "readelf",
-    exclude: Optional[List[str]] = None,
-) -> List[Result]:
+    exclude: list[str] | None = None,
+) -> list[Result]:
     """Convert every registered device's traces into an lcov file.
 
     For a single device, writes ``output``. For several devices, writes one file
@@ -349,7 +336,7 @@ def finalize(
     per-device results (rendering of the human-readable summary is left to the
     caller).
     """
-    results: List[Result] = []
+    results: list[Result] = []
     multi = len(registered()) > 1
     for device, (elf, trace_dir) in sorted(registered().items()):
         traces = sorted(trace_dir.glob("cov-*.log"))
@@ -360,9 +347,7 @@ def finalize(
         if multi:
             out = output.with_name(f"{output.stem}-{device}{output.suffix}")
         try:
-            files, cov, total = to_lcov(
-                elf, traces, out, project_root, readelf, exclude=exclude
-            )
+            files, cov, total = to_lcov(elf, traces, out, project_root, readelf, exclude=exclude)
         except ValueError as exc:
             logger.error("[coverage] %s: %s", device, exc)
             continue

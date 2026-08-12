@@ -1,9 +1,9 @@
 from unittest import TestCase
-from typing import Tuple
+
+from bip_utils import Bip32KeyError
 
 # from ragger.bip.seed import Seed
-from ragger.bip import calculate_public_key_and_chaincode, CurveChoice
-from bip_utils import Bip32KeyError
+from ragger.bip import CurveChoice, calculate_public_key_and_chaincode
 
 # Disable yapf as it proposes unreadable test vectors
 # yapf: disable
@@ -40,7 +40,7 @@ class TestSeed(TestCase):
                                                path="m/44'/601/1430/20/0/0")
 
     def test_get_public_key_and_chaincode_secp256k1(self):
-        secp256k1_test_values: Tuple[Tuple[str, str, str]] = (
+        secp256k1_test_values: tuple[tuple[str, str, str]] = (
             ("m/44'/0'",
              "049cf864c874c05959780f5c80e20f837b5f304367bde75508ceba499e54f0ef7c848279d96aa18e50cf09494c7adba9a6f166d2d92952892f18ece854c919159d",
              "039cf864c874c05959780f5c80e20f837b5f304367bde75508ceba499e54f0ef7c",
@@ -62,7 +62,7 @@ class TestSeed(TestCase):
             self._assert_return(*refs, CurveChoice.Secp256k1)
 
     def test_get_public_key_and_chaincode_nist256p1(self):
-        nist256p1_test_values: Tuple[Tuple[str, str, str]] = (
+        nist256p1_test_values: tuple[tuple[str, str, str]] = (
             ("m/44'/0'",
              "04cc70e8a1d99dd7dfa962e22f236d1be2f033714644a4c3515c64b8b9ba63e56b95ce3053c98733b5c0cc1e376ead8fed94cc78b0b2bf1bca5e12135ea864c8b8",
              "02cc70e8a1d99dd7dfa962e22f236d1be2f033714644a4c3515c64b8b9ba63e56b",
@@ -84,7 +84,7 @@ class TestSeed(TestCase):
             self._assert_return(*refs, CurveChoice.Nist256p1)
 
     def test_get_public_key_and_chaincode_ed25519slip(self):
-        ed25519slip_test_values: Tuple[Tuple[str, str, str]] = (
+        ed25519slip_test_values: tuple[tuple[str, str, str]] = (
             ("m/44'/0'",
              "00878ee3e0514e12dbbfa81a46f5bfea2e2266fef56e6e2fac64cac2d244a1b1bf",
              "00878ee3e0514e12dbbfa81a46f5bfea2e2266fef56e6e2fac64cac2d244a1b1bf",
@@ -102,7 +102,7 @@ class TestSeed(TestCase):
             self._assert_return(*refs, CurveChoice.Ed25519Slip)
 
     def test_get_public_key_and_chaincode_ed25519kholaw(self):
-        ed25519kholaw_test_values: Tuple[Tuple[str, str, str]] = (
+        ed25519kholaw_test_values: tuple[tuple[str, str, str]] = (
             ("m/44'/0'",
              "003108582f9d96e765606f34a7bcc0519e0de48440f91672b205ce8e4cb17d6f14",
              "003108582f9d96e765606f34a7bcc0519e0de48440f91672b205ce8e4cb17d6f14",
@@ -124,7 +124,7 @@ class TestSeed(TestCase):
             self._assert_return(*refs, CurveChoice.Ed25519Kholaw)
 
     def test_get_public_key_and_chaincode_ed25519blake2bslip(self):
-        ed25519blake2bslip_test_values: Tuple[Tuple[str, str, str]] = (
+        ed25519blake2bslip_test_values: tuple[tuple[str, str, str]] = (
             ("m/44'/0'",
              "00a22f09fde3338341f2be204121c935d32be753a0eec22f1746ee9db07670bce6",
              "00a22f09fde3338341f2be204121c935d32be753a0eec22f1746ee9db07670bce6",

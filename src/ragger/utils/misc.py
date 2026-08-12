@@ -14,12 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import toml
-from typing import Optional, Tuple, List
-from pathlib import Path
-from ragger.error import ExceptionRAPDU, MissingElfError
-import subprocess
 import json
+import subprocess
+from pathlib import Path
+
+import toml
+
+from ragger.error import ExceptionRAPDU, MissingElfError
 
 ERROR_BOLOS_DEVICE_LOCKED = 0x5515
 ERROR_DENIED_BY_USER = 0x5501
@@ -85,7 +86,7 @@ def find_application(base_dir: Path, device: str, sdk: str) -> Path:
             device = "nanosplus"
         app_name = toml.load(base_dir / "Cargo.toml")["package"]["name"]
         cmd = ["cargo", "metadata", "--no-deps"]
-        output = subprocess.check_output(cmd, cwd=base_dir)
+        output = subprocess.check_output(cmd, cwd=base_dir)  # noqa: S603
         metadata = json.loads(output)
         target = Path(metadata["target_directory"])
         app = target / device / "release" / app_name
@@ -102,10 +103,7 @@ def _is_root(path_to_check: Path) -> bool:
 
 def find_project_root_dir(origin: Path) -> Path:
     project_root_dir = origin
-    while (
-        not _is_root(project_root_dir)
-        and not (project_root_dir / ".git").resolve().is_dir()
-    ):
+    while not _is_root(project_root_dir) and not (project_root_dir / ".git").resolve().is_dir():
         project_root_dir = project_root_dir.parent
     if _is_root(project_root_dir):
         raise ValueError("Could not find project top directory")
@@ -119,7 +117,7 @@ def prefix_with_len(to_prefix: bytes) -> bytes:
 def create_currency_config(
     main_ticker: str,
     application_name: str,
-    sub_coin_config: Optional[Tuple[str, int]] = None,
+    sub_coin_config: tuple[str, int] | None = None,
 ) -> bytes:
     sub_config: bytes = b""
     if sub_coin_config is not None:
@@ -131,7 +129,7 @@ def create_currency_config(
     return coin_config
 
 
-def split_message(message: bytes, max_size: int) -> List[bytes]:
+def split_message(message: bytes, max_size: int) -> list[bytes]:
     return [message[x : x + max_size] for x in range(0, len(message), max_size)]
 
 
@@ -147,7 +145,8 @@ def get_current_app_name_and_version(backend):
 
         format_id = response[offset]
         offset += 1
-        assert format_id == 1
+        if format_id != 1:
+            raise ValueError(f"Unsupported format id: {format_id}")
 
         app_name_len = response[offset]
         offset += 1
@@ -165,12 +164,13 @@ def get_current_app_name_and_version(backend):
             _ = response[offset : offset + flags_len]
             offset += flags_len
 
-        assert offset == len(response)
+        if offset != len(response):
+            raise ValueError(f"Response parsing error: consumed {offset} bytes but response is {len(response)} bytes")
 
         return app_name, version
     except ExceptionRAPDU as e:
         if e.status == ERROR_BOLOS_DEVICE_LOCKED:
-            raise ValueError(ERROR_MSG_DEVICE_LOCKED)
+            raise ValueError(ERROR_MSG_DEVICE_LOCKED) from e
         raise e
 
 
@@ -194,7 +194,7 @@ def open_app_from_dashboard(backend, app_name: str):
         )
     except ExceptionRAPDU as e:
         if e.status == ERROR_DENIED_BY_USER:
-            raise ValueError("Open app consent denied by the user")
+            raise ValueError("Open app consent denied by the user") from e
         elif e.status == ERROR_APP_NOT_FOUND:
-            raise ValueError(f"App '{app_name} is not present")
+            raise ValueError(f"App '{app_name} is not present") from e
         raise e

@@ -17,10 +17,7 @@ limitations under the License.
 from .interface import BackendInterface, RaisePolicy
 from .stub import StubBackend
 
-ERROR_MSG = (
-    "This backend needs {}. Please install this package (run `pip install ragger[{}]` or "
-    "check this address: '{}')"
-)
+ERROR_MSG = "This backend needs {}. Please install this package (run `pip install ragger[{}]` or check this address: '{}')"
 
 try:
     from .speculos import SpeculosBackend
@@ -29,11 +26,7 @@ except ImportError as e:
         raise e
 
     def SpeculosBackend(*args, **kwargs):  # type: ignore
-        raise ImportError(
-            ERROR_MSG.format(
-                "Speculos", "speculos", "https://github.com/LedgerHQ/speculos/"
-            )
-        )
+        raise ImportError(ERROR_MSG.format("Speculos", "speculos", "https://github.com/LedgerHQ/speculos/"))
 
 
 try:
@@ -43,11 +36,7 @@ except ImportError as e:
         raise e
 
     def LedgerCommBackend(*args, **kwargs):  # type: ignore
-        raise ImportError(
-            ERROR_MSG.format(
-                "LedgerComm", "ledgercomm", "https://github.com/LedgerHQ/ledgercomm/"
-            )
-        )
+        raise ImportError(ERROR_MSG.format("LedgerComm", "ledgercomm", "https://github.com/LedgerHQ/ledgercomm/"))
 
 
 try:
@@ -57,18 +46,14 @@ except ImportError as e:
         raise e
 
     def LedgerWalletBackend(*args, **kwargs):  # type: ignore
-        raise ImportError(
-            ERROR_MSG.format(
-                "LedgerWallet", "ledgerwallet", "https://github.com/LedgerHQ/ledgerctl/"
-            )
-        )
+        raise ImportError(ERROR_MSG.format("LedgerWallet", "ledgerwallet", "https://github.com/LedgerHQ/ledgerctl/"))
 
 
 __all__ = [
-    "SpeculosBackend",
+    "BackendInterface",
     "LedgerCommBackend",
     "LedgerWalletBackend",
-    "BackendInterface",
     "RaisePolicy",
+    "SpeculosBackend",
     "StubBackend",
 ]

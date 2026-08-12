@@ -1,12 +1,11 @@
-from ledgered.devices import DeviceType, Devices
-from typing import Optional
 from unittest import TestCase
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
+from ledgered.devices import Devices, DeviceType
+
+from ragger.backend import LedgerWalletBackend, RaisePolicy
 from ragger.error import ExceptionRAPDU
 from ragger.utils import RAPDU
-from ragger.backend import LedgerWalletBackend
-from ragger.backend import RaisePolicy
 
 
 class TestLedgerWalletBackend(TestCase):
@@ -14,9 +13,7 @@ class TestLedgerWalletBackend(TestCase):
         self.device = MagicMock()
         self.backend = LedgerWalletBackend(Devices.get_by_type(DeviceType.NANOS))
 
-    def check_rapdu(
-        self, rapdu: RAPDU, status: int = 0x9000, payload: Optional[bytes] = None
-    ):
+    def check_rapdu(self, rapdu: RAPDU, status: int = 0x9000, payload: bytes | None = None):
         self.assertIsInstance(rapdu, RAPDU)
         self.assertEqual(rapdu.status, status)
         self.assertEqual(rapdu.data, payload)

@@ -1,14 +1,13 @@
-from ledgered.devices import Devices, DeviceType
 from pathlib import Path
-from typing import Optional
 from unittest import TestCase
 from unittest.mock import patch
 
-from ragger.backend import SpeculosBackend, RaisePolicy
+from ledgered.devices import Devices, DeviceType
+
+from ragger.backend import RaisePolicy, SpeculosBackend
 from ragger.error import ExceptionRAPDU
 from ragger.utils import RAPDU
-
-from tests.stubs import SpeculosServerStub, EndPoint, APDUStatus
+from tests.stubs import APDUStatus, EndPoint, SpeculosServerStub
 
 ROOT_SCREENSHOT_PATH = Path(__file__).parent.parent.resolve()
 
@@ -34,9 +33,7 @@ class TestbackendSpeculos(TestCase):
     - else means the response has a APDUStatus.ERROR status (arbitrarily set to 0x8000)
     """
 
-    def check_rapdu(
-        self, rapdu: RAPDU, expected: Optional[bytes] = None, status: int = 0x9000
-    ):
+    def check_rapdu(self, rapdu: RAPDU, expected: bytes | None = None, status: int = 0x9000):
         self.assertEqual(rapdu.status, status)
         if expected is None:
             return
@@ -91,7 +88,7 @@ class TestbackendSpeculos(TestCase):
                     self.assertIsNotNone(self.backend._pending)
 
     def test_receive_error(self):
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(RuntimeError):
             self.backend.receive()
 
     def test_receive_ok(self):
@@ -170,9 +167,7 @@ class TestbackendSpeculos(TestCase):
                             # (wait_for_screen_change calls _check_async_error)
                             self.backend.wait_for_screen_change(timeout=0.5)
                             # This line should be unreachable - if reached, the error wasn't raised during navigation
-                            assert False, (
-                                "Expected ExceptionRAPDU was not raised during navigation"
-                            )  # pragma: no cover
+                            raise AssertionError("Expected ExceptionRAPDU was not raised during navigation")  # pragma: no cover
                     self.assertEqual(error.exception.status, APDUStatus.ERROR)
 
                     # Perform a second async exchange with a SUCCESS APDU to ensure state is properly reset
@@ -181,6 +176,4 @@ class TestbackendSpeculos(TestCase):
                         with self.backend.exchange_async_raw(bytes.fromhex("00000000")):
                             self.backend.wait_for_screen_change(timeout=1)
                     # Verify that the response was successfully retrieved despite the timeout
-                    self.assertEqual(
-                        self.backend.last_async_response.status, APDUStatus.SUCCESS
-                    )
+                    self.assertEqual(self.backend.last_async_response.status, APDUStatus.SUCCESS)

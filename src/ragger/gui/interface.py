@@ -14,21 +14,22 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+from collections.abc import Callable
 from functools import partial
 from pathlib import Path
+
 from PyQt6.QtCore import QRect, Qt, QVariantAnimation
+from PyQt6.QtGui import QAction, QFont, QGuiApplication, QIcon, QKeyEvent, QPixmap
 from PyQt6.QtWidgets import (
     QApplication,
-    QWidget,
-    QMainWindow,
+    QGraphicsOpacityEffect,
+    QGridLayout,
     QLabel,
+    QMainWindow,
     QPushButton,
     QSizePolicy,
-    QGridLayout,
-    QGraphicsOpacityEffect,
+    QWidget,
 )
-from PyQt6.QtGui import QAction, QGuiApplication, QIcon, QPixmap, QFont, QKeyEvent
-from typing import Callable
 
 from ragger.logger import get_gui_logger
 
@@ -73,24 +74,18 @@ class RaggerMainWindow(QMainWindow):
         qr.moveCenter(cp)
         self.move(qr.topLeft())
         self.setWindowTitle("Ragger - Ledger Nano app automation framework")
-        self.setWindowIcon(
-            QIcon("/home/lpascal/repos/tools/ragger/doc/images/ragger.png")
-        )
+        self.setWindowIcon(QIcon("/home/lpascal/repos/tools/ragger/doc/images/ragger.png"))
         self._init_gui_widgets()
         self.show()
 
     def _bigger(self, screenshot: Path) -> QPixmap:
-        return QPixmap(str(screenshot.resolve())).scaled(
-            SCREENSHOT_MAX_WIDTH, SCREENSHOT_MAX_HEIGHT, Qt.KeepAspectRatio
-        )
+        return QPixmap(str(screenshot.resolve())).scaled(SCREENSHOT_MAX_WIDTH, SCREENSHOT_MAX_HEIGHT, Qt.KeepAspectRatio)
 
     def _init_screenshot(self) -> None:
         self._screenshot = QLabel(self._central_widget)
         self._screenshot.setScaledContents(False)
         self._screenshot.setObjectName("screenshot")
-        self._screenshot.setSizePolicy(
-            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
-        )
+        self._screenshot.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self._screenshot.setAlignment(Qt.AlignmentFlag.AlignVCenter)
         dict_margin = {
             "nanos": 75,
@@ -106,22 +101,16 @@ class RaggerMainWindow(QMainWindow):
 
     def _init_action_hint(self) -> None:
         self._actionhint = QLabel(self._central_widget)
-        self._actionhint.setGeometry(
-            QRect(0, 0, SCREENSHOT_MAX_WIDTH, SCREENSHOT_MAX_HEIGHT)
-        )
+        self._actionhint.setGeometry(QRect(0, 0, SCREENSHOT_MAX_WIDTH, SCREENSHOT_MAX_HEIGHT))
         self._actionhint.setScaledContents(False)
         self._actionhint.setObjectName("action_hint")
-        self._actionhint.setSizePolicy(
-            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
-        )
+        self._actionhint.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self._actionhint.setAlignment(Qt.AlignmentFlag.AlignCenter)
         custom_font = QFont()
         custom_font.setWeight(30)
         self._actionhint.setFont(custom_font)
         self._actionhint.setText("")
-        margin_top = (
-            self._devicebody.height() + self._actionhint.fontInfo().pixelSize() + 10
-        )
+        margin_top = self._devicebody.height() + self._actionhint.fontInfo().pixelSize() + 10
         self._actionhint.setStyleSheet(f"QLabel {{margin-top: {margin_top}px;}}")
         self._actionhint.show()
 
@@ -157,32 +146,20 @@ class RaggerMainWindow(QMainWindow):
 
         self._devicebody.setPixmap(bodypix)
         self._devicebody.setMinimumHeight(bodypix.height())
-        self._devicebody.setSizePolicy(
-            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
-        )
+        self._devicebody.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self._devicebody.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self._lb = QLabel(self._central_widget)
         self._lb.setScaledContents(False)
         self._lb.setObjectName("left_button")
-        self._lb.setPixmap(
-            QPixmap(
-                str(Path(__file__).parent / "assets" / f"{self._device}_leftbutton.png")
-            )
-        )
+        self._lb.setPixmap(QPixmap(str(Path(__file__).parent / "assets" / f"{self._device}_leftbutton.png")))
         self._lb.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self._lb.hide()
 
         self._rb = QLabel(self._central_widget)
         self._rb.setScaledContents(False)
         self._rb.setObjectName("right_button")
-        self._rb.setPixmap(
-            QPixmap(
-                str(
-                    Path(__file__).parent / "assets" / f"{self._device}_rightbutton.png"
-                )
-            )
-        )
+        self._rb.setPixmap(QPixmap(str(Path(__file__).parent / "assets" / f"{self._device}_rightbutton.png")))
         self._rb.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self._rb.hide()
 
@@ -197,24 +174,16 @@ class RaggerMainWindow(QMainWindow):
         self._swipe_left = QLabel(self._central_widget)
         self._swipe_left.setScaledContents(False)
         self._swipe_left.setObjectName("swipe_left")
-        swipe_left_pix = QPixmap(
-            str(Path(__file__).parent / "assets/swipe_left_action.png")
-        )
-        self._swipe_left.setGeometry(
-            QRect(0, 0, swipe_left_pix.width(), swipe_left_pix.height())
-        )
+        swipe_left_pix = QPixmap(str(Path(__file__).parent / "assets/swipe_left_action.png"))
+        self._swipe_left.setGeometry(QRect(0, 0, swipe_left_pix.width(), swipe_left_pix.height()))
         self._swipe_left.setPixmap(swipe_left_pix)
         self._swipe_left.hide()
 
         self._swipe_right = QLabel(self._central_widget)
         self._swipe_right.setScaledContents(False)
         self._swipe_right.setObjectName("swipe_right")
-        swipe_right_pix = QPixmap(
-            str(Path(__file__).parent / "assets/swipe_right_action.png")
-        )
-        self._swipe_right.setGeometry(
-            QRect(0, 0, swipe_right_pix.width(), swipe_right_pix.height())
-        )
+        swipe_right_pix = QPixmap(str(Path(__file__).parent / "assets/swipe_right_action.png"))
+        self._swipe_right.setGeometry(QRect(0, 0, swipe_right_pix.width(), swipe_right_pix.height()))
         self._swipe_right.setPixmap(swipe_right_pix)
         self._swipe_right.hide()
 
@@ -259,14 +228,10 @@ class RaggerMainWindow(QMainWindow):
 
     def _init_validation_buttons(self) -> None:
         self._yes = QPushButton(self._central_widget)
-        self._yes.setGeometry(
-            QRect(0, SCREENSHOT_MAX_HEIGHT, WIDTH // 2, BUTTON_HEIGHT)
-        )
+        self._yes.setGeometry(QRect(0, SCREENSHOT_MAX_HEIGHT, WIDTH // 2, BUTTON_HEIGHT))
         self._yes.setObjectName("valid_button")
         self._no = QPushButton(self._central_widget)
-        self._no.setGeometry(
-            QRect(WIDTH // 2, SCREENSHOT_MAX_HEIGHT, WIDTH // 2, BUTTON_HEIGHT)
-        )
+        self._no.setGeometry(QRect(WIDTH // 2, SCREENSHOT_MAX_HEIGHT, WIDTH // 2, BUTTON_HEIGHT))
         self._no.setObjectName("invalid_button")
 
     def keyPressEvent(self, event: QKeyEvent):

@@ -1,12 +1,14 @@
-from typing import Tuple, Sequence
+from collections.abc import Sequence
 from enum import Enum, auto
 
-from bip_utils import Bip32Secp256k1
-from bip_utils import Bip32Nist256p1
-from bip_utils import Bip32Ed25519Slip
-from bip_utils import Bip32Ed25519Kholaw
-from bip_utils import Bip32Ed25519Blake2bSlip
-from bip_utils import Bip39SeedGenerator
+from bip_utils import (
+    Bip32Ed25519Blake2bSlip,
+    Bip32Ed25519Kholaw,
+    Bip32Ed25519Slip,
+    Bip32Nist256p1,
+    Bip32Secp256k1,
+    Bip39SeedGenerator,
+)
 
 
 class CurveChoice(Enum):
@@ -36,7 +38,7 @@ def calculate_public_key_and_chaincode(
     path: str,
     mnemonic: Sequence[str] = SPECULOS_MNEMONIC,
     compress_public_key: bool = False,
-) -> Tuple[str, str]:
+) -> tuple[str, str]:
     if not isinstance(curve, CurveChoice):
         raise ValueError(f'"{curve}" must be a CurveChoice enum')
 

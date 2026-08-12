@@ -1,9 +1,10 @@
 from functools import partial
 from unittest import TestCase
-from ledgered.devices import DeviceType, Devices
 
-from ragger.navigator.nano_navigator import NanoNavigator
+from ledgered.devices import Devices, DeviceType
+
 from ragger.backend import LedgerCommBackend, LedgerWalletBackend, SpeculosBackend
+from ragger.navigator.nano_navigator import NanoNavigator
 
 
 class TestNanoNavigator(TestCase):

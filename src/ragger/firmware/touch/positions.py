@@ -15,7 +15,8 @@ limitations under the License.
 """
 
 from dataclasses import astuple, dataclass
-from ledgered.devices import DeviceType, Devices, Resolution
+
+from ledgered.devices import Devices, DeviceType, Resolution
 
 
 @dataclass(frozen=True)

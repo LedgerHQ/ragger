@@ -1,13 +1,14 @@
 import struct
 import tempfile
-from ledgered.devices import DeviceType, Devices
 from pathlib import Path
 from unittest import TestCase
 from unittest.mock import MagicMock
 
+from ledgered.devices import Devices, DeviceType
+
+from ragger.backend import BackendInterface, RaisePolicy
 from ragger.error import ExceptionRAPDU
-from ragger.backend import BackendInterface
-from ragger.backend import RaisePolicy
+from ragger.utils import Crop
 
 
 class DummyBackend(BackendInterface):
@@ -33,7 +34,7 @@ class DummyBackend(BackendInterface):
     def exchange_async_raw(self, *args, **kwargs):
         return self.mock.exchange_async_raw(*args, **kwargs)
 
-    def exchange_raw(self, data: bytes, tick_timeout: int):
+    def exchange_raw(self, data: bytes = b"", tick_timeout: int = 5 * 60 * 10):
         return self.mock.exchange_raw(data, tick_timeout)
 
     def receive(self):
@@ -48,16 +49,22 @@ class DummyBackend(BackendInterface):
     def finger_swipe(self, *args, **kwargs):
         self.mock.finger_touch(*args, **kwargs)
 
-    def compare_screen_with_snapshot(self, snap_path, crop=None) -> bool:
+    def compare_screen_with_snapshot(
+        self,
+        golden_snap_path: Path,
+        crop: Crop | None = None,
+        tmp_snap_path: Path | None = None,
+        golden_run: bool = False,
+    ) -> bool:
         return self.mock.compare_screen_with_snapshot()
 
     def save_screen_snapshot(self, path) -> None:
         self.mock.save_screen_snapshot()
 
-    def wait_for_home_screen(self, timeout: float = 10.0, context: list = []):
+    def wait_for_home_screen(self, timeout: float = 10.0, context: list | None = None):
         return self.mock.wait_for_home_screen()
 
-    def wait_for_screen_change(self, timeout: float = 10.0, context: list = []):
+    def wait_for_screen_change(self, timeout: float = 10.0, context: list | None = None):
         return self.mock.wait_for_screen_change()
 
     def wait_for_text_on_screen(self, text: str, timeout: float = 10.0) -> None:
@@ -113,9 +120,7 @@ class TestBackendInterface(TestCase):
         self.assertFalse(self.backend.mock.send_raw.called)
         result = self.backend.exchange(cla, ins, p1, p2)
         self.assertTrue(self.backend.mock.exchange_raw.called)
-        self.assertEqual(
-            self.backend.mock.exchange_raw.call_args, ((expected, 5 * 60 * 10),)
-        )
+        self.assertEqual(self.backend.mock.exchange_raw.call_args, ((expected, 5 * 60 * 10),))
         self.assertEqual(result, self.backend.mock.exchange_raw())
 
     def test_exchange_async(self):
@@ -135,8 +140,8 @@ class TestBackendInterfaceLogging(TestCase):
             test_file = (Path(td) / "test_log_file.log").resolve()
             self.backend = DummyBackend(device=self.device, log_apdu_file=test_file)
             ref_lines = ["Test logging", "hello world", "Lorem Ipsum"]
-            for l in ref_lines:
-                self.backend.apdu_logger.info(l)
-            with open(test_file, mode="r") as fp:
-                read_lines = [l.strip() for l in fp.readlines()]
+            for line in ref_lines:
+                self.backend.apdu_logger.info(line)
+            with open(test_file) as fp:
+                read_lines = [line.strip() for line in fp.readlines()]
                 self.assertEqual(read_lines, ref_lines)

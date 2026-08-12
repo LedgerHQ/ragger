@@ -1,9 +1,10 @@
 from functools import partial
-from ledgered.devices import DeviceType, Devices
 from unittest import TestCase
 
-from ragger.navigator.touch_navigator import TouchNavigator
+from ledgered.devices import Devices, DeviceType
+
 from ragger.backend import LedgerCommBackend, LedgerWalletBackend, SpeculosBackend
+from ragger.navigator.touch_navigator import TouchNavigator
 
 
 class TestTouchNavigator(TestCase):

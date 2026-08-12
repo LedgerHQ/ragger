@@ -14,6 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from .signing_partner import SigningPartner, CertificatePubKeyUsage
+from .signing_partner import CertificatePubKeyUsage, SigningPartner
 
-__all__ = ["SigningPartner", "CertificatePubKeyUsage"]
+__all__ = ["CertificatePubKeyUsage", "SigningPartner"]

@@ -1,16 +1,16 @@
 from unittest import TestCase
 
-from ragger.tlv import BlockchainFamily, LedgerStructType
 from ragger.address_book import (
-    RegisterIdentity,
     EditContactName,
     EditIdentifier,
-    EditScope,
-    RegisterLedgerAccount,
     EditLedgerAccount,
+    EditScope,
     ProvideContact,
     ProvideLedgerAccountContact,
+    RegisterIdentity,
+    RegisterLedgerAccount,
 )
+from ragger.tlv import BlockchainFamily, LedgerStructType
 
 FAMILY = BlockchainFamily.ETHEREUM
 ADDR = bytes.fromhex("6b175474e89094c44da98b954eedeac495271d0f")  # 20 bytes
@@ -22,7 +22,6 @@ REST = bytes(range(32, 64))  # 32-byte hmac rest
 # TLV tags used in the assertions
 STRUCT_TYPE = 0x01
 VERSION = 0x02
-DERIVATION_PATH = 0x69
 CHAIN_ID = 0x23
 HMAC_PROOF = 0x29
 BLOCKCHAIN_FAMILY = 0x51
@@ -60,14 +59,11 @@ class TestRegisterIdentity(TestCase):
             identifier=ADDR,
             contact_name="Alice",
             scope="Eth Address 1",
-            derivation_path=PATH,
             chain_id=1,
             blockchain_family=BlockchainFamily.ETHEREUM,
         )
         tlv = parse_tlv(cmd.serialize())
-        self.assertEqual(
-            bytes([LedgerStructType.TYPE_REGISTER_IDENTITY]), tlv[STRUCT_TYPE]
-        )
+        self.assertEqual(bytes([LedgerStructType.TYPE_REGISTER_IDENTITY]), tlv[STRUCT_TYPE])
         self.assertEqual(b"\x01", tlv[VERSION])
         self.assertEqual(b"Alice", tlv[CONTACT_NAME])
         self.assertEqual(b"Eth Address 1", tlv[SCOPE])
@@ -82,7 +78,6 @@ class TestRegisterIdentity(TestCase):
             identifier=ADDR,
             contact_name="Alice",
             scope="S",
-            derivation_path=PATH,
             chain_id=1,
             blockchain_family=FAMILY,
             group_handle=GH,
@@ -97,12 +92,11 @@ class TestRegisterIdentity(TestCase):
             identifier=ADDR,
             contact_name="Alice",
             scope="S",
-            derivation_path=PATH,
             chain_id=1,
             blockchain_family=FAMILY,
             group_handle=GH,
         )
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(ValueError):
             cmd.serialize()
 
     def test_contact_name_too_long_raises(self):
@@ -110,11 +104,10 @@ class TestRegisterIdentity(TestCase):
             identifier=ADDR,
             contact_name="A" * 33,
             scope="S",
-            derivation_path=PATH,
             chain_id=1,
             blockchain_family=FAMILY,
         )
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(ValueError):
             cmd.serialize()
 
 
@@ -124,7 +117,6 @@ class TestBlockchainFamily(TestCase):
             identifier=ADDR,
             contact_name="A",
             scope="S",
-            derivation_path=PATH,
             chain_id=42,
             blockchain_family=FAMILY,
         )
@@ -138,7 +130,6 @@ class TestBlockchainFamily(TestCase):
             identifier=ADDR,
             contact_name="A",
             scope="S",
-            derivation_path=PATH,
             blockchain_family=BlockchainFamily.BITCOIN,
         )
         tlv = parse_tlv(cmd.serialize())
@@ -153,9 +144,8 @@ class TestValidations(TestCase):
             new_contact_name="new",
             hmac_proof=PR,
             group_handle=b"\x00" * 10,
-            derivation_path=PATH,
         )
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(ValueError):
             cmd.serialize()
 
     def test_bad_hmac_proof_length(self):
@@ -164,26 +154,25 @@ class TestValidations(TestCase):
             new_contact_name="new",
             hmac_proof=b"\x00" * 10,
             group_handle=GH,
-            derivation_path=PATH,
         )
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(ValueError):
             cmd.serialize()
 
 
 class TestSubCommandMapping(TestCase):
     def _cases(self):
         return [
-            (RegisterIdentity(ADDR, "A", "S", PATH, FAMILY, 1), 0x01, 0x2D),
-            (EditContactName("o", "n", PR, GH, PATH), 0x02, 0x2E),
+            (RegisterIdentity(ADDR, "A", "S", FAMILY, 1), 0x01, 0x2D),
+            (EditContactName("o", "n", PR, GH), 0x02, 0x2E),
             (
-                EditIdentifier(ADDR, ADDR, "A", "S", PATH, PR, REST, GH, FAMILY, 1),
+                EditIdentifier(ADDR, ADDR, "A", "S", PR, REST, GH, FAMILY, 1),
                 0x03,
                 0x31,
             ),
-            (EditScope("o", "n", ADDR, "A", PATH, PR, REST, GH, FAMILY, 1), 0x04, 0x32),
+            (EditScope("o", "n", ADDR, "A", PR, REST, GH, FAMILY, 1), 0x04, 0x32),
             (RegisterLedgerAccount("A", PATH, FAMILY, 1), 0x11, 0x2F),
             (EditLedgerAccount("o", "n", PATH, PR, FAMILY, 1), 0x12, 0x30),
-            (ProvideContact(ADDR, GH, PR, REST, "A", "S", PATH, FAMILY, 1), 0x20, 0x33),
+            (ProvideContact(ADDR, GH, PR, REST, "A", "S", FAMILY, 1), 0x20, 0x33),
             (ProvideLedgerAccountContact(PR, "A", PATH, FAMILY, 1), 0x21, 0x34),
         ]
 
@@ -199,7 +188,7 @@ class TestSubCommandMapping(TestCase):
 class TestEditAndProvideContent(TestCase):
     def test_edit_identifier_carries_old_and_new_address(self):
         new_addr = bytes(range(20))
-        cmd = EditIdentifier(ADDR, new_addr, "A", "S", PATH, PR, REST, GH, FAMILY, 1)
+        cmd = EditIdentifier(ADDR, new_addr, "A", "S", PR, REST, GH, FAMILY, 1)
         tlv = parse_tlv(cmd.serialize())
         self.assertEqual(new_addr, tlv[ACCOUNT_IDENTIFIER])
         self.assertEqual(ADDR, tlv[0xF4])  # PREVIOUS_IDENTIFIER

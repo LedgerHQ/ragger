@@ -1,11 +1,11 @@
-from ledgered.devices import Devices, DeviceType
 from pathlib import Path
 from unittest import TestCase
 from unittest.mock import patch
 
-from ragger.backend import SpeculosBackend
-from ragger.navigator import NavInsID, NavIns, NanoNavigator
+from ledgered.devices import Devices, DeviceType
 
+from ragger.backend import SpeculosBackend
+from ragger.navigator import NanoNavigator, NavIns, NavInsID
 from tests.stubs import SpeculosServerStub
 
 ROOT_SCREENSHOT_PATH = Path(__file__).parent.parent.parent.resolve()
@@ -160,9 +160,7 @@ class TestNavigator(TestCase):
                             timeout=5,
                             screen_change_before_first_instruction=False,
                         )
-                    self.assertIn(
-                        "Timeout waiting for screen change", str(error.exception)
-                    )
+                    self.assertIn("Timeout waiting for screen change", str(error.exception))
 
     def test_navigate_until_text_and_compare(self):
         with patch("speculos.client.subprocess"):
