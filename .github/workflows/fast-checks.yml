@@ -20,7 +20,6 @@ jobs:
     with:
       run_type_check: true
       src_directory: "src"
-      bandit_severity_level: "medium"
 
   misspell:
     name: Check misspellings
