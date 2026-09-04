@@ -1,0 +1,155 @@
+---
+name: E2E testing
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+      - main
+      - develop
+  pull_request:
+
+# This workflow file contains the duplicates of several applications that use ragger
+# The duplication is unfortunate but can't be avoided as github actions do not (yet ?) accept the
+# syntax 'uses: org/repo@${{ inputs.ref }}'
+#
+# Related tickets on Github org
+# https://github.com/actions/runner/issues/1541
+# https://github.com/orgs/community/discussions/45342
+
+jobs:
+
+  ##################################
+  ######### Exchange tests #########
+  ##################################
+
+  build_sideloaded_applications_for_exchange:
+    name: Build sideloaded applications using the reusable workflow
+    strategy:
+      fail-fast: false
+      matrix:
+        coin:
+          - name: stellar
+            repo: 'LedgerHQ/app-stellar'
+            branch: 'develop'
+          - name: tezos
+            repo: 'LedgerHQ/app-tezos'
+            branch: 'develop'
+          - name: xrp
+            repo: 'LedgerHQ/app-xrp'
+            branch: 'develop'
+          - name: ethereum
+            repo: 'LedgerHQ/app-ethereum'
+            branch: 'develop'
+          - name: ethereum_classic
+            repo: 'LedgerHQ/app-ethereum'
+            branch: 'develop'
+          - name: litecoin
+            repo: 'LedgerHQ/app-bitcoin'
+            branch: 'develop'
+          - name: bitcoin_legacy
+            repo: 'LedgerHQ/app-bitcoin'
+            branch: 'develop'
+          - name: bitcoin
+            repo: 'LedgerHQ/app-bitcoin-new'
+            branch: 'develop'
+          - name: solana
+            repo: 'LedgerHQ/app-solana'
+            branch: 'develop'
+          - name: bsc
+            repo: 'LedgerHQ/app-ethereum'
+            branch: 'develop'
+          - name: DOT
+            repo: 'LedgerHQ/app-polkadot'
+            branch: 'develop'
+          - name: tron
+            repo: 'LedgerHQ/app-tron'
+            branch: 'develop'
+
+    uses: LedgerHQ/ledger-app-workflows/.github/workflows/reusable_build.yml@v1
+    with:
+      app_repository: ${{ matrix.coin.repo }}
+      app_branch_name: ${{ matrix.coin.branch }}
+      flags: "COIN=${{ matrix.coin.name }} CHAIN=${{ matrix.coin.name }}"
+      upload_app_binaries_artifact: libraries_binaries
+      upload_as_lib_artifact: ${{ matrix.coin.name }}
+
+  build_exchange_application:
+    name: Build application using the reusable workflow
+    uses: LedgerHQ/ledger-app-workflows/.github/workflows/reusable_build.yml@v1
+    with:
+      app_repository: LedgerHQ/app-exchange
+      app_branch_name: develop
+      flags: "TESTING=1 TEST_PUBLIC_KEY=1"
+      upload_app_binaries_artifact: exchange_binaries
+
+  ragger_tests_exchange:
+    name: Run ragger tests using the reusable workflow
+    needs:
+      - build_exchange_application
+      - build_sideloaded_applications_for_exchange
+    uses: LedgerHQ/ledger-app-workflows/.github/workflows/reusable_ragger_tests.yml@v1
+    with:
+      app_repository: LedgerHQ/app-exchange
+      app_branch_name: develop
+      download_app_binaries_artifact: exchange_binaries
+      lib_binaries_artifact: libraries_binaries
+      # No need to run everyone, we are testing the reusable workflows not exchange
+      test_filter: "ethereum"
+
+  #####################################
+  ######### Boilerplate tests #########
+  #####################################
+
+  build_boilerplate_application:
+    name: Build application using the reusable workflow
+    uses: LedgerHQ/ledger-app-workflows/.github/workflows/reusable_build.yml@v1
+    with:
+      app_repository: LedgerHQ/app-boilerplate
+      app_branch_name: master
+      upload_app_binaries_artifact: "boilerplate_binaries"
+
+  ragger_tests_boilerplate:
+    name: Run ragger tests using the reusable workflow
+    needs: build_boilerplate_application
+    uses: LedgerHQ/ledger-app-workflows/.github/workflows/reusable_ragger_tests.yml@v1
+    with:
+      app_repository: LedgerHQ/app-boilerplate
+      app_branch_name: master
+      download_app_binaries_artifact: "boilerplate_binaries"
+
+  ############################################
+  ######### Plugin Boilerplate tests #########
+  ############################################
+
+  build_plugin_boilerplate:
+    name: Build plugin using the reusable workflow
+    uses: LedgerHQ/ledger-app-workflows/.github/workflows/reusable_build.yml@v1
+    with:
+      app_repository: LedgerHQ/app-plugin-boilerplate
+      app_branch_name: develop
+      upload_app_binaries_artifact: plugin_boilerplate_binaries
+      flags: "DEBUG=1"
+
+  build_develop_ethereum_app:
+    name: Build Ethereum app using the reusable workflow
+    uses: LedgerHQ/ledger-app-workflows/.github/workflows/reusable_build.yml@v1
+    with:
+      app_repository: LedgerHQ/app-ethereum
+      app_branch_name: develop
+      flags: "DEBUG=1 CAL_TEST_KEY=1"
+      upload_app_binaries_artifact: ethereum_build_develop
+
+  ragger_tests_plugin_boilerplate:
+    name: Run ragger tests using the reusable workflow
+    needs:
+      - build_plugin_boilerplate
+      - build_develop_ethereum_app
+    uses: LedgerHQ/ledger-app-workflows/.github/workflows/reusable_ragger_tests.yml@v1
+    with:
+      app_repository: LedgerHQ/app-plugin-boilerplate
+      app_branch_name: develop
+      download_app_binaries_artifact: plugin_boilerplate_binaries
+      additional_app_binaries_artifact: ethereum_build_develop
+      additional_app_binaries_artifact_dir: ./tests/.test_dependencies/ethereum/build
