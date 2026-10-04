@@ -380,7 +380,7 @@ class SpeculosBackend(BackendInterface):
             if argument in speculos_args:
                 logger.warning("'%s' argument is ignored on batch mode", argument)
                 index = speculos_args.index(argument)
-                # popipng argument and its value
+                # popping argument and its value
                 speculos_args.pop(index)
                 speculos_args.pop(index)
 
