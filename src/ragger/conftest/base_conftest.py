@@ -454,7 +454,7 @@ def prepare_speculos_args(
 
     # Legacy lib method, remove once exchange is ported
     if len(conf.OPTIONAL.SIDELOADED_APPS) != 0:
-        # We are testing a a standalone app that needs libraries: search in SIDELOADED_APPS_DIR
+        # We are testing a standalone app that needs libraries: search in SIDELOADED_APPS_DIR
         if conf.OPTIONAL.SIDELOADED_APPS_DIR is None:
             raise ValueError('Configuration "SIDELOADED_APPS_DIR" is mandatory if "SIDELOADED_APPS" is used')
         libs_dir = Path(project_root_dir / conf.OPTIONAL.SIDELOADED_APPS_DIR)

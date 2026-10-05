@@ -196,5 +196,5 @@ def open_app_from_dashboard(backend, app_name: str):
         if e.status == ERROR_DENIED_BY_USER:
             raise ValueError("Open app consent denied by the user") from e
         elif e.status == ERROR_APP_NOT_FOUND:
-            raise ValueError(f"App '{app_name} is not present") from e
+            raise ValueError(f"App '{app_name}' is not present") from e
         raise e

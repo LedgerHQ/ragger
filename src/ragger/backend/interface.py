@@ -502,7 +502,7 @@ class BackendInterface(ABC):
     @abstractmethod
     def wait_for_text_on_screen(self, text: str, timeout: float = 10.0) -> None:
         """
-        Wait until the screen content contains the text string provider.
+        Wait until the screen content contains the text string provided.
 
         This method may be left void on backends connecting to physical devices,
         where a physical interaction must be performed instead.
@@ -525,7 +525,7 @@ class BackendInterface(ABC):
     @abstractmethod
     def wait_for_text_not_on_screen(self, text: str, timeout: float = 10.0) -> None:
         """
-        Wait until the screen content does not contains the text string provider.
+        Wait until the screen content does not contain the text string provided.
 
         This method may be left void on backends connecting to physical devices,
         where a physical interaction must be performed instead.
