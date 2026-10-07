@@ -103,7 +103,7 @@ def _is_root(path_to_check: Path) -> bool:
 
 def find_project_root_dir(origin: Path) -> Path:
     project_root_dir = origin
-    while not _is_root(project_root_dir) and not (project_root_dir / ".git").resolve().is_dir():
+    while not _is_root(project_root_dir) and not (project_root_dir / ".git").exists():
         project_root_dir = project_root_dir.parent
     if _is_root(project_root_dir):
         raise ValueError("Could not find project top directory")
