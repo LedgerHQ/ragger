@@ -62,6 +62,16 @@ class TestMisc(TestCase):
                 Path(misc.find_project_root_dir(nested_dir)).resolve(),
             )
 
+    def test_find_project_root_dir_ok_worktree(self):
+        with temporary_directory() as dir_path:
+            (dir_path / ".git").write_text("gitdir: ../.git/worktrees/example\n", encoding="utf-8")
+            nested_dir = dir_path / "subfolder" / "another_subfolder"
+            nested_dir.mkdir(parents=True)
+            self.assertEqual(
+                dir_path.resolve(),
+                misc.find_project_root_dir(nested_dir).resolve(),
+            )
+
     def test_find_project_root_dir_nok(self):
         with temporary_directory() as dir_path:
             nested_dir = Path(dir_path / "subfolder").resolve()
