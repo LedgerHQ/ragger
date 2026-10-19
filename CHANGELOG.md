@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.47.4] - 2026-10-19
+
+### Fixed
+
+- Speculos backend: report an async APDU error when the screen has already changed, instead of comparing
+  the status screen displayed after the error
+
 ## [1.47.3] - 2026-08-12
 
 ### Changed

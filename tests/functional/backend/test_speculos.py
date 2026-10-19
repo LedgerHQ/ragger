@@ -151,6 +151,24 @@ class TestbackendSpeculos(TestCase):
                     self.backend.left_click()
                     self.backend.both_click()
 
+    def test_async_error_raised_when_screen_already_changed(self):
+        """
+        Ensure that an async APDU error is raised even when the screen has already changed when
+        navigation starts waiting for it: an application answers an APDU, then displays its status
+        screen, so both can be observed by the same screen change check.
+        """
+        with patch("speculos.client.subprocess"):
+            with SpeculosServerStub():
+                with self.backend:
+                    with self.assertRaises(ExceptionRAPDU) as error:
+                        with self.backend.exchange_async_raw(bytes.fromhex("01000000")):
+                            # The screen changes before navigation waits for it
+                            self.backend.right_click()
+                            self.backend.wait_for_screen_change(timeout=0.5)
+                            # This line should be unreachable - if reached, the error was missed
+                            raise AssertionError("Expected ExceptionRAPDU was not raised")  # pragma: no cover
+                    self.assertEqual(error.exception.status, APDUStatus.ERROR)
+
     def test_async_error_raised_during_navigation(self):
         """
         Ensure that an async APDU error is raised immediately during navigation (e.g., while waiting for a screen change),

@@ -346,6 +346,9 @@ class SpeculosBackend(BackendInterface):
         screenshot = BytesIO(self._client.get_screenshot())
         for _ in range(int(timeout / TICKER_DELAY)):
             if not screenshot_equal(screenshot, self._last_screenshot):
+                # An application answers an APDU before displaying its status screen: check the
+                # answer here too, or an error would be missed when the new screen is seen first.
+                self._check_async_error()
                 break
 
             # Check for async APDU errors before sending a tick. This ensures that if the
