@@ -83,6 +83,20 @@ class TxSimulationFieldTag(IntEnum):
     SIMULATION_TYPE = 0x84
 
 
+class GatingFieldTag(IntEnum):
+    """Gating descriptor specific fields.
+
+    Deliberately reuses the EVM selector tag and the TX Simulation message, URL and type tags.
+    A structured message is named with LedgerCommonFieldTag.DOMAIN_HASH and PRIMARY_TYPE_HASH.
+    """
+
+    PRIMARY_TYPE_HASH = 0x2A
+    SELECTOR = 0x40
+    INTRO_MSG = 0x82
+    TINY_URL = 0x83
+    TX_TYPE = 0x84
+
+
 class SwapTemplateFieldTag(IntEnum):
     """Solana swap template specific fields."""
 
