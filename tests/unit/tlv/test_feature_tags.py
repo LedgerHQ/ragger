@@ -5,6 +5,7 @@ from ragger.tlv import (
     AleoFieldTag,
     CoinInfoFieldTag,
     EvmFunctionFieldTag,
+    GatingFieldTag,
     LesMultisigFieldTag,
     PerpsActionFieldTag,
     PerpsApprovalBuilderFeeFieldTag,
@@ -40,6 +41,7 @@ ALL_FEATURE_ENUMS = [
     PerpsApprovalBuilderFeeFieldTag,
     PerpsUpdateIsolatedMarginFieldTag,
     AddressBookFieldTag,
+    GatingFieldTag,
 ]
 
 
@@ -95,3 +97,9 @@ class TestAddressBookFieldTag(TestCase):
         self.assertEqual(0xF5, AddressBookFieldTag.PREVIOUS_SCOPE)
         self.assertEqual(0xF6, AddressBookFieldTag.GROUP_HANDLE)
         self.assertEqual(0xF7, AddressBookFieldTag.HMAC_REST)
+
+    def test_gating_reuses_selector_and_simulation_tags(self):
+        self.assertEqual(EvmFunctionFieldTag.EVM_FUNCTION_SELECTOR, GatingFieldTag.SELECTOR)
+        self.assertEqual(TxSimulationFieldTag.PROVIDER_MESSAGE, GatingFieldTag.INTRO_MSG)
+        self.assertEqual(TxSimulationFieldTag.TINY_URL, GatingFieldTag.TINY_URL)
+        self.assertEqual(TxSimulationFieldTag.SIMULATION_TYPE, GatingFieldTag.TX_TYPE)

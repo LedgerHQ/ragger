@@ -121,6 +121,16 @@ should expect. This is declared with this class:
    :members:
    :undoc-members:
 
+``ragger.gating``
+-----------------
+
+Generic helper for the SDK Gating feature: a descriptor serializes itself into
+a TLV payload and builds its own APDUs via ``get_chunks()``.
+
+.. automodule:: ragger.gating.gating
+   :members:
+   :show-inheritance:
+
 ``ragger.navigator``
 --------------------
 
