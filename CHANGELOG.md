@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.49.0] - 2026-11-02
+
+### Added
+
+- Adding a new generic Transaction Check module (`ragger.transaction_check`)
+
 ## [1.48.0] - 2026-11-04
 
 ### Added
@@ -15,6 +21,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - conftest: with `--no-nav`, a navigation performed outside of an async exchange (e.g. in the settings)
   now waits for the user to do it and press Enter, instead of being silently skipped
+## [1.48.0] - 2026-11-02
+
+### Added
+
+- Adding a new generic Transaction Check module (`ragger.transaction_check`)
+## [Unreleased]
+
+### Added
+
+- `ragger.gating`: helper for the SDK Gating feature (CLA 0xB0, INS 0x12), building the signed
+  descriptor and its chunked APDUs
+- `ragger.tlv.GatingFieldTag`: TLV tags of the Gating descriptor
 
 ## [1.47.4] - 2026-10-19
 
