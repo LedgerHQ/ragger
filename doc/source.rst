@@ -16,6 +16,16 @@ itself into a TLV payload and builds its own APDUs via ``get_chunks()``.
    :members:
    :show-inheritance:
 
+``ragger.transaction_check``
+----------------------------
+
+Generic helper for the SDK Transaction Check feature: the descriptor serializes
+itself into a signed TLV payload and builds its own APDUs via ``get_chunks()``.
+
+.. automodule:: ragger.transaction_check.transaction_check
+   :members:
+   :show-inheritance:
+
 ``ragger.backend``
 ------------------
 
