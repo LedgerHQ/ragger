@@ -70,6 +70,7 @@ class BackendInterface(ABC):
         """
         self._device = device
         self._last_async_response: RAPDU | None = None
+        self._async_exchange_pending = False
         self.raise_policy = RaisePolicy.RAISE_ALL_BUT_0x9000
         # SDK graphic library
         self.sdk_graphics: GraphicalLibrary | None = None
@@ -108,6 +109,15 @@ class BackendInterface(ABC):
         :rtype: RAPDU
         """
         return self._last_async_response
+
+    @property
+    def is_async_exchange_pending(self) -> bool:
+        """
+        :return: True while inside an `exchange_async` / `exchange_async_raw` context,
+                 i.e. an APDU has been sent and its response is still awaited.
+        :rtype: bool
+        """
+        return self._async_exchange_pending
 
     @abstractmethod
     def __enter__(self) -> "BackendInterface":

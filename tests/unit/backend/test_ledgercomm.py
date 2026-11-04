@@ -117,9 +117,12 @@ class TestLedgerCommbackend(TestCase):
             self.hid().recv.return_value = (success, payload)
             with self.backend:
                 self.assertIsNone(self.backend.last_async_response)
+                self.assertFalse(self.backend.is_async_exchange_pending)
                 with self.backend.exchange_async_raw(b""):
+                    self.assertTrue(self.backend.is_async_exchange_pending)
                     self.backend.right_click()
                     self.backend.left_click()
                     self.backend.both_click()
+                self.assertFalse(self.backend.is_async_exchange_pending)
         self.assertIsNotNone(self.backend.last_async_response)
         self.check_rapdu(self.backend.last_async_response, payload=payload)
