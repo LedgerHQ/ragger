@@ -62,7 +62,7 @@ jobs:
   build_install_test:
     name: Install and test the library
     needs: [prepare_matrix, build_boilerplate_application, build_boilerplate_application_nanos]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:

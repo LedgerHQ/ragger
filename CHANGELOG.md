@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.48.0] - 2026-11-04
+
+### Added
+
+- Backend: `is_async_exchange_pending` property, True while an `exchange_async` response is awaited
+
+### Fixed
+
+- conftest: with `--no-nav`, a navigation performed outside of an async exchange (e.g. in the settings)
+  now waits for the user to do it and press Enter, instead of being silently skipped
+
 ## [1.47.4] - 2026-10-19
 
 ### Fixed

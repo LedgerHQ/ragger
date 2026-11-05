@@ -4,7 +4,6 @@ import warnings
 from collections.abc import Generator
 from dataclasses import fields
 from pathlib import Path
-from unittest.mock import MagicMock
 
 import pytest
 from ledgered.devices import Device, Devices
@@ -20,6 +19,7 @@ from ragger.error import ExceptionRAPDU, MissingElfError, StatusWords
 from ragger.firmware import Firmware
 from ragger.logger import init_loggers, standalone_conf_logger
 from ragger.navigator import (
+    ManualNavigator,
     NanoNavigator,
     NavigateWithScenario,
     Navigator,
@@ -618,7 +618,7 @@ def navigator(
     navigation: bool,
 ):
     if not navigation:
-        return MagicMock()
+        return ManualNavigator(backend, device, golden_run)
 
     if device.is_nano:
         return NanoNavigator(backend, device, golden_run)

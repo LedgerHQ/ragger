@@ -109,5 +109,9 @@ class LedgerCommBackend(PhysicalBackend):
     @contextmanager
     def exchange_async_raw(self, data: bytes = b"") -> Generator[bool, None, None]:
         self.send_raw(data)
-        yield True
-        self._last_async_response = self.receive()
+        self._async_exchange_pending = True
+        try:
+            yield True
+            self._last_async_response = self.receive()
+        finally:
+            self._async_exchange_pending = False

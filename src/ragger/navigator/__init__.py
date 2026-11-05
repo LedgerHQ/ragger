@@ -15,6 +15,7 @@ limitations under the License.
 """
 
 from .instruction import BaseNavInsID, NavIns, NavInsID
+from .manual_navigator import ManualNavigator
 from .nano_navigator import NanoNavigator
 from .navigation_scenario import NavigateWithScenario
 from .navigator import Navigator
@@ -22,6 +23,7 @@ from .touch_navigator import TouchNavigator
 
 __all__ = [
     "BaseNavInsID",
+    "ManualNavigator",
     "NanoNavigator",
     "NavIns",
     "NavInsID",

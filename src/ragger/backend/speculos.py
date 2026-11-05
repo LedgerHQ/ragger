@@ -249,6 +249,7 @@ class SpeculosBackend(BackendInterface):
         self._last_async_response = None
         with self._client.apdu_exchange_nowait(cla=data[0], ins=data[1], p1=data[2], p2=data[3], data=data[5:]) as response:
             self._pending_async_response = response
+            self._async_exchange_pending = True
             try:
                 yield has_data_available(response, timeout=self.apdu_timeout)
                 # Only retrieve if not already retrieved by _check_async_error during navigation
@@ -257,6 +258,7 @@ class SpeculosBackend(BackendInterface):
             finally:
                 # Clear pending async response flag in all cases
                 self._pending_async_response = None
+                self._async_exchange_pending = False
 
     def right_click(self) -> None:
         self._client.press_and_release("right")

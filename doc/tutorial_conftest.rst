@@ -490,11 +490,19 @@ path in which every :term:`APDU` and :term:`RAPDU` will be recorded.
 Disabling the navigation (``--no-nav``)
 '''''''''''''''''''''''''''''''''''''''
 
-The ``--no-nav`` CLI argument disables the navigation: the :class:`Navigator
-<ragger.navigator.navigator.Navigator>` methods will exchange with the
-application but will not perform any action on the device. This is useful to
-manually drive the UI while a test is running. As manual navigation requires
-seeing the device, ``--no-nav`` automatically forces the ``--display`` option.
+The ``--no-nav`` CLI argument disables the navigation: the ``navigator`` fixture
+is a :class:`ManualNavigator <ragger.navigator.manual_navigator.ManualNavigator>`,
+which exchanges with the application but does not perform any action on the
+device. This is useful to manually drive the UI while a test is running. As
+manual navigation requires seeing the device, ``--no-nav`` automatically forces
+the ``--display`` option.
+
+When a navigation method is called while an APDU response is awaited (inside
+``exchange_async``), it returns immediately and the test waits for the response,
+i.e. for the user to end the flow on the device. Otherwise (for instance a
+navigation in the application settings), the expected instructions are printed
+and the test waits for the user to press ``Enter`` in the terminal once the
+navigation is done.
 
 Measuring the stack consumption (``--get-stack-consumption``)
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
