@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Backend: `is_async_exchange_pending` property, True while an `exchange_async` response is awaited
+- PKI: `APPROVAL_REQUEST` public key usage (`0x12`)
 
 ### Fixed
 
