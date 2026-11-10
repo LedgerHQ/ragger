@@ -41,7 +41,7 @@ class CertificatePubKeyUsage(IntEnum):
     GATING = 0x0F
     LKRP_TOPIC = 0x10
     PERPS_DATA = 0x11
-    TOKEN_MULTIPLIER = 0x12
+    APPROVAL_REQUEST = 0x12
 
 
 class SigningPartner:
