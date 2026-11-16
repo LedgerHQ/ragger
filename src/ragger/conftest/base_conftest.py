@@ -720,6 +720,19 @@ def pytest_configure(config):
     )
 
     _setup_log_level(config)
+    _check_xdist_compatible_options(config)
+
+
+# Options whose results are gathered in the pytest process itself, hence lost across pytest-xdist workers.
+_XDIST_INCOMPATIBLE_OPTIONS = {"get_stack_consumption": "--get-stack-consumption", "coverage": "--coverage"}
+
+
+def _check_xdist_compatible_options(config):
+    if not config.getoption("numprocesses", None):
+        return
+    for dest, flag in _XDIST_INCOMPATIBLE_OPTIONS.items():
+        if config.getoption(dest):
+            raise pytest.UsageError(f"{flag} is not supported with pytest-xdist (-n): run it without -n")
 
 
 def pytest_sessionstart(session):

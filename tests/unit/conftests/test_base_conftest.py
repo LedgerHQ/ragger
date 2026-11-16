@@ -4,6 +4,7 @@ from pathlib import Path
 from unittest import TestCase
 from unittest.mock import patch
 
+import pytest
 from ledgered.devices import Devices, DeviceType
 
 from ragger.conftest import base_conftest as bc
@@ -141,3 +142,30 @@ class TestBaseConftest(TestCase):
         with patch("ragger.conftest.base_conftest.LedgerCommBackend") as backend:
             result = bc.create_backend(None, "LedgerComm", self.stax, False, False, None, self.seed, [])
             self.assertEqual(result, backend())
+
+
+class ConfigMock:
+    def __init__(self, **options):
+        self._options = options
+
+    def getoption(self, name, default=None):
+        return self._options.get(name, default)
+
+
+class TestXdistCompatibleOptions(TestCase):
+    def test_no_xdist(self):
+        bc._check_xdist_compatible_options(ConfigMock(get_stack_consumption=True, coverage=True))
+
+    def test_xdist_disabled(self):
+        bc._check_xdist_compatible_options(ConfigMock(numprocesses=0, get_stack_consumption=True, coverage=True))
+
+    def test_xdist_without_incompatible_options(self):
+        bc._check_xdist_compatible_options(ConfigMock(numprocesses=4, get_stack_consumption=False, coverage=False))
+
+    def test_xdist_with_stack_consumption(self):
+        with self.assertRaisesRegex(pytest.UsageError, "--get-stack-consumption"):
+            bc._check_xdist_compatible_options(ConfigMock(numprocesses=4, get_stack_consumption=True, coverage=False))
+
+    def test_xdist_with_coverage(self):
+        with self.assertRaisesRegex(pytest.UsageError, "--coverage"):
+            bc._check_xdist_compatible_options(ConfigMock(numprocesses=4, get_stack_consumption=False, coverage=True))
