@@ -20,7 +20,7 @@ from collections.abc import Generator
 from contextlib import contextmanager
 from copy import deepcopy
 from io import BytesIO
-from os import urandom
+from os import environ, urandom
 from pathlib import Path
 from re import match
 from time import sleep, time
@@ -45,7 +45,18 @@ from ragger.utils import RAPDU, Crop
 from .interface import BackendInterface, GraphicalLibrary
 
 STARTING_RANGE = 7000
+# Each pytest-xdist worker draws its ports from its own block, so parallel workers never collide.
+XDIST_PORTS_START = 10000
+XDIST_PORTS_PER_WORKER = 100
 T = TypeVar("T", bound="SpeculosBackend")
+
+
+def _xdist_worker_ports_start() -> int | None:
+    """Return the first port of the current pytest-xdist worker block, or None outside xdist."""
+    worker = environ.get("PYTEST_XDIST_WORKER", "")
+    if not worker.startswith("gw") or not worker[2:].isdigit():
+        return None
+    return XDIST_PORTS_START + int(worker[2:]) * XDIST_PORTS_PER_WORKER
 
 
 def _is_port_in_use(port: int) -> bool:
@@ -108,7 +119,7 @@ class SpeculosBackend(BackendInterface):
             index = speculos_args.index(self._ARGS_API_PORT_KEY)
             self._api_port = int(speculos_args[index + 1])
         else:
-            self._api_port = _get_unused_port_from(self._DEFAULT_API_PORT)
+            self._api_port = _get_unused_port_from(_xdist_worker_ports_start() or self._DEFAULT_API_PORT)
             args.extend([self._ARGS_API_PORT_KEY, str(self._api_port)])
         # Inferring the APDU port
         if self._ARGS_APDU_PORT_KEY in speculos_args:
@@ -404,7 +415,11 @@ class SpeculosBackend(BackendInterface):
     ) -> list["SpeculosBackend"]:
         logger = get_default_logger()
         logger.info("Request to spawn %d Speculos instances of '%s'", number, application)
-        test_port = STARTING_RANGE
+        worker_ports_start = _xdist_worker_ports_start()
+        if worker_ports_start is None:
+            test_port = STARTING_RANGE
+        else:
+            test_port = worker_ports_start + XDIST_PORTS_PER_WORKER // 2
         result: list[SpeculosBackend] = list()
         while len(result) < number:
             tmp_kwargs = deepcopy(kwargs)

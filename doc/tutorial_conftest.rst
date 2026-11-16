@@ -543,6 +543,25 @@ arguments tune the output:
 
 More details are available in the :doc:`dedicated coverage chapter <coverage>`.
 
+Running the tests in parallel (``pytest-xdist``)
+''''''''''''''''''''''''''''''''''''''''''''''''
+
+With `pytest-xdist <https://pypi.org/project/pytest-xdist/>`_ installed, the
+tests can be spread over several processes, each running its own Speculos
+instance:
+
+.. code-block:: bash
+
+   pytest --device nanox -n auto tests/
+
+Each worker takes its Speculos ports from its own block (``10000 + 100 * N``
+for worker ``gwN``), so that the instances never collide. Ports explicitly given
+through ``additional_speculos_arguments`` are kept as is: in that case, keeping
+them distinct per worker is up to the application.
+
+``--get-stack-consumption`` and ``--coverage`` gather their results in a single
+process, and are rejected when combined with ``-n``.
+
 
 Fixtures and decorators
 +++++++++++++++++++++++

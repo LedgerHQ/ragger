@@ -1,10 +1,12 @@
 from io import BytesIO
+from os import environ
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
 from ledgered.devices import Devices, DeviceType
 
 from ragger.backend import SpeculosBackend
+from ragger.backend.speculos import XDIST_PORTS_PER_WORKER, XDIST_PORTS_START
 
 APPNAME = "some app"
 
@@ -42,6 +44,32 @@ class TestSpeculosBackend(TestCase):
         b3 = SpeculosBackend(APPNAME, self.nanos, args=["--apdu-port", str(apdu_port)])
         self.assertEqual(b3._api_port, b3._DEFAULT_API_PORT)
         self.assertEqual(b3._apdu_port, apdu_port)
+
+    def test___init__xdist_worker_ports(self):
+        with patch.dict(environ, {"PYTEST_XDIST_WORKER": "gw3"}):
+            b = SpeculosBackend(APPNAME, self.nanos)
+        expected = XDIST_PORTS_START + 3 * XDIST_PORTS_PER_WORKER
+        self.assertEqual(b._api_port, expected)
+        self.assertEqual(b._apdu_port, expected + 1)
+
+    def test___init__xdist_explicit_ports_kept(self):
+        with patch.dict(environ, {"PYTEST_XDIST_WORKER": "gw3"}):
+            b = SpeculosBackend(APPNAME, self.nanos, args=["--api-port", "4567"])
+        self.assertEqual(b._api_port, 4567)
+        self.assertEqual(b._apdu_port, 4568)
+
+    def test___init__xdist_unexpected_worker_name(self):
+        with patch.dict(environ, {"PYTEST_XDIST_WORKER": "master"}):
+            b = SpeculosBackend(APPNAME, self.nanos)
+        self.assertEqual(b._api_port, b._DEFAULT_API_PORT)
+
+    def test_batch_xdist_worker_ports(self):
+        with patch("ragger.backend.speculos.SpeculosClient"), patch.dict(environ, {"PYTEST_XDIST_WORKER": "gw2"}):
+            clients = SpeculosBackend.batch(APPNAME, self.nanos, 2)
+        block_start = XDIST_PORTS_START + 2 * XDIST_PORTS_PER_WORKER
+        for client in clients:
+            self.assertGreaterEqual(client._api_port, block_start + XDIST_PORTS_PER_WORKER // 2)
+            self.assertLess(client._apdu_port, block_start + XDIST_PORTS_PER_WORKER)
 
     def test___init__args_ok(self):
         SpeculosBackend(APPNAME, self.nanos, args=["some", "specific", "arguments"])
