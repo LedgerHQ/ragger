@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Adding a new generic Transaction Check module (`ragger.transaction_check`)
 - Speculos backend: under `pytest-xdist`, each worker takes its ports from its own block, so that
   parallel Speculos instances never collide
 - conftest: `--get-stack-consumption` and `--coverage` are rejected when combined with `pytest-xdist` (`-n`)
