@@ -1,7 +1,6 @@
 from unittest import TestCase
 
 from ragger.address_book import (
-    EditContactName,
     EditIdentifier,
     EditLedgerAccount,
     EditScope,
@@ -139,22 +138,12 @@ class TestBlockchainFamily(TestCase):
 
 class TestValidations(TestCase):
     def test_bad_group_handle_length(self):
-        cmd = EditContactName(
-            old_contact_name="old",
-            new_contact_name="new",
-            hmac_proof=PR,
-            group_handle=b"\x00" * 10,
-        )
+        cmd = ProvideContact(ADDR, b"\x00" * 10, PR, REST, "A", "S", FAMILY, 1)
         with self.assertRaises(ValueError):
             cmd.serialize()
 
     def test_bad_hmac_proof_length(self):
-        cmd = EditContactName(
-            old_contact_name="old",
-            new_contact_name="new",
-            hmac_proof=b"\x00" * 10,
-            group_handle=GH,
-        )
+        cmd = ProvideContact(ADDR, GH, b"\x00" * 10, REST, "A", "S", FAMILY, 1)
         with self.assertRaises(ValueError):
             cmd.serialize()
 
@@ -163,7 +152,6 @@ class TestSubCommandMapping(TestCase):
     def _cases(self):
         return [
             (RegisterIdentity(ADDR, "A", "S", FAMILY, 1), 0x01, 0x2D),
-            (EditContactName("o", "n", PR, GH), 0x02, 0x2E),
             (
                 EditIdentifier(ADDR, ADDR, "A", "S", PR, REST, GH, FAMILY, 1),
                 0x03,

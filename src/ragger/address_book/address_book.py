@@ -50,7 +50,6 @@ class AddressBookSubCommand(IntEnum):
     """Address Book sub-command, carried as APDU P1."""
 
     SUB_CMD_REGISTER_IDENTITY = 0x01
-    SUB_CMD_EDIT_CONTACT_NAME = 0x02
     SUB_CMD_EDIT_IDENTIFIER = 0x03
     SUB_CMD_EDIT_SCOPE = 0x04
     SUB_CMD_REGISTER_LEDGER_ACCOUNT = 0x11
@@ -71,8 +70,6 @@ ERR_IDENTIFIER_REQUIRED = "Identifier is required"
 ERR_NEW_IDENTIFIER_REQUIRED = "New identifier is required"
 ERR_OLD_IDENTIFIER_REQUIRED = "Old identifier is required"
 ERR_CONTACT_NAME_REQUIRED = f"Contact name required (max {CONTACT_NAME_MAX_LENGTH} chars)"
-ERR_PREVIOUS_CONTACT_NAME_REQUIRED = f"Previous contact name required (max {CONTACT_NAME_MAX_LENGTH} chars)"
-ERR_NEW_CONTACT_NAME_REQUIRED = f"New contact name required (max {CONTACT_NAME_MAX_LENGTH} chars)"
 ERR_OLD_ACCOUNT_NAME_REQUIRED = f"Old account name required (max {CONTACT_NAME_MAX_LENGTH} chars)"
 ERR_NEW_ACCOUNT_NAME_REQUIRED = f"New account name required (max {CONTACT_NAME_MAX_LENGTH} chars)"
 ERR_PREVIOUS_SCOPE_REQUIRED = f"Previous scope required (max {SCOPE_MAX_LENGTH} chars)"
@@ -201,57 +198,6 @@ class RegisterIdentity(AddressBookCommand):
             payload += self.serialize_field(AddressBookFieldTag.GROUP_HANDLE, self.group_handle)
         if self.hmac_proof is not None:
             payload += self.serialize_field(LedgerCommonFieldTag.HMAC_PROOF, self.hmac_proof)
-        return payload
-
-
-class EditContactName(AddressBookCommand):
-    """Edit Contact Name sub-command.
-
-    Only needs group_handle + names + path + HMAC_NAME — no identifier, scope,
-    or network required (HMAC_NAME covers only gid + name).
-    """
-
-    subcommand = AddressBookSubCommand.SUB_CMD_EDIT_CONTACT_NAME
-    struct_type = LedgerStructType.TYPE_EDIT_CONTACT_NAME
-
-    def __init__(
-        self,
-        old_contact_name: str,
-        new_contact_name: str,
-        hmac_proof: bytes,
-        group_handle: bytes,
-    ) -> None:
-        """
-        Args:
-            old_contact_name: Current (old) name of the contact
-            new_contact_name: New name to assign to the contact
-            hmac_proof: HMAC_NAME from the original Register Identity response
-            group_handle: 64-byte group handle received from the Register Identity response
-        """
-        self.old_contact_name = old_contact_name
-        self.new_contact_name = new_contact_name
-        self.hmac_proof = hmac_proof
-        self.group_handle = group_handle
-
-    def serialize(self) -> bytes:
-        if not self.old_contact_name or len(self.old_contact_name) > CONTACT_NAME_MAX_LENGTH:
-            raise ValueError(ERR_PREVIOUS_CONTACT_NAME_REQUIRED)
-        if not self.new_contact_name or len(self.new_contact_name) > CONTACT_NAME_MAX_LENGTH:
-            raise ValueError(ERR_NEW_CONTACT_NAME_REQUIRED)
-        if len(self.group_handle) != GROUP_HANDLE_LENGTH:
-            raise ValueError(ERR_GROUP_HANDLE_LENGTH)
-        if len(self.hmac_proof) != HMAC_PROOF_LENGTH:
-            raise ValueError(ERR_HMAC_PROOF_LENGTH)
-
-        payload: bytes = self.serialize_field(LedgerCommonFieldTag.STRUCTURE_TYPE, self.struct_type)
-        payload += self.serialize_field(LedgerCommonFieldTag.VERSION, 1)
-        payload += self.serialize_field(AddressBookFieldTag.CONTACT_NAME, self.new_contact_name.encode("utf-8"))
-        payload += self.serialize_field(
-            AddressBookFieldTag.PREVIOUS_CONTACT_NAME,
-            self.old_contact_name.encode("utf-8"),
-        )
-        payload += self.serialize_field(AddressBookFieldTag.GROUP_HANDLE, self.group_handle)
-        payload += self.serialize_field(LedgerCommonFieldTag.HMAC_PROOF, self.hmac_proof)
         return payload
 
 
